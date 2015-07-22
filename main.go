@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"strconv"
@@ -20,6 +21,11 @@ type Player struct {
 	Combo   int
 }
 
+type Position struct {
+	Rotation int
+	X        int
+}
+
 func main() {
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
@@ -35,12 +41,6 @@ func main() {
 			_getMoves(time)
 		}
 	}
-}
-
-func _getMoves(time int) {
-	fmt.Println("left,left,left,drop")
-	
-	FindFitPositions(CurrentPiece,MyPlayer.Columns)
 }
 
 func _asignSettings(action, value string) {
@@ -119,4 +119,291 @@ func _asignUpdates(who, action, value string) {
 			}
 		}
 	}
+}
+
+func _getMoves(time int) {
+	if Round == 1 {
+		fmt.Println("drop")
+		return
+	}
+
+	var positions []Position
+	switch CurrentPiece {
+	case "I":
+		positions = _fitsI()
+	case "J":
+		positions = _fitsJ()
+	case "L":
+		positions = _fitsL()
+	case "O":
+		positions = _fitsO()
+	case "S":
+		positions = _fitsS()
+	case "T":
+		positions = _fitsT()
+	case "Z":
+		positions = _fitsZ()
+	}
+
+	if len(positions) == 0 {
+		fmt.Println("drop")
+		return
+	}
+	//fmt.Println(positions)
+
+	finalPositionIndex := _chooseLowestPosition(positions)
+	//fmt.Println(finalPositionIndex)
+
+	_printMoves(positions[finalPositionIndex])
+}
+
+func _fitsI() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if (_isRight(i, 1) && v+1 < c[i+1]) || (_isLeft(i, 1) && v+1 < c[i-1]) {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 3) && v == c[i+1] && v == c[i+2] && v == c[i+3] {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if (_isRight(i, 1) && v < c[i+1]) || (_isLeft(i, 1) && v < c[i-1]) {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+	return pos
+}
+
+func _fitsJ() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v+2 == c[i+1] {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1] && v == c[i+2]+1 {
+			p := Position{Rotation: 2, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v == c[i+1] {
+			p := Position{Rotation: 3, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	return pos
+}
+
+func _fitsL() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v == c[i+1]+2 {
+			p := Position{Rotation: 3, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v+1 == c[i+1] && v+1 == c[i+2] {
+			p := Position{Rotation: 2, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v == c[i+1] {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	return pos
+}
+
+func _fitsO() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if (_isRight(i, 2) && v == c[i+1] && v < c[i+2]) || (_isLeft(i, 1) && v < c[i-1] && _isRight(i, 1) && v == c[i+1]) {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v == c[i+1] {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	return pos
+}
+
+func _fitsS() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1] && v+1 == c[i+2] {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v == c[i+1]+1 {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	return pos
+}
+
+func _fitsT() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1]+1 && v == c[i+2] {
+			p := Position{Rotation: 2, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v+1 == c[i+1] {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v == c[i+1]+1 {
+			p := Position{Rotation: 3, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	return pos
+}
+
+func _fitsZ() []Position {
+	var pos []Position
+	c := MyPlayer.Columns
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 2) && v == c[i+1]+1 && v == c[i+2]+1 {
+			p := Position{Rotation: 0, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	for i, v := range MyPlayer.Columns {
+		if _isRight(i, 1) && v+1 == c[i+1] {
+			p := Position{Rotation: 1, X: i}
+			pos = append(pos, p)
+		}
+	}
+
+	return pos
+}
+
+func _isRight(i, right int) bool {
+	if i+right < Width {
+		return true
+	} else {
+		return false
+	}
+}
+
+func _isLeft(i, left int) bool {
+	if i-left > 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func _chooseLowestPosition(positions []Position) int {
+	if len(positions) > 1 {
+		cashX := positions[0].X
+		indexSmallestPosition := 0
+		for i := 1; i < len(positions); i++ {
+			if MyPlayer.Columns[cashX] > MyPlayer.Columns[positions[i].X] {
+				cashX = positions[i].X
+				indexSmallestPosition = i
+			}
+		}
+		return indexSmallestPosition
+	}
+	return 0
+}
+
+func _printMoves(pos Position) {
+	var buffer bytes.Buffer
+	for i := 0; i < pos.Rotation; i++ {
+		buffer.WriteString("turnright,")
+	}
+	if pos.Rotation == 1 {
+		CurrentPieceX = CurrentPieceX + 1
+		if CurrentPiece == "I" {
+			CurrentPieceX = CurrentPieceX + 1
+		}
+	}
+	if CurrentPieceX > pos.X {
+		for i := 0; i < CurrentPieceX-pos.X; i++ {
+			buffer.WriteString("left,")
+		}
+	}
+	if CurrentPieceX < pos.X {
+		for i := 0; i < pos.X-CurrentPieceX; i++ {
+			buffer.WriteString("right,")
+		}
+	}
+	buffer.WriteString("drop")
+	fmt.Println(buffer.String())
 }
