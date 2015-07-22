@@ -39,6 +39,8 @@ func main() {
 
 func _getMoves(time int) {
 	fmt.Println("left,left,left,drop")
+	
+	FindFitPositions(CurrentPiece,MyPlayer.Columns)
 }
 
 func _asignSettings(action, value string) {
