@@ -38,7 +38,7 @@ func main() {
 			_asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			time, _ := strconv.Atoi(parts[2])
-			_getMoves(time)
+			GetMoves(time)
 		}
 	}
 }
@@ -121,7 +121,7 @@ func _asignUpdates(who, action, value string) {
 	}
 }
 
-func _getMoves(time int) {
+func GetMoves(time int) {
 	if Round == 1 {
 		fmt.Println("drop")
 		return
