@@ -9,23 +9,6 @@ import (
 	"strings"
 )
 
-var Timebank, TimePerMove, Width, Height, Round, CurrentPieceX, CurrentPieceY int
-var Players [2]Player
-var MyPlayer *Player
-var CurrentPiece, NextPiece string
-
-type Player struct {
-	Name    string
-	Columns []int
-	Points  int
-	Combo   int
-}
-
-type Position struct {
-	Rotation int
-	X        int
-}
-
 func main() {
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
@@ -38,7 +21,7 @@ func main() {
 			_asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			time, _ := strconv.Atoi(parts[2])
-			GetMoves(time)
+			_getMoves(time)
 		}
 	}
 }
@@ -121,7 +104,7 @@ func _asignUpdates(who, action, value string) {
 	}
 }
 
-func GetMoves(time int) {
+func _getMoves(time int) {
 	if Round == 1 {
 		fmt.Println("drop")
 		return
@@ -130,19 +113,19 @@ func GetMoves(time int) {
 	var positions []Position
 	switch CurrentPiece {
 	case "I":
-		positions = _fitsI()
+		positions = _fitsI(MyPlayer.Columns)
 	case "J":
-		positions = _fitsJ()
+		positions = _fitsJ(MyPlayer.Columns)
 	case "L":
-		positions = _fitsL()
+		positions = _fitsL(MyPlayer.Columns)
 	case "O":
-		positions = _fitsO()
+		positions = _fitsO(MyPlayer.Columns)
 	case "S":
-		positions = _fitsS()
+		positions = _fitsS(MyPlayer.Columns)
 	case "T":
-		positions = _fitsT()
+		positions = _fitsT(MyPlayer.Columns)
 	case "Z":
-		positions = _fitsZ()
+		positions = _fitsZ(MyPlayer.Columns)
 	}
 
 	if len(positions) == 0 {
@@ -154,215 +137,6 @@ func GetMoves(time int) {
 		_printMoves(positions[finalPositionIndex])
 	}
 
-}
-
-func _fitsI() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-
-	for i, v := range MyPlayer.Columns {
-		if (_isRight(i, 1) && v+1 < c[i+1]) || (_isLeft(i, 1) && v+1 < c[i-1]) {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 3) && v == c[i+1] && v == c[i+2] && v == c[i+3] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if (_isRight(i, 1) && v < c[i+1]) || (_isLeft(i, 1) && v < c[i-1]) {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-	return pos
-}
-
-func _fitsJ() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-	//TODO: replace MyPlayer.Columns to c
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v+2 == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2]+1 {
-			p := Position{Rotation: 2, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v == c[i+1] {
-			p := Position{Rotation: 3, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsL() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v == c[i+1]+2 {
-			p := Position{Rotation: 3, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v+1 == c[i+1] && v+1 == c[i+2] {
-			p := Position{Rotation: 2, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsO() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-
-	for i, v := range MyPlayer.Columns {
-		if (_isRight(i, 2) && v == c[i+1] && v < c[i+2]) || (_isLeft(i, 1) && v < c[i-1] && _isRight(i, 1) && v == c[i+1]) {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v == c[i+1] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsS() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1] && v+1 == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v == c[i+1]+1 {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsT() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1]+1 && v == c[i+2] {
-			p := Position{Rotation: 2, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v+1 == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v == c[i+1]+1 {
-			p := Position{Rotation: 3, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsZ() []Position {
-	var pos []Position
-	c := MyPlayer.Columns
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 2) && v == c[i+1]+1 && v == c[i+2]+1 {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range MyPlayer.Columns {
-		if _isRight(i, 1) && v+1 == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _isRight(i, right int) bool {
-	if i+right < Width {
-		return true
-	}
-	return false
-}
-
-func _isLeft(i, left int) bool {
-	if i-left > 0 {
-		return true
-	}
-	return false
 }
 
 func _chooseLowestPosition(positions []Position) int {
@@ -394,7 +168,7 @@ func _chooseMinimumDamage() Position {
 	columnsSum := _sum(MyPlayer.Columns)
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < Width; i++ {
-			columsAfter := _getColumnsAfter(i, r, CurrentPiece)
+			columsAfter := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
 			columsAfterSum := _sum(columsAfter)
 			if columsAfterSum <= columnsSum {
 				break
@@ -423,305 +197,6 @@ func _sum(c []int) int {
 		sum += c[i]
 	}
 	return sum
-}
-
-func _getColumnsAfter(i, r int, piece string) []int {
-	c := MyPlayer.Columns
-	a := MyPlayer.Columns
-	switch piece {
-	case "I":
-		switch r {
-		case 0:
-			if _isRight(i, 3) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-				if pick < c[i+3] {
-					pick = c[i+3]
-				}
-
-				a[i] = pick + 1
-				a[i+1] = pick + 1
-				a[i+2] = pick + 1
-				a[i+3] = pick + 1
-			}
-		case 1:
-			a[i] = c[i] + 4
-		}
-	case "J":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				a[i] = pick + 2
-				a[i+1] = pick + 1
-				a[i+2] = pick + 1
-			}
-		case 1:
-			if _isRight(i, 1) {
-
-				if c[i+1] >= c[i]+2 {
-					a[i] = c[i+1] + 1
-					a[i+1] = c[i+1] + 1
-				} else {
-					a[i] = c[i] + 3
-					a[i+1] = c[i] + 3
-				}
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				if pick == c[i+2] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-
-				a[i] = pick + 1
-				a[i+1] = pick + 3
-			}
-		}
-	case "L":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				a[i] = pick + 1
-				a[i+1] = pick + 1
-				a[i+2] = pick + 2
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-
-				a[i] = pick + 3
-				a[i+1] = pick + 1
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				if pick == c[i] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				if c[i] >= c[i+1]+2 {
-					a[i] = c[i] + 1
-					a[i+1] = c[i] + 1
-				} else {
-					a[i] = c[i+1] + 3
-					a[i+1] = c[i+1] + 3
-				}
-			}
-		}
-	case "O":
-		if _isRight(i, 1) {
-			pick := c[i]
-			if pick < c[i+1] {
-				pick = c[i+1]
-			}
-			a[i] = pick + 2
-			a[i+1] = pick + 2
-		}
-	case "S":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				if pick == c[i] || pick == c[i+1] {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-				} else {
-					a[i] = pick
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-				}
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-
-				if pick == c[i+1] {
-					a[i] = pick + 3
-					a[i+1] = pick + 2
-				} else {
-					a[i] = pick + 2
-					a[i+1] = pick + 1
-				}
-			}
-		}
-	case "T":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				a[i] = pick + 1
-				a[i+1] = pick + 2
-				a[i+2] = pick + 1
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-
-				if pick == c[i] {
-					a[i] = pick + 3
-					a[i+1] = pick + 2
-				} else {
-					a[i] = pick + 2
-					a[i+1] = pick + 1
-				}
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				if pick == c[i+1] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-
-				if pick == c[i+1] {
-					a[i] = pick + 2
-					a[i+1] = pick + 3
-
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-				}
-			}
-		}
-	case "Z":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-				if pick < c[i+2] {
-					pick = c[i+2]
-				}
-
-				if pick == c[i+1] || pick == c[i+2] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 1
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick
-				}
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := c[i]
-				if pick < c[i+1] {
-					pick = c[i+1]
-				}
-
-				if pick == c[i] {
-					a[i] = pick + 2
-					a[i+1] = pick + 3
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-				}
-			}
-		}
-	}
-	return a
 }
 
 func _printMoves(pos Position) {

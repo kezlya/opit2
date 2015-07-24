@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func BenchmarkGetMoves(b *testing.B) {
+func Benchmark_getMoves(b *testing.B) {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 	pieces := []string{"I", "J", "L", "O", "S", "T", "Z"}
@@ -36,7 +36,7 @@ func BenchmarkGetMoves(b *testing.B) {
 		_asignUpdates("game", "this_piece_position", "3,1")
 		_asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;"+strings.Join(row1, ",")+";"+strings.Join(row2, ",")+";"+strings.Join(row1, ","))
 
-		GetMoves(500)
+		_getMoves(500)
 	}
 
 }
