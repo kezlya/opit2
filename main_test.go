@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
-	"fmt"
 )
 
 func Benchmark_getMoves(b *testing.B) {
@@ -42,20 +42,29 @@ func Benchmark_getMoves(b *testing.B) {
 
 }
 
-func Test_chooseMinimumDamage(t *testing.T){
+func Test_chooseMinimumDamage(t *testing.T) {
 	_asignSettings("field_width", "10")
-		_asignSettings("field_height", "20")
-		_asignSettings("player_names", "player1,player2")
-		_asignSettings("your_bot", "player1")
+	_asignSettings("field_height", "20")
+	_asignSettings("player_names", "player1,player2")
+	_asignSettings("your_bot", "player1")
+
 	_asignUpdates("game", "this_piece_type", "J")
-	MyPlayer.Columns = []int{7,6,4,7,6,7,8,6,3,0}
-	
+	MyPlayer.Columns = []int{7, 6, 4, 7, 6, 7, 8, 6, 3, 0}
 	result := _chooseMinimumDamage()
-	should := Position{Rotation:0,X:2}
-	if result.Rotation != should.Rotation || result.X != should.X{
-		fmt.Println("result: ",result)
-		fmt.Println("should: ",should)
+	should := Position{Rotation: 0, X: 2}
+	if result.Rotation != should.Rotation || result.X != should.X {
+		fmt.Println("result: ", result)
+		fmt.Println("should: ", should)
 		t.Fail()
 	}
 
+	_asignUpdates("game", "this_piece_type", "Z")
+	MyPlayer.Columns = []int{2, 0, 3, 3, 3, 2, 4, 3, 2, 1}
+	result = _chooseMinimumDamage()
+	should = Position{Rotation: 0, X: 7}
+	if result.Rotation != should.Rotation || result.X != should.X {
+		fmt.Println("result: ", result)
+		fmt.Println("should: ", should)
+		t.Fail()
+	}
 }

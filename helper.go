@@ -199,9 +199,10 @@ func _isLeft(i, left int) bool {
 	return false
 }
 
-func _getColumnsAfter(c []int, i, r int, piece string) []int {
-	a :=make([]int, len(c))
+func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
+	a := make([]int, len(c))
 	copy(a, c[:])
+	y := 0
 	switch piece {
 	case "I":
 		switch r {
@@ -212,9 +213,11 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				a[i+1] = pick + 1
 				a[i+2] = pick + 1
 				a[i+3] = pick + 1
+				y = pick + 1
 			}
 		case 1:
 			a[i] = c[i] + 4
+			y = c[i] + 4
 		}
 	case "J":
 		switch r {
@@ -224,15 +227,18 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				a[i] = pick + 2
 				a[i+1] = pick + 1
 				a[i+2] = pick + 1
+				y = pick + 2
 			}
 		case 1:
 			if _isRight(i, 1) {
 				if c[i+1] >= c[i]+2 {
 					a[i] = c[i+1] + 1
 					a[i+1] = c[i+1] + 1
+					y = c[i+1] + 1
 				} else {
 					a[i] = c[i] + 3
 					a[i+1] = c[i] + 3
+					y = c[i] + 3
 				}
 			}
 		case 2:
@@ -242,10 +248,12 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 					a[i] = pick + 2
 					a[i+1] = pick + 2
 					a[i+2] = pick + 2
+					y = pick + 2
 				} else {
 					a[i] = pick + 1
 					a[i+1] = pick + 1
 					a[i+2] = pick + 1
+					y = pick + 1
 				}
 			}
 		case 3:
@@ -253,6 +261,7 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				pick := _getPick(i, 1)
 				a[i] = pick + 1
 				a[i+1] = pick + 3
+				y = pick + 3
 			}
 		}
 	case "L":
@@ -263,12 +272,14 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				a[i] = pick + 1
 				a[i+1] = pick + 1
 				a[i+2] = pick + 2
+				y = pick + 2
 			}
 		case 1:
 			if _isRight(i, 1) {
 				pick := _getPick(i, 1)
 				a[i] = pick + 3
 				a[i+1] = pick + 1
+				y = pick + 3
 			}
 		case 2:
 			if _isRight(i, 2) {
@@ -277,10 +288,12 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 					a[i] = pick + 2
 					a[i+1] = pick + 2
 					a[i+2] = pick + 2
+					y = pick + 2
 				} else {
 					a[i] = pick + 1
 					a[i+1] = pick + 1
 					a[i+2] = pick + 1
+					y = pick + 1
 				}
 			}
 		case 3:
@@ -288,9 +301,11 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				if c[i] >= c[i+1]+2 {
 					a[i] = c[i] + 1
 					a[i+1] = c[i] + 1
+					y = c[i] + 1
 				} else {
 					a[i] = c[i+1] + 3
 					a[i+1] = c[i+1] + 3
+					y = c[i] + 3
 				}
 			}
 		}
@@ -299,6 +314,7 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 			pick := _getPick(i, 1)
 			a[i] = pick + 2
 			a[i+1] = pick + 2
+			y = pick + 2
 		}
 	case "S":
 		switch r {
@@ -309,10 +325,12 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 					a[i] = pick + 1
 					a[i+1] = pick + 2
 					a[i+2] = pick + 2
+					y = pick + 2
 				} else {
 					a[i] = pick
 					a[i+1] = pick + 1
 					a[i+2] = pick + 1
+					y = pick + 1
 				}
 			}
 		case 1:
@@ -321,9 +339,11 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				if pick == c[i+1] {
 					a[i] = pick + 3
 					a[i+1] = pick + 2
+					y = pick + 3
 				} else {
 					a[i] = pick + 2
 					a[i+1] = pick + 1
+					y = pick + 2
 				}
 			}
 		}
@@ -335,6 +355,7 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				a[i] = pick + 1
 				a[i+1] = pick + 2
 				a[i+2] = pick + 1
+				y = pick + 2
 			}
 		case 1:
 			if _isRight(i, 1) {
@@ -342,9 +363,11 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				if pick == c[i] {
 					a[i] = pick + 3
 					a[i+1] = pick + 2
+					y = pick + 3
 				} else {
 					a[i] = pick + 2
 					a[i+1] = pick + 1
+					y = pick + 2
 				}
 			}
 		case 2:
@@ -354,10 +377,12 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 					a[i] = pick + 2
 					a[i+1] = pick + 2
 					a[i+2] = pick + 2
+					y = pick + 2
 				} else {
 					a[i] = pick + 1
 					a[i+1] = pick + 1
 					a[i+2] = pick + 1
+					y = pick + 1
 				}
 			}
 		case 3:
@@ -366,10 +391,12 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				if pick == c[i+1] {
 					a[i] = pick + 2
 					a[i+1] = pick + 3
+					y = pick + 3
 
 				} else {
 					a[i] = pick + 1
 					a[i+1] = pick + 2
+					y = pick + 2
 				}
 			}
 		}
@@ -382,10 +409,12 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 					a[i] = pick + 2
 					a[i+1] = pick + 2
 					a[i+2] = pick + 1
+					y = pick + 2
 				} else {
 					a[i] = pick + 1
 					a[i+1] = pick + 1
 					a[i+2] = pick
+					y = pick + 1
 				}
 			}
 		case 1:
@@ -394,14 +423,16 @@ func _getColumnsAfter(c []int, i, r int, piece string) []int {
 				if pick == c[i] {
 					a[i] = pick + 2
 					a[i+1] = pick + 3
+					y = pick + 3
 				} else {
 					a[i] = pick + 1
 					a[i+1] = pick + 2
+					y = pick + 2
 				}
 			}
 		}
 	}
-	return a
+	return a, y
 }
 
 func _getPick(i, v int) int {

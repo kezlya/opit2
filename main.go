@@ -157,9 +157,10 @@ func _chooseLowestPosition(positions []Position) int {
 func _chooseMinimumDamage() Position {
 	p := Position{}
 	minDammage := 1000
+	tempY := 1000
 	rotationMax := 1
-	switch CurrentPiece {
 
+	switch CurrentPiece {
 	case "I", "Z", "S":
 		rotationMax = 2
 	case "J", "L", "T":
@@ -168,24 +169,27 @@ func _chooseMinimumDamage() Position {
 	columnsSum := _sum(MyPlayer.Columns)
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < Width; i++ {
-			columsAfter := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
+			columsAfter, maxY := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
 			columsAfterSum := _sum(columsAfter)
 			if columsAfterSum <= columnsSum {
 				break
 			}
-
 			damage := columsAfterSum - columnsSum
+			//fmt.Println("columsAfter: ",r,i,columsAfter,columsAfterSum,damage)
 			if damage < minDammage {
 				minDammage = damage
+				tempY = maxY
 				p.Rotation = r
 				p.X = i
 			}
 
-			if damage == minDammage && MyPlayer.Columns[p.X] > MyPlayer.Columns[i] {
+			if damage == minDammage && maxY < tempY {
+				tempY = maxY
 				p.X = i
 			}
 		}
 	}
+	//fmt.Println("minDammage: ",minDammage)
 	return p
 }
 
