@@ -355,17 +355,15 @@ func _fitsZ() []Position {
 func _isRight(i, right int) bool {
 	if i+right < Width {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func _isLeft(i, left int) bool {
 	if i-left > 0 {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func _chooseLowestPosition(positions []Position) int {
