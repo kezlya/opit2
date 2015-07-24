@@ -184,10 +184,8 @@ func _chooseMinimumDamage() Position {
 			if damage == minDammage && MyPlayer.Columns[p.X] > MyPlayer.Columns[i] {
 				p.X = i
 			}
-
 		}
 	}
-
 	return p
 }
 

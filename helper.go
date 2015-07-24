@@ -200,7 +200,8 @@ func _isLeft(i, left int) bool {
 }
 
 func _getColumnsAfter(c []int, i, r int, piece string) []int {
-	a := c
+	a :=make([]int, len(c))
+	copy(a, c[:])
 	switch piece {
 	case "I":
 		switch r {
