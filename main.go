@@ -124,10 +124,13 @@ func _calculateMoves(time int) {
 	}
 
 	roofIsnear := false
+	savePlay := false
 	for _, pick := range MyPlayer.Columns {
 		if Height-pick <= 5 {
 			roofIsnear = true
-			break
+		}
+		if Height-pick >= 10 {
+			savePlay = true
 		}
 	}
 
@@ -148,6 +151,35 @@ func _calculateMoves(time int) {
 			}
 		}
 		_printMoves(allPositins[goldenIndex])
+	} else if savePlay {
+		//old code here
+		noDamadgePositions := _getNoDamadgePositions(allPositins)
+		if len(noDamadgePositions) > 0 {
+			tempMaxY := 1000
+			for i, pos := range noDamadgePositions {
+				if pos.MaxY < tempMaxY {
+					tempMaxY = pos.MaxY
+					goldenIndex = i
+				}
+			}
+			_printMoves(noDamadgePositions[goldenIndex])
+		} else {
+			//redundand code below
+			bestPositions := _getBestScorePositions(allPositins, bestScore)
+			tempDamadge := 1000
+			for i, pos := range bestPositions {
+				//check if it burns rows
+
+				if pos.Damadge < tempDamadge {
+					tempDamadge = pos.Damadge
+					goldenIndex = i
+				}
+			}
+			_printMoves(bestPositions[goldenIndex])
+			//////////end redundand code
+
+		}
+
 	} else {
 		bestPositions := _getBestScorePositions(allPositins, bestScore)
 		tempDamadge := 1000
@@ -191,6 +223,17 @@ func _getBestScorePositions(positions []Position, bestScore int) []Position {
 	var result []Position
 	for _, pos := range positions {
 		if pos.Score == bestScore {
+			result = append(result, pos)
+		}
+		//TODO: predict next move
+	}
+	return result
+}
+
+func _getNoDamadgePositions(positions []Position) []Position {
+	var result []Position
+	for _, pos := range positions {
+		if pos.Damadge == 4 {
 			result = append(result, pos)
 		}
 		//TODO: predict next move
