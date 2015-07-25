@@ -14,6 +14,7 @@ func _setup() {
 	_asignSettings("field_height", "20")
 	_asignSettings("player_names", "player1,player2")
 	_asignSettings("your_bot", "player1")
+	_asignUpdates("game", "this_piece_position", "3,1")
 }
 
 func Benchmark_getMoves(b *testing.B) {
@@ -59,6 +60,15 @@ func Test_getMoves(t *testing.T) {
 		fmt.Println("should: ", "turnright,left,left,drop")
 		t.Fail()
 
+}
+
+func Test__calculateMoves(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "S")
+	_asignUpdates("player1", "field", "0,0,0,1,1,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,2,0,0,0,0;0,0,0,2,2,2,2,2,2,2")
+	_calculateMoves(500)
+	//fmt.Println("should: ", "left,left,drop")
+	t.Fail()
 }
 
 
@@ -279,3 +289,16 @@ func Test_getAllPossiblePositionsZ(t *testing.T) {
 		t.Fail()
 	}
 }
+
+/*
+func Test__calculateMovesI(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "Z")
+	MyPlayer.Columns = []int{4, 3, 8, 8, 4, 6, 6, 5, 6, 6}
+	_calculateMoves(100)
+
+		fmt.Println("shoul be turnright,left,left,left,left")
+		t.Fail()
+
+}
+*/

@@ -1,6 +1,6 @@
 package main
 
-var Timebank, TimePerMove, Width, Height, Round, CurrentPieceX, CurrentPieceY int
+var Timebank, TimePerMove, Width, OriginalHeight, Height, Round, CurrentPieceX, CurrentPieceY int
 var Players [2]Player
 var MyPlayer *Player
 var CurrentPiece, NextPiece string
@@ -8,6 +8,7 @@ var CurrentPiece, NextPiece string
 type Player struct {
 	Name    string
 	Columns []int
+	Field   [][]bool
 	Points  int
 	Combo   int
 }

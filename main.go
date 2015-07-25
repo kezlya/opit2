@@ -47,7 +47,7 @@ func _asignSettings(action, value string) {
 	case "field_width":
 		Width, _ = strconv.Atoi(value)
 	case "field_height":
-		Height, _ = strconv.Atoi(value)
+		OriginalHeight, _ = strconv.Atoi(value)
 	}
 }
 
@@ -83,20 +83,10 @@ func _asignUpdates(who, action, value string) {
 				}
 			}
 		case "field":
+			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", OriginalHeight)
 			for i, p := range Players {
 				if p.Name == who {
-					piks := make([]int, Width, Width)
-					rows := strings.Split(value, ";")
-					for ii, row := range rows {
-						y := Height - ii
-						columns := strings.Split(row, ",")
-						for iii, cell := range columns {
-							if (cell == "2" || cell == "3") && y > piks[iii] {
-								piks[iii] = y
-							}
-						}
-					}
-					Players[i].Columns = piks
+					Players[i].Field, Players[i].Columns = _convertField(cleanSource)
 					break
 				}
 			}
@@ -104,33 +94,91 @@ func _asignUpdates(who, action, value string) {
 	}
 }
 
+func _convertField(rawField string) ([][]bool, []int) {
+	rows := strings.Split(rawField, ";")
+	Height = len(rows)
+	var piks = make([]int, Width)
+	var field = make([][]bool, Height)
+	for rowIndex, row := range rows {
+		y := Height - rowIndex
+		var colums = make([]bool, Width)
+		for columIndex, colum := range strings.Split(row, ",") {
+			if colum == "2" {
+				colums[columIndex] = true
+				if y > piks[columIndex] {
+					piks[columIndex] = y
+				}
+			} else {
+				colums[columIndex] = false
+			}
+		}
+		field[rowIndex] = colums
+	}
+	return field, piks
+}
+
 func _calculateMoves(time int) {
 	if Round == 1 {
 		fmt.Println("drop")
 		return
 	}
-	var goldenIndex int
-	allPositins, minDamadge := _getAllPossiblePositions()
 
-
-
-	/*
-		if minDamadge == 4{
-			//we have best fit
-		}
-	*/
-
-	//lowestY
-	lowestY := 1000
-	for i, pos := range allPositins {
-		if pos.Damadge == minDamadge && pos.MaxY < lowestY {
-			lowestY = pos.MaxY
-			goldenIndex = i
+	roofIsnear := false
+	for _, pick := range MyPlayer.Columns {
+		if Height-pick <= 5 {
+			roofIsnear = true
+			break
 		}
 	}
-	
+
+	//TODO: I should not behave as minimum damadge need to use best fit from before
+
+	//TODO: choose plasements clother to the wall
+
+	var goldenIndex int
+	allPositins, _ := _getAllPossiblePositions()
+	// perfect fit when damadge 4
+
+	if roofIsnear {
+		lowestY := 1000
+		for i, pos := range allPositins {
+			if pos.MaxY < lowestY {
+				lowestY = pos.MaxY
+				goldenIndex = i
+			}
+		}
+	} else {
+		score := 1000
+		for i, pos := range allPositins {
+			if pos.MaxY+pos.Damadge < score {
+				score = pos.MaxY + pos.Damadge
+				goldenIndex = i
+			}
+			//TODO: predict next move
+		}
+	}
+
+	//lowestY
+	/*lowestY := 1000
+	for i, pos := range allPositins {
+		if roofIsnear {
+			if pos.MaxY < lowestY {
+				lowestY = pos.MaxY
+				goldenIndex = i
+			}
+			if pos.MaxY == lowestY {
+
+			}
+		} else {
+			if pos.Damadge == minDamadge && pos.MaxY < lowestY {
+				goldenIndex = i
+				lowestY = pos.MaxY
+			}
+		}
+	}*/
+
 	//TODO absolute lowest when close to the roof or tool bildings
-	
+
 	//TODO look into the next piece
 
 	_printMoves(allPositins[goldenIndex])
