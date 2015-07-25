@@ -44,25 +44,22 @@ func Benchmark_getMoves(b *testing.B) {
 		_asignUpdates("game", "this_piece_position", "3,1")
 		_asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;"+strings.Join(row1, ",")+";"+strings.Join(row2, ",")+";"+strings.Join(row1, ","))
 
-		_getMoves(500)
+		_calculateMoves(500)
 	}
 
 }
 
-
 /*
 func Test_getMoves(t *testing.T) {
 	_setup()
-	
+
 	_asignUpdates("game", "this_piece_type", "J")
 	_asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,2,0,2,0,0,2,0,0;0,0,2,2,2,0,2,2,0,0;0,0,2,2,2,2,2,2,2,0;0,2,2,2,2,2,2,2,2,0;0,2,2,2,2,2,2,2,2,0;0,2,0,2,2,2,2,2,2,0;0,2,2,2,2,2,2,2,2,0;0,2,2,2,2,2,2,2,2,0;0,2,2,2,2,2,2,2,2,0;0,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,0,2,2,2,2;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3")
-	_getMoves(500)
+	_calculateMoves(500)
 		fmt.Println("should: ", "turnright,left,left,drop")
 		t.Fail()
 
 }
-*/
-
 
 
 //http://theaigames.com/competitions/ai-block-battle/games/55b270a535ec1d487cd5d5b5 round 38
@@ -79,7 +76,7 @@ func Test_chooseMinimumDamageJ0(t *testing.T) {
 	}
 }
 
-/*
+
 func Test_chooseMinimumDamageJ1(t *testing.T) {
 	_setup()
 	_asignUpdates("game", "this_piece_type", "J")
@@ -170,3 +167,115 @@ func Test_chooseMinimumDamageS2(t *testing.T) {
 		t.Fail()
 	}
 }*/
+
+func Test_getAllPossiblePositionsI(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "I")
+	posiblePositions := 17
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}
+
+func Test_getAllPossiblePositionsJ(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "J")
+	posiblePositions := 34
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}
+
+func Test_getAllPossiblePositionsL(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "L")
+	posiblePositions := 34
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}
+
+func Test_getAllPossiblePositionsO(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "O")
+	posiblePositions := 9
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}
+
+func Test_getAllPossiblePositionsS(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "S")
+	posiblePositions := 17
+	MyPlayer.Columns = []int{2, 0, 2, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}
+
+func Test_getAllPossiblePositionsT(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "T")
+	posiblePositions := 34
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}
+
+func Test_getAllPossiblePositionsZ(t *testing.T) {
+	_setup()
+	_asignUpdates("game", "this_piece_type", "Z")
+	posiblePositions := 17
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, minDamadge := _getAllPossiblePositions()
+	if len(result) != posiblePositions {
+		fmt.Println(posiblePositions, "!=", len(result))
+		t.Fail()
+	}
+	if minDamadge != 4 {
+		fmt.Println(minDamadge, "!=", 4)
+		t.Fail()
+	}
+}

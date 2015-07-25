@@ -4,185 +4,31 @@ import (
 //"strings"
 )
 
-func _fitsI(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if (_isRight(i, 1) && v+1 < c[i+1]) || (_isLeft(i, 1) && v+1 < c[i-1]) {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
+func _getAllPossiblePositions() ([]Position, int) {
+	var positions []Position
+	minDamadge := 1000
+	rotationMax := 1
+	switch CurrentPiece {
+	case "I", "Z", "S":
+		rotationMax = 2
+	case "J", "L", "T":
+		rotationMax = 4
+	}
+	columnsSum := _sum(MyPlayer.Columns)
+	for r := 0; r < rotationMax; r++ {
+		for i := 0; i < Width; i++ {
+			columsAfter, maxY := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
+			damage := _sum(columsAfter) - columnsSum
+			if damage > 0 {
+				p := Position{Rotation: r, X: i, MaxY: maxY, Damadge: damage, ColumnsAfter: columsAfter}
+				positions = append(positions, p)
+				if damage < minDamadge {
+					minDamadge = damage
+				}
+			}
 		}
 	}
-
-	for i, v := range c {
-		if _isRight(i, 3) && v == c[i+1] && v == c[i+2] && v == c[i+3] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if (_isRight(i, 1) && v < c[i+1]) || (_isLeft(i, 1) && v < c[i-1]) {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-	return pos
-}
-
-func _fitsJ(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if _isRight(i, 1) && v+2 == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2]+1 {
-			p := Position{Rotation: 2, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v == c[i+1] {
-			p := Position{Rotation: 3, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsL(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if _isRight(i, 1) && v == c[i+1]+2 {
-			p := Position{Rotation: 3, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 2) && v+1 == c[i+1] && v+1 == c[i+2] {
-			p := Position{Rotation: 2, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsO(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if (_isRight(i, 2) && v == c[i+1] && v < c[i+2]) || (_isLeft(i, 1) && v < c[i-1] && _isRight(i, 1) && v == c[i+1]) {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v == c[i+1] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsS(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1] && v+1 == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v == c[i+1]+1 {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsT(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1]+1 && v == c[i+2] {
-			p := Position{Rotation: 2, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1] && v == c[i+2] {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v+1 == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v == c[i+1]+1 {
-			p := Position{Rotation: 3, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
-}
-
-func _fitsZ(c []int) []Position {
-	var pos []Position
-	for i, v := range c {
-		if _isRight(i, 2) && v == c[i+1]+1 && v == c[i+2]+1 {
-			p := Position{Rotation: 0, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	for i, v := range c {
-		if _isRight(i, 1) && v+1 == c[i+1] {
-			p := Position{Rotation: 1, X: i}
-			pos = append(pos, p)
-		}
-	}
-
-	return pos
+	return positions, minDamadge
 }
 
 func _isRight(i, right int) bool {
@@ -443,4 +289,12 @@ func _getPick(i, v int) int {
 		}
 	}
 	return pick
+}
+
+func _sum(c []int) int {
+	sum := 0
+	for i := 0; i < len(c); i++ {
+		sum += c[i]
+	}
+	return sum
 }

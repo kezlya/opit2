@@ -13,6 +13,9 @@ type Player struct {
 }
 
 type Position struct {
-	Rotation int
-	X        int
+	Rotation     int
+	X            int
+	MaxY         int
+	Damadge      int
+	ColumnsAfter []int
 }

@@ -21,7 +21,7 @@ func main() {
 			_asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			time, _ := strconv.Atoi(parts[2])
-			_getMoves(time)
+			_calculateMoves(time)
 		}
 	}
 }
@@ -104,101 +104,36 @@ func _asignUpdates(who, action, value string) {
 	}
 }
 
-func _getMoves(time int) {
+func _calculateMoves(time int) {
 	if Round == 1 {
 		fmt.Println("drop")
 		return
 	}
+	var goldenIndex int
+	allPositins, minDamadge := _getAllPossiblePositions()
 
-	var positions []Position
-	switch CurrentPiece {
-	case "I":
-		positions = _fitsI(MyPlayer.Columns)
-	case "J":
-		positions = _fitsJ(MyPlayer.Columns)
-	case "L":
-		positions = _fitsL(MyPlayer.Columns)
-	case "O":
-		positions = _fitsO(MyPlayer.Columns)
-	case "S":
-		positions = _fitsS(MyPlayer.Columns)
-	case "T":
-		positions = _fitsT(MyPlayer.Columns)
-	case "Z":
-		positions = _fitsZ(MyPlayer.Columns)
-	}
 
-	if len(positions) == 0 {
 
-		finalPosition := _chooseMinimumDamage()
-		_printMoves(finalPosition)
-	} else {
-		finalPositionIndex := _chooseLowestPosition(positions)
-		_printMoves(positions[finalPositionIndex])
-	}
-
-}
-
-func _chooseLowestPosition(positions []Position) int {
-	if len(positions) > 1 {
-		cashX := positions[0].X
-		indexSmallestPosition := 0
-		for i := 1; i < len(positions); i++ {
-			if MyPlayer.Columns[cashX] > MyPlayer.Columns[positions[i].X] {
-				cashX = positions[i].X
-				indexSmallestPosition = i
-			}
+	/*
+		if minDamadge == 4{
+			//we have best fit
 		}
-		return indexSmallestPosition
-	}
-	return 0
-}
+	*/
 
-func _chooseMinimumDamage() Position {
-	p := Position{}
-	minDammage := 1000
-	tempY := 1000
-	rotationMax := 1
-
-	switch CurrentPiece {
-	case "I", "Z", "S":
-		rotationMax = 2
-	case "J", "L", "T":
-		rotationMax = 4
-	}
-	columnsSum := _sum(MyPlayer.Columns)
-	for r := 0; r < rotationMax; r++ {
-		for i := 0; i < Width; i++ {
-			columsAfter, maxY := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
-			columsAfterSum := _sum(columsAfter)
-			if columsAfterSum <= columnsSum {
-				break
-			}
-			damage := columsAfterSum - columnsSum
-			//fmt.Println("columsAfter: ",r,i,columsAfter,columsAfterSum,damage)
-			if damage < minDammage {
-				minDammage = damage
-				tempY = maxY
-				p.Rotation = r
-				p.X = i
-			}
-
-			if damage == minDammage && maxY < tempY {
-				tempY = maxY
-				p.X = i
-			}
+	//lowestY
+	lowestY := 1000
+	for i, pos := range allPositins {
+		if pos.Damadge == minDamadge && pos.MaxY < lowestY {
+			lowestY = pos.MaxY
+			goldenIndex = i
 		}
 	}
-	//fmt.Println("minDammage: ",minDammage)
-	return p
-}
+	
+	//TODO absolute lowest when close to the roof or tool bildings
+	
+	//TODO look into the next piece
 
-func _sum(c []int) int {
-	sum := 0
-	for i := 0; i < len(c); i++ {
-		sum += c[i]
-	}
-	return sum
+	_printMoves(allPositins[goldenIndex])
 }
 
 func _printMoves(pos Position) {
