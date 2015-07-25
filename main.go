@@ -133,14 +133,14 @@ func _calculateMoves(time int) {
 			savePlay = true
 		}
 	}
-	
-	
+
+	//TODO fix round 41 http://theaigames.com/competitions/ai-block-battle/games/55b403af35ec1d487cd5e8aa
+
 	//TODO fix round 51 http://theaigames.com/competitions/ai-block-battle/games/55b3ea7b35ec1d487cd5e77a
-	
+
 	//TODO fix round 76 http://theaigames.com/competitions/ai-block-battle/games/55b3eea335ec1d487cd5e7a5
-	
+
 	//TODO strandge round 32 http://theaigames.com/competitions/ai-block-battle/games/55b3f2831c687b544a2b9291
-	
 
 	//TODO: I should not behave as minimum damadge need to use best fit from before
 
@@ -156,7 +156,7 @@ func _calculateMoves(time int) {
 			if pos.MaxY < lowestY {
 				lowestY = pos.MaxY
 				goldenIndex = i
-				
+
 				if pos.Damadge < allPositins[goldenIndex].Damadge {
 					goldenIndex = i
 				}
