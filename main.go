@@ -136,7 +136,7 @@ func _calculateMoves(time int) {
 	//TODO: choose plasements clother to the wall
 
 	var goldenIndex int
-	allPositins, _ := _getAllPossiblePositions()
+	allPositins, bestScore := _getAllPossiblePositions()
 	// perfect fit when damadge 4
 
 	if roofIsnear {
@@ -147,15 +147,19 @@ func _calculateMoves(time int) {
 				goldenIndex = i
 			}
 		}
+		_printMoves(allPositins[goldenIndex])
 	} else {
-		score := 1000
-		for i, pos := range allPositins {
-			if pos.MaxY+pos.Damadge < score {
-				score = pos.MaxY + pos.Damadge
+		bestPositions := _getBestScorePositions(allPositins, bestScore)
+		tempDamadge := 1000
+		for i, pos := range bestPositions {
+			//check if it burns rows
+
+			if pos.Damadge < tempDamadge {
+				tempDamadge = pos.Damadge
 				goldenIndex = i
 			}
-			//TODO: predict next move
 		}
+		_printMoves(bestPositions[goldenIndex])
 	}
 
 	//lowestY
@@ -181,7 +185,17 @@ func _calculateMoves(time int) {
 
 	//TODO look into the next piece
 
-	_printMoves(allPositins[goldenIndex])
+}
+
+func _getBestScorePositions(positions []Position, bestScore int) []Position {
+	var result []Position
+	for _, pos := range positions {
+		if pos.Score == bestScore {
+			result = append(result, pos)
+		}
+		//TODO: predict next move
+	}
+	return result
 }
 
 func _printMoves(pos Position) {

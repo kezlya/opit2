@@ -183,13 +183,14 @@ func Test_getAllPossiblePositionsI(t *testing.T) {
 	_asignUpdates("game", "this_piece_type", "I")
 	posiblePositions := 17
 	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 8
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }
@@ -199,13 +200,14 @@ func Test_getAllPossiblePositionsJ(t *testing.T) {
 	_asignUpdates("game", "this_piece_type", "J")
 	posiblePositions := 34
 	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 8
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }
@@ -215,13 +217,14 @@ func Test_getAllPossiblePositionsL(t *testing.T) {
 	_asignUpdates("game", "this_piece_type", "L")
 	posiblePositions := 34
 	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 7
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }
@@ -231,13 +234,14 @@ func Test_getAllPossiblePositionsO(t *testing.T) {
 	_asignUpdates("game", "this_piece_type", "O")
 	posiblePositions := 9
 	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 9
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }
@@ -246,14 +250,15 @@ func Test_getAllPossiblePositionsS(t *testing.T) {
 	_setup()
 	_asignUpdates("game", "this_piece_type", "S")
 	posiblePositions := 17
-	MyPlayer.Columns = []int{2, 0, 2, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 9
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }
@@ -263,13 +268,14 @@ func Test_getAllPossiblePositionsT(t *testing.T) {
 	_asignUpdates("game", "this_piece_type", "T")
 	posiblePositions := 34
 	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 9
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }
@@ -279,13 +285,14 @@ func Test_getAllPossiblePositionsZ(t *testing.T) {
 	_asignUpdates("game", "this_piece_type", "Z")
 	posiblePositions := 17
 	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, minDamadge := _getAllPossiblePositions()
+	result, bestScore := _getAllPossiblePositions()
 	if len(result) != posiblePositions {
 		fmt.Println(posiblePositions, "!=", len(result))
 		t.Fail()
 	}
-	if minDamadge != 4 {
-		fmt.Println(minDamadge, "!=", 4)
+	expectedScore := 10
+	if bestScore != expectedScore {
+		fmt.Println(bestScore, "!=", expectedScore)
 		t.Fail()
 	}
 }

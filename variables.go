@@ -18,5 +18,6 @@ type Position struct {
 	X            int
 	MaxY         int
 	Damadge      int
+	Score        int
 	ColumnsAfter []int
 }

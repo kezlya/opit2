@@ -1,12 +1,12 @@
 package main
 
 import (
-//"strings"
+//"fmt"
 )
 
 func _getAllPossiblePositions() ([]Position, int) {
 	var positions []Position
-	minDamadge := 1000
+	bestScore := 1000
 	rotationMax := 1
 	switch CurrentPiece {
 	case "I", "Z", "S":
@@ -20,15 +20,21 @@ func _getAllPossiblePositions() ([]Position, int) {
 			columsAfter, maxY := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
 			damage := _sum(columsAfter) - columnsSum
 			if damage > 0 {
-				p := Position{Rotation: r, X: i, MaxY: maxY, Damadge: damage, ColumnsAfter: columsAfter}
+				p := Position{
+					Rotation:     r,
+					X:            i,
+					MaxY:         maxY,
+					Damadge:      damage,
+					Score:        maxY + damage,
+					ColumnsAfter: columsAfter}
 				positions = append(positions, p)
-				if damage < minDamadge {
-					minDamadge = damage
+				if maxY+damage < bestScore {
+					bestScore = maxY + damage
 				}
 			}
 		}
 	}
-	return positions, minDamadge
+	return positions, bestScore
 }
 
 func _isRight(i, right int) bool {
