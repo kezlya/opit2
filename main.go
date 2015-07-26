@@ -21,7 +21,11 @@ func main() {
 			_asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			time, _ := strconv.Atoi(parts[2])
-			_calculateMoves(time)
+			if Round == 1 {
+				fmt.Println("drop")
+				return
+			}
+			_printMoves(_calculateMoves(time))
 		}
 	}
 }
@@ -117,12 +121,7 @@ func _convertField(rawField string) ([][]bool, []int) {
 	return field, piks
 }
 
-func _calculateMoves(time int) {
-	if Round == 1 {
-		fmt.Println("drop")
-		return
-	}
-
+func _calculateMoves(time int) Position {
 	roofIsnear := false
 	savePlay := false
 	for _, pick := range MyPlayer.Columns {
@@ -143,8 +142,6 @@ func _calculateMoves(time int) {
 
 	//TODO fix round 76 http://theaigames.com/competitions/ai-block-battle/games/55b3eea335ec1d487cd5e7a5
 
-	//TODO strandge round 32 http://theaigames.com/competitions/ai-block-battle/games/55b3f2831c687b544a2b9291
-
 	//TODO: I should not behave as minimum damadge need to use best fit from before
 
 	//TODO: choose plasements clother to the wall
@@ -156,6 +153,7 @@ func _calculateMoves(time int) {
 	if roofIsnear {
 		lowestY := 1000
 		for i, pos := range allPositins {
+			//fmt.Println(pos.Rotation, pos.X,pos.Damadge,pos.MaxY,lowestY)
 			if pos.MaxY < lowestY {
 				lowestY = pos.MaxY
 				goldenIndex = i
@@ -163,9 +161,12 @@ func _calculateMoves(time int) {
 				if pos.Damadge < allPositins[goldenIndex].Damadge {
 					goldenIndex = i
 				}
+				//fmt.Println("************")
+				//fmt.Println(pos.Rotation, pos.X,pos.Damadge,pos.MaxY,lowestY)
+				//fmt.Println(pos.ColumnsAfter)
 			}
 		}
-		_printMoves(allPositins[goldenIndex])
+		return allPositins[goldenIndex]
 	} else if savePlay {
 		//old code here
 		noDamadgePositions := _getNoDamadgePositions(allPositins)
@@ -177,7 +178,7 @@ func _calculateMoves(time int) {
 					goldenIndex = i
 				}
 			}
-			_printMoves(noDamadgePositions[goldenIndex])
+			return noDamadgePositions[goldenIndex]
 		} else {
 			//redundand code below
 			bestPositions := _getBestScorePositions(allPositins, bestScore)
@@ -190,7 +191,7 @@ func _calculateMoves(time int) {
 					goldenIndex = i
 				}
 			}
-			_printMoves(bestPositions[goldenIndex])
+			return bestPositions[goldenIndex]
 			//////////end redundand code
 
 		}
@@ -206,7 +207,7 @@ func _calculateMoves(time int) {
 				goldenIndex = i
 			}
 		}
-		_printMoves(bestPositions[goldenIndex])
+		return bestPositions[goldenIndex]
 	}
 
 	//lowestY

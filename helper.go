@@ -157,7 +157,7 @@ func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
 				} else {
 					a[i] = c[i+1] + 3
 					a[i+1] = c[i+1] + 3
-					y = c[i] + 3
+					y = c[i+1] + 3
 				}
 			}
 		}
