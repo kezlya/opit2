@@ -37,6 +37,141 @@ func _getAllPossiblePositions() ([]Position, int) {
 	return positions, bestScore
 }
 
+func _calculateMoves(time int) Position {
+	roofIsnear := false
+	savePlay := false
+	for _, pick := range MyPlayer.Columns {
+		if Height-pick <= 5 {
+			//fmt.Println(Height,pick)
+			roofIsnear = true
+		}
+		if Height-pick >= 10 {
+			savePlay = true
+		}
+	}
+
+	//TODO very bad game http://theaigames.com/competitions/ai-block-battle/games/55b40c2e35ec1d487cd5e908
+
+	//TODO fix round 41 http://theaigames.com/competitions/ai-block-battle/games/55b403af35ec1d487cd5e8aa
+
+	//TODO fix round 51 http://theaigames.com/competitions/ai-block-battle/games/55b3ea7b35ec1d487cd5e77a
+
+	//TODO fix round 76 http://theaigames.com/competitions/ai-block-battle/games/55b3eea335ec1d487cd5e7a5
+
+	//TODO: I should not behave as minimum damadge need to use best fit from before
+
+	//TODO: choose plasements clother to the wall
+
+	var goldenIndex int
+	allPositins, bestScore := _getAllPossiblePositions()
+	// perfect fit when damadge 4
+
+	if roofIsnear {
+		lowestY := 1000
+		for i, pos := range allPositins {
+			//fmt.Println(pos.Rotation, pos.X,pos.Damadge,pos.MaxY,lowestY)
+			if pos.MaxY < lowestY {
+				lowestY = pos.MaxY
+				goldenIndex = i
+
+				if pos.Damadge < allPositins[goldenIndex].Damadge {
+					goldenIndex = i
+				}
+				//fmt.Println("************")
+				//fmt.Println(pos.Rotation, pos.X,pos.Damadge,pos.MaxY,lowestY)
+				//fmt.Println(pos.ColumnsAfter)
+				//fmt.Println(_isHole(pos.ColumnsAfter))
+			}
+		}
+		return allPositins[goldenIndex]
+	}
+
+	if savePlay {
+		//old code here
+		noDamadgePositions := _getNoDamadgePositions(allPositins)
+		if len(noDamadgePositions) > 0 {
+			tempMaxY := 1000
+			for i, pos := range noDamadgePositions {
+				
+				if (!_isHole(pos.ColumnsAfter)) && pos.MaxY < tempMaxY {
+					tempMaxY = pos.MaxY
+					goldenIndex = i
+					//fmt.Println(_isHole(pos.ColumnsAfter))
+				}
+			}
+			return noDamadgePositions[goldenIndex]
+		}
+	}
+
+	bestPositions := _getBestScorePositions(allPositins, bestScore)
+	tempDamadge := 1000
+	for i, pos := range bestPositions {
+		//check if it burns rows
+
+		if (!_isHole(pos.ColumnsAfter)) && pos.Damadge < tempDamadge {
+			tempDamadge = pos.Damadge
+			goldenIndex = i
+			//fmt.Println(_isHole(pos.ColumnsAfter))
+		}
+	}
+	return bestPositions[goldenIndex]
+
+	//lowestY
+	/*lowestY := 1000
+	for i, pos := range allPositins {
+		if roofIsnear {
+			if pos.MaxY < lowestY {
+				lowestY = pos.MaxY
+				goldenIndex = i
+			}
+			if pos.MaxY == lowestY {
+
+			}
+		} else {
+			if pos.Damadge == minDamadge && pos.MaxY < lowestY {
+				goldenIndex = i
+				lowestY = pos.MaxY
+			}
+		}
+	}*/
+
+	//TODO absolute lowest when close to the roof or tool bildings
+
+	//TODO look into the next piece
+
+}
+
+func _getBestScorePositions(positions []Position, bestScore int) []Position {
+	var result []Position
+	for _, pos := range positions {
+		if pos.Score == bestScore {
+			result = append(result, pos)
+		}
+		//TODO: predict next move
+	}
+	return result
+}
+
+func _getNoDamadgePositions(positions []Position) []Position {
+	var result []Position
+	for _, pos := range positions {
+		if pos.Damadge == 4 {
+			result = append(result, pos)
+		}
+		//TODO: predict next move
+	}
+	return result
+}
+
+func _isHole(cols []int) bool {
+	for i,c := range cols {
+		if _isRight(i,1) && (c-cols[i+1] < -2 || c - cols[i+1] > 2) && CurrentPiece != "I" && NextPiece !="I" {
+			return true
+			}
+	}
+	return false
+}
+
 func _isRight(i, right int) bool {
 	if i+right < Width {
 		return true
