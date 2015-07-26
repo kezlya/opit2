@@ -166,7 +166,9 @@ func _calculateMoves(time int) Position {
 			}
 		}
 		return allPositins[goldenIndex]
-	} else if savePlay {
+	}
+
+	if savePlay {
 		//old code here
 		noDamadgePositions := _getNoDamadgePositions(allPositins)
 		if len(noDamadgePositions) > 0 {
@@ -178,24 +180,9 @@ func _calculateMoves(time int) Position {
 				}
 			}
 			return noDamadgePositions[goldenIndex]
-		} else {
-			//redundand code below
-			bestPositions := _getBestScorePositions(allPositins, bestScore)
-			tempDamadge := 1000
-			for i, pos := range bestPositions {
-				//check if it burns rows
-
-				if pos.Damadge < tempDamadge {
-					tempDamadge = pos.Damadge
-					goldenIndex = i
-				}
-			}
-			return bestPositions[goldenIndex]
-			//////////end redundand code
-
 		}
-
-	} else {
+		
+		//redundand code below
 		bestPositions := _getBestScorePositions(allPositins, bestScore)
 		tempDamadge := 1000
 		for i, pos := range bestPositions {
@@ -207,7 +194,21 @@ func _calculateMoves(time int) Position {
 			}
 		}
 		return bestPositions[goldenIndex]
+		//////////end redundand code
+
 	}
+
+	bestPositions := _getBestScorePositions(allPositins, bestScore)
+	tempDamadge := 1000
+	for i, pos := range bestPositions {
+		//check if it burns rows
+
+		if pos.Damadge < tempDamadge {
+			tempDamadge = pos.Damadge
+			goldenIndex = i
+		}
+	}
+	return bestPositions[goldenIndex]
 
 	//lowestY
 	/*lowestY := 1000
