@@ -49,7 +49,6 @@ func Benchmark_getMoves(b *testing.B) {
 	}
 }
 
-
 func Test_getMoves(t *testing.T) {
 	_setup() //round 32 http://theaigames.com/competitions/ai-block-battle/games/55b3f2831c687b544a2b9291
 	_asignUpdates("game", "this_piece_type", "L")
@@ -60,7 +59,6 @@ func Test_getMoves(t *testing.T) {
 		t.Fail()
 	}
 }
-
 
 func Test_getAllPossiblePositionsI(t *testing.T) {
 	_setup()

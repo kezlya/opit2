@@ -23,9 +23,9 @@ func main() {
 			time, _ := strconv.Atoi(parts[2])
 			if Round == 1 {
 				fmt.Println("drop")
-				return
+			} else {
+				_printMoves(_calculateMoves(time))
 			}
-			_printMoves(_calculateMoves(time))
 		}
 	}
 }
@@ -134,7 +134,6 @@ func _calculateMoves(time int) Position {
 	}
 
 	//TODO very bad game http://theaigames.com/competitions/ai-block-battle/games/55b40c2e35ec1d487cd5e908
-
 
 	//TODO fix round 41 http://theaigames.com/competitions/ai-block-battle/games/55b403af35ec1d487cd5e8aa
 
