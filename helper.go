@@ -422,6 +422,19 @@ func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
 	return a, y
 }
 
+func _fieldAfter(f [][]bool,i,r int,piece string)([][]bool,int){
+	a := make([][]bool, len(f))
+	for i,row := range f {
+		a[i] = make([]bool,len(row))
+		copy(a[i], row[:])
+	}
+
+	a[1][0] = true
+	a[1][1] = true
+
+	return a	, 1
+}
+
 func _getPick(i, v int) int {
 	pick := MyPlayer.Columns[i]
 	for n := 1; n <= v; n++ {

@@ -158,3 +158,17 @@ func Test_isHoleNo(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func Test_fieldAfter(t *testing.T){
+	Width = 10
+	arange := [][]bool {{false,false,false,false},{false,false,false,true}}
+	arange[0][0] = true
+	arange[0][1] = true
+	
+	fa,burned := _fieldAfter(arange,1,1,"I")
+	
+	fmt.Println(arange)
+	fmt.Println(fa)
+	fmt.Println(burned)
+	
+}
