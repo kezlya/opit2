@@ -1,6 +1,6 @@
 package main
 
-var Timebank, TimePerMove, Width, OriginalHeight, Height, Round, CurrentPieceX, CurrentPieceY int
+var Timebank, TimePerMove, Width, OriginalHeight, Height, Pick, Round, CurrentPieceX, CurrentPieceY int
 var Players [2]Player
 var MyPlayer *Player
 var CurrentPiece, NextPiece string
