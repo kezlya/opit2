@@ -92,7 +92,7 @@ func _calculateMoves(time int) Position {
 		if len(noDamadgePositions) > 0 {
 			tempMaxY := 1000
 			for i, pos := range noDamadgePositions {
-				
+
 				if (!_isHole(pos.ColumnsAfter)) && pos.MaxY < tempMaxY {
 					tempMaxY = pos.MaxY
 					goldenIndex = i
@@ -164,10 +164,10 @@ func _getNoDamadgePositions(positions []Position) []Position {
 }
 
 func _isHole(cols []int) bool {
-	for i,c := range cols {
-		if _isRight(i,1) && (c-cols[i+1] < -2 || c - cols[i+1] > 2) && CurrentPiece != "I" && NextPiece !="I" {
+	for i, c := range cols {
+		if _isRight(i, 1) && (c-cols[i+1] < -2 || c-cols[i+1] > 2) && CurrentPiece != "I" && NextPiece != "I" {
 			return true
-			}
+		}
 	}
 	return false
 }
@@ -429,10 +429,10 @@ func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
 	return a, y
 }
 
-func _fieldAfter(f [][]bool,i,r int,piece string)([][]bool,int){
+func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 	a := make([][]bool, len(f))
-	for i,row := range f {
-		a[i] = make([]bool,len(row))
+	for i, row := range f {
+		a[i] = make([]bool, len(row))
 		copy(a[i], row[:])
 	}
 
@@ -442,7 +442,7 @@ func _fieldAfter(f [][]bool,i,r int,piece string)([][]bool,int){
 		case 0:
 			if _isRight(i, 3) && _isUp() {
 				pick := _getPick(i, 3)
-				
+
 				a[pick][i] = true
 				a[pick][i+1] = true
 				a[pick][i+2] = true

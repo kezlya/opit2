@@ -159,16 +159,40 @@ func Test_isHoleNo(t *testing.T) {
 	}
 }
 
-func Test_fieldAfter(t *testing.T){
+func Test_fieldAfter(t *testing.T) {
 	Width = 10
-	arange := [][]bool {{false,false,false,false},{false,false,false,true}}
+	arange := [][]bool{{false, false, false, false}, {false, false, false, true}}
 	arange[0][0] = true
 	arange[0][1] = true
-	
-	fa,burned := _fieldAfter(arange,1,1,"I")
-	
+
+	fa, burned := _fieldAfter(arange, 1, 1, "I")
+
 	fmt.Println(arange)
 	fmt.Println(fa)
 	fmt.Println(burned)
-	
+
+}
+
+func Test_hh(t *testing.T) {
+	arange = "0,0,0,1,1,1,0,0,0,0;" +
+		"0,0,0,0,0,0,0,0,0,0;" +
+		"0,0,0,0,0,0,0,0,0,0;" +
+		"0,0,0,0,0,0,2,0,0,0;" +
+		"0,0,0,0,0,0,2,0,0,0;" +
+		"0,0,0,0,0,0,2,2,0,0;" +
+		"0,0,2,2,0,0,2,2,0,0;" +
+		"0,2,2,2,0,0,2,2,0,2;" +
+		"2,2,2,2,2,0,2,2,2,2;" +
+		"2,2,0,2,2,2,2,2,2,2;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"2,2,2,2,2,2,2,2,2,0;" +
+		"3,3,3,3,3,3,3,3,3,3;" +
+		"3,3,3,3,3,3,3,3,3,3"
+
 }

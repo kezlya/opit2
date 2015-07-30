@@ -8,18 +8,19 @@ import (
 	"testing"
 	"time"
 )
+
 var pieces = []string{"I", "J", "L", "O", "S", "T", "Z"}
 
 func Benchmark_Score(b *testing.B) {
-	// try to get everadge score to hight 
-	// try to get rounds to low 
+	// try to get everadge score to hight
+	// try to get rounds to low
 	// game lost count vs games won count
 
 	//var rounds []int
 	//var scores []int
 	//var	victories []bool
-	
-	for n := 0; n < b.N; n++ {	
+
+	for n := 0; n < b.N; n++ {
 		_asignSettings("field_width", "10")
 		_asignSettings("field_height", "20")
 		_asignSettings("player_names", "player1,player2")
@@ -29,26 +30,26 @@ func Benchmark_Score(b *testing.B) {
 		//rounds = append(rounds,round)
 		//scores = append(scores,score)
 		//victories = append(victories,isWinner)
-		
-		fmt.Println(Round,MyPlayer.Points)
+
+		fmt.Println(Round, MyPlayer.Points)
 	}
 }
 
-func playGame(){
+func playGame() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	MyPlayer.Points = 0
 
 	Round = 0
-	
-	fmt.Println(Height,Width)
 
-	for Height>17 && Pick <= Height {
-		
+	fmt.Println(Height, Width)
+
+	for Height > 17 && Pick <= Height {
+
 		Round++
 
 		Height = rand.Intn(50)
 		Pick = rand.Intn(20)
-		
+
 		MyPlayer.Points++
 	}
 }
