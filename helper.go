@@ -431,11 +431,11 @@ func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
 }
 
 func _getPicks(f [][]bool) []int {
-	result := make([]int,len(f[0]))
-	for i,row := range f{
-		for j,col := range row{			
-			if( i+1 > result[j] && col==true){
-				result[j] = i+1
+	result := make([]int, len(f[0]))
+	for i, row := range f {
+		for j, col := range row {
+			if i+1 > result[j] && col == true {
+				result[j] = i + 1
 			}
 		}
 	}
@@ -448,7 +448,7 @@ func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 		a[i] = make([]bool, len(row))
 		copy(a[i], row[:])
 	}
-	y:=99
+	y := 99
 
 	switch piece {
 	case "I":
@@ -456,232 +456,244 @@ func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 		case 0:
 			if _isRight(i, 3) {
 				pick := _getPick(i, 3)
-				a[pick][i] = true
-				a[pick][i+1] = true
-				a[pick][i+2] = true
-				a[pick][i+3] = true
+				if _isUp(pick, 1) {
+					a[pick][i] = true
+					a[pick][i+1] = true
+					a[pick][i+2] = true
+					a[pick][i+3] = true
+				}
 			}
 		case 1:
-			pick:= MyPlayer.Columns[i]
-			if _isUp(pick,4) {
+			pick := MyPlayer.Columns[i]
+			if _isUp(pick, 4) {
 				a[pick][i] = true
 				a[pick+1][i] = true
 				a[pick+2][i] = true
 				a[pick+3][i] = true
-			}		
+			}
 		}
-/*	case "J":
+	case "J":
 		switch r {
 		case 0:
 			if _isRight(i, 2) {
 				pick := _getPick(i, 2)
-				a[i] = pick + 2
-				a[i+1] = pick + 1
-				a[i+2] = pick + 1
-				y = pick + 2
+				if _isUp(pick, 2) {
+					a[pick][i] = true
+					a[pick+1][i] = true
+					a[pick][i+1] = true
+					a[pick][i+2] = true
+				}
 			}
 		case 1:
 			if _isRight(i, 1) {
-				if c[i+1] >= c[i]+2 {
-					a[i] = c[i+1] + 1
-					a[i+1] = c[i+1] + 1
-					y = c[i+1] + 1
-				} else {
-					a[i] = c[i] + 3
-					a[i+1] = c[i] + 3
-					y = c[i] + 3
+				l := MyPlayer.Columns[i]
+				r := MyPlayer.Columns[i+1]
+				if r >= l+2 && _isUp(r, 1) {
+					a[r][i] = true
+					a[r][i+1] = true
+					a[r-1][i] = true
+					a[r-2][i] = true
+				} else if _isUp(l, 3) {
+					a[l][i] = true
+					a[l+1][i] = true
+					a[l+2][i] = true
+					a[l+2][i+1] = true
 				}
 			}
 		case 2:
 			if _isRight(i, 2) {
 				pick := _getPick(i, 2)
-				if pick == c[i+2] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
+				r := MyPlayer.Columns[i+2]
+				if pick == r && _isUp(r, 2) {
+					a[pick+1][i] = true
+					a[pick+1][i+1] = true
+					a[pick+1][i+2] = true
+					a[pick][i+2] = true
+				} else if _isUp(r, 1) {
+					a[pick][i] = true
+					a[pick][i+1] = true
+					a[pick][i+2] = true
+					a[pick-1][i+2] = true
 				}
 			}
 		case 3:
 			if _isRight(i, 1) {
 				pick := _getPick(i, 1)
-				a[i] = pick + 1
-				a[i+1] = pick + 3
-				y = pick + 3
-			}
-		}
-/*	case "L":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				a[i] = pick + 1
-				a[i+1] = pick + 1
-				a[i+2] = pick + 2
-				y = pick + 2
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				a[i] = pick + 3
-				a[i+1] = pick + 1
-				y = pick + 3
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				if c[i] >= c[i+1]+2 {
-					a[i] = c[i] + 1
-					a[i+1] = c[i] + 1
-					y = c[i] + 1
-				} else {
-					a[i] = c[i+1] + 3
-					a[i+1] = c[i+1] + 3
-					y = c[i+1] + 3
+				if _isUp(pick, 3) {
+					a[pick][i] = true
+					a[pick][i+1] = true
+					a[pick+1][i+1] = true
+					a[pick+2][i+1] = true
 				}
 			}
 		}
-	case "O":
-		if _isRight(i, 1) {
-			pick := _getPick(i, 1)
-			a[i] = pick + 2
-			a[i+1] = pick + 2
-			y = pick + 2
-		}
-	case "S":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i] || pick == c[i+1] {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
+		/*	case "L":
+				switch r {
+				case 0:
+					if _isRight(i, 2) {
+						pick := _getPick(i, 2)
+						a[i] = pick + 1
+						a[i+1] = pick + 1
+						a[i+2] = pick + 2
+						y = pick + 2
+					}
+				case 1:
+					if _isRight(i, 1) {
+						pick := _getPick(i, 1)
+						a[i] = pick + 3
+						a[i+1] = pick + 1
+						y = pick + 3
+					}
+				case 2:
+					if _isRight(i, 2) {
+						pick := _getPick(i, 2)
+						if pick == c[i] {
+							a[i] = pick + 2
+							a[i+1] = pick + 2
+							a[i+2] = pick + 2
+							y = pick + 2
+						} else {
+							a[i] = pick + 1
+							a[i+1] = pick + 1
+							a[i+2] = pick + 1
+							y = pick + 1
+						}
+					}
+				case 3:
+					if _isRight(i, 1) {
+						if c[i] >= c[i+1]+2 {
+							a[i] = c[i] + 1
+							a[i+1] = c[i] + 1
+							y = c[i] + 1
+						} else {
+							a[i] = c[i+1] + 3
+							a[i+1] = c[i+1] + 3
+							y = c[i+1] + 3
+						}
+					}
 				}
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i+1] {
-					a[i] = pick + 3
-					a[i+1] = pick + 2
-					y = pick + 3
-				} else {
-					a[i] = pick + 2
-					a[i+1] = pick + 1
-					y = pick + 2
-				}
-			}
-		}
-	case "T":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				a[i] = pick + 1
-				a[i+1] = pick + 2
-				a[i+2] = pick + 1
-				y = pick + 2
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i] {
-					a[i] = pick + 3
-					a[i+1] = pick + 2
-					y = pick + 3
-				} else {
-					a[i] = pick + 2
-					a[i+1] = pick + 1
-					y = pick + 2
-				}
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i+1] {
+			case "O":
+				if _isRight(i, 1) {
+					pick := _getPick(i, 1)
 					a[i] = pick + 2
 					a[i+1] = pick + 2
-					a[i+2] = pick + 2
 					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
 				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i+1] {
-					a[i] = pick + 2
-					a[i+1] = pick + 3
-					y = pick + 3
+			case "S":
+				switch r {
+				case 0:
+					if _isRight(i, 2) {
+						pick := _getPick(i, 2)
+						if pick == c[i] || pick == c[i+1] {
+							a[i] = pick + 1
+							a[i+1] = pick + 2
+							a[i+2] = pick + 2
+							y = pick + 2
+						} else {
+							a[i] = pick
+							a[i+1] = pick + 1
+							a[i+2] = pick + 1
+							y = pick + 1
+						}
+					}
+				case 1:
+					if _isRight(i, 1) {
+						pick := _getPick(i, 1)
+						if pick == c[i+1] {
+							a[i] = pick + 3
+							a[i+1] = pick + 2
+							y = pick + 3
+						} else {
+							a[i] = pick + 2
+							a[i+1] = pick + 1
+							y = pick + 2
+						}
+					}
+				}
+			case "T":
+				switch r {
+				case 0:
+					if _isRight(i, 2) {
+						pick := _getPick(i, 2)
+						a[i] = pick + 1
+						a[i+1] = pick + 2
+						a[i+2] = pick + 1
+						y = pick + 2
+					}
+				case 1:
+					if _isRight(i, 1) {
+						pick := _getPick(i, 1)
+						if pick == c[i] {
+							a[i] = pick + 3
+							a[i+1] = pick + 2
+							y = pick + 3
+						} else {
+							a[i] = pick + 2
+							a[i+1] = pick + 1
+							y = pick + 2
+						}
+					}
+				case 2:
+					if _isRight(i, 2) {
+						pick := _getPick(i, 2)
+						if pick == c[i+1] {
+							a[i] = pick + 2
+							a[i+1] = pick + 2
+							a[i+2] = pick + 2
+							y = pick + 2
+						} else {
+							a[i] = pick + 1
+							a[i+1] = pick + 1
+							a[i+2] = pick + 1
+							y = pick + 1
+						}
+					}
+				case 3:
+					if _isRight(i, 1) {
+						pick := _getPick(i, 1)
+						if pick == c[i+1] {
+							a[i] = pick + 2
+							a[i+1] = pick + 3
+							y = pick + 3
 
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					y = pick + 2
+						} else {
+							a[i] = pick + 1
+							a[i+1] = pick + 2
+							y = pick + 2
+						}
+					}
 				}
-			}
-		}
-	case "Z":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i+1] || pick == c[i+2] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 1
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick
-					y = pick + 1
-				}
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i] {
-					a[i] = pick + 2
-					a[i+1] = pick + 3
-					y = pick + 3
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					y = pick + 2
-				}
-			}
-		}*/
+			case "Z":
+				switch r {
+				case 0:
+					if _isRight(i, 2) {
+						pick := _getPick(i, 2)
+						if pick == c[i+1] || pick == c[i+2] {
+							a[i] = pick + 2
+							a[i+1] = pick + 2
+							a[i+2] = pick + 1
+							y = pick + 2
+						} else {
+							a[i] = pick + 1
+							a[i+1] = pick + 1
+							a[i+2] = pick
+							y = pick + 1
+						}
+					}
+				case 1:
+					if _isRight(i, 1) {
+						pick := _getPick(i, 1)
+						if pick == c[i] {
+							a[i] = pick + 2
+							a[i+1] = pick + 3
+							y = pick + 3
+						} else {
+							a[i] = pick + 1
+							a[i+1] = pick + 2
+							y = pick + 2
+						}
+					}
+				}*/
 	}
 	return a, y
 }
