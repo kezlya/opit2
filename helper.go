@@ -180,7 +180,8 @@ func _isRight(i, right int) bool {
 }
 
 func _isUp(i, up int) bool {
-	if i+up < Height {
+	//fmt.Println(i+up,Height)
+	if i+up <= Height {
 		return true
 	}
 	return false
@@ -429,32 +430,47 @@ func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
 	return a, y
 }
 
+func _getPicks(f [][]bool) []int {
+	result := make([]int,len(f[0]))
+	for i,row := range f{
+		for j,col := range row{			
+			if( i+1 > result[j] && col==true){
+				result[j] = i+1
+			}
+		}
+	}
+	return result
+}
+
 func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 	a := make([][]bool, len(f))
 	for i, row := range f {
 		a[i] = make([]bool, len(row))
 		copy(a[i], row[:])
 	}
+	y:=99
 
 	switch piece {
 	case "I":
 		switch r {
 		case 0:
-			if _isRight(i, 3) && _isUp() {
+			if _isRight(i, 3) {
 				pick := _getPick(i, 3)
-
 				a[pick][i] = true
 				a[pick][i+1] = true
 				a[pick][i+2] = true
 				a[pick][i+3] = true
 			}
 		case 1:
-			a[pick][i] = true
-			a[pick+1][i] = true
-			a[pick+2][i] = true
-			a[pick+3][i] = true
+			pick:= MyPlayer.Columns[i]
+			if _isUp(pick,4) {
+				a[pick][i] = true
+				a[pick+1][i] = true
+				a[pick+2][i] = true
+				a[pick+3][i] = true
+			}		
 		}
-	case "J":
+/*	case "J":
 		switch r {
 		case 0:
 			if _isRight(i, 2) {
@@ -499,7 +515,7 @@ func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 				y = pick + 3
 			}
 		}
-	case "L":
+/*	case "L":
 		switch r {
 		case 0:
 			if _isRight(i, 2) {
@@ -665,7 +681,7 @@ func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 					y = pick + 2
 				}
 			}
-		}
+		}*/
 	}
 	return a, y
 }

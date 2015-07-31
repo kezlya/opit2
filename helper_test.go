@@ -24,6 +24,21 @@ func Test_getMoves(t *testing.T) {
 	}
 }
 
+func Test_convertField(t *testing.T){
+	_setup()
+	cleanInput := "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,2,0,0;0,0,2,2,0,0,2,2,0,0;0,2,2,2,0,0,2,2,0,2;2,2,2,2,2,0,2,2,2,2;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0"
+	expect := [][]bool {{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, true, true, true, true, true, true, true, false},{true, true, false, true, true, true, true, true, true, true},{true, true, true, true, true, false, true, true, true, true},{false, true, true, true, false, false, true, true, false, true},{false, false, true, true, false, false, true, true, false, false},{false, false, false, false, false, false, true, true, false, false},{false, false, false, false, false, false, true, false, false, false},{false, false, false, false, false, false, true, false, false, false},{false, false, false, false, false, false, false, false, false, false},{false, false, false, false, false, false, false, false, false, false},{false, false, false, false, false, false, false, false, false, false}}
+	result, _ := _convertField(cleanInput)
+	
+	if !_eq2(expect,result) {
+		t.Fail()
+		y:= len(expect)-1
+		for i := range expect {
+			fmt.Println(expect[y-i],result[y-i])
+		}
+	}
+}
+
 func Test_getAllPossiblePositionsI(t *testing.T) {
 	_setup()
 	_asignUpdates("game", "this_piece_type", "I")
@@ -159,40 +174,147 @@ func Test_isHoleNo(t *testing.T) {
 	}
 }
 
-func Test_fieldAfter(t *testing.T) {
-	Width = 10
-	arange := [][]bool{{false, false, false, false}, {false, false, false, true}}
-	arange[0][0] = true
-	arange[0][1] = true
-
-	fa, burned := _fieldAfter(arange, 1, 1, "I")
-
-	fmt.Println(arange)
-	fmt.Println(fa)
-	fmt.Println(burned)
-
+func Test_getPicks(t *testing.T){
+	arrange := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	expect := []int{12,13,14,14,14,17,14,14,13,14}
+	
+	result := _getPicks(arrange)
+	
+	if !_eq1(expect,result) {
+		fmt.Println(result)
+		fmt.Println(expect)
+		t.Fail()
+	}
 }
 
-func Test_hh(t *testing.T) {
-	arange = "0,0,0,1,1,1,0,0,0,0;" +
-		"0,0,0,0,0,0,0,0,0,0;" +
-		"0,0,0,0,0,0,0,0,0,0;" +
-		"0,0,0,0,0,0,2,0,0,0;" +
-		"0,0,0,0,0,0,2,0,0,0;" +
-		"0,0,0,0,0,0,2,2,0,0;" +
-		"0,0,2,2,0,0,2,2,0,0;" +
-		"0,2,2,2,0,0,2,2,0,2;" +
-		"2,2,2,2,2,0,2,2,2,2;" +
-		"2,2,0,2,2,2,2,2,2,2;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"2,2,2,2,2,2,2,2,2,0;" +
-		"3,3,3,3,3,3,3,3,3,3;" +
-		"3,3,3,3,3,3,3,3,3,3"
+func Test_I(t *testing.T) {
+	arange := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer.Columns = _getPicks(arange)
+	Height = len(arange)
+	piece := "I"
+	rotation := 0
+	x := 4
+	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, true, true, true, true, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	
+	result,_ := _fieldAfter(arange, x, rotation, piece)
 
+	if !_eq2(expect,result) {
+		t.Fail()
+		y:= len(expect)-1
+		for i := range expect {
+			fmt.Println(expect[y-i],result[y-i])
+		}
+	}
+}
+
+func Test_I2(t *testing.T) {
+	arange := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer.Columns = _getPicks(arange)
+	Height = len(arange)
+	piece := "I"
+	rotation := 0
+	x := 2
+	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, true, true, true, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+		
+	result,_ := _fieldAfter(arange, x, rotation, piece)
+
+	if !_eq2(expect,result) {
+		t.Fail()
+		y:= len(expect)-1
+		for i := range expect {
+			fmt.Println(expect[y-i],result[y-i])
+		}
+	}
+}
+
+func Test_I3(t *testing.T) {
+	arange := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer.Columns = _getPicks(arange)
+	Height = len(arange)
+	piece := "I"
+	rotation := 1
+	x := 6
+	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}}
+				
+	result,_ := _fieldAfter(arange, x, rotation, piece)
+
+	if !_eq2(expect,result) {
+		t.Fail()
+		y:= len(expect)-1
+		for i := range expect {
+			fmt.Println(expect[y-i],result[y-i])
+		}
+	}
+}
+
+func Test_I_FailTall(t *testing.T) {
+	arange := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer.Columns = _getPicks(arange)
+	Height = len(arange)
+	piece := "I"
+	rotation := 1
+	x := 6
+	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+				
+	result,_ := _fieldAfter(arange, x, rotation, piece)
+
+	if !_eq2(expect,result) {
+		t.Fail()
+		y:= len(expect)-1
+		for i := range expect {
+			fmt.Println(expect[y-i],result[y-i])
+		}
+	}
+}
+
+/*
+func Test_(t *testing.T) {
+	arange := 
+	MyPlayer.Columns = _getPicks(arange)
+	Height = len(arange)
+	piece := ""
+	rotation := 
+	x := 
+	expect := 
+	
+	result,_ := _fieldAfter(arange, x, rotation, piece)
+
+	if !_eq2(expect,result) {
+		t.Fail()
+		y:= len(expect)-1
+		for i := range expect {
+			fmt.Println(expect[y-i],result[y-i])
+		}
+	}
+}
+*/
+
+
+func _eq2(a, b [][]bool) bool {
+    if len(a) != len(b) {
+        return false
+    }
+    for i := range a {
+        if len(a[i]) != len(b[i]) {
+            return false
+        }
+		for j :=range a[i] {
+			if a[i][j] != b[i][j]{
+				return false
+			}
+		}		
+    }
+    return true
+}
+
+func _eq1(a, b []int) bool {
+    if len(a) != len(b) {
+        return false
+    }
+    for i := range a {
+		if a[i] != b[i] {
+			return false
+		}	
+    }
+    return true
 }

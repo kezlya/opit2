@@ -116,7 +116,7 @@ func _convertField(rawField string) ([][]bool, []int) {
 				colums[columIndex] = false
 			}
 		}
-		field[rowIndex] = colums
+		field[y-1] = colums
 	}
 	return field, piks
 }
