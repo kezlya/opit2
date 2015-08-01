@@ -582,48 +582,53 @@ func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 				}
 			}
 		}
-		case "O":
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if _isUp(pick, 2) {
+	case "O":
+		if _isRight(i, 1) {
+			pick := _getPick(i, 1)
+			if _isUp(pick, 2) {
+				a[pick][i] = true
+				a[pick+1][i] = true
+				a[pick][i+1] = true
+				a[pick+1][i+1] = true
+			}
+		}
+	case "S":
+		switch r {
+		case 0:
+			if _isRight(i, 2) {
+				pick := _getPick(i, 2)
+				l := MyPlayer.Columns[i]
+				l1 := MyPlayer.Columns[i+1]
+				if (pick == l || pick == l1) && _isUp(pick, 2) {
 					a[pick][i] = true
-					a[pick+1][i] = true
 					a[pick][i+1] = true
 					a[pick+1][i+1] = true
+					a[pick+1][i+2] = true
+				} else if _isUp(pick, 1) {
+					a[pick-1][i] = true
+					a[pick-1][i+1] = true
+					a[pick][i+1] = true
+					a[pick][i+2] = true
 				}
 			}
-		/*case "S":
-			switch r {
-			case 0:
-				if _isRight(i, 2) {
-					pick := _getPick(i, 2)
-					if pick == c[i] || pick == c[i+1] {
-						a[i] = pick + 1
-						a[i+1] = pick + 2
-						a[i+2] = pick + 2
-						y = pick + 2
-					} else {
-						a[i] = pick
-						a[i+1] = pick + 1
-						a[i+2] = pick + 1
-						y = pick + 1
-					}
-				}
-			case 1:
-				if _isRight(i, 1) {
-					pick := _getPick(i, 1)
-					if pick == c[i+1] {
-						a[i] = pick + 3
-						a[i+1] = pick + 2
-						y = pick + 3
-					} else {
-						a[i] = pick + 2
-						a[i+1] = pick + 1
-						y = pick + 2
-					}
+		case 1:
+			if _isRight(i, 1) {
+				pick := _getPick(i, 1)
+				r := MyPlayer.Columns[i+1]
+				if pick == r && _isUp(pick, 3) {
+					a[pick+2][i] = true
+					a[pick+1][i] = true
+					a[pick+1][i+1] = true
+					a[pick][i+1] = true
+				} else if _isUp(pick, 2) {
+					a[pick+1][i] = true
+					a[pick][i] = true
+					a[pick][i+1] = true
+					a[pick-1][i+1] = true
 				}
 			}
-		case "T":
+		}
+		/*case "T":
 			switch r {
 			case 0:
 				if _isRight(i, 2) {
