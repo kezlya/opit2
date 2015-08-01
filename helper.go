@@ -582,14 +582,17 @@ func _fieldAfter(f [][]bool, i, r int, piece string) ([][]bool, int) {
 				}
 			}
 		}
-		/*case "O":
+		case "O":
 			if _isRight(i, 1) {
 				pick := _getPick(i, 1)
-				a[i] = pick + 2
-				a[i+1] = pick + 2
-				y = pick + 2
+				if _isUp(pick, 2) {
+					a[pick][i] = true
+					a[pick+1][i] = true
+					a[pick][i+1] = true
+					a[pick+1][i+1] = true
+				}
 			}
-		case "S":
+		/*case "S":
 			switch r {
 			case 0:
 				if _isRight(i, 2) {
