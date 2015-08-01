@@ -26,6 +26,7 @@ func _getAllPossiblePositions() []Position {
 				p := Position{
 					Rotation:     r,
 					X:            i,
+					IsBurn:       _isBurn(fieldAfter),
 					Damadge:      damage,
 					ColumnsAfter: columsAfter,
 					FieldAfter:   fieldAfter}
