@@ -746,3 +746,20 @@ func _sum(c []int) int {
 	}
 	return sum
 }
+
+func _isBurn(f [][]bool) int {
+	burn := 0
+	for _, row := range f {
+		check := true
+		for _, col := range row {
+			if !col {
+				check = false
+				break
+			}
+		}
+		if check {
+			burn++
+		}
+	}
+	return burn
+}
