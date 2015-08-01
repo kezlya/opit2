@@ -16,8 +16,7 @@ type Player struct {
 type Position struct {
 	Rotation     int
 	X            int
-	MaxY         int
 	Damadge      int
-	Score        int
 	ColumnsAfter []int
+	FieldAfter   [][]bool
 }

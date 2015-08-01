@@ -13,15 +13,11 @@ func _setup() {
 	_asignUpdates("game", "this_piece_position", "3,1")
 }
 
-func Test_getMoves(t *testing.T) {
-	_setup() //round 32 http://theaigames.com/competitions/ai-block-battle/games/55b3f2831c687b544a2b9291
-	_asignUpdates("game", "this_piece_type", "L")
-	_asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,2,0,0;0,0,2,2,0,0,2,2,0,0;0,2,2,2,0,0,2,2,0,2;2,2,2,2,2,0,2,2,2,2;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;3,3,3,3,3,3,3,3,3,3;3,3,3,3,3,3,3,3,3,3")
-	result := _calculateMoves(500)
-	if result.Rotation != 3 || result.X != 4 {
-		fmt.Println("rotation", 3, "!=", result.Rotation, "X", 4, "!=", result.X)
-		t.Fail()
-	}
+func _setup2() {
+	MyPlayer.Field = [][]bool{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer.Columns = _getPicks(MyPlayer.Field)
+	Height = len(MyPlayer.Field)
+	Width = len(MyPlayer.Field[0])
 }
 
 func Test_convertField(t *testing.T) {
@@ -40,124 +36,97 @@ func Test_convertField(t *testing.T) {
 }
 
 func Test_getAllPossiblePositionsI(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "I")
-	posiblePositions := 17
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "I"
+	expectPositions := 15
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 8
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
 func Test_getAllPossiblePositionsJ(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "J")
-	posiblePositions := 34
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "J"
+	expectPositions := 24
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 8
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
 func Test_getAllPossiblePositionsL(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "L")
-	posiblePositions := 34
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "L"
+	expectPositions := 24
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 7
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
 func Test_getAllPossiblePositionsO(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "O")
-	posiblePositions := 9
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "O"
+	expectPositions := 7
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 9
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
 func Test_getAllPossiblePositionsS(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "S")
-	posiblePositions := 17
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "S"
+	expectPositions := 12
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 9
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
 func Test_getAllPossiblePositionsT(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "T")
-	posiblePositions := 34
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "T"
+	expectPositions := 24
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 9
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
 func Test_getAllPossiblePositionsZ(t *testing.T) {
-	_setup()
-	_asignUpdates("game", "this_piece_type", "Z")
-	posiblePositions := 17
-	MyPlayer.Columns = []int{2, 0, 3, 1, 3, 4, 0, 3, 3, 3}
-	result, bestScore := _getAllPossiblePositions()
-	if len(result) != posiblePositions {
-		fmt.Println(posiblePositions, "!=", len(result))
+	_setup2()
+	CurrentPiece = "Z"
+	expectPositions := 12
+
+	result := _getAllPossiblePositions()
+
+	if len(result) != expectPositions {
 		t.Fail()
-	}
-	expectedScore := 10
-	if bestScore != expectedScore {
-		fmt.Println(bestScore, "!=", expectedScore)
-		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
 	}
 }
 
+/*
 func Test_isHoleYes(t *testing.T) {
 	cols := []int{1, 1, 1, 1, 1, 1, 1, 2, 1, 4}
 	yes := _isHole(cols)
@@ -173,7 +142,7 @@ func Test_isHoleNo(t *testing.T) {
 		t.Fail()
 	}
 }
-
+*/
 func Test_isBurn(t *testing.T) {
 	arange := [][]bool{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, false, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	expect := 5
@@ -207,7 +176,7 @@ func Test_I1(t *testing.T) {
 	x := 4
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, true, true, true, true, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -227,7 +196,7 @@ func Test_I2(t *testing.T) {
 	x := 2
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, true, true, true, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -247,7 +216,7 @@ func Test_I3(t *testing.T) {
 	x := 6
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -267,7 +236,7 @@ func Test_I_FailTall(t *testing.T) {
 	x := 6
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -287,7 +256,7 @@ func Test_J1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, true, true, true, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -307,7 +276,7 @@ func Test_J2_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -327,7 +296,7 @@ func Test_J2_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -347,7 +316,7 @@ func Test_J3_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, true, false, false, true, false, false, false}, {false, true, true, true, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -367,7 +336,7 @@ func Test_J3_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, true, false, false, true, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -387,7 +356,7 @@ func Test_J4(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, true, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -407,7 +376,7 @@ func Test_L1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, true, true, true, false, false, true, false, false, false}, {false, false, false, true, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -427,7 +396,7 @@ func Test_L2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, true, true, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -447,7 +416,7 @@ func Test_L3_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -467,7 +436,7 @@ func Test_L3_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, true, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -487,7 +456,7 @@ func Test_L4_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -507,7 +476,7 @@ func Test_L4_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -527,7 +496,7 @@ func Test_O(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, true, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -547,7 +516,7 @@ func Test_S1_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, true, false, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -567,7 +536,7 @@ func Test_S1_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, true, false, false, true, false, false, false}, {false, true, true, true, false, false, true, false, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -587,7 +556,7 @@ func Test_S2_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -607,7 +576,7 @@ func Test_S2_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -627,7 +596,7 @@ func Test_T1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -647,7 +616,7 @@ func Test_T2_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -667,7 +636,7 @@ func Test_T2_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -687,7 +656,7 @@ func Test_T3_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -707,7 +676,7 @@ func Test_T3_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -727,7 +696,7 @@ func Test_T4_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -747,7 +716,7 @@ func Test_T4_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -767,7 +736,7 @@ func Test_Z1_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, true, true, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -787,7 +756,7 @@ func Test_Z1_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -807,7 +776,7 @@ func Test_Z2_1(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -827,7 +796,7 @@ func Test_Z2_2(t *testing.T) {
 	x := 1
 	expect := [][]bool{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, true, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}}
 
-	result, _ := _fieldAfter(arange, x, rotation, piece)
+	result := _fieldAfter(arange, x, rotation, piece)
 
 	if !_eq2(expect, result) {
 		t.Fail()
@@ -836,55 +805,4 @@ func Test_Z2_2(t *testing.T) {
 			fmt.Println(expect[y-i], result[y-i])
 		}
 	}
-}
-
-/*
-func Test_(t *testing.T) {
-	arange :=
-	MyPlayer.Columns = _getPicks(arange)
-	Height = len(arange)
-	piece := ""
-	rotation :=
-	x :=
-	expect :=
-
-	result,_ := _fieldAfter(arange, x, rotation, piece)
-
-	if !_eq2(expect,result) {
-		t.Fail()
-		y:= len(expect)-1
-		for i := range expect {
-			fmt.Println(expect[y-i],result[y-i])
-		}
-	}
-}
-*/
-
-func _eq2(a, b [][]bool) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-		for j := range a[i] {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func _eq1(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
 }
