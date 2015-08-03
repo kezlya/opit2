@@ -8,7 +8,7 @@ var CurrentPiece, NextPiece string
 type Player struct {
 	Name    string
 	Columns []int
-	MaxY	    int
+	MaxY    int
 	Field   [][]bool
 	Points  int
 	Combo   int
@@ -19,7 +19,8 @@ type Position struct {
 	X            int
 	IsBurn       int
 	Damadge      int
-	MaxY			 int
+	GrowY        int
+	Score        int
 	ColumnsAfter []int
 	FieldAfter   [][]bool
 }

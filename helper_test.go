@@ -40,7 +40,7 @@ func Test_getAllPossiblePositionsI(t *testing.T) {
 	CurrentPiece = "I"
 	expectPositions := 15
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()
@@ -53,7 +53,7 @@ func Test_getAllPossiblePositionsJ(t *testing.T) {
 	CurrentPiece = "J"
 	expectPositions := 24
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()
@@ -66,7 +66,7 @@ func Test_getAllPossiblePositionsL(t *testing.T) {
 	CurrentPiece = "L"
 	expectPositions := 24
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()
@@ -79,7 +79,7 @@ func Test_getAllPossiblePositionsO(t *testing.T) {
 	CurrentPiece = "O"
 	expectPositions := 7
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()
@@ -92,7 +92,7 @@ func Test_getAllPossiblePositionsS(t *testing.T) {
 	CurrentPiece = "S"
 	expectPositions := 12
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()
@@ -105,7 +105,7 @@ func Test_getAllPossiblePositionsT(t *testing.T) {
 	CurrentPiece = "T"
 	expectPositions := 24
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()
@@ -118,7 +118,7 @@ func Test_getAllPossiblePositionsZ(t *testing.T) {
 	CurrentPiece = "Z"
 	expectPositions := 12
 
-	result := _getAllPossiblePositions()
+	result := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 
 	if len(result) != expectPositions {
 		t.Fail()

@@ -1,8 +1,25 @@
 package main
 
 import (
-"fmt"
+	"sort"
+	//"fmt"
 )
+
+type ByDamage []Position
+type ByMaxY []Position
+type ByScore []Position
+
+func (a ByDamage) Len() int           { return len(a) }
+func (a ByDamage) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByDamage) Less(i, j int) bool { return a[i].Damadge < a[j].Damadge }
+
+func (a ByScore) Len() int           { return len(a) }
+func (a ByScore) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByScore) Less(i, j int) bool { return a[i].Score < a[j].Score }
+
+func (a ByMaxY) Len() int           { return len(a) }
+func (a ByMaxY) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByMaxY) Less(i, j int) bool { return a[i].GrowY < a[j].GrowY }
 
 func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 	picks := _getPicks(field)
@@ -24,15 +41,16 @@ func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 			if !_eq2(field, fieldAfter) {
 				//fmt.Println(piece,r,i)
 				columsAfter := _getPicks(fieldAfter)
-				maxY := _getMaxY(columsAfter)
+				growMin, growMax := _getGrow(picks, columsAfter)
 				damage := _sum(columsAfter) - picksSum
 				p := Position{
 					Rotation:     r,
 					X:            i,
 					IsBurn:       _isBurn(fieldAfter),
 					Damadge:      damage,
+					Score:        damage + growMin + growMax,
 					ColumnsAfter: columsAfter,
-					MaxY:		maxY,
+					GrowY:        growMax,
 					FieldAfter:   fieldAfter}
 				positions = append(positions, p)
 			}
@@ -44,79 +62,77 @@ func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 func _calculateMoves(time int) Position {
 	roofIsnear := false
 	safePlay := false
-	for _, pick := range MyPlayer.Columns {
-		if Height-pick <= 5 {
-			//fmt.Println(Height,pick)
-			roofIsnear = true
-		}
-		if Height-pick >= 10 {
-			savePlay = true
-		}
+	leftRows := Height - MyPlayer.MaxY
+	//fmt.Println(Height,MyPlayer.MaxY,leftRows)
+	if leftRows <= 5 {
+		roofIsnear = true
 	}
-	
+	if leftRows >= 10 {
+		safePlay = true
+	}
+
 	//TODO: choose plasements clother to the wall
 	//TODO: build 2-wide hole
 
 	allPositins := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
-	
-	
-	// try to burn more 
-	if MyPlayer.Combo > 0{
-		var burnedPositions []Position
-		
-		for _, pos := range allPositins {
-			if pos.IsBurn>0 {
-				burnedPositions = append(burnedPositions, p)			
-			}
-		}
-		burnedPositionsTotal := len(burnedPositions)
-		
-		if  burnedPositionsTotal== 1{
-			return burnedPositions[0]
-		}
-		
-		//see if next peacie will burn rows
-		if burnedPositionsTotal>1{
-			for _,pos := range burnedPositions {
-				nextPiecePositions := _getAllPossiblePositions(NextPiece)
-				
-			}
+
+	// try to burn more
+	if MyPlayer.Combo > 0 || !safePlay {
+		pos, isFound := _keepUpBurn(allPositins)
+		if isFound {
+			return pos
 		}
 	}
 
-
-
+	// build minimum damadge with 2-wide hole on the right
 	if safePlay {
-		
+		sort.Sort(ByScore(allPositins))
 	}
 
-	
+	// play save try to burn rows and get lowest Y
+	if roofIsnear {
+		//TODO check if burn and check if no damadge
+		sort.Sort(ByMaxY(allPositins))
+	}
 
-	return allPositins[goldenIndex]
+	return allPositins[0]
 }
 
-/*
-func _getBestScorePositions(positions []Position, bestScore int) []Position {
-	var result []Position
+func _keepUpBurn(positions []Position) (Position, bool) {
+	var emptyPos Position
+	var burnedPositions []Position
+
 	for _, pos := range positions {
-		if pos.Score == bestScore {
-			result = append(result, pos)
+		if pos.IsBurn > 0 {
+			burnedPositions = append(burnedPositions, pos)
 		}
-		//TODO: predict next move
 	}
-	return result
-}
-*/
-func _getNoDamadgePositions(positions []Position) []Position {
-	var result []Position
-	for _, pos := range positions {
-		if pos.Damadge == 4 {
-			result = append(result, pos)
+	burnedPositionsTotal := len(burnedPositions)
+
+	if burnedPositionsTotal == 1 {
+		return burnedPositions[0], true
+	}
+
+	//see if next peacie will burn rows
+	if burnedPositionsTotal > 1 {
+		//sort first
+		sort.Sort(ByDamage(burnedPositions))
+
+		bIndex := 0
+		for current_i, pos := range burnedPositions {
+			nextPiecePositions := _getAllPossiblePositions(NextPiece, pos.FieldAfter)
+			for _, nextPos := range nextPiecePositions {
+				if nextPos.IsBurn > 0 {
+					bIndex = current_i
+					break
+				}
+			}
 		}
-		//TODO: predict next move
+		return burnedPositions[bIndex], true
 	}
-	return result
+	return emptyPos, false
 }
+
 /*
 func _isHole(cols []int, piece string) bool {
 	for i, c := range cols {
@@ -735,6 +751,24 @@ func _getPick(i, v int) int {
 		}
 	}
 	return pick
+}
+
+func _getGrow(b, a []int) (int, int) {
+	maxY := 0
+	minY := 1000
+	for i, col := range b {
+		if (a[i] - col) > 0 {
+
+			if col > maxY {
+				maxY = col
+			}
+
+			if a[i] < minY {
+				minY = a[i]
+			}
+		}
+	}
+	return minY, maxY
 }
 
 func _getMaxY(c []int) int {
