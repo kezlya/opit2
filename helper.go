@@ -48,7 +48,7 @@ func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 					X:            i,
 					IsBurn:       _isBurn(fieldAfter),
 					Damadge:      damage,
-					Score:        damage + growMin + growMax,
+					Score:        (3 * damage) + growMin + growMax,
 					ColumnsAfter: columsAfter,
 					GrowY:        growMax,
 					FieldAfter:   fieldAfter}
@@ -60,6 +60,7 @@ func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 }
 
 func _calculateMoves(time int) Position {
+	var allPositins []Position
 	roofIsnear := false
 	safePlay := false
 	leftRows := Height - MyPlayer.MaxY
@@ -74,10 +75,9 @@ func _calculateMoves(time int) Position {
 	//TODO: choose plasements clother to the wall
 	//TODO: build 2-wide hole
 
-	allPositins := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
-
 	// try to burn more
 	if MyPlayer.Combo > 0 || !safePlay {
+
 		pos, isFound := _keepUpBurn(allPositins)
 		if isFound {
 			return pos
@@ -86,6 +86,10 @@ func _calculateMoves(time int) Position {
 
 	// build minimum damadge with 2-wide hole on the right
 	if safePlay {
+		// change width and cut field
+		Width = Width - 2
+		shortField := _trimField(MyPlayer.Field, 2)
+		allPositins = _getAllPossiblePositions(CurrentPiece, shortField)
 		sort.Sort(ByScore(allPositins))
 	}
 
@@ -131,6 +135,17 @@ func _keepUpBurn(positions []Position) (Position, bool) {
 		return burnedPositions[bIndex], true
 	}
 	return emptyPos, false
+}
+
+func _trimField(f [][]bool, trim int) [][]bool {
+	var field = make([][]bool, Height)
+	newSize := len(f[0]) - trim
+	for rowIndex, row := range f {
+		colums := make([]bool, newSize)
+		copy(colums, row[:])
+		field[rowIndex] = colums
+	}
+	return field
 }
 
 /*
