@@ -1,7 +1,7 @@
 package main
 
 import (
-//"fmt"
+"fmt"
 )
 
 func _getAllPossiblePositions() []Position {
@@ -54,8 +54,16 @@ func _calculateMoves(time int) Position {
 
 	//var goldenIndex int
 	allPositins := _getAllPossiblePositions()
+	goldenIndex :=0
+	for i, pos := range allPositins {
+		if pos.IsBurn>0 {
+			goldenIndex = i
+			fmt.Println("found burn position", pos.IsBurn)
+			
+		}
+	}
 
-	return allPositins[0]
+	return allPositins[goldenIndex]
 }
 
 /*
