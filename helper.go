@@ -4,31 +4,35 @@ import (
 "fmt"
 )
 
-func _getAllPossiblePositions() []Position {
+func _getAllPossiblePositions(piece string, field [][]bool) []Position {
+	picks := _getPicks(field)
+	picksSum := _sum(picks)
 	var positions []Position
 	rotationMax := 1
-	switch CurrentPiece {
+	switch piece {
 	case "I", "Z", "S":
 		rotationMax = 2
 	case "J", "L", "T":
 		rotationMax = 4
 	}
-	columnsSum := _sum(MyPlayer.Columns)
+
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < Width; i++ {
-			//fmt.Println(CurrentPiece,r,i)
-			fieldAfter := _fieldAfter(MyPlayer.Field, i, r, CurrentPiece)
-			//columsAfter, maxY := _getColumnsAfter(MyPlayer.Columns, i, r, CurrentPiece)
-			if !_eq2(MyPlayer.Field, fieldAfter) {
-				//fmt.Println(CurrentPiece,r,i)
+			//fmt.Println(piece,r,i)
+			fieldAfter := _fieldAfter(field, i, r, piece)
+			//columsAfter, maxY := _getColumnsAfter(picks, i, r, piece)
+			if !_eq2(field, fieldAfter) {
+				//fmt.Println(piece,r,i)
 				columsAfter := _getPicks(fieldAfter)
-				damage := _sum(columsAfter) - columnsSum
+				maxY := _getMaxY(columsAfter)
+				damage := _sum(columsAfter) - picksSum
 				p := Position{
 					Rotation:     r,
 					X:            i,
 					IsBurn:       _isBurn(fieldAfter),
 					Damadge:      damage,
 					ColumnsAfter: columsAfter,
+					MaxY:		maxY,
 					FieldAfter:   fieldAfter}
 				positions = append(positions, p)
 			}
@@ -38,30 +42,55 @@ func _getAllPossiblePositions() []Position {
 }
 
 func _calculateMoves(time int) Position {
-	/*	roofIsnear := false
-		savePlay := false
-		for _, pick := range MyPlayer.Columns {
-			if Height-pick <= 5 {
-				//fmt.Println(Height,pick)
-				roofIsnear = true
-			}
-			if Height-pick >= 10 {
-				savePlay = true
-			}
+	roofIsnear := false
+	safePlay := false
+	for _, pick := range MyPlayer.Columns {
+		if Height-pick <= 5 {
+			//fmt.Println(Height,pick)
+			roofIsnear = true
 		}
-	*/
-	//TODO: choose plasements clother to the wall
-
-	//var goldenIndex int
-	allPositins := _getAllPossiblePositions()
-	goldenIndex :=0
-	for i, pos := range allPositins {
-		if pos.IsBurn>0 {
-			goldenIndex = i
-			fmt.Println("found burn position", pos.IsBurn)
-			
+		if Height-pick >= 10 {
+			savePlay = true
 		}
 	}
+	
+	//TODO: choose plasements clother to the wall
+	//TODO: build 2-wide hole
+
+	allPositins := _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
+	
+	
+	// try to burn more 
+	if MyPlayer.Combo > 0{
+		var burnedPositions []Position
+		
+		for _, pos := range allPositins {
+			if pos.IsBurn>0 {
+				burnedPositions = append(burnedPositions, p)			
+			}
+		}
+		burnedPositionsTotal := len(burnedPositions)
+		
+		if  burnedPositionsTotal== 1{
+			return burnedPositions[0]
+		}
+		
+		//see if next peacie will burn rows
+		if burnedPositionsTotal>1{
+			for _,pos := range burnedPositions {
+				nextPiecePositions := _getAllPossiblePositions(NextPiece)
+				
+			}
+		}
+	}
+
+
+
+	if safePlay {
+		
+	}
+
+	
 
 	return allPositins[goldenIndex]
 }
@@ -88,16 +117,16 @@ func _getNoDamadgePositions(positions []Position) []Position {
 	}
 	return result
 }
-
-func _isHole(cols []int) bool {
+/*
+func _isHole(cols []int, piece string) bool {
 	for i, c := range cols {
-		if _isRight(i, 1) && (c-cols[i+1] < -2 || c-cols[i+1] > 2) && CurrentPiece != "I" && NextPiece != "I" {
+		if _isRight(i, 1) && (c-cols[i+1] < -2 || c-cols[i+1] > 2) && piece != "I" && NextPiece != "I" {
 			return true
 		}
 	}
 	return false
 }
-
+*/
 func _isRight(i, right int) bool {
 	if i+right < Width {
 		return true

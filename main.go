@@ -91,6 +91,7 @@ func _asignUpdates(who, action, value string) {
 			for i, p := range Players {
 				if p.Name == who {
 					Players[i].Field, Players[i].Columns = _convertField(cleanSource)
+					Players[i].MaxY = _getMaxY(Players[i].Columns)
 					break
 				}
 			}
