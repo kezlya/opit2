@@ -2,8 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -20,11 +18,11 @@ func main() {
 		case "update":
 			_asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
-			time, _ := strconv.Atoi(parts[2])
+			//time, _ := strconv.Atoi(parts[2])
 			if Round == 1 {
-				fmt.Println("drop")
+				_roundOne()
 			} else {
-				_printMoves(_calculateMoves(time))
+				_printMoves(_calculateMoves())
 			}
 		}
 	}
@@ -90,8 +88,7 @@ func _asignUpdates(who, action, value string) {
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", OriginalHeight)
 			for i, p := range Players {
 				if p.Name == who {
-					Players[i].Field, Players[i].Columns = _convertField(cleanSource)
-					Players[i].MaxY = _getMaxY(Players[i].Columns)
+					Players[i].Field = _convertField(cleanSource)
 					break
 				}
 			}
@@ -99,50 +96,21 @@ func _asignUpdates(who, action, value string) {
 	}
 }
 
-func _convertField(rawField string) ([][]bool, []int) {
+func _convertField(rawField string) Field {
 	rows := strings.Split(rawField, ";")
 	Height = len(rows)
-	var piks = make([]int, Width)
 	var field = make([][]bool, Height)
 	for rowIndex, row := range rows {
 		y := Height - rowIndex
 		var colums = make([]bool, Width)
-		for columIndex, colum := range strings.Split(row, ",") {
-			if colum == "2" {
+		for columIndex, value := range strings.Split(row, ",") {
+			if value == "2" {
 				colums[columIndex] = true
-				if y > piks[columIndex] {
-					piks[columIndex] = y
-				}
 			} else {
 				colums[columIndex] = false
 			}
 		}
 		field[y-1] = colums
 	}
-	return field, piks
-}
-
-func _printMoves(pos Position) {
-	var buffer bytes.Buffer
-	for i := 0; i < pos.Rotation; i++ {
-		buffer.WriteString("turnright,")
-	}
-	if pos.Rotation == 1 {
-		CurrentPieceX = CurrentPieceX + 1
-		if CurrentPiece == "I" {
-			CurrentPieceX = CurrentPieceX + 1
-		}
-	}
-	if CurrentPieceX > pos.X {
-		for i := 0; i < CurrentPieceX-pos.X; i++ {
-			buffer.WriteString("left,")
-		}
-	}
-	if CurrentPieceX < pos.X {
-		for i := 0; i < pos.X-CurrentPieceX; i++ {
-			buffer.WriteString("right,")
-		}
-	}
-	buffer.WriteString("drop")
-	fmt.Println(buffer.String())
+	return field
 }

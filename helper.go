@@ -1,8 +1,9 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
 	"sort"
-	//"fmt"
 )
 
 //TODO rewrite to extentions for colums
@@ -23,13 +24,12 @@ func (a ByMaxY) Len() int           { return len(a) }
 func (a ByMaxY) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByMaxY) Less(i, j int) bool { return a[i].GrowY < a[j].GrowY }
 
-func _availablePositions(piece string, field [][]bool) []Position {
-	width := len(field[0])
-	picks := _getPicks(field)
-	picksSum := _sum(picks)// kill this
+func _availablePositions(piece string, field Field) []Position {
+	w := field.Width()
+	picks := field.Picks()
 	var positions []Position
 	rotationMax := 1
-	
+
 	switch piece {
 	case "I", "Z", "S":
 		rotationMax = 2
@@ -38,24 +38,24 @@ func _availablePositions(piece string, field [][]bool) []Position {
 	}
 
 	for r := 0; r < rotationMax; r++ {
-		for i := 0; i < width; i++ {
+		for i := 0; i < w; i++ {
 			//fmt.Println(piece,r,i)
 			fieldAfter := _fieldAfter(field, i, r, piece)
 			//columsAfter, maxY := _getColumnsAfter(picks, i, r, piece)
-			if !_eq2(field, fieldAfter) {
+			if !field.Equal(fieldAfter) {
 				//fmt.Println(piece,r,i)
-				columsAfter := _getPicks(fieldAfter)
-				growMin, growMax := _getGrow(picks, columsAfter)
-				damage := _sum(columsAfter) - picksSum //kill this and get data from grow
+				picksAfter := fieldAfter.Picks()
+				growMin, growMax := _getGrow(picks, picksAfter)
+				//damage := _sum(columsAfter) - picksSum //kill this and get data from grow
 				p := Position{
-					Rotation:     r,
-					X:            i,
-					IsBurn:       _isBurn(fieldAfter),
-					Damadge:      damage,
-					Score:        (3 * damage) + growMin + growMax,
-					ColumnsAfter: columsAfter,
-					GrowY:        growMax,
-					FieldAfter:   fieldAfter}
+					Rotation: r,
+					X:        i,
+					IsBurn:   _isBurn(fieldAfter),
+					//Damadge:      damage,
+					//Score:        (3 * damage) + growMin + growMax,
+					//ColumnsAfter: picksAfter,
+					GrowY:      growMax + growMin, //very wrong redu this
+					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}
 		}
@@ -63,7 +63,7 @@ func _availablePositions(piece string, field [][]bool) []Position {
 	return positions
 }
 
-func _calculateMoves(time int) Position {
+func _calculateMoves() Position {
 	var allPositins []Position
 	roofIsnear := false
 	safePlay := false
@@ -165,25 +165,9 @@ func _isHole(cols []int, piece string) bool {
 	return false
 }
 */
-/*
-func _isUp(i, up int) bool {
-	//fmt.Println(i+up,Height)
-	if i+up <= Height {
-		return true
-	}
-	return false
-}
-*/
-/*
-func _isLeft(i, left int) bool {
-	if i-left > 0 {
-		return true
-	}
-	return false
-}
-*/
+
 func _fieldAfter(f Field, x, r int, piece string) Field {
-	picks:= f.Columns()
+	picks := f.Picks()
 	w := f.Width()
 	a := make([][]bool, f.Height())
 	for i, row := range f {
@@ -196,7 +180,7 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 		switch r {
 		case 0:
 			if picks.IsRight(x, 3) {
-				pick := picks.Max(x, 3)
+				pick := picks.MaxR(x, 3)
 				if f.IsFit(pick, 1) {
 					a[pick][x] = true
 					a[pick][x+1] = true
@@ -205,8 +189,8 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 1:
-			pick := MyPlayer.Columns[x]
-			if _isUp(pick, 4) {
+			pick := picks[x]
+			if f.IsFit(pick, 4) {
 				a[pick][x] = true
 				a[pick+1][x] = true
 				a[pick+2][x] = true
@@ -216,9 +200,9 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	case "J":
 		switch r {
 		case 0:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				if _isUp(pick, 2) {
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				if f.IsFit(pick, 2) {
 					a[pick][x] = true
 					a[pick+1][x] = true
 					a[pick][x+1] = true
@@ -226,18 +210,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 1:
-			if _isRight(w, x, 1) {
-				l := MyPlayer.Columns[x]
-				r := MyPlayer.Columns[x+1]
-				if r >= l+2 {
-					if _isUp(r, 1) {
-						a[r][x] = true
-						a[r][x+1] = true
-						a[r-1][x] = true
-						a[r-2][x] = true
+			if picks.IsRight(x, 1) {
+				l := picks[x]
+				l2 := picks[x+1]
+				if l2 >= l+2 {
+					if f.IsFit(l2, 1) {
+						a[l2][x] = true
+						a[l2][x+1] = true
+						a[l2-1][x] = true
+						a[l2-2][x] = true
 					}
 				} else {
-					if _isUp(l, 3) {
+					if f.IsFit(l, 3) {
 						a[l][x] = true
 						a[l+1][x] = true
 						a[l+2][x] = true
@@ -246,18 +230,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 2:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				r := MyPlayer.Columns[x+2]
-				if pick == r {
-					if _isUp(r, 2) {
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				l3 := picks[x+2]
+				if pick == l3 {
+					if f.IsFit(l3, 2) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
 						a[pick][x+2] = true
 					}
 				} else {
-					if _isUp(r, 1) {
+					if f.IsFit(l3, 1) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
@@ -266,9 +250,9 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 3:
-			if _isRight(w, x, 1) {
-				pick := _getPick(x, 1)
-				if _isUp(pick, 3) {
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				if f.IsFit(pick, 3) {
 					a[pick][x] = true
 					a[pick][x+1] = true
 					a[pick+1][x+1] = true
@@ -279,9 +263,9 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	case "L":
 		switch r {
 		case 0:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				if _isUp(pick, 2) {
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				if f.IsFit(pick, 2) {
 					a[pick][x] = true
 					a[pick][x+1] = true
 					a[pick][x+2] = true
@@ -289,9 +273,9 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 1:
-			if _isRight(w, x, 1) {
-				pick := _getPick(x, 1)
-				if _isUp(pick, 3) {
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				if f.IsFit(pick, 3) {
 					a[pick][x] = true
 					a[pick+1][x] = true
 					a[pick+2][x] = true
@@ -299,18 +283,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 2:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				l := MyPlayer.Columns[x]
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				l := picks[x]
 				if pick == l {
-					if _isUp(l, 2) {
+					if f.IsFit(l, 2) {
 						a[pick][x] = true
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
 					}
 				} else {
-					if _isUp(l, 1) {
+					if f.IsFit(l, 1) {
 						a[pick-1][x] = true
 						a[pick][x] = true
 						a[pick][x+1] = true
@@ -319,30 +303,30 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 3:
-			if _isRight(w, x, 1) {
-				l := MyPlayer.Columns[x]
-				r := MyPlayer.Columns[x+1]
-				if l >= r+2 {
-					if _isUp(l, 1) {
+			if picks.IsRight(x, 1) {
+				l := picks[x]
+				l2 := picks[x+1]
+				if l >= l2+2 {
+					if f.IsFit(l, 1) {
 						a[l][x] = true
 						a[l][x+1] = true
 						a[l-1][x+1] = true
 						a[l-2][x+1] = true
 					}
 				} else {
-					if _isUp(r, 3) {
-						a[r+2][x] = true
-						a[r][x+1] = true
-						a[r+1][x+1] = true
-						a[r+2][x+1] = true
+					if f.IsFit(l2, 3) {
+						a[l2+2][x] = true
+						a[l2][x+1] = true
+						a[l2+1][x+1] = true
+						a[l2+2][x+1] = true
 					}
 				}
 			}
 		}
 	case "O":
-		if _isRight(w, x, 1) {
-			pick := _getPick(x, 1)
-			if _isUp(pick, 2) {
+		if picks.IsRight(x, 1) {
+			pick := picks.MaxR(x, 1)
+			if f.IsFit(pick, 2) {
 				a[pick][x] = true
 				a[pick+1][x] = true
 				a[pick][x+1] = true
@@ -352,19 +336,19 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	case "S":
 		switch r {
 		case 0:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				l := MyPlayer.Columns[x]
-				l1 := MyPlayer.Columns[x+1]
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				l := picks[x]
+				l1 := picks[x+1]
 				if pick == l || pick == l1 {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
 					}
 				} else {
-					if _isUp(pick, 1) {
+					if f.IsFit(pick, 1) {
 						a[pick-1][x] = true
 						a[pick-1][x+1] = true
 						a[pick][x+1] = true
@@ -373,18 +357,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 1:
-			if _isRight(w, x, 1) {
-				pick := _getPick(x, 1)
-				r := MyPlayer.Columns[x+1]
-				if pick == r {
-					if _isUp(pick, 3) {
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				l2 := picks[x+1]
+				if pick == l2 {
+					if f.IsFit(pick, 3) {
 						a[pick+2][x] = true
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
 					}
 				} else {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick+1][x] = true
 						a[pick][x] = true
 						a[pick][x+1] = true
@@ -396,9 +380,9 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	case "T":
 		switch r {
 		case 0:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				if _isUp(pick, 2) {
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				if f.IsFit(pick, 2) {
 					a[pick][x] = true
 					a[pick][x+1] = true
 					a[pick+1][x+1] = true
@@ -406,18 +390,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 1:
-			if _isRight(w, x, 1) {
-				pick := _getPick(x, 1)
-				l := MyPlayer.Columns[x]
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				l := picks[x]
 				if pick == l {
-					if _isUp(pick, 3) {
+					if f.IsFit(pick, 3) {
 						a[pick][x] = true
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+2][x] = true
 					}
 				} else {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick-1][x] = true
 						a[pick][x] = true
 						a[pick][x+1] = true
@@ -426,18 +410,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 2:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				c := MyPlayer.Columns[x+1]
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				c := picks[x+1]
 				if pick == c {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick+1][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
 					}
 				} else {
-					if _isUp(pick, 1) {
+					if f.IsFit(pick, 1) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
@@ -446,18 +430,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 3:
-			if _isRight(w, x, 1) {
-				pick := _getPick(x, 1)
-				r := MyPlayer.Columns[x+1]
-				if pick == r {
-					if _isUp(pick, 3) {
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				l2 := picks[x+1]
+				if pick == l2 {
+					if f.IsFit(pick, 3) {
 						a[pick+2][x+1] = true
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
 					}
 				} else {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick+1][x+1] = true
 						a[pick][x] = true
 						a[pick][x+1] = true
@@ -469,19 +453,19 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	case "Z":
 		switch r {
 		case 0:
-			if _isRight(w, x, 2) {
-				pick := _getPick(x, 2)
-				l1 := MyPlayer.Columns[x+1]
-				l2 := MyPlayer.Columns[x+2]
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				l1 := picks[x+1]
+				l2 := picks[x+2]
 				if pick == l1 || pick == l2 {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
 					}
 				} else {
-					if _isUp(pick, 1) {
+					if f.IsFit(pick, 1) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
@@ -490,18 +474,18 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 				}
 			}
 		case 1:
-			if _isRight(w, x, 1) {
-				pick := _getPick(x, 1)
-				l := MyPlayer.Columns[x]
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				l := picks[x]
 				if pick == l {
-					if _isUp(pick, 3) {
+					if f.IsFit(pick, 3) {
 						a[pick][x] = true
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+2][x+1] = true
 					}
 				} else {
-					if _isUp(pick, 2) {
+					if f.IsFit(pick, 2) {
 						a[pick-1][x] = true
 						a[pick][x] = true
 						a[pick][x+1] = true
@@ -514,18 +498,6 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	return a
 }
 
-/*
-
-func _getPick(x, v int) int {
-	pick := MyPlayer.Columns[x]
-	for n := 1; n <= v; n++ {
-		if pick < MyPlayer.Columns[x+n] {
-			pick = MyPlayer.Columns[x+n]
-		}
-	}
-	return pick
-}
-*/
 func _getGrow(b, a []int) (int, int) {
 	maxY := 0
 	minY := 1000
@@ -543,27 +515,7 @@ func _getGrow(b, a []int) (int, int) {
 	}
 	return minY, maxY
 }
-/*
-func _getMaxY(c []int) int {
-	maxY := 0
-	for _, col := range c {
-		if col > maxY {
-			maxY = col
-		}
-	}
-	return maxY
-}
-*/
 
-/*
-func _sum(c []int) int {
-	sum := 0
-	for i := 0; i < len(c); i++ {
-		sum += c[i]
-	}
-	return sum
-}
-*/
 func _isBurn(f [][]bool) int {
 	burn := 0
 	for _, row := range f {
@@ -581,4 +533,31 @@ func _isBurn(f [][]bool) int {
 	return burn
 }
 
+func _printMoves(pos Position) {
+	var buffer bytes.Buffer
+	for i := 0; i < pos.Rotation; i++ {
+		buffer.WriteString("turnright,")
+	}
+	if pos.Rotation == 1 {
+		CurrentPieceX = CurrentPieceX + 1
+		if CurrentPiece == "I" {
+			CurrentPieceX = CurrentPieceX + 1
+		}
+	}
+	if CurrentPieceX > pos.X {
+		for i := 0; i < CurrentPieceX-pos.X; i++ {
+			buffer.WriteString("left,")
+		}
+	}
+	if CurrentPieceX < pos.X {
+		for i := 0; i < pos.X-CurrentPieceX; i++ {
+			buffer.WriteString("right,")
+		}
+	}
+	buffer.WriteString("drop")
+	fmt.Println(buffer.String())
+}
 
+func _roundOne() {
+	fmt.Println("drop")
+}
