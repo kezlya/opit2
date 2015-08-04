@@ -87,9 +87,14 @@ func _calculateMoves(time int) Position {
 	// build minimum damadge with 2-wide hole on the right
 	if safePlay {
 		// change width and cut field
+		originalWidth := Width
 		Width = Width - 2
 		shortField := _trimField(MyPlayer.Field, 2)
 		allPositins = _getAllPossiblePositions(CurrentPiece, shortField)
+		sort.Sort(ByScore(allPositins))
+		Width = originalWidth
+	} else {
+		allPositins = _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
 		sort.Sort(ByScore(allPositins))
 	}
 
@@ -138,7 +143,7 @@ func _keepUpBurn(positions []Position) (Position, bool) {
 }
 
 func _trimField(f [][]bool, trim int) [][]bool {
-	var field = make([][]bool, Height)
+	var field = make([][]bool, len(f))
 	newSize := len(f[0]) - trim
 	for rowIndex, row := range f {
 		colums := make([]bool, newSize)
