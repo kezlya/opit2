@@ -89,6 +89,18 @@ func _asignUpdates(who, action, value string) {
 			for i, p := range Players {
 				if p.Name == who {
 					Players[i].Field = _convertField(cleanSource)
+					picks := Players[i].Field.Picks()
+					y := picks.Max()
+					rowsLeft := Players[i].Field.Height() - y
+					if rowsLeft >= 10 {
+						Players[i].State = "safe"
+					} else {
+						if rowsLeft < 5 {
+							Players[i].State = "dangerous"
+						} else {
+							Players[i].State = "normal"
+						}
+					}
 					break
 				}
 			}

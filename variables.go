@@ -4,14 +4,16 @@ var Timebank, TimePerMove, Width, OriginalHeight, Height, Pick, Round, CurrentPi
 var Players [2]Player
 var MyPlayer *Player
 var CurrentPiece, NextPiece string
+var IsSafePlay, IsRoofNear bool
 
 type Player struct {
 	Name    string
-	Columns []int
+	Columns Picks
 	MaxY    int
-	Field   [][]bool
+	Field   Field
 	Points  int
 	Combo   int
+	State   string
 }
 
 type Position struct {
@@ -21,8 +23,8 @@ type Position struct {
 	Damadge      int
 	GrowY        int
 	Score        int
-	ColumnsAfter []int
-	FieldAfter   [][]bool
+	ColumnsAfter Picks
+	FieldAfter   Field
 }
 
 type Field [][]bool
@@ -30,7 +32,6 @@ type Field [][]bool
 func (f Field) Width() int  { return len(f[0]) }
 func (f Field) Height() int { return len(f) }
 func (f Field) IsFit(pick, up int) bool {
-	//fmt.Println(i+up,Height)
 	if pick+up <= f.Height() {
 		return true
 	}

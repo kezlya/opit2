@@ -64,54 +64,44 @@ func _availablePositions(piece string, field Field) []Position {
 }
 
 func _calculateMoves() Position {
-	var allPositins []Position
-	roofIsnear := false
-	safePlay := false
-	leftRows := Height - MyPlayer.MaxY
-	//fmt.Println(Height,MyPlayer.MaxY,leftRows)
-	if leftRows <= 5 {
-		roofIsnear = true
-	}
-	if leftRows >= 10 {
-		safePlay = true
-	}
-
 	//TODO: choose plasements clother to the wall
 
 	// try to burn more
-	if MyPlayer.Combo > 0 || !safePlay {
-
-		pos, isFound := _keepUpBurn(allPositins)
+	if MyPlayer.Combo > 0 {
+		pos, isFound := _keepUpBurn()
 		if isFound {
 			return pos
 		}
 	}
 
-	if safePlay {
-		// change width and cut field
-		originalWidth := Width
-		Width = Width - 2
+	if MyPlayer.State == "safe" {
 		shortField := _trimField(MyPlayer.Field, 2)
-		allPositins = _availablePositions(CurrentPiece, shortField)
-		sort.Sort(ByScore(allPositins))
-		Width = originalWidth
-	} else {
-		allPositins = _availablePositions(CurrentPiece, MyPlayer.Field)
-		sort.Sort(ByScore(allPositins))
+		shortPositions := _availablePositions(CurrentPiece, shortField)
+		sort.Sort(ByDamage(shortPositions))
+		return shortPositions[0] //TODO: check lowest fit and predict next piece
+	}
+
+	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
+
+	if MyPlayer.State == "normal" {
+		sort.Sort(ByDamage(positions))
+		//TODO: check lowest fit and predict next piece
 	}
 
 	// play save try to burn rows and get lowest Y
-	if roofIsnear {
+	if MyPlayer.State == "dangerous" {
 		//TODO check if burn and check if no damadge
-		sort.Sort(ByMaxY(allPositins))
+		sort.Sort(ByMaxY(positions))
+		//TODO: check lowest fit and predict next piece
 	}
 
-	return allPositins[0]
+	return positions[0]
 }
 
-func _keepUpBurn(positions []Position) (Position, bool) {
+func _keepUpBurn() (Position, bool) {
 	var emptyPos Position
 	var burnedPositions []Position
+	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
 
 	for _, pos := range positions {
 		if pos.IsBurn > 0 {
