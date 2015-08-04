@@ -20,9 +20,9 @@ type Position struct {
 	Rotation     int
 	X            int
 	IsBurn       int
-	Damadge      int
-	GrowY        int
-	Score        int
+	Damage       int
+	LowY         int
+	HighY        int
 	ColumnsAfter Picks
 	FieldAfter   Field
 }

@@ -5,9 +5,6 @@ import (
 	"fmt"
 )
 
-//TODO rewrite to extentions for colums
-//http://golang.org/pkg/sort/#example_Interface
-
 func _availablePositions(piece string, field Field) []Position {
 	w := field.Width()
 	picks := field.Picks()
@@ -23,22 +20,17 @@ func _availablePositions(piece string, field Field) []Position {
 
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < w; i++ {
-			//fmt.Println(piece,r,i)
 			fieldAfter := _fieldAfter(field, i, r, piece)
-			//columsAfter, maxY := _getColumnsAfter(picks, i, r, piece)
 			if !field.Equal(fieldAfter) {
-				//fmt.Println(piece,r,i)
 				picksAfter := fieldAfter.Picks()
-				growMin, growMax := _getGrow(picks, picksAfter)
-				//damage := _sum(columsAfter) - picksSum //kill this and get data from grow
+				damage, lowY, highY := _getMetric(picks, picksAfter)
 				p := Position{
-					Rotation: r,
-					X:        i,
-					IsBurn:   _isBurn(fieldAfter),
-					//Damadge:      damage,
-					//Score:        (3 * damage) + growMin + growMax,
-					//ColumnsAfter: picksAfter,
-					GrowY:      growMax + growMin, //very wrong redu this
+					Rotation:   r,
+					X:          i,
+					IsBurn:     _isBurn(fieldAfter),
+					Damage:     damage,
+					LowY:       lowY,
+					HighY:      highY,
 					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}
@@ -50,7 +42,6 @@ func _availablePositions(piece string, field Field) []Position {
 func _calculateMoves() Position {
 	//TODO: choose plasements clother to the wall
 
-	// try to burn more
 	if MyPlayer.Combo > 0 {
 		pos, isFound := _keepUpBurn()
 		if isFound {
@@ -61,22 +52,23 @@ func _calculateMoves() Position {
 	if MyPlayer.State == "safe" {
 		shortField := _trimField(MyPlayer.Field, 2)
 		shortPositions := _availablePositions(CurrentPiece, shortField)
-		OrderedBy(DAMADGE, SCORE, GROWY).Sort(shortPositions)
-		return shortPositions[0] //TODO: check lowest fit and predict next piece
+		OrderedBy(DAMAGE, LOWY, HIGHY).Sort(shortPositions)
+		return shortPositions[0] //TODO: predict next piece
 	}
 
 	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
 
 	if MyPlayer.State == "normal" {
-		OrderedBy(DAMADGE, SCORE, GROWY).Sort(positions)
-		//TODO: check lowest fit and predict next piece
+		OrderedBy(DAMAGE, LOWY, HIGHY).Sort(positions)
+		//TODO check if burn and check if no damadge
+		//TODO: predict next piece
 	}
 
 	// play save try to burn rows and get lowest Y
 	if MyPlayer.State == "dangerous" {
-		//TODO check if burn and check if no damadge
-		OrderedBy(GROWY, DAMADGE, SCORE).Sort(positions)
-		//TODO: check lowest fit and predict next piece
+		//TODO check if burn
+		OrderedBy(HIGHY, DAMAGE, LOWY).Sort(positions)
+		//TODO: predict next piece
 	}
 
 	return positions[0]
@@ -84,27 +76,24 @@ func _calculateMoves() Position {
 
 func _keepUpBurn() (Position, bool) {
 	var emptyPos Position
-	var burnedPositions []Position
+	var burnedPos []Position
 	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
 
 	for _, pos := range positions {
 		if pos.IsBurn > 0 {
-			burnedPositions = append(burnedPositions, pos)
+			burnedPos = append(burnedPos, pos)
 		}
 	}
-	burnedPositionsTotal := len(burnedPositions)
+	burnedPosTotal := len(burnedPos)
 
-	if burnedPositionsTotal == 1 {
-		return burnedPositions[0], true
+	if burnedPosTotal == 1 {
+		return burnedPos[0], true
 	}
 
-	//see if next peacie will burn rows
-	if burnedPositionsTotal > 1 {
-		//sort first
-		OrderedBy(DAMADGE, GROWY).Sort(positions)
-
+	if burnedPosTotal > 1 {
+		OrderedBy(DAMAGE, LOWY).Sort(positions)
 		bIndex := 0
-		for current_i, pos := range burnedPositions {
+		for current_i, pos := range burnedPos {
 			nextPiecePositions := _availablePositions(NextPiece, pos.FieldAfter)
 			for _, nextPos := range nextPiecePositions {
 				if nextPos.IsBurn > 0 {
@@ -113,7 +102,7 @@ func _keepUpBurn() (Position, bool) {
 				}
 			}
 		}
-		return burnedPositions[bIndex], true
+		return burnedPos[bIndex], true
 	}
 	return emptyPos, false
 }
@@ -472,22 +461,25 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 	return a
 }
 
-func _getGrow(b, a []int) (int, int) {
-	maxY := 0
-	minY := 1000
+func _getMetric(b, a []int) (int, int, int) {
+	highY := 0
+	lowY := 1000
+	damadge := 0
 	for i, col := range b {
-		if (a[i] - col) > 0 {
+		diff := a[i] - col
+		if diff > 0 {
+			damadge = damadge + diff
 
-			if col > maxY {
-				maxY = col
+			if col < lowY {
+				lowY = col
 			}
 
-			if a[i] < minY {
-				minY = a[i]
+			if a[i] > highY {
+				highY = a[i]
 			}
 		}
 	}
-	return minY, maxY
+	return damadge, lowY, highY
 }
 
 func _isBurn(f [][]bool) int {
