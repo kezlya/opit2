@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"testing"
+	//"sort"
 )
 
 func _setup() {
@@ -67,4 +68,27 @@ func Test_getPicks(t *testing.T) {
 		fmt.Println(expect)
 		t.Fail()
 	}
+}
+
+func Test_Sort(t *testing.T) {
+
+	pos0 := Position{Damadge: 4, Score: 7, GrowY: 5}
+	pos1 := Position{Damadge: 4, Score: 7, GrowY: 10}
+	pos2 := Position{Damadge: 4, Score: 13, GrowY: 3}
+	pos3 := Position{Damadge: 5, Score: 1, GrowY: 3}
+	pos4 := Position{Damadge: 5, Score: 5, GrowY: 1}
+	pos5 := Position{Damadge: 5, Score: 11, GrowY: 4}
+	pos6 := Position{Damadge: 6, Score: 1, GrowY: 2}
+
+	positions := []Position{pos4, pos0, pos5, pos2, pos6, pos1, pos3}
+
+	OrderedBy(DAMADGE, SCORE, GROWY).Sort(positions)
+
+	if !(positions[0].GrowY == 5 && positions[1].GrowY == 10 && positions[2].GrowY == 3 && positions[3].GrowY == 3 && positions[4].GrowY == 1 && positions[5].GrowY == 4) {
+		t.Fail()
+		for _, pos := range positions {
+			fmt.Println("damadge:", pos.Damadge, "Score:", pos.Score, "GrowY:", pos.GrowY)
+		}
+	}
+
 }

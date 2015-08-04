@@ -3,26 +3,10 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"sort"
 )
 
 //TODO rewrite to extentions for colums
-
-type ByDamage []Position
-type ByMaxY []Position
-type ByScore []Position
-
-func (a ByDamage) Len() int           { return len(a) }
-func (a ByDamage) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByDamage) Less(i, j int) bool { return a[i].Damadge < a[j].Damadge }
-
-func (a ByScore) Len() int           { return len(a) }
-func (a ByScore) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByScore) Less(i, j int) bool { return a[i].Score < a[j].Score }
-
-func (a ByMaxY) Len() int           { return len(a) }
-func (a ByMaxY) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByMaxY) Less(i, j int) bool { return a[i].GrowY < a[j].GrowY }
+//http://golang.org/pkg/sort/#example_Interface
 
 func _availablePositions(piece string, field Field) []Position {
 	w := field.Width()
@@ -77,21 +61,21 @@ func _calculateMoves() Position {
 	if MyPlayer.State == "safe" {
 		shortField := _trimField(MyPlayer.Field, 2)
 		shortPositions := _availablePositions(CurrentPiece, shortField)
-		sort.Sort(ByDamage(shortPositions))
+		OrderedBy(DAMADGE, SCORE, GROWY).Sort(shortPositions)
 		return shortPositions[0] //TODO: check lowest fit and predict next piece
 	}
 
 	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
 
 	if MyPlayer.State == "normal" {
-		sort.Sort(ByDamage(positions))
+		OrderedBy(DAMADGE, SCORE, GROWY).Sort(positions)
 		//TODO: check lowest fit and predict next piece
 	}
 
 	// play save try to burn rows and get lowest Y
 	if MyPlayer.State == "dangerous" {
 		//TODO check if burn and check if no damadge
-		sort.Sort(ByMaxY(positions))
+		OrderedBy(GROWY, DAMADGE, SCORE).Sort(positions)
 		//TODO: check lowest fit and predict next piece
 	}
 
@@ -117,7 +101,7 @@ func _keepUpBurn() (Position, bool) {
 	//see if next peacie will burn rows
 	if burnedPositionsTotal > 1 {
 		//sort first
-		sort.Sort(ByDamage(burnedPositions))
+		OrderedBy(DAMADGE, GROWY).Sort(positions)
 
 		bIndex := 0
 		for current_i, pos := range burnedPositions {
