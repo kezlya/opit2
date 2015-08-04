@@ -5,6 +5,8 @@ import (
 	//"fmt"
 )
 
+//TODO rewrite to extentions for colums
+
 type ByDamage []Position
 type ByMaxY []Position
 type ByScore []Position
@@ -21,11 +23,13 @@ func (a ByMaxY) Len() int           { return len(a) }
 func (a ByMaxY) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByMaxY) Less(i, j int) bool { return a[i].GrowY < a[j].GrowY }
 
-func _getAllPossiblePositions(piece string, field [][]bool) []Position {
+func _availablePositions(piece string, field [][]bool) []Position {
+	width := len(field[0])
 	picks := _getPicks(field)
-	picksSum := _sum(picks)
+	picksSum := _sum(picks)// kill this
 	var positions []Position
 	rotationMax := 1
+	
 	switch piece {
 	case "I", "Z", "S":
 		rotationMax = 2
@@ -34,7 +38,7 @@ func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 	}
 
 	for r := 0; r < rotationMax; r++ {
-		for i := 0; i < Width; i++ {
+		for i := 0; i < width; i++ {
 			//fmt.Println(piece,r,i)
 			fieldAfter := _fieldAfter(field, i, r, piece)
 			//columsAfter, maxY := _getColumnsAfter(picks, i, r, piece)
@@ -42,7 +46,7 @@ func _getAllPossiblePositions(piece string, field [][]bool) []Position {
 				//fmt.Println(piece,r,i)
 				columsAfter := _getPicks(fieldAfter)
 				growMin, growMax := _getGrow(picks, columsAfter)
-				damage := _sum(columsAfter) - picksSum
+				damage := _sum(columsAfter) - picksSum //kill this and get data from grow
 				p := Position{
 					Rotation:     r,
 					X:            i,
@@ -73,7 +77,6 @@ func _calculateMoves(time int) Position {
 	}
 
 	//TODO: choose plasements clother to the wall
-	//TODO: build 2-wide hole
 
 	// try to burn more
 	if MyPlayer.Combo > 0 || !safePlay {
@@ -84,17 +87,16 @@ func _calculateMoves(time int) Position {
 		}
 	}
 
-	// build minimum damadge with 2-wide hole on the right
 	if safePlay {
 		// change width and cut field
 		originalWidth := Width
 		Width = Width - 2
 		shortField := _trimField(MyPlayer.Field, 2)
-		allPositins = _getAllPossiblePositions(CurrentPiece, shortField)
+		allPositins = _availablePositions(CurrentPiece, shortField)
 		sort.Sort(ByScore(allPositins))
 		Width = originalWidth
 	} else {
-		allPositins = _getAllPossiblePositions(CurrentPiece, MyPlayer.Field)
+		allPositins = _availablePositions(CurrentPiece, MyPlayer.Field)
 		sort.Sort(ByScore(allPositins))
 	}
 
@@ -129,7 +131,7 @@ func _keepUpBurn(positions []Position) (Position, bool) {
 
 		bIndex := 0
 		for current_i, pos := range burnedPositions {
-			nextPiecePositions := _getAllPossiblePositions(NextPiece, pos.FieldAfter)
+			nextPiecePositions := _availablePositions(NextPiece, pos.FieldAfter)
 			for _, nextPos := range nextPiecePositions {
 				if nextPos.IsBurn > 0 {
 					bIndex = current_i
@@ -163,13 +165,7 @@ func _isHole(cols []int, piece string) bool {
 	return false
 }
 */
-func _isRight(i, right int) bool {
-	if i+right < Width {
-		return true
-	}
-	return false
-}
-
+/*
 func _isUp(i, up int) bool {
 	//fmt.Println(i+up,Height)
 	if i+up <= Height {
@@ -177,266 +173,21 @@ func _isUp(i, up int) bool {
 	}
 	return false
 }
-
+*/
+/*
 func _isLeft(i, left int) bool {
 	if i-left > 0 {
 		return true
 	}
 	return false
 }
-
-func _getColumnsAfter(c []int, i, r int, piece string) ([]int, int) {
-	a := make([]int, len(c))
-	copy(a, c[:])
-	y := 0
-	switch piece {
-	case "I":
-		switch r {
-		case 0:
-			if _isRight(i, 3) {
-				pick := _getPick(i, 3)
-				a[i] = pick + 1
-				a[i+1] = pick + 1
-				a[i+2] = pick + 1
-				a[i+3] = pick + 1
-				y = pick + 1
-			}
-		case 1:
-			a[i] = c[i] + 4
-			y = c[i] + 4
-		}
-	case "J":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				a[i] = pick + 2
-				a[i+1] = pick + 1
-				a[i+2] = pick + 1
-				y = pick + 2
-			}
-		case 1:
-			if _isRight(i, 1) {
-				if c[i+1] >= c[i]+2 {
-					a[i] = c[i+1] + 1
-					a[i+1] = c[i+1] + 1
-					y = c[i+1] + 1
-				} else {
-					a[i] = c[i] + 3
-					a[i+1] = c[i] + 3
-					y = c[i] + 3
-				}
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i+2] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				a[i] = pick + 1
-				a[i+1] = pick + 3
-				y = pick + 3
-			}
-		}
-	case "L":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				a[i] = pick + 1
-				a[i+1] = pick + 1
-				a[i+2] = pick + 2
-				y = pick + 2
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				a[i] = pick + 3
-				a[i+1] = pick + 1
-				y = pick + 3
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				if c[i] >= c[i+1]+2 {
-					a[i] = c[i] + 1
-					a[i+1] = c[i] + 1
-					y = c[i] + 1
-				} else {
-					a[i] = c[i+1] + 3
-					a[i+1] = c[i+1] + 3
-					y = c[i+1] + 3
-				}
-			}
-		}
-	case "O":
-		if _isRight(i, 1) {
-			pick := _getPick(i, 1)
-			a[i] = pick + 2
-			a[i+1] = pick + 2
-			y = pick + 2
-		}
-	case "S":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i] || pick == c[i+1] {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
-				}
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i+1] {
-					a[i] = pick + 3
-					a[i+1] = pick + 2
-					y = pick + 3
-				} else {
-					a[i] = pick + 2
-					a[i+1] = pick + 1
-					y = pick + 2
-				}
-			}
-		}
-	case "T":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				a[i] = pick + 1
-				a[i+1] = pick + 2
-				a[i+2] = pick + 1
-				y = pick + 2
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i] {
-					a[i] = pick + 3
-					a[i+1] = pick + 2
-					y = pick + 3
-				} else {
-					a[i] = pick + 2
-					a[i+1] = pick + 1
-					y = pick + 2
-				}
-			}
-		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i+1] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 2
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick + 1
-					y = pick + 1
-				}
-			}
-		case 3:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i+1] {
-					a[i] = pick + 2
-					a[i+1] = pick + 3
-					y = pick + 3
-
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					y = pick + 2
-				}
-			}
-		}
-	case "Z":
-		switch r {
-		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				if pick == c[i+1] || pick == c[i+2] {
-					a[i] = pick + 2
-					a[i+1] = pick + 2
-					a[i+2] = pick + 1
-					y = pick + 2
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 1
-					a[i+2] = pick
-					y = pick + 1
-				}
-			}
-		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				if pick == c[i] {
-					a[i] = pick + 2
-					a[i+1] = pick + 3
-					y = pick + 3
-				} else {
-					a[i] = pick + 1
-					a[i+1] = pick + 2
-					y = pick + 2
-				}
-			}
-		}
-	}
-	return a, y
-}
-
-func _getPicks(f [][]bool) []int {
-	result := make([]int, len(f[0]))
+*/
+func _fieldAfter(f Field, x, r int, piece string) Field {
+	picks:= f.Columns()
+	w := f.Width()
+	a := make([][]bool, f.Height())
 	for i, row := range f {
-		for j, col := range row {
-			if i+1 > result[j] && col == true {
-				result[j] = i + 1
-			}
-		}
-	}
-	return result
-}
-
-func _fieldAfter(f [][]bool, i, r int, piece string) [][]bool {
-	a := make([][]bool, len(f))
-	for i, row := range f {
-		a[i] = make([]bool, len(row))
+		a[i] = make([]bool, w)
 		copy(a[i], row[:])
 	}
 
@@ -444,200 +195,200 @@ func _fieldAfter(f [][]bool, i, r int, piece string) [][]bool {
 	case "I":
 		switch r {
 		case 0:
-			if _isRight(i, 3) {
-				pick := _getPick(i, 3)
-				if _isUp(pick, 1) {
-					a[pick][i] = true
-					a[pick][i+1] = true
-					a[pick][i+2] = true
-					a[pick][i+3] = true
+			if picks.IsRight(x, 3) {
+				pick := picks.Max(x, 3)
+				if f.IsFit(pick, 1) {
+					a[pick][x] = true
+					a[pick][x+1] = true
+					a[pick][x+2] = true
+					a[pick][x+3] = true
 				}
 			}
 		case 1:
-			pick := MyPlayer.Columns[i]
+			pick := MyPlayer.Columns[x]
 			if _isUp(pick, 4) {
-				a[pick][i] = true
-				a[pick+1][i] = true
-				a[pick+2][i] = true
-				a[pick+3][i] = true
+				a[pick][x] = true
+				a[pick+1][x] = true
+				a[pick+2][x] = true
+				a[pick+3][x] = true
 			}
 		}
 	case "J":
 		switch r {
 		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
 				if _isUp(pick, 2) {
-					a[pick][i] = true
-					a[pick+1][i] = true
-					a[pick][i+1] = true
-					a[pick][i+2] = true
+					a[pick][x] = true
+					a[pick+1][x] = true
+					a[pick][x+1] = true
+					a[pick][x+2] = true
 				}
 			}
 		case 1:
-			if _isRight(i, 1) {
-				l := MyPlayer.Columns[i]
-				r := MyPlayer.Columns[i+1]
+			if _isRight(w, x, 1) {
+				l := MyPlayer.Columns[x]
+				r := MyPlayer.Columns[x+1]
 				if r >= l+2 {
 					if _isUp(r, 1) {
-						a[r][i] = true
-						a[r][i+1] = true
-						a[r-1][i] = true
-						a[r-2][i] = true
+						a[r][x] = true
+						a[r][x+1] = true
+						a[r-1][x] = true
+						a[r-2][x] = true
 					}
 				} else {
 					if _isUp(l, 3) {
-						a[l][i] = true
-						a[l+1][i] = true
-						a[l+2][i] = true
-						a[l+2][i+1] = true
+						a[l][x] = true
+						a[l+1][x] = true
+						a[l+2][x] = true
+						a[l+2][x+1] = true
 					}
 				}
 			}
 		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				r := MyPlayer.Columns[i+2]
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
+				r := MyPlayer.Columns[x+2]
 				if pick == r {
 					if _isUp(r, 2) {
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick+1][i+2] = true
-						a[pick][i+2] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick+1][x+2] = true
+						a[pick][x+2] = true
 					}
 				} else {
 					if _isUp(r, 1) {
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick][i+2] = true
-						a[pick-1][i+2] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick][x+2] = true
+						a[pick-1][x+2] = true
 					}
 				}
 			}
 		case 3:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
+			if _isRight(w, x, 1) {
+				pick := _getPick(x, 1)
 				if _isUp(pick, 3) {
-					a[pick][i] = true
-					a[pick][i+1] = true
-					a[pick+1][i+1] = true
-					a[pick+2][i+1] = true
+					a[pick][x] = true
+					a[pick][x+1] = true
+					a[pick+1][x+1] = true
+					a[pick+2][x+1] = true
 				}
 			}
 		}
 	case "L":
 		switch r {
 		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
 				if _isUp(pick, 2) {
-					a[pick][i] = true
-					a[pick][i+1] = true
-					a[pick][i+2] = true
-					a[pick+1][i+2] = true
+					a[pick][x] = true
+					a[pick][x+1] = true
+					a[pick][x+2] = true
+					a[pick+1][x+2] = true
 				}
 			}
 		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
+			if _isRight(w, x, 1) {
+				pick := _getPick(x, 1)
 				if _isUp(pick, 3) {
-					a[pick][i] = true
-					a[pick+1][i] = true
-					a[pick+2][i] = true
-					a[pick][i+1] = true
+					a[pick][x] = true
+					a[pick+1][x] = true
+					a[pick+2][x] = true
+					a[pick][x+1] = true
 				}
 			}
 		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				l := MyPlayer.Columns[i]
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
+				l := MyPlayer.Columns[x]
 				if pick == l {
 					if _isUp(l, 2) {
-						a[pick][i] = true
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick+1][i+2] = true
+						a[pick][x] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick+1][x+2] = true
 					}
 				} else {
 					if _isUp(l, 1) {
-						a[pick-1][i] = true
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick][i+2] = true
+						a[pick-1][x] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick][x+2] = true
 					}
 				}
 			}
 		case 3:
-			if _isRight(i, 1) {
-				l := MyPlayer.Columns[i]
-				r := MyPlayer.Columns[i+1]
+			if _isRight(w, x, 1) {
+				l := MyPlayer.Columns[x]
+				r := MyPlayer.Columns[x+1]
 				if l >= r+2 {
 					if _isUp(l, 1) {
-						a[l][i] = true
-						a[l][i+1] = true
-						a[l-1][i+1] = true
-						a[l-2][i+1] = true
+						a[l][x] = true
+						a[l][x+1] = true
+						a[l-1][x+1] = true
+						a[l-2][x+1] = true
 					}
 				} else {
 					if _isUp(r, 3) {
-						a[r+2][i] = true
-						a[r][i+1] = true
-						a[r+1][i+1] = true
-						a[r+2][i+1] = true
+						a[r+2][x] = true
+						a[r][x+1] = true
+						a[r+1][x+1] = true
+						a[r+2][x+1] = true
 					}
 				}
 			}
 		}
 	case "O":
-		if _isRight(i, 1) {
-			pick := _getPick(i, 1)
+		if _isRight(w, x, 1) {
+			pick := _getPick(x, 1)
 			if _isUp(pick, 2) {
-				a[pick][i] = true
-				a[pick+1][i] = true
-				a[pick][i+1] = true
-				a[pick+1][i+1] = true
+				a[pick][x] = true
+				a[pick+1][x] = true
+				a[pick][x+1] = true
+				a[pick+1][x+1] = true
 			}
 		}
 	case "S":
 		switch r {
 		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				l := MyPlayer.Columns[i]
-				l1 := MyPlayer.Columns[i+1]
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
+				l := MyPlayer.Columns[x]
+				l1 := MyPlayer.Columns[x+1]
 				if pick == l || pick == l1 {
 					if _isUp(pick, 2) {
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick+1][i+1] = true
-						a[pick+1][i+2] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick+1][x+1] = true
+						a[pick+1][x+2] = true
 					}
 				} else {
 					if _isUp(pick, 1) {
-						a[pick-1][i] = true
-						a[pick-1][i+1] = true
-						a[pick][i+1] = true
-						a[pick][i+2] = true
+						a[pick-1][x] = true
+						a[pick-1][x+1] = true
+						a[pick][x+1] = true
+						a[pick][x+2] = true
 					}
 				}
 			}
 		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				r := MyPlayer.Columns[i+1]
+			if _isRight(w, x, 1) {
+				pick := _getPick(x, 1)
+				r := MyPlayer.Columns[x+1]
 				if pick == r {
 					if _isUp(pick, 3) {
-						a[pick+2][i] = true
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick][i+1] = true
+						a[pick+2][x] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick][x+1] = true
 					}
 				} else {
 					if _isUp(pick, 2) {
-						a[pick+1][i] = true
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick-1][i+1] = true
+						a[pick+1][x] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick-1][x+1] = true
 					}
 				}
 			}
@@ -645,72 +396,72 @@ func _fieldAfter(f [][]bool, i, r int, piece string) [][]bool {
 	case "T":
 		switch r {
 		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
 				if _isUp(pick, 2) {
-					a[pick][i] = true
-					a[pick][i+1] = true
-					a[pick+1][i+1] = true
-					a[pick][i+2] = true
+					a[pick][x] = true
+					a[pick][x+1] = true
+					a[pick+1][x+1] = true
+					a[pick][x+2] = true
 				}
 			}
 		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				l := MyPlayer.Columns[i]
+			if _isRight(w, x, 1) {
+				pick := _getPick(x, 1)
+				l := MyPlayer.Columns[x]
 				if pick == l {
 					if _isUp(pick, 3) {
-						a[pick][i] = true
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick+2][i] = true
+						a[pick][x] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick+2][x] = true
 					}
 				} else {
 					if _isUp(pick, 2) {
-						a[pick-1][i] = true
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick+1][i] = true
+						a[pick-1][x] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick+1][x] = true
 					}
 				}
 			}
 		case 2:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				c := MyPlayer.Columns[i+1]
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
+				c := MyPlayer.Columns[x+1]
 				if pick == c {
 					if _isUp(pick, 2) {
-						a[pick+1][i] = true
-						a[pick][i+1] = true
-						a[pick+1][i+1] = true
-						a[pick+1][i+2] = true
+						a[pick+1][x] = true
+						a[pick][x+1] = true
+						a[pick+1][x+1] = true
+						a[pick+1][x+2] = true
 					}
 				} else {
 					if _isUp(pick, 1) {
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick-1][i+1] = true
-						a[pick][i+2] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick-1][x+1] = true
+						a[pick][x+2] = true
 					}
 				}
 			}
 		case 3:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				r := MyPlayer.Columns[i+1]
+			if _isRight(w, x, 1) {
+				pick := _getPick(x, 1)
+				r := MyPlayer.Columns[x+1]
 				if pick == r {
 					if _isUp(pick, 3) {
-						a[pick+2][i+1] = true
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick][i+1] = true
+						a[pick+2][x+1] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick][x+1] = true
 					}
 				} else {
 					if _isUp(pick, 2) {
-						a[pick+1][i+1] = true
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick-1][i+1] = true
+						a[pick+1][x+1] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick-1][x+1] = true
 					}
 				}
 			}
@@ -718,43 +469,43 @@ func _fieldAfter(f [][]bool, i, r int, piece string) [][]bool {
 	case "Z":
 		switch r {
 		case 0:
-			if _isRight(i, 2) {
-				pick := _getPick(i, 2)
-				l1 := MyPlayer.Columns[i+1]
-				l2 := MyPlayer.Columns[i+2]
+			if _isRight(w, x, 2) {
+				pick := _getPick(x, 2)
+				l1 := MyPlayer.Columns[x+1]
+				l2 := MyPlayer.Columns[x+2]
 				if pick == l1 || pick == l2 {
 					if _isUp(pick, 2) {
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick][i+1] = true
-						a[pick][i+2] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick][x+1] = true
+						a[pick][x+2] = true
 					}
 				} else {
 					if _isUp(pick, 1) {
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick-1][i+1] = true
-						a[pick-1][i+2] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick-1][x+1] = true
+						a[pick-1][x+2] = true
 					}
 				}
 			}
 		case 1:
-			if _isRight(i, 1) {
-				pick := _getPick(i, 1)
-				l := MyPlayer.Columns[i]
+			if _isRight(w, x, 1) {
+				pick := _getPick(x, 1)
+				l := MyPlayer.Columns[x]
 				if pick == l {
 					if _isUp(pick, 3) {
-						a[pick][i] = true
-						a[pick+1][i] = true
-						a[pick+1][i+1] = true
-						a[pick+2][i+1] = true
+						a[pick][x] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick+2][x+1] = true
 					}
 				} else {
 					if _isUp(pick, 2) {
-						a[pick-1][i] = true
-						a[pick][i] = true
-						a[pick][i+1] = true
-						a[pick+1][i+1] = true
+						a[pick-1][x] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick+1][x+1] = true
 					}
 				}
 			}
@@ -763,16 +514,18 @@ func _fieldAfter(f [][]bool, i, r int, piece string) [][]bool {
 	return a
 }
 
-func _getPick(i, v int) int {
-	pick := MyPlayer.Columns[i]
+/*
+
+func _getPick(x, v int) int {
+	pick := MyPlayer.Columns[x]
 	for n := 1; n <= v; n++ {
-		if pick < MyPlayer.Columns[i+n] {
-			pick = MyPlayer.Columns[i+n]
+		if pick < MyPlayer.Columns[x+n] {
+			pick = MyPlayer.Columns[x+n]
 		}
 	}
 	return pick
 }
-
+*/
 func _getGrow(b, a []int) (int, int) {
 	maxY := 0
 	minY := 1000
@@ -790,7 +543,7 @@ func _getGrow(b, a []int) (int, int) {
 	}
 	return minY, maxY
 }
-
+/*
 func _getMaxY(c []int) int {
 	maxY := 0
 	for _, col := range c {
@@ -800,7 +553,9 @@ func _getMaxY(c []int) int {
 	}
 	return maxY
 }
+*/
 
+/*
 func _sum(c []int) int {
 	sum := 0
 	for i := 0; i < len(c); i++ {
@@ -808,7 +563,7 @@ func _sum(c []int) int {
 	}
 	return sum
 }
-
+*/
 func _isBurn(f [][]bool) int {
 	burn := 0
 	for _, row := range f {
@@ -826,31 +581,4 @@ func _isBurn(f [][]bool) int {
 	return burn
 }
 
-func _eq2(a, b [][]bool) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-		for j := range a[i] {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-	return true
-}
 
-func _eq1(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
