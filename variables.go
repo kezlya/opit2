@@ -65,6 +65,16 @@ func (f Field) Equal(b Field) bool {
 	}
 	return true
 }
+func (f Field) Trim(trim int) Field {
+	var field = make([][]bool, len(f))
+	newSize := len(f[0]) - trim
+	for rowIndex, row := range f {
+		colums := make([]bool, newSize)
+		copy(colums, row[:])
+		field[rowIndex] = colums
+	}
+	return field
+}
 
 type Picks []int
 

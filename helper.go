@@ -51,7 +51,7 @@ func _calculateMoves() Position {
 	}
 
 	if MyPlayer.State == "safe" {
-		shortField := _trimField(MyPlayer.Field, 2)
+		shortField := MyPlayer.Field.Trim(2)
 		shortPositions := _availablePositions(CurrentPiece, shortField)
 		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
 		return shortPositions[0] //TODO: predict next piece
@@ -105,17 +105,6 @@ func _keepUpBurn() (Position, bool) {
 		return burnedPos[bIndex], true
 	}
 	return emptyPos, false
-}
-
-func _trimField(f [][]bool, trim int) [][]bool {
-	var field = make([][]bool, len(f))
-	newSize := len(f[0]) - trim
-	for rowIndex, row := range f {
-		colums := make([]bool, newSize)
-		copy(colums, row[:])
-		field[rowIndex] = colums
-	}
-	return field
 }
 
 /*
