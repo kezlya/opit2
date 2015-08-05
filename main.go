@@ -184,6 +184,7 @@ func _keepUpBurn() (Position, bool) {
 		OrderedBy(SCORE, DAMAGE).Sort(positions)
 		bIndex := 0
 		for current_i, pos := range burnedPos {
+			pos.FieldAfter.Burn()
 			nextPiecePositions := pos.FieldAfter.Positions(NextPiece)
 			for _, nextPos := range nextPiecePositions {
 				if nextPos.IsBurn > 0 {
