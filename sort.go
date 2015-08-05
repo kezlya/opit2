@@ -9,6 +9,7 @@ import (
 var DAMAGE = func(c1, c2 *Position) bool { return c1.Damage < c2.Damage }
 var LOWY = func(c1, c2 *Position) bool { return c1.LowY < c2.LowY }
 var HIGHY = func(c1, c2 *Position) bool { return c1.HighY < c2.HighY }
+var SCORE = func(c1, c2 *Position) bool { return c1.Score < c2.Score }
 
 type lessFunc func(p1, p2 *Position) bool
 

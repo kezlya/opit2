@@ -23,6 +23,7 @@ type Position struct {
 	Damage       int
 	LowY         int
 	HighY        int
+	Score        int
 	ColumnsAfter Picks
 	FieldAfter   Field
 }

@@ -31,6 +31,7 @@ func _availablePositions(piece string, field Field) []Position {
 					Damage:     damage,
 					LowY:       lowY,
 					HighY:      highY,
+					Score:      damage + highY,
 					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}
@@ -42,7 +43,7 @@ func _availablePositions(piece string, field Field) []Position {
 func _calculateMoves() Position {
 	//TODO: choose plasements clother to the wall
 
-	if MyPlayer.Combo > 0 {
+	if MyPlayer.Combo > 0 || MyPlayer.State == "dangerous" {
 		pos, isFound := _keepUpBurn()
 		if isFound {
 			return pos
@@ -52,22 +53,21 @@ func _calculateMoves() Position {
 	if MyPlayer.State == "safe" {
 		shortField := _trimField(MyPlayer.Field, 2)
 		shortPositions := _availablePositions(CurrentPiece, shortField)
-		OrderedBy(DAMAGE, LOWY, HIGHY).Sort(shortPositions)
+		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
 		return shortPositions[0] //TODO: predict next piece
 	}
 
 	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
 
 	if MyPlayer.State == "normal" {
-		OrderedBy(DAMAGE, LOWY, HIGHY).Sort(positions)
-		//TODO check if burn and check if no damadge
+		OrderedBy(SCORE, DAMAGE, LOWY).Sort(positions)
+		//TODO check if burn and check if no damage
 		//TODO: predict next piece
 	}
 
 	// play save try to burn rows and get lowest Y
 	if MyPlayer.State == "dangerous" {
-		//TODO check if burn
-		OrderedBy(HIGHY, DAMAGE, LOWY).Sort(positions)
+		OrderedBy(LOWY, SCORE, DAMAGE).Sort(positions)
 		//TODO: predict next piece
 	}
 
@@ -91,7 +91,7 @@ func _keepUpBurn() (Position, bool) {
 	}
 
 	if burnedPosTotal > 1 {
-		OrderedBy(DAMAGE, LOWY).Sort(positions)
+		OrderedBy(SCORE, DAMAGE).Sort(positions)
 		bIndex := 0
 		for current_i, pos := range burnedPos {
 			nextPiecePositions := _availablePositions(NextPiece, pos.FieldAfter)
@@ -464,11 +464,11 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 func _getMetric(b, a []int) (int, int, int) {
 	highY := 0
 	lowY := 1000
-	damadge := 0
+	damage := 0
 	for i, col := range b {
 		diff := a[i] - col
 		if diff > 0 {
-			damadge = damadge + diff
+			damage = damage + diff
 
 			if col < lowY {
 				lowY = col
@@ -479,7 +479,7 @@ func _getMetric(b, a []int) (int, int, int) {
 			}
 		}
 	}
-	return damadge, lowY, highY
+	return damage, lowY, highY
 }
 
 func _isBurn(f [][]bool) int {
