@@ -62,13 +62,11 @@ func (p Picks) Damage(a Picks) (int, int, int) {
 	return damage, lowY, highY
 }
 
-/*
-func _isHole(cols []int, piece string) bool {
-	for i, c := range cols {
-		if _isRight(i, 1) && (c-cols[i+1] < -2 || c-cols[i+1] > 2) && piece != "I" && NextPiece != "I" {
+func (p Picks) IsHole() bool {
+	for i, c := range p {
+		if p.IsRight(i, 1) && (c-p[i+1] < -2 || c-p[i+1] > 2) {
 			return true
 		}
 	}
 	return false
 }
-*/

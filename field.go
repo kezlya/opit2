@@ -105,6 +105,20 @@ func (f Field) IsBurn() int {
 	return burn
 }
 
+func (f Field) Burn() {
+	for i, row := range f {
+		check := true
+		for _, col := range row {
+			if !col {
+				check = false
+			}
+		}
+		if check { //delete line
+			f = append(f[:i], f[i+1:]...)
+		}
+	}
+}
+
 func (f Field) After(x, r int, piece string) Field {
 	picks := f.Picks()
 	w := f.Width()
