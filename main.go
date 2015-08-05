@@ -132,12 +132,11 @@ func _convertField(rawField string) Field {
 
 func _calculateMoves() Position {
 	//TODO: choose plasements clother to the wall
-
-	if MyPlayer.Combo > 0 || MyPlayer.State == "dangerous" {
-		pos, isFound := _keepUpBurn()
-		if isFound {
-			return pos
-		}
+	positions := MyPlayer.Field.Positions(CurrentPiece)
+	burndPositions := _getBurned(positions)
+	
+	if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || MyPlayer.State != "safe") {
+		return _keepUpBurn(burndPositions)
 	}
 
 	if MyPlayer.State == "safe" {
@@ -146,8 +145,6 @@ func _calculateMoves() Position {
 		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
 		return shortPositions[0] //TODO: predict next piece
 	}
-
-	positions := MyPlayer.Field.Positions(CurrentPiece)
 
 	if MyPlayer.State == "normal" {
 		OrderedBy(SCORE, DAMAGE, LOWY).Sort(positions)
@@ -164,24 +161,19 @@ func _calculateMoves() Position {
 	return positions[0]
 }
 
-func _keepUpBurn() (Position, bool) {
-	var emptyPos Position
+func _getBurned(positions []Position) []Position{
 	var burnedPos []Position
-	positions := MyPlayer.Field.Positions(CurrentPiece)
-
 	for _, pos := range positions {
 		if pos.IsBurn > 0 {
 			burnedPos = append(burnedPos, pos)
 		}
 	}
-	burnedPosTotal := len(burnedPos)
+	return burnedPos
+}
 
-	if burnedPosTotal == 1 {
-		return burnedPos[0], true
-	}
-
-	if burnedPosTotal > 1 {
-		OrderedBy(SCORE, DAMAGE).Sort(positions)
+func _keepUpBurn(burnedPos []Position) Position {
+	if len(burnedPos) > 1 {
+		OrderedBy(SCORE, DAMAGE).Sort(burnedPos)
 		bIndex := 0
 		for current_i, pos := range burnedPos {
 			pos.FieldAfter.Burn()
@@ -193,9 +185,9 @@ func _keepUpBurn() (Position, bool) {
 				}
 			}
 		}
-		return burnedPos[bIndex], true
+		return burnedPos[bIndex]
 	}
-	return emptyPos, false
+	return burnedPos[0]
 }
 
 func _roundOne() {
