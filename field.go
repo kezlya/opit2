@@ -1,13 +1,61 @@
 package main
 
-import (
-	"bytes"
-	"fmt"
-)
+type Field [][]bool
 
-func _availablePositions(piece string, field Field) []Position {
-	w := field.Width()
-	picks := field.Picks()
+func (f Field) Width() int { return len(f[0]) }
+
+func (f Field) Height() int { return len(f) }
+
+func (f Field) IsFit(pick, up int) bool {
+	if pick+up <= f.Height() {
+		return true
+	}
+	return false
+}
+
+func (f Field) Picks() Picks {
+	result := make([]int, f.Width())
+	for i, row := range f {
+		for j, col := range row {
+			if i+1 > result[j] && col == true {
+				result[j] = i + 1
+			}
+		}
+	}
+	return result
+}
+
+func (f Field) Equal(b Field) bool {
+	if f.Height() != b.Height() {
+		return false
+	}
+	for i := range f {
+		if len(f[i]) != len(b[i]) {
+			return false
+		}
+		for j := range f[i] {
+			if f[i][j] != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func (f Field) Trim(trim int) Field {
+	var trimed = make([][]bool, len(f))
+	newSize := len(f[0]) - trim
+	for rowIndex, row := range f {
+		colums := make([]bool, newSize)
+		copy(colums, row[:])
+		trimed[rowIndex] = colums
+	}
+	return trimed
+}
+
+func (f Field) Positions(piece string) []Position {
+	w := f.Width()
+	picks := f.Picks()
 	var positions []Position
 	rotationMax := 1
 
@@ -20,14 +68,14 @@ func _availablePositions(piece string, field Field) []Position {
 
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < w; i++ {
-			fieldAfter := _fieldAfter(field, i, r, piece)
-			if !field.Equal(fieldAfter) {
+			fieldAfter := f.After(i, r, piece)
+			if !f.Equal(fieldAfter) {
 				picksAfter := fieldAfter.Picks()
-				damage, lowY, highY := _getMetric(picks, picksAfter)
+				damage, lowY, highY := picks.Damage(picksAfter)
 				p := Position{
 					Rotation:   r,
 					X:          i,
-					IsBurn:     _isBurn(fieldAfter),
+					IsBurn:     fieldAfter.IsBurn(),
 					Damage:     damage,
 					LowY:       lowY,
 					HighY:      highY,
@@ -40,85 +88,24 @@ func _availablePositions(piece string, field Field) []Position {
 	return positions
 }
 
-func _calculateMoves() Position {
-	//TODO: choose plasements clother to the wall
-
-	if MyPlayer.Combo > 0 || MyPlayer.State == "dangerous" {
-		pos, isFound := _keepUpBurn()
-		if isFound {
-			return pos
-		}
-	}
-
-	if MyPlayer.State == "safe" {
-		shortField := MyPlayer.Field.Trim(2)
-		shortPositions := _availablePositions(CurrentPiece, shortField)
-		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
-		return shortPositions[0] //TODO: predict next piece
-	}
-
-	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
-
-	if MyPlayer.State == "normal" {
-		OrderedBy(SCORE, DAMAGE, LOWY).Sort(positions)
-		//TODO check if burn and check if no damage
-		//TODO: predict next piece
-	}
-
-	// play save try to burn rows and get lowest Y
-	if MyPlayer.State == "dangerous" {
-		OrderedBy(LOWY, SCORE, DAMAGE).Sort(positions)
-		//TODO: predict next piece
-	}
-
-	return positions[0]
-}
-
-func _keepUpBurn() (Position, bool) {
-	var emptyPos Position
-	var burnedPos []Position
-	positions := _availablePositions(CurrentPiece, MyPlayer.Field)
-
-	for _, pos := range positions {
-		if pos.IsBurn > 0 {
-			burnedPos = append(burnedPos, pos)
-		}
-	}
-	burnedPosTotal := len(burnedPos)
-
-	if burnedPosTotal == 1 {
-		return burnedPos[0], true
-	}
-
-	if burnedPosTotal > 1 {
-		OrderedBy(SCORE, DAMAGE).Sort(positions)
-		bIndex := 0
-		for current_i, pos := range burnedPos {
-			nextPiecePositions := _availablePositions(NextPiece, pos.FieldAfter)
-			for _, nextPos := range nextPiecePositions {
-				if nextPos.IsBurn > 0 {
-					bIndex = current_i
-					break
-				}
+func (f Field) IsBurn() int {
+	burn := 0
+	for _, row := range f {
+		check := true
+		for _, col := range row {
+			if !col {
+				check = false
+				break
 			}
 		}
-		return burnedPos[bIndex], true
-	}
-	return emptyPos, false
-}
-
-/*
-func _isHole(cols []int, piece string) bool {
-	for i, c := range cols {
-		if _isRight(i, 1) && (c-cols[i+1] < -2 || c-cols[i+1] > 2) && piece != "I" && NextPiece != "I" {
-			return true
+		if check {
+			burn++
 		}
 	}
-	return false
+	return burn
 }
-*/
 
-func _fieldAfter(f Field, x, r int, piece string) Field {
+func (f Field) After(x, r int, piece string) Field {
 	picks := f.Picks()
 	w := f.Width()
 	a := make([][]bool, f.Height())
@@ -448,71 +435,4 @@ func _fieldAfter(f Field, x, r int, piece string) Field {
 		}
 	}
 	return a
-}
-
-func _getMetric(b, a []int) (int, int, int) {
-	highY := 0
-	lowY := 1000
-	damage := 0
-	for i, col := range b {
-		diff := a[i] - col
-		if diff > 0 {
-			damage = damage + diff
-
-			if col < lowY {
-				lowY = col
-			}
-
-			if a[i] > highY {
-				highY = a[i]
-			}
-		}
-	}
-	return damage, lowY, highY
-}
-
-func _isBurn(f [][]bool) int {
-	burn := 0
-	for _, row := range f {
-		check := true
-		for _, col := range row {
-			if !col {
-				check = false
-				break
-			}
-		}
-		if check {
-			burn++
-		}
-	}
-	return burn
-}
-
-func _printMoves(pos Position) {
-	var buffer bytes.Buffer
-	for i := 0; i < pos.Rotation; i++ {
-		buffer.WriteString("turnright,")
-	}
-	if pos.Rotation == 1 {
-		CurrentPieceX = CurrentPieceX + 1
-		if CurrentPiece == "I" {
-			CurrentPieceX = CurrentPieceX + 1
-		}
-	}
-	if CurrentPieceX > pos.X {
-		for i := 0; i < CurrentPieceX-pos.X; i++ {
-			buffer.WriteString("left,")
-		}
-	}
-	if CurrentPieceX < pos.X {
-		for i := 0; i < pos.X-CurrentPieceX; i++ {
-			buffer.WriteString("right,")
-		}
-	}
-	buffer.WriteString("drop")
-	fmt.Println(buffer.String())
-}
-
-func _roundOne() {
-	fmt.Println("drop")
 }

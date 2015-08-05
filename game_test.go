@@ -41,13 +41,12 @@ func playGame() {
 
 	Round = 0
 
-	fmt.Println(Height, Width)
+	fmt.Println(Width)
 
-	for Height > 17 && Pick <= Height {
+	for Pick <= 20 {
 
 		Round++
 
-		Height = rand.Intn(50)
 		Pick = rand.Intn(20)
 
 		MyPlayer.Points++

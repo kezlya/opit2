@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -110,12 +112,13 @@ func _asignUpdates(who, action, value string) {
 
 func _convertField(rawField string) Field {
 	rows := strings.Split(rawField, ";")
-	Height = len(rows)
-	var field = make([][]bool, Height)
+	height := len(rows)
+	var field = make([][]bool, height)
 	for rowIndex, row := range rows {
-		y := Height - rowIndex
-		var colums = make([]bool, Width)
-		for columIndex, value := range strings.Split(row, ",") {
+		y := height - rowIndex
+		cells := strings.Split(row, ",")
+		var colums = make([]bool, len(cells))
+		for columIndex, value := range cells {
 			if value == "2" {
 				colums[columIndex] = true
 			} else {
@@ -125,4 +128,100 @@ func _convertField(rawField string) Field {
 		field[y-1] = colums
 	}
 	return field
+}
+
+func _calculateMoves() Position {
+	//TODO: choose plasements clother to the wall
+
+	if MyPlayer.Combo > 0 || MyPlayer.State == "dangerous" {
+		pos, isFound := _keepUpBurn()
+		if isFound {
+			return pos
+		}
+	}
+
+	if MyPlayer.State == "safe" {
+		shortField := MyPlayer.Field.Trim(2)
+		shortPositions := shortField.Positions(CurrentPiece)
+		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
+		return shortPositions[0] //TODO: predict next piece
+	}
+
+	positions := MyPlayer.Field.Positions(CurrentPiece)
+
+	if MyPlayer.State == "normal" {
+		OrderedBy(SCORE, DAMAGE, LOWY).Sort(positions)
+		//TODO check if burn and check if no damage
+		//TODO: predict next piece
+	}
+
+	// play save try to burn rows and get lowest Y
+	if MyPlayer.State == "dangerous" {
+		OrderedBy(LOWY, SCORE, DAMAGE).Sort(positions)
+		//TODO: predict next piece
+	}
+
+	return positions[0]
+}
+
+func _keepUpBurn() (Position, bool) {
+	var emptyPos Position
+	var burnedPos []Position
+	positions := MyPlayer.Field.Positions(CurrentPiece)
+
+	for _, pos := range positions {
+		if pos.IsBurn > 0 {
+			burnedPos = append(burnedPos, pos)
+		}
+	}
+	burnedPosTotal := len(burnedPos)
+
+	if burnedPosTotal == 1 {
+		return burnedPos[0], true
+	}
+
+	if burnedPosTotal > 1 {
+		OrderedBy(SCORE, DAMAGE).Sort(positions)
+		bIndex := 0
+		for current_i, pos := range burnedPos {
+			nextPiecePositions := pos.FieldAfter.Positions(NextPiece)
+			for _, nextPos := range nextPiecePositions {
+				if nextPos.IsBurn > 0 {
+					bIndex = current_i
+					break
+				}
+			}
+		}
+		return burnedPos[bIndex], true
+	}
+	return emptyPos, false
+}
+
+func _roundOne() {
+	fmt.Println("drop")
+}
+
+func _printMoves(pos Position) {
+	var buffer bytes.Buffer
+	for i := 0; i < pos.Rotation; i++ {
+		buffer.WriteString("turnright,")
+	}
+	if pos.Rotation == 1 {
+		CurrentPieceX = CurrentPieceX + 1
+		if CurrentPiece == "I" {
+			CurrentPieceX = CurrentPieceX + 1
+		}
+	}
+	if CurrentPieceX > pos.X {
+		for i := 0; i < CurrentPieceX-pos.X; i++ {
+			buffer.WriteString("left,")
+		}
+	}
+	if CurrentPieceX < pos.X {
+		for i := 0; i < pos.X-CurrentPieceX; i++ {
+			buffer.WriteString("right,")
+		}
+	}
+	buffer.WriteString("drop")
+	fmt.Println(buffer.String())
 }
