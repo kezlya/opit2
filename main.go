@@ -120,35 +120,25 @@ func _convertField(rawField string) Field {
 
 func _calculateMoves() Position {
 	//TODO: choose plasements clother to the wall
-	zone := _getZone()
+	//zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
 	burndPositions := _getBurned(positions)
 	//fmt.Println(zone)
 	//fmt.Println(len(positions),len(burndPositions))
 	
-	if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone != "safe") {
+	if len(burndPositions) > 0 && MyPlayer.Combo > 0  {
 		//fmt.Println("keep burning")
 		return _keepUpBurn(burndPositions)
 	}
 
-	if zone == "safe" {
-		shortField := MyPlayer.Field.Trim(2)
-		shortPositions := shortField.Positions(CurrentPiece)
-		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
-		return shortPositions[0] //TODO: predict next piece
-	}
 
-	if zone == "normal" {
 		OrderedBy(SCORE, DAMAGE, HIGHY).Sort(positions)
 		//TODO check if burn and check if no damage
 		//TODO: predict next piece
-	}
+
 
 	// play save try to burn rows and get lowest Y
-	if zone == "dangerous" {
-		OrderedBy(HIGHY, DAMAGE, SCORE).Sort(positions)
-		//TODO: predict next piece
-	}
+
 
 	return positions[0]
 }
