@@ -140,9 +140,10 @@ func _choosePosition(positions []Position) Position {
 			nextPiecePositions := pos.FieldAfter.Positions(NextPiece)
 			for _, nextPos := range nextPiecePositions {
 				if pos.Score+nextPos.Score < sumScore {
-					sumScore = pos.Score+nextPos.Score
+					sumScore = pos.Score + nextPos.Score
 					bIndex = current_i
 				}
+				//TODO:check burn game in unittest
 			}
 		}
 		return positions[bIndex]

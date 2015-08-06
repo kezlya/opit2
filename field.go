@@ -194,7 +194,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x+2] = true
 					}
 				} else {
-					if f.IsFit(l3, 1) {
+					if f.IsFit(pick, 1) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
@@ -247,7 +247,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x+2] = true
 					}
 				} else {
-					if f.IsFit(l, 1) {
+					if f.IsFit(pick, 1) {
 						a[pick-1][x] = true
 						a[pick][x] = true
 						a[pick][x+1] = true

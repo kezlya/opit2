@@ -97,3 +97,17 @@ func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 		fmt.Println(pos.X, pos.Rotation)
 	}
 }
+
+func Test_55c2d43635ec1d070e2b697c_63(t *testing.T) {
+	field := Field{{false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, false, true, true, true, false}, {true, false, false, false, false, false, false, true, true, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer = &Player{Field: field}
+	CurrentPiece = "I"
+	NextPiece = "L"
+
+	pos := _calculateMoves()
+
+	if pos.X != 1 || pos.Rotation != 0 {
+		t.Fail()
+		fmt.Println(pos.X, pos.Rotation)
+	}
+}
