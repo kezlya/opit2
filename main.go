@@ -123,23 +123,29 @@ func _calculateMoves() Position {
 	//zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
 	burndPositions := _getBurned(positions)
-	//fmt.Println(zone)
-	//fmt.Println(len(positions),len(burndPositions))
-	
-	if len(burndPositions) > 0 && MyPlayer.Combo > 0  {
-		//fmt.Println("keep burning")
+
+	if len(burndPositions) > 0 && MyPlayer.Combo > 0 {
 		return _keepUpBurn(burndPositions)
 	}
 
+	return _choosePosition(positions)
+}
 
+func _choosePosition(positions []Position) Position {
+	if len(positions) > 1 {
 		OrderedBy(SCORE, DAMAGE, HIGHY).Sort(positions)
-		//TODO check if burn and check if no damage
-		//TODO: predict next piece
-
-
-	// play save try to burn rows and get lowest Y
-
-
+		bIndex := 0
+		sumScore := 1000
+		for current_i, pos := range positions {
+			nextPiecePositions := pos.FieldAfter.Positions(NextPiece)
+			for _, nextPos := range nextPiecePositions {
+				if pos.Score+nextPos.Score < sumScore {
+					bIndex = current_i
+				}
+			}
+		}
+		return positions[bIndex]
+	}
 	return positions[0]
 }
 
@@ -155,9 +161,9 @@ func _getZone() string {
 		}
 	}
 	return "normal"
-} 
+}
 
-func _getBurned(positions []Position) []Position{
+func _getBurned(positions []Position) []Position {
 	var burnedPos []Position
 	for _, pos := range positions {
 		if pos.IsBurn > 0 {
@@ -169,7 +175,7 @@ func _getBurned(positions []Position) []Position{
 
 func _keepUpBurn(burnedPos []Position) Position {
 	if len(burnedPos) > 1 {
-		OrderedBy(SCORE, DAMAGE).Sort(burnedPos)
+		OrderedBy(BURN).Sort(burnedPos)
 		bIndex := 0
 		for current_i, pos := range burnedPos {
 			pos.FieldAfter.Burn()
