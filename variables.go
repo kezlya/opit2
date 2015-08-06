@@ -11,7 +11,6 @@ type Player struct {
 	Field  Field
 	Points int
 	Combo  int
-	State  string
 }
 
 type Position struct {

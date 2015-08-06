@@ -84,3 +84,16 @@ func Benchmark_getMoves(b *testing.B) {
 	}
 	fmt.Println("Done")
 }
+
+func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T){
+	field := Field{{true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, false, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {false, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, false, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {false, true, true, false, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, false}, {false, true, true, false, false, true, true, true, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	MyPlayer = &Player{Field: field}
+	CurrentPiece = "T"
+
+	pos := _calculateMoves()
+	
+	if pos.X != 8 || pos.Rotation != 3{
+		t.Fail()
+		fmt.Println(pos.X,pos.Rotation)
+	}
+}

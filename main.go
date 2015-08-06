@@ -91,18 +91,6 @@ func _asignUpdates(who, action, value string) {
 			for i, p := range Players {
 				if p.Name == who {
 					Players[i].Field = _convertField(cleanSource)
-					picks := Players[i].Field.Picks()
-					y := picks.Max()
-					rowsLeft := Players[i].Field.Height() - y
-					if rowsLeft >= 10 {
-						Players[i].State = "safe"
-					} else {
-						if rowsLeft < 5 {
-							Players[i].State = "dangerous"
-						} else {
-							Players[i].State = "normal"
-						}
-					}
 					break
 				}
 			}
@@ -132,34 +120,52 @@ func _convertField(rawField string) Field {
 
 func _calculateMoves() Position {
 	//TODO: choose plasements clother to the wall
+	zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
 	burndPositions := _getBurned(positions)
+	//fmt.Println(zone)
+	//fmt.Println(len(positions),len(burndPositions))
 	
-	if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || MyPlayer.State != "safe") {
+	if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone != "safe") {
+		//fmt.Println("keep burning")
 		return _keepUpBurn(burndPositions)
 	}
 
-	if MyPlayer.State == "safe" {
+	if zone == "safe" {
 		shortField := MyPlayer.Field.Trim(2)
 		shortPositions := shortField.Positions(CurrentPiece)
 		OrderedBy(SCORE, DAMAGE, LOWY).Sort(shortPositions)
 		return shortPositions[0] //TODO: predict next piece
 	}
 
-	if MyPlayer.State == "normal" {
-		OrderedBy(SCORE, DAMAGE, LOWY).Sort(positions)
+	if zone == "normal" {
+		OrderedBy(SCORE, DAMAGE, HIGHY).Sort(positions)
 		//TODO check if burn and check if no damage
 		//TODO: predict next piece
 	}
 
 	// play save try to burn rows and get lowest Y
-	if MyPlayer.State == "dangerous" {
-		OrderedBy(LOWY, SCORE, DAMAGE).Sort(positions)
+	if zone == "dangerous" {
+		OrderedBy(HIGHY, DAMAGE, SCORE).Sort(positions)
 		//TODO: predict next piece
 	}
 
 	return positions[0]
 }
+
+func _getZone() string {
+	picks := MyPlayer.Field.Picks()
+	y := picks.Max()
+	rowsLeft := MyPlayer.Field.Height() - y
+	if rowsLeft >= 10 {
+		return "safe"
+	} else {
+		if rowsLeft < 5 {
+			return "dangerous"
+		}
+	}
+	return "normal"
+} 
 
 func _getBurned(positions []Position) []Position{
 	var burnedPos []Position
