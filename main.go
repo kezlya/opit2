@@ -120,11 +120,11 @@ func _convertField(rawField string) Field {
 
 func _calculateMoves() Position {
 	//TODO: choose plasements clother to the wall
-	//zone := _getZone()
+	zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
 	burndPositions := _getBurned(positions)
 
-	if len(burndPositions) > 0 && MyPlayer.Combo > 0 {
+	if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
 		return _keepUpBurn(burndPositions)
 	}
 
@@ -155,14 +155,10 @@ func _getZone() string {
 	picks := MyPlayer.Field.Picks()
 	y := picks.Max()
 	rowsLeft := MyPlayer.Field.Height() - y
-	if rowsLeft >= 10 {
+	if rowsLeft > 15 {
 		return "safe"
-	} else {
-		if rowsLeft < 5 {
-			return "dangerous"
-		}
 	}
-	return "normal"
+	return "dangerous"
 }
 
 func _getBurned(positions []Position) []Position {
@@ -177,7 +173,7 @@ func _getBurned(positions []Position) []Position {
 
 func _keepUpBurn(burnedPos []Position) Position {
 	if len(burnedPos) > 1 {
-		OrderedBy(BURN).Sort(burnedPos)
+		OrderedBy(BURN, DAMAGE).Sort(burnedPos)
 		bIndex := 0
 		for current_i, pos := range burnedPos {
 			pos.FieldAfter.Burn()
