@@ -38,7 +38,7 @@ func Benchmark_Score(b *testing.B) {
 func playGame() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	MyPlayer.Points = 0
-
+	//TODO: need to write logic to paly the game ofline so I can see performance in graphs 
 	Round = 0
 
 	fmt.Println(Width)
