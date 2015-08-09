@@ -155,7 +155,7 @@ func _getZone() string {
 	picks := MyPlayer.Field.Picks()
 	y := picks.Max()
 	rowsLeft := MyPlayer.Field.Height() - y
-	if rowsLeft > 15 {
+	if rowsLeft > 13 {
 		return "safe"
 	}
 	return "dangerous"
