@@ -43,14 +43,15 @@ func playGame() {
 
 	fmt.Println(Width)
 
-	for Pick <= 20 {
+	position := Position{}
+	position.FieldAfter := Field{}
 
+	for position !=nil {
 		Round++
 
-		Pick = rand.Intn(20)
-
-		MyPlayer.Points++
+		position = _calculateMoves()
 	}
+	fmt.Println(Round)
 }
 
 func Benchmark_getMoves(b *testing.B) {

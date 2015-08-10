@@ -148,6 +148,10 @@ func _choosePosition(positions []Position) Position {
 		}
 		return positions[bIndex]
 	}
+	
+	if len(positions) == 0{
+		return nil
+	}
 	return positions[0]
 }
 
