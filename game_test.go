@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+var initialField = Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 var pieces = []string{"I", "J", "L", "O", "S", "T", "Z"}
 
 func Benchmark_Score(b *testing.B) {
@@ -18,40 +19,39 @@ func Benchmark_Score(b *testing.B) {
 
 	//var rounds []int
 	//var scores []int
-	//var	victories []bool
 
 	for n := 0; n < b.N; n++ {
-		_asignSettings("field_width", "10")
-		_asignSettings("field_height", "20")
-		_asignSettings("player_names", "player1,player2")
-		_asignSettings("your_bot", "player1")
 
-		playGame()
-		//rounds = append(rounds,round)
-		//scores = append(scores,score)
-		//victories = append(victories,isWinner)
+		for raz := 0; raz < 20; raz++ {
+			roud, score := playGame()
 
-		fmt.Println(Round, MyPlayer.Points)
+			fmt.Println(roud, score)
+		}
 	}
 }
 
-func playGame() {
+func playGame() (int, int) {
 	rand.Seed(time.Now().UTC().UnixNano())
-	MyPlayer.Points = 0
-	//TODO: need to write logic to paly the game ofline so I can see performance in graphs 
+
 	Round = 0
+	NextPiece = pieces[rand.Intn(len(pieces))]
+	MyPlayer.Points = 0
+	position := &Position{}
+	position.FieldAfter = initialField
 
-	fmt.Println(Width)
-
-	position := Position{}
-	position.FieldAfter := Field{}
-
-	for position !=nil {
-		Round++
+	for position != nil {
+		rand.Seed(time.Now().UTC().UnixNano())
+		CurrentPiece = NextPiece
+		NextPiece = pieces[rand.Intn(len(pieces))]
+		position.FieldAfter.Burn()
+		MyPlayer.Field = position.FieldAfter
 
 		position = _calculateMoves()
+		Round++
+		//add garbage raws
 	}
-	fmt.Println(Round)
+
+	return Round, MyPlayer.Points
 }
 
 func Benchmark_getMoves(b *testing.B) {

@@ -118,7 +118,7 @@ func _convertField(rawField string) Field {
 	return field
 }
 
-func _calculateMoves() Position {
+func _calculateMoves() *Position {
 	//TODO: choose plasements clother to the wall
 	zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
@@ -131,7 +131,7 @@ func _calculateMoves() Position {
 	return _choosePosition(positions)
 }
 
-func _choosePosition(positions []Position) Position {
+func _choosePosition(positions []Position) *Position {
 	if len(positions) > 1 {
 		OrderedBy(SCORE, DAMAGE, HIGHY).Sort(positions)
 		bIndex := 0
@@ -146,13 +146,14 @@ func _choosePosition(positions []Position) Position {
 				//TODO:check burn game in unittest
 			}
 		}
-		return positions[bIndex]
+		return &positions[bIndex]
 	}
-	
-	if len(positions) == 0{
+
+	if len(positions) == 0 {
 		return nil
 	}
-	return positions[0]
+
+	return &positions[0]
 }
 
 func _getZone() string {
@@ -175,7 +176,7 @@ func _getBurned(positions []Position) []Position {
 	return burnedPos
 }
 
-func _keepUpBurn(burnedPos []Position) Position {
+func _keepUpBurn(burnedPos []Position) *Position {
 	if len(burnedPos) > 1 {
 		OrderedBy(BURN, DAMAGE).Sort(burnedPos)
 		bIndex := 0
@@ -189,16 +190,16 @@ func _keepUpBurn(burnedPos []Position) Position {
 				}
 			}
 		}
-		return burnedPos[bIndex]
+		return &burnedPos[bIndex]
 	}
-	return burnedPos[0]
+	return &burnedPos[0]
 }
 
 func _roundOne() {
 	fmt.Println("drop")
 }
 
-func _printMoves(pos Position) {
+func _printMoves(pos *Position) {
 	var buffer bytes.Buffer
 	for i := 0; i < pos.Rotation; i++ {
 		buffer.WriteString("turnright,")
