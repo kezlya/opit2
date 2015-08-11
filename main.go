@@ -120,13 +120,13 @@ func _convertField(rawField string) Field {
 
 func _calculateMoves() *Position {
 	//TODO: choose plasements clother to the wall
-	zone := _getZone()
+	//zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
-	burndPositions := _getBurned(positions)
+	//burndPositions := _getBurned(positions)
 
-	if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
+	/*if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
 		return _keepUpBurn(burndPositions)
-	}
+	}*/
 
 	return _choosePosition(positions)
 }
