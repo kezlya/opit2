@@ -84,11 +84,20 @@ func playGame() (int, int) {
 		} else {
 			MyPlayer.Combo = 0
 		}
+		
+		
+		
 		//fmt.Println(Round,position.IsBurn, MyPlayer.Combo, MyPlayer.Points)
 		
 
 		position.FieldAfter.Burn()
 		MyPlayer.Field = position.FieldAfter
+		
+		//add solid line every 20th round
+		r := Round % 20
+		if r == 0 {
+	    	MyPlayer.Field = MyPlayer.Field[1:]
+		}
 
 		position = _calculateMoves()
 		Round++
@@ -105,8 +114,6 @@ func saveReport(fileName string, records [][]string) {
                   return
           }
           defer csvfile.Close()
-
-          
           writer := csv.NewWriter(csvfile)
           for _, record := range records {
                   err := writer.Write(record)

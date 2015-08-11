@@ -122,7 +122,13 @@ func _calculateMoves() *Position {
 	//TODO: choose plasements clother to the wall
 	//zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
-	//burndPositions := _getBurned(positions)
+	burndPositions := _getBurned(positions)
+
+	if len(burndPositions)>0 {
+		OrderedBy(BURN, DAMAGE).Sort(burndPositions)
+		return &burndPositions[0]
+	}
+
 
 	/*if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
 		return _keepUpBurn(burndPositions)
