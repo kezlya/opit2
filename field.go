@@ -1,6 +1,31 @@
 package main
 
+import (
+	"strings"
+)
+
 type Field [][]bool
+
+func (f *Field) init(raw string) Field {
+	rows := strings.Split(raw, ";")
+	height := len(rows)
+	var field Field
+	field = make([][]bool, height)
+	for rowIndex, row := range rows {
+		y := height - rowIndex
+		cells := strings.Split(row, ",")
+		var colums = make([]bool, len(cells))
+		for columIndex, value := range cells {
+			if value == "2" {
+				colums[columIndex] = true
+			} else {
+				colums[columIndex] = false
+			}
+		}
+		field[y-1] = colums
+	}
+	return field
+}
 
 func (f Field) Width() int { return len(f[0]) }
 

@@ -1,11 +1,5 @@
 package main
 
-var Timebank, TimePerMove, Width, OriginalHeight, Pick, Round, CurrentPieceX, CurrentPieceY int
-var Players [2]Player
-var MyPlayer *Player
-var CurrentPiece, NextPiece string
-var IsSafePlay, IsRoofNear bool
-
 type Player struct {
 	Name   string
 	Field  Field
