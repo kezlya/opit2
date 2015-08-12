@@ -24,7 +24,7 @@ func main() {
 			if Round == 1 {
 				_roundOne()
 			} else {
-				_printMoves(_calculateMoves())
+				_printMoves(CalculateMoves())
 			}
 		}
 	}
@@ -118,17 +118,16 @@ func _convertField(rawField string) Field {
 	return field
 }
 
-func _calculateMoves() *Position {
+func CalculateMoves() *Position {
 	//TODO: choose plasements clother to the wall
 	//zone := _getZone()
 	positions := MyPlayer.Field.Positions(CurrentPiece)
 	burndPositions := _getBurned(positions)
 
-	if len(burndPositions)>0 {
+	if len(burndPositions) > 0 {
 		OrderedBy(BURN, DAMAGE).Sort(burndPositions)
 		return &burndPositions[0]
 	}
-
 
 	/*if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
 		return _keepUpBurn(burndPositions)
