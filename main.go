@@ -8,7 +8,12 @@ import (
 )
 
 func main() {
-	game := Game{}
+	game := Game{
+		DamageK: 1,
+		HoleK:   1,
+		PostyK:  1,
+		BurnK:   1,
+	}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
 		input, _ := consolereader.ReadString('\n')
@@ -27,16 +32,6 @@ func main() {
 			}
 		}
 	}
-}
-
-func _getBurned(positions []Position) []Position {
-	var burnedPos []Position
-	for _, pos := range positions {
-		if pos.Burn > 0 {
-			burnedPos = append(burnedPos, pos)
-		}
-	}
-	return burnedPos
 }
 
 func roundOne() {

@@ -98,44 +98,22 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Position {
-	//TODO: choose plasements clother to the wall
-	//zone := _getZone()
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece)
-	burndPositions := _getBurned(positions)
 
-	if len(burndPositions) > 0 {
-		OrderedBy(BURN, DAMAGE).Sort(burndPositions)
-		return &burndPositions[0]
+	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
+
+	for i, position := range positions {
+		position.FieldAfter.Burn()
+		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
+		OrderedBy(SCORE).Sort(nextPositions)
+		minNextScore := nextPositions[0].Score
+		positions[i].Score += minNextScore
 	}
+
+	OrderedBy(SCORE).Sort(positions)
 
 	/*if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
 		return _keepUpBurn(burndPositions)
 	}*/
-
-	return g.choosePosition(positions)
-}
-
-func (g *Game) choosePosition(positions []Position) *Position {
-	if len(positions) > 1 {
-		OrderedBy(SCORE, DAMAGE, HIGHY).Sort(positions)
-		bIndex := 0
-		sumScore := 1000
-		for current_i, pos := range positions {
-			nextPiecePositions := pos.FieldAfter.Positions(g.NextPiece)
-			for _, nextPos := range nextPiecePositions {
-				if pos.Score+nextPos.Score < sumScore {
-					sumScore = pos.Score + nextPos.Score
-					bIndex = current_i
-				}
-				//TODO:check burn game in unittest
-			}
-		}
-		return &positions[bIndex]
-	}
-
-	if len(positions) == 0 {
-		return nil
-	}
 
 	return &positions[0]
 }
@@ -148,25 +126,6 @@ func (g *Game) getZone() string {
 		return "safe"
 	}
 	return "dangerous"
-}
-
-func (g *Game) keepUpBurn(burnedPos []Position) *Position {
-	if len(burnedPos) > 1 {
-		OrderedBy(BURN, DAMAGE).Sort(burnedPos)
-		bIndex := 0
-		for current_i, pos := range burnedPos {
-			pos.FieldAfter.Burn()
-			nextPiecePositions := pos.FieldAfter.Positions(g.NextPiece)
-			for _, nextPos := range nextPiecePositions {
-				if nextPos.Burn > 0 {
-					bIndex = current_i
-					break
-				}
-			}
-		}
-		return &burnedPos[bIndex]
-	}
-	return &burnedPos[0]
 }
 
 func (g *Game) printMoves() {
