@@ -20,6 +20,11 @@ type Game struct {
 	MyPlayer       *Player
 	CurrentPiece   string
 	NextPiece      string
+
+	BurnK   int
+	HoleK   int
+	DamageK int
+	PostyK  int
 }
 
 func (g *Game) asignSettings(action, value string) {
