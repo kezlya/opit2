@@ -10,7 +10,8 @@ type Player struct {
 type Position struct {
 	Rotation     int
 	X            int
-	IsBurn       int
+	Burn         int
+	Hole         int
 	Damage       int
 	LowY         int
 	HighY        int

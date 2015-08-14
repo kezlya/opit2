@@ -118,10 +118,10 @@ func assignPieces(g *Game) {
 }
 
 func applyPoints(g *Game, pos *Position) {
-	if pos.IsBurn > 0 {
+	if pos.Burn > 0 {
 		g.MyPlayer.Combo++
 		g.MyPlayer.Points += g.MyPlayer.Combo - 1
-		switch pos.IsBurn {
+		switch pos.Burn {
 		case 1:
 			g.MyPlayer.Points += 1
 		case 2:

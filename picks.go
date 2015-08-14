@@ -41,10 +41,13 @@ func (p Picks) Equal(b Picks) bool {
 	return true
 }
 
-func (p Picks) Damage(a Picks) (int, int, int) {
+func (p Picks) Damage(a Picks) (int, int, int, int) {
 	highY := 0
 	lowY := 1000
+	hole := 0
 	damage := 0
+	_left := -1
+	_right := 0
 	for i, col := range p {
 		diff := a[i] - col
 		if diff > 0 {
@@ -57,16 +60,29 @@ func (p Picks) Damage(a Picks) (int, int, int) {
 			if a[i] > highY {
 				highY = a[i]
 			}
-		}
-	}
-	return damage, lowY, highY
-}
 
-func (p Picks) IsHole() bool {
-	for i, c := range p {
-		if p.IsRight(i, 1) && (c-p[i+1] < -2 || c-p[i+1] > 2) {
-			return true
+			if hole == -1 {
+				hole = i
+			}
+
+			_right = i
 		}
 	}
-	return false
+
+	if _left > 0 {
+		lDif := a[_left-1] - a[_left]
+		if lDif < 0 {
+			lDif = -lDif
+		}
+		hole += lDif
+	}
+	if _right < len(a)-1 {
+		rDif := a[_right+1] - a[_right]
+		if rDif < 0 {
+			rDif = -rDif
+		}
+		hole += rDif
+	}
+
+	return damage, lowY, highY, hole
 }

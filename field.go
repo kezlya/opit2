@@ -96,15 +96,15 @@ func (f Field) Positions(piece string) []Position {
 			fieldAfter := f.After(i, r, piece)
 			if !f.Equal(fieldAfter) {
 				picksAfter := fieldAfter.Picks()
-				damage, lowY, highY := picks.Damage(picksAfter)
+				damage, _, highY, hole := picks.Damage(picksAfter)
 				p := Position{
 					Rotation:   r,
 					X:          i,
-					IsBurn:     fieldAfter.IsBurn(),
+					Burn:       fieldAfter.IsBurn(),
+					Hole:       hole,
 					Damage:     damage,
-					LowY:       lowY,
 					HighY:      highY,
-					Score:      damage + highY,
+					Score:      0,
 					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}

@@ -28,18 +28,18 @@ func Test_Sort(t *testing.T) {
 }
 
 func Test_SortBurn(t *testing.T) {
-	pos0 := Position{IsBurn: 3}
-	pos1 := Position{IsBurn: 1}
-	pos2 := Position{IsBurn: 0}
+	pos0 := Position{Burn: 3}
+	pos1 := Position{Burn: 1}
+	pos2 := Position{Burn: 0}
 
 	positions := []Position{pos1, pos2, pos0}
 
 	OrderedBy(BURN).Sort(positions)
 
-	if !(positions[0].IsBurn == 3 && positions[1].IsBurn == 1 && positions[2].IsBurn == 0) {
+	if !(positions[0].Burn == 3 && positions[1].Burn == 1 && positions[2].Burn == 0) {
 		t.Fail()
 		for _, pos := range positions {
-			fmt.Println("burn:", pos.IsBurn)
+			fmt.Println("burn:", pos.Burn)
 		}
 	}
 }

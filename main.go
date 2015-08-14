@@ -32,7 +32,7 @@ func main() {
 func _getBurned(positions []Position) []Position {
 	var burnedPos []Position
 	for _, pos := range positions {
-		if pos.IsBurn > 0 {
+		if pos.Burn > 0 {
 			burnedPos = append(burnedPos, pos)
 		}
 	}

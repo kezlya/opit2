@@ -158,7 +158,7 @@ func (g *Game) keepUpBurn(burnedPos []Position) *Position {
 			pos.FieldAfter.Burn()
 			nextPiecePositions := pos.FieldAfter.Positions(g.NextPiece)
 			for _, nextPos := range nextPiecePositions {
-				if nextPos.IsBurn > 0 {
+				if nextPos.Burn > 0 {
 					bIndex = current_i
 					break
 				}
