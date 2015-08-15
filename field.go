@@ -105,7 +105,7 @@ func (f Field) Positions(piece string, dK, yK, hK, bK int) []Position {
 					Hole:       hole,
 					Damage:     damage,
 					HighY:      highY,
-					Score:      damage*dK + highY*yK + hole*hK + burn*bK,
+					Score:      damage*dK + highY*yK + hole*hK - burn*bK,
 					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}
