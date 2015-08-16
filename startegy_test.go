@@ -68,16 +68,32 @@ func Benchmark_one(b *testing.B) {
 }
 
 func Benchmark_strategy(b *testing.B) {
-	game := Game{}
 	for n := 0; n < b.N; n++ {
-		game.Round = n + 1
-		//go fake(game.Round, "hello"+strconv.Itoa(n))
-		//Round = (n + 1) * 2
-		//fake(game.Round, "privet"+strconv.Itoa(n))
+		//strategies := [][]string{}
+		for d := 1; d < 5; d++ {
+			for h := 1; h < 5; h++ {
+				for y := 1; y < 5; y++ {
+					for b := 1; b < 5; b++ {
+						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
+						go playGames(d, h, y, b, 30, true)
+						//strategy := []string{
+						//	strconv.FormatFloat(avrPoint, 'f', 3, 64),
+						//	strconv.FormatFloat(avrRound, 'f', 3, 64),
+						//	"d" + strconv.Itoa(d) + " h" + strconv.Itoa(h) + " y" + strconv.Itoa(y) + " b" + strconv.Itoa(b)}
+						//strategies = append(strategies, strategy)
+					}
+					//fmt.Println("start sleep")
+					time.Sleep(60000000000)
+					//fmt.Println("end sleep")
+				}
+				time.Sleep(60000000000)
+			}
+		}
+		//save("strategies", strategies)
 	}
 }
 
-func playGames(dK, hK, yK, bK, amount int, saveReport bool) (float64, float64) {
+func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
 	records := [][]string{}
 	scores := []int{}
 	rounds := []int{}
@@ -92,19 +108,19 @@ func playGames(dK, hK, yK, bK, amount int, saveReport bool) (float64, float64) {
 		records = append(records, []string{strconv.Itoa(roud), strconv.Itoa(score)})
 		scores = append(scores, score)
 		rounds = append(rounds, roud)
-		fmt.Println(roud, score)
+		//fmt.Println(roud, score)
 	}
 	avrPoint := average(scores)
 	avrRound := average(rounds)
 	if saveReport {
-		filename := strconv.Itoa(amount) + "_" +
-			"_" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
-			"_" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
+		filename := "d" + strconv.Itoa(dK) + "_h" + strconv.Itoa(hK) + "_y" + strconv.Itoa(yK) + "_b" + strconv.Itoa(bK) +
+			"_s" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
+			"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
 			"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
 		save(filename, records)
 		fmt.Println(filename)
 	}
-	return avrPoint, avrRound
+	//return avrPoint, avrRound
 }
 
 func playGame(g *Game) (int, int) {
