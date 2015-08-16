@@ -8,11 +8,12 @@ import (
 )
 
 func main() {
+	//best score so far d4_h1_y3_b3
 	game := Game{
-		DamageK: 1,
+		DamageK: 4,
 		HoleK:   1,
-		PostyK:  1,
-		BurnK:   1,
+		PostyK:  3,
+		BurnK:   3,
 	}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
