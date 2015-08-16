@@ -48,14 +48,22 @@ func Benchmark_moves(b *testing.B) {
 }
 
 func Benchmark_many(b *testing.B) {
+	dK := 1
+	hK := 1
+	yK := 1
+	bK := 1
 	for n := 0; n < b.N; n++ {
-		playGames(100, true)
+		playGames(dK, hK, yK, bK, 100, true)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
+	dK := 1
+	hK := 1
+	yK := 1
+	bK := 1
 	for n := 0; n < b.N; n++ {
-		playGames(1, false)
+		playGames(dK, hK, yK, bK, 1, false)
 	}
 }
 
@@ -69,10 +77,16 @@ func Benchmark_strategy(b *testing.B) {
 	}
 }
 
-func playGames(amount int, saveReport bool) {
+func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
 	records := [][]string{}
 	for i := 0; i < amount; i++ {
-		roud, score := playGame()
+		g := Game{
+			DamageK: dK,
+			HoleK:   hK,
+			PostyK:  yK,
+			BurnK:   bK,
+		}
+		roud, score := playGame(&g)
 		records = append(records, []string{strconv.Itoa(roud), strconv.Itoa(score)})
 		fmt.Println(roud, score)
 	}
@@ -85,9 +99,8 @@ func playGames(amount int, saveReport bool) {
 	}
 }
 
-func playGame() (int, int) {
+func playGame(g *Game) (int, int) {
 	rand.Seed(time.Now().UTC().UnixNano())
-	g := Game{}
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
@@ -97,11 +110,11 @@ func playGame() (int, int) {
 	position.FieldAfter = initialField
 
 	for position != nil {
-		assignPieces(&g)
-		applyPoints(&g, position)
+		assignPieces(g)
+		applyPoints(g, position)
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
-		addSolidLines(&g)
+		addSolidLines(g)
 		//add garbage raws
 		g.Round++
 
