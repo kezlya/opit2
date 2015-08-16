@@ -77,8 +77,10 @@ func Benchmark_strategy(b *testing.B) {
 	}
 }
 
-func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
+func playGames(dK, hK, yK, bK, amount int, saveReport bool) (float64, float64) {
 	records := [][]string{}
+	scores := []int{}
+	rounds := []int{}
 	for i := 0; i < amount; i++ {
 		g := Game{
 			DamageK: dK,
@@ -88,15 +90,21 @@ func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
 		}
 		roud, score := playGame(&g)
 		records = append(records, []string{strconv.Itoa(roud), strconv.Itoa(score)})
+		scores = append(scores, score)
+		rounds = append(rounds, roud)
 		fmt.Println(roud, score)
 	}
+	avrPoint := average(scores)
+	avrRound := average(rounds)
 	if saveReport {
 		filename := strconv.Itoa(amount) + "_" +
-			"_" + "avaradge_round" + "_" + "avaradge_score" + "_" +
-			strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
+			"_" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
+			"_" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
+			"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
 		save(filename, records)
 		fmt.Println(filename)
 	}
+	return avrPoint, avrRound
 }
 
 func playGame(g *Game) (int, int) {
@@ -172,4 +180,23 @@ func save(fileName string, records [][]string) {
 		}
 	}
 	writer.Flush()
+}
+
+func average(a []int) float64 {
+	total := 0.0
+	min := 10000000000.0
+	max := 0.0
+	for _, v := range a {
+		vv := float64(v)
+		total += vv
+		if vv > max {
+			max = vv
+		}
+		if vv < min {
+			min = vv
+		}
+	}
+	total = total - max - min
+
+	return total / float64(len(a)-2)
 }

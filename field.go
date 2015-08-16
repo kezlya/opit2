@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"strings"
 )
 
@@ -139,7 +140,8 @@ func (f Field) Burn() {
 				check = false
 			}
 		}
-		if check { //delete line
+		if check && i < len(f) { //delete line
+			//fmt.Println(len(f), i)
 			f = append(f[:i], f[i+1:]...)
 		}
 	}

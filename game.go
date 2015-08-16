@@ -104,18 +104,22 @@ func (g *Game) calculateMoves() *Position {
 	for i, position := range positions {
 		position.FieldAfter.Burn()
 		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
-		OrderedBy(SCORE).Sort(nextPositions)
-		minNextScore := nextPositions[0].Score
-		positions[i].Score += minNextScore
+		if len(nextPositions) > 0 {
+			OrderedBy(SCORE).Sort(nextPositions)
+			minNextScore := nextPositions[0].Score
+			positions[i].Score += minNextScore
+		} else {
+			positions[i].Score += 10000000000000
+		}
+
 	}
 
-	OrderedBy(SCORE).Sort(positions)
+	if len(positions) > 0 {
+		OrderedBy(SCORE).Sort(positions)
+		return &positions[0]
+	}
 
-	/*if len(burndPositions) > 0 && (MyPlayer.Combo > 0 || zone == "dangerous") {
-		return _keepUpBurn(burndPositions)
-	}*/
-
-	return &positions[0]
+	return nil
 }
 
 func (g *Game) getZone() string {
