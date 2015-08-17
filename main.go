@@ -9,8 +9,9 @@ import (
 
 func main() {
 	//best score so far d4_h1_y3_b3
+	//best score so far d5_h1_y3_b3
 	game := Game{
-		DamageK: 4,
+		DamageK: 5,
 		HoleK:   1,
 		PostyK:  3,
 		BurnK:   3,
