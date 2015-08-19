@@ -98,12 +98,20 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Position {
+	d := g.DamageK
+	p := g.PostyK
+	h := g.HoleK
+	b := g.BurnK
 
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
+	if g.MyPlayer.Combo >= 2 {
+		b = 100
+	}
+
+	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, d, p, h, b)
 
 	for i, position := range positions {
 		position.FieldAfter.Burn()
-		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
+		nextPositions := position.FieldAfter.Positions(g.NextPiece, d, p, h, b)
 		if len(nextPositions) > 0 {
 			OrderedBy(SCORE).Sort(nextPositions)
 			minNextScore := nextPositions[0].Score
