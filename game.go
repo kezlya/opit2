@@ -103,7 +103,7 @@ func (g *Game) calculateMoves() *Position {
 	h := g.HoleK
 	b := g.BurnK
 
-	if g.MyPlayer.Combo >= 2 {
+	if g.MyPlayer.Combo >= 3 {
 		b = 100
 	}
 
