@@ -70,23 +70,23 @@ func Benchmark_one(b *testing.B) {
 func Benchmark_strategy(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
-		for d := 3; d < 8; d++ {
-			for h := 1; h < 6; h++ {
-				for y := 2; y < 7; y++ {
-					for b := 2; b < 7; b++ {
+		for d := 3; d <= 7; d++ {
+			for b := 3; b <= 7; b++ {
+				for y := 2; y <= 6; y++ {
+					for h := 1; h <=3; h++ {
 						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
-						go playGames(d, h, y, b, 30, true)
+						go playGames(d, h, y, b, 26, true)
 						//strategy := []string{
 						//	strconv.FormatFloat(avrPoint, 'f', 3, 64),
 						//	strconv.FormatFloat(avrRound, 'f', 3, 64),
 						//	"d" + strconv.Itoa(d) + " h" + strconv.Itoa(h) + " y" + strconv.Itoa(y) + " b" + strconv.Itoa(b)}
 						//strategies = append(strategies, strategy)
 					}
-					//fmt.Println("start sleep")
-					time.Sleep(80000000000)
-					//fmt.Println("end sleep")
+					fmt.Println("start sleep")
+					time.Sleep(40000000000)
+					fmt.Println("end sleep")
 				}
-				time.Sleep(30000000000)
+				time.Sleep(20000000000)
 			}
 		}
 		//save("strategies", strategies)
