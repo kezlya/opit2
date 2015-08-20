@@ -48,20 +48,20 @@ func Benchmark_moves(b *testing.B) {
 }
 
 func Benchmark_many(b *testing.B) {
-	dK := 1
+	dK := 5
 	hK := 1
-	yK := 1
-	bK := 1
+	yK := 3
+	bK := 3
 	for n := 0; n < b.N; n++ {
 		playGames(dK, hK, yK, bK, 100, true)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
-	dK := 1
+	dK := 5
 	hK := 1
-	yK := 1
-	bK := 1
+	yK := 3
+	bK := 3
 	for n := 0; n < b.N; n++ {
 		playGames(dK, hK, yK, bK, 1, false)
 	}
@@ -72,8 +72,8 @@ func Benchmark_strategy(b *testing.B) {
 		//strategies := [][]string{}
 		for d := 3; d < 8; d++ {
 			for h := 1; h < 6; h++ {
-				for y := 1; y < 6; y++ {
-					for b := 1; b < 6; b++ {
+				for y := 2; y < 7; y++ {
+					for b := 2; b < 7; b++ {
 						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
 						go playGames(d, h, y, b, 30, true)
 						//strategy := []string{
