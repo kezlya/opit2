@@ -82,9 +82,9 @@ func Benchmark_strategy(b *testing.B) {
 						//	"d" + strconv.Itoa(d) + " h" + strconv.Itoa(h) + " y" + strconv.Itoa(y) + " b" + strconv.Itoa(b)}
 						//strategies = append(strategies, strategy)
 					}
-					fmt.Println("start sleep")
+					//fmt.Println("start sleep")
 					time.Sleep(40000000000)
-					fmt.Println("end sleep")
+					//fmt.Println("end sleep")
 				}
 				time.Sleep(20000000000)
 			}
