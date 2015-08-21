@@ -100,7 +100,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 func (g *Game) calculateMoves() *Position {
 	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
 
-	if g.MyPlayer.Combo >= 2 {
+	if g.MyPlayer.Combo >= 3 {
 		burned := g.keepBurning(positions)
 		if burned != nil {
 			return burned

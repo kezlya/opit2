@@ -12,9 +12,9 @@ func main() {
 	//best score so far d5_h1_y3_b3
 	game := Game{
 		DamageK: 5,
-		HoleK:   1,
+		HoleK:   2,
 		PostyK:  3,
-		BurnK:   3,
+		BurnK:   5,
 	}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
