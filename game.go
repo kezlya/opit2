@@ -98,20 +98,52 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Position {
-	d := g.DamageK
-	p := g.PostyK
-	h := g.HoleK
-	b := g.BurnK
+	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
 
-	if g.MyPlayer.Combo >= 3 {
-		b = 100
+	if g.MyPlayer.Combo >= 2 {
+		burned := g.keepBurning(positions)
+		if burned != nil {
+			return burned
+		}
 	}
 
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, d, p, h, b)
+	return g.clasic(positions)
+}
+
+func (g *Game) keepBurning(positions []Position) *Position {
+
+	var burned []Position
 
 	for i, position := range positions {
-		position.FieldAfter.Burn()
-		nextPositions := position.FieldAfter.Positions(g.NextPiece, d, p, h, b)
+		if position.Burn > 0 {
+			position.FieldAfter.Burn()
+			b := g.BurnK + 100
+			nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, b)
+			if len(nextPositions) > 0 {
+				OrderedBy(SCORE).Sort(nextPositions)
+				minNextScore := nextPositions[0].Score
+				positions[i].Score += minNextScore
+			} else {
+				positions[i].Score += 10000000000000
+			}
+			burned = append(burned, positions[i])
+		}
+	}
+
+	if len(burned) > 0 {
+		OrderedBy(SCORE).Sort(burned)
+		return &positions[0]
+	}
+
+	return nil
+}
+
+func (g *Game) clasic(positions []Position) *Position {
+	for i, position := range positions {
+		if position.Burn > 0 {
+			position.FieldAfter.Burn()
+		}
+		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
 		if len(nextPositions) > 0 {
 			OrderedBy(SCORE).Sort(nextPositions)
 			minNextScore := nextPositions[0].Score
@@ -119,7 +151,6 @@ func (g *Game) calculateMoves() *Position {
 		} else {
 			positions[i].Score += 10000000000000
 		}
-
 	}
 
 	if len(positions) > 0 {

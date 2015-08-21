@@ -91,7 +91,7 @@ func (f Field) Positions(piece string, dK, yK, hK, bK int) []Position {
 	case "J", "L", "T":
 		rotationMax = 4
 	}
-	
+
 	if piece == "I" {
 		dK++
 		yK--
