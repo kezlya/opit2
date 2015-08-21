@@ -92,12 +92,6 @@ func (f Field) Positions(piece string, dK, yK, hK, bK int) []Position {
 		rotationMax = 4
 	}
 
-	if piece == "I" {
-		dK++
-		yK--
-		hK--
-	}
-
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < w; i++ {
 			fieldAfter := f.After(i, r, piece)
