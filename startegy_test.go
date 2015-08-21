@@ -67,6 +67,65 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 
+func Benchmark_best_strategy(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		go playGames(7, 1, 2, 4, 10, false)
+		go playGames(6, 1, 5, 3, 10, false)
+		go playGames(7, 3, 4, 6, 10, false)
+		go playGames(7, 1, 3, 4, 10, false)
+		go playGames(4, 1, 2, 5, 10, false)
+		go playGames(6, 2, 4, 5, 10, false)
+		go playGames(6, 1, 3, 5, 10, false)
+		go playGames(7, 2, 5, 8, 10, false)
+		go playGames(7, 1, 4, 7, 10, false)
+		go playGames(7, 2, 4, 6, 10, false)
+		go playGames(7, 3, 6, 7, 10, false)
+		go playGames(5, 1, 2, 6, 10, false)
+		go playGames(6, 2, 3, 6, 10, false)
+		go playGames(7, 2, 3, 3, 10, false)
+		go playGames(7, 1, 6, 4, 10, false)
+		time.Sleep(80000000000)
+		go playGames(7, 2, 5, 5, 10, false)
+		go playGames(6, 2, 4, 3, 10, false)
+		go playGames(6, 2, 2, 5, 10, false)
+		go playGames(7, 2, 5, 3, 10, false)
+		go playGames(5, 2, 5, 6, 10, false)
+		go playGames(7, 1, 5, 5, 10, false)
+		go playGames(7, 2, 3, 5, 10, false)
+		go playGames(6, 1, 2, 7, 10, false)
+		go playGames(5, 1, 3, 4, 10, false)
+		go playGames(6, 2, 4, 7, 10, false)
+		go playGames(7, 3, 3, 8, 10, false)
+		go playGames(5, 1, 2, 7, 10, false)
+		go playGames(7, 2, 2, 7, 10, false)
+		go playGames(5, 2, 3, 7, 10, false)
+		go playGames(5, 2, 3, 6, 10, false)
+		time.Sleep(80000000000)
+		go playGames(6, 1, 3, 7, 10, false)
+		go playGames(5, 1, 5, 4, 10, false)
+		go playGames(6, 1, 5, 8, 10, false)
+		go playGames(7, 2, 4, 7, 10, false)
+		go playGames(5, 2, 3, 4, 10, false)
+		go playGames(5, 2, 3, 5, 10, false)
+		go playGames(6, 1, 4, 4, 10, false)
+		go playGames(7, 2, 6, 8, 10, false)
+		go playGames(7, 1, 5, 7, 10, false)
+		go playGames(5, 1, 3, 8, 10, false)
+		go playGames(7, 1, 3, 7, 10, false)
+		go playGames(7, 2, 4, 8, 10, false)
+		go playGames(5, 1, 4, 5, 10, false)
+		go playGames(7, 1, 2, 5, 10, false)
+		go playGames(7, 3, 3, 6, 10, false)
+		time.Sleep(80000000000)
+		go playGames(5, 1, 2, 4, 10, false)
+		go playGames(5, 1, 4, 4, 10, false)
+		go playGames(5, 1, 3, 5, 10, false)
+		go playGames(6, 1, 5, 6, 10, false)
+		go playGames(7, 3, 2, 5, 10, false)
+		time.Sleep(30000000000)
+	}
+}
+
 func Benchmark_strategy(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
@@ -112,14 +171,22 @@ func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
 	}
 	avrPoint := average(scores)
 	avrRound := average(rounds)
+
 	if saveReport {
 		filename := "d" + strconv.Itoa(dK) + "_h" + strconv.Itoa(hK) + "_y" + strconv.Itoa(yK) + "_b" + strconv.Itoa(bK) +
 			"_s" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
 			"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
 			"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
 		save(filename, records)
-		fmt.Println(filename)
 	}
+	result := strconv.Itoa(dK) +
+		"	" + strconv.Itoa(hK) +
+		"	" + strconv.Itoa(yK) +
+		"	" + strconv.Itoa(bK) +
+		"	" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
+		"	" + strconv.FormatFloat(avrRound, 'f', 3, 64)
+	fmt.Println(result)
+
 	//return avrPoint, avrRound
 }
 
