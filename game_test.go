@@ -25,6 +25,27 @@ func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 	}
 }
 
+func Test_55d7935d35ec1d06d15c9d7e_31(t *testing.T) {
+	game := Game{
+		DamageK: 5,
+		HoleK:   2,
+		PostyK:  3,
+		BurnK:   5,
+	}
+	field := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	game.MyPlayer = &Player{Field: field}
+	game.CurrentPiece = "Z"
+	game.NextPiece = "T"
+	game.MyPlayer.Combo = 3
+
+	pos := game.calculateMoves()
+
+	if pos.X != 2 || pos.Rotation != 1 {
+		t.Fail()
+		fmt.Println(pos.X, pos.Rotation)
+	}
+}
+
 /*
 func Test_55c2d43635ec1d070e2b697c_63(t *testing.T) {
 	game := Game{

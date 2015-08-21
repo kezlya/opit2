@@ -132,7 +132,7 @@ func (g *Game) keepBurning(positions []Position) *Position {
 
 	if len(burned) > 0 {
 		OrderedBy(SCORE).Sort(burned)
-		return &positions[0]
+		return &burned[0]
 	}
 
 	return nil
