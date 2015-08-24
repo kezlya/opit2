@@ -134,7 +134,7 @@ func Benchmark_strategy(b *testing.B) {
 				for y := 2; y <= 6; y++ {
 					for h := 1; h <= 3; h++ {
 						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
-						go playGames(d, h, y, b, 26, true)
+						go playGames(d, h, y, b, 26, false)
 						//strategy := []string{
 						//	strconv.FormatFloat(avrPoint, 'f', 3, 64),
 						//	strconv.FormatFloat(avrRound, 'f', 3, 64),
