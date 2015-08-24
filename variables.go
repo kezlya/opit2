@@ -19,3 +19,8 @@ type Position struct {
 	ColumnsAfter Picks
 	FieldAfter   Field
 }
+
+type Hole struct {
+	X	int
+	Y	int
+}
