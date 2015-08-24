@@ -142,10 +142,10 @@ func Benchmark_strategy(b *testing.B) {
 						//strategies = append(strategies, strategy)
 					}
 					//fmt.Println("start sleep")
-					time.Sleep(40000000000)
+					time.Sleep(15000000000)
 					//fmt.Println("end sleep")
 				}
-				time.Sleep(20000000000)
+				time.Sleep(10000000000)
 			}
 		}
 		//save("strategies", strategies)
