@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	//best score so far d4_h1_y3_b3
-	//best score so far d5_h1_y3_b3
 
 	// if two same shapes make sure first one land in better place test for
 	// this to prove ut
@@ -19,10 +17,10 @@ func main() {
 	// shift left or right
 
 	game := Game{
-		DamageK: 7,
-		HoleK:   2,
+		DamageK: 9,
+		HoleK:   1,
 		PostyK:  3,
-		BurnK:   5,
+		BurnK:   8,
 	}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
