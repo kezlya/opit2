@@ -98,7 +98,7 @@ func (f Field) Positions(piece string, dK, yK, hK, bK int) []Position {
 			if !f.Equal(fieldAfter) {
 				picksAfter := fieldAfter.Picks()
 				damage, _, highY, hole := picks.Damage(picksAfter)
-				burn := fieldAfter.IsBurn()
+				burn := fieldAfter.WillBurn()
 				p := Position{
 					Rotation:   r,
 					X:          i,
@@ -115,7 +115,7 @@ func (f Field) Positions(piece string, dK, yK, hK, bK int) []Position {
 	return positions
 }
 
-func (f Field) IsBurn() int {
+func (f Field) WillBurn() int {
 	burn := 0
 	for _, row := range f {
 		check := true
