@@ -10,6 +10,14 @@ import (
 func main() {
 	//best score so far d4_h1_y3_b3
 	//best score so far d5_h1_y3_b3
+
+	// if two same shapes make sure first one land in better place test for
+	// this to prove ut
+
+	// do not cover garbage rows
+
+	// shift left or right
+
 	game := Game{
 		DamageK: 7,
 		HoleK:   2,

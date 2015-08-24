@@ -206,7 +206,7 @@ func playGame(g *Game) (int, int) {
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
 		addSolidLines(g)
-		//add garbage raws
+		addGarbageLines(g)
 		g.Round++
 
 		position = g.calculateMoves()
@@ -243,7 +243,21 @@ func applyPoints(g *Game, pos *Position) {
 func addSolidLines(g *Game) {
 	r := g.Round % 20
 	if r == 0 {
-		g.MyPlayer.Field = g.MyPlayer.Field[1:]
+		g.MyPlayer.Field = g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1]
+	}
+}
+
+func addGarbageLines(g *Game) {
+	r := g.Round % 6
+	if r == 0 {
+		size := g.MyPlayer.Field.Width()
+		row := make([]bool, size, size)
+		for i := range row {
+			row[i] = true
+		}
+		hole := rand.Intn(size)
+		row[hole] = false
+		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
 	}
 }
 
