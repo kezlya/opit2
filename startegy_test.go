@@ -199,8 +199,9 @@ func playGame(g *Game) (int, int) {
 	g.MyPlayer.Points = 0
 	position := &Position{}
 	position.FieldAfter = initialField
+	keepGoing := true
 
-	for position != nil {
+	for keepGoing {
 		assignPieces(g)
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
@@ -210,6 +211,10 @@ func playGame(g *Game) (int, int) {
 		g.Round++
 
 		position = g.calculateMoves()
+		
+		if position == nil || isRoof(g) {
+			keepGoing = false
+		}
 	}
 
 	return g.Round, g.MyPlayer.Points
@@ -238,6 +243,16 @@ func applyPoints(g *Game, pos *Position) {
 	} else {
 		g.MyPlayer.Combo = 0
 	}
+}
+
+func isRoof(g *Game) bool {
+	for _, col := range g.MyPlayer.Field[g.MyPlayer.Field.Height()-1]{
+		if col {
+			//fmt.Println("roof", g.MyPlayer.Field.Height())
+			return true
+		}
+	}
+	return false
 }
 
 func addSolidLines(g *Game) {
