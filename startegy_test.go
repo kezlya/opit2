@@ -129,7 +129,7 @@ func Benchmark_best_strategy(b *testing.B) {
 func Benchmark_strategy(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
-		for d := 4; d <= 7; d++ {
+		for d := 8; d <= 10; d++ {
 			for b := 3; b <= 8; b++ {
 				for y := 2; y <= 6; y++ {
 					for h := 1; h <= 3; h++ {
