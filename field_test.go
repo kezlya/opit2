@@ -58,3 +58,16 @@ func Test_Picks(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func Test_FindHoles(t *testing.T) {
+	arrange := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, false, false, true, false}, {false, false, true, true, true, true, false, false, false, true}, {false, false, true, true, true, false, false, false, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+
+	holes := arrange.FindHoles(arrange.Picks())
+
+	if len(holes) != 6 {
+		for _, hole :=range holes {
+			fmt.Println("x:",hole.X," y:",hole.Y)
+		}
+		t.Fail()
+	}
+}

@@ -147,6 +147,19 @@ func (f Field) Burn() {
 	}
 }
 
+func (f Field) FindHoles(picks Picks) []Hole {
+	holes:=make([]Hole,0)
+	
+	for i,pick := range picks {
+		for j:=0; j<pick; j++ {
+			if !f[j][i] {
+				holes = append(holes,Hole{X:i,Y:j})
+			}
+		}
+	}
+	return holes
+} 
+
 func (f Field) After(x, r int, piece string) Field {
 	picks := f.Picks()
 	w := f.Width()
