@@ -44,7 +44,7 @@ func (p Picks) Equal(b Picks) bool {
 func (p Picks) Damage(a Picks) (int, int, int, int) {
 	highY := 0
 	lowY := 1000
-	hole := 0
+	step := 0
 	damage := 0
 	_left := -1
 	_right := 0
@@ -61,8 +61,8 @@ func (p Picks) Damage(a Picks) (int, int, int, int) {
 				highY = a[i]
 			}
 
-			if hole == -1 {
-				hole = i
+			if step == -1 {
+				step = i
 			}
 
 			_right = i
@@ -74,15 +74,15 @@ func (p Picks) Damage(a Picks) (int, int, int, int) {
 		if lDif < 0 {
 			lDif = -lDif
 		}
-		hole += lDif
+		step += lDif
 	}
 	if _right < len(a)-1 {
 		rDif := a[_right+1] - a[_right]
 		if rDif < 0 {
 			rDif = -rDif
 		}
-		hole += rDif
+		step += rDif
 	}
 
-	return damage, lowY, highY, hole
+	return damage, lowY, highY, step
 }

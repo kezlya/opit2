@@ -12,7 +12,7 @@ func Test_Damage(t *testing.T) {
 	piksBefore := before.Picks()
 	piksAfter := after.Picks()
 
-	damage, lowY, highY, hole := piksBefore.Damage(piksAfter)
+	damage, lowY, highY, step := piksBefore.Damage(piksAfter)
 
 	if damage != 5 {
 		fmt.Println("damage is wrong", damage)
@@ -29,8 +29,8 @@ func Test_Damage(t *testing.T) {
 		t.Fail()
 	}
 
-	if hole != 2 {
-		fmt.Println("hole is wrong", hole)
+	if step != 2 {
+		fmt.Println("hole is wrong", step)
 		t.Fail()
 	}
 }
