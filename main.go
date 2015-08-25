@@ -27,6 +27,11 @@ func main() {
 		HoleK:   1,
 		PostyK:  4,
 		BurnK:   7,
+		SavePlay: false,
+		DamageKs: 8,
+		HoleKs:	2,
+		PostyKs:	3,
+		BurnKs:	6,
 	}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
