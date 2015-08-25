@@ -12,7 +12,7 @@ func Test_Damage(t *testing.T) {
 	piksBefore := before.Picks()
 	piksAfter := after.Picks()
 
-	damage, lowY, highY, step := piksBefore.Damage(piksAfter)
+	damage, lowY, highY, step, _ := piksBefore.Damage(piksAfter, []Hole{})
 
 	if damage != 5 {
 		fmt.Println("damage is wrong", damage)
@@ -31,6 +31,39 @@ func Test_Damage(t *testing.T) {
 
 	if step != 2 {
 		fmt.Println("hole is wrong", step)
+		t.Fail()
+	}
+}
+
+func Test_DamageHoleScore(t *testing.T) {
+	before := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {false, true, true, true, true, true, true, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	afterBad := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	afterGood := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, false, true, true, false, false, false, false}, {false, true, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	afterNoHole := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {false, true, true, true, true, true, true, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {false, false, false, false, true, true, true, true, true, false}, {false, false, false, false, false, false, false, true, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+
+	piksBefore := before.Picks()
+	piksAfterBad := afterBad.Picks()
+	piksAfterGood := afterGood.Picks()
+	piksAfterNoHole := afterNoHole.Picks()
+
+	holes := before.FindHoles(piksBefore)
+
+	_, _, _, _, holeBad := piksBefore.Damage(piksAfterBad, holes)
+	_, _, _, _, holeGood := piksBefore.Damage(piksAfterGood, holes)
+	_, _, _, _, holeNo := piksBefore.Damage(piksAfterNoHole, holes)
+
+	if holeBad != 5 {
+		fmt.Println("bad holes is wrong", holeBad)
+		t.Fail()
+	}
+
+	if holeGood != 3 {
+		fmt.Println("good hole is wrong", holeGood)
+		t.Fail()
+	}
+
+	if holeNo != 0 {
+		fmt.Println("NoHole is wrong", holeNo)
 		t.Fail()
 	}
 }

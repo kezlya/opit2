@@ -215,7 +215,7 @@ func playGame(g *Game) (int, int) {
 		g.Round++
 
 		position = g.calculateMoves()
-		
+
 		if position == nil || isRoof(g) {
 			keepGoing = false
 		}
@@ -250,7 +250,7 @@ func applyPoints(g *Game, pos *Position) {
 }
 
 func isRoof(g *Game) bool {
-	for _, col := range g.MyPlayer.Field[g.MyPlayer.Field.Height()-1]{
+	for _, col := range g.MyPlayer.Field[g.MyPlayer.Field.Height()-1] {
 		if col {
 			//fmt.Println("roof", g.MyPlayer.Field.Height())
 			return true

@@ -65,8 +65,8 @@ func Test_FindHoles(t *testing.T) {
 	holes := arrange.FindHoles(arrange.Picks())
 
 	if len(holes) != 6 {
-		for _, hole :=range holes {
-			fmt.Println("x:",hole.X," y:",hole.Y)
+		for _, hole := range holes {
+			fmt.Println("x:", hole.X, " y:", hole.Y)
 		}
 		t.Fail()
 	}

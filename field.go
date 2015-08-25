@@ -97,17 +97,18 @@ func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
 			fieldAfter := f.After(i, r, piece)
 			if !f.Equal(fieldAfter) {
 				burn := fieldAfter.WillBurn()
-				//holes := f.FindHoles()
+				holes := f.FindHoles(picks)
 				picksAfter := fieldAfter.Picks()
-				damage, _, highY, step := picks.Damage(picksAfter)
+				damage, _, highY, step, hole := picks.Damage(picksAfter, holes)
 				p := Position{
 					Rotation:   r,
 					X:          i,
 					Burn:       burn,
-					Hole:       step,
+					Step:       step,
+					Hole:       hole,
 					Damage:     damage,
 					HighY:      highY,
-					Score:      damage*dK + highY*yK + step*sK - burn*bK,
+					Score:      damage*dK + highY*yK + step*sK - burn*bK + hole,
 					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}
@@ -149,17 +150,17 @@ func (f Field) Burn() {
 }
 
 func (f Field) FindHoles(picks Picks) []Hole {
-	holes:=make([]Hole,0)
-	
-	for i,pick := range picks {
-		for j:=0; j<pick; j++ {
+	holes := make([]Hole, 0)
+
+	for i, pick := range picks {
+		for j := 0; j < pick; j++ {
 			if !f[j][i] {
-				holes = append(holes,Hole{X:i,Y:j})
+				holes = append(holes, Hole{X: i, Y: j})
 			}
 		}
 	}
 	return holes
-} 
+}
 
 func (f Field) After(x, r int, piece string) Field {
 	picks := f.Picks()

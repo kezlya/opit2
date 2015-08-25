@@ -41,11 +41,12 @@ func (p Picks) Equal(b Picks) bool {
 	return true
 }
 
-func (p Picks) Damage(a Picks) (int, int, int, int) {
+func (p Picks) Damage(a Picks, holes []Hole) (int, int, int, int, int) {
 	highY := 0
 	lowY := 1000
 	step := 0
 	damage := 0
+	holeDamage := 0
 	_left := -1
 	_right := 0
 	for i, col := range p {
@@ -66,6 +67,12 @@ func (p Picks) Damage(a Picks) (int, int, int, int) {
 			}
 
 			_right = i
+
+			for _, hole := range holes {
+				if hole.X == i && holeDamage < hole.Y {
+					holeDamage = hole.Y
+				}
+			}
 		}
 	}
 
@@ -84,5 +91,5 @@ func (p Picks) Damage(a Picks) (int, int, int, int) {
 		step += rDif
 	}
 
-	return damage, lowY, highY, step
+	return damage, lowY, highY, step, holeDamage
 }
