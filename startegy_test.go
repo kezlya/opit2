@@ -127,12 +127,14 @@ func Benchmark_best_strategy(b *testing.B) {
 }
 
 func Benchmark_strategy(b *testing.B) {
+	fmt.Println("")
+	fmt.Println("damadge	hole	postY	burn	score	round")
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
-		for d := 8; d <= 10; d++ {
-			for b := 3; b <= 8; b++ {
+		for d := 8; d <= 15; d++ {
+			for b := 4; b <= 12; b++ {
 				for y := 2; y <= 6; y++ {
-					for h := 1; h <= 3; h++ {
+					for h := 1; h <= 2; h++ {
 						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
 						go playGames(d, h, y, b, 26, false)
 						//strategy := []string{
@@ -142,10 +144,12 @@ func Benchmark_strategy(b *testing.B) {
 						//strategies = append(strategies, strategy)
 					}
 					//fmt.Println("start sleep")
-					time.Sleep(15000000000)
+					//time.Sleep(15000000000)
 					//fmt.Println("end sleep")
 				}
-				time.Sleep(10000000000)
+				//fmt.Println("start sleep")
+				time.Sleep(60000000000)
+				//fmt.Println("end sleep")
 			}
 		}
 		//save("strategies", strategies)
