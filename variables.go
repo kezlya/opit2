@@ -11,6 +11,7 @@ type Position struct {
 	Rotation     int
 	X            int
 	Burn         int
+	Step         int
 	Hole         int
 	Damage       int
 	LowY         int
@@ -21,6 +22,6 @@ type Position struct {
 }
 
 type Hole struct {
-	X	int
-	Y	int
+	X int
+	Y int
 }
