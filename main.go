@@ -12,6 +12,9 @@ func main() {
 // 15	1	4	8	78.792	103.333
 // 15	2	3	7	78.708	106.042
 
+// 15	1	4	7	81.917	102.667
+// 15	2	3	8	79.708	101.958
+
 	// if two same shapes make sure first one land in better place test for
 	// this to prove ut
 
@@ -20,10 +23,10 @@ func main() {
 	// shift left or right
 
 	game := Game{
-		DamageK: 9,
+		DamageK: 15,
 		HoleK:   1,
-		PostyK:  3,
-		BurnK:   8,
+		PostyK:  4,
+		BurnK:   7,
 	}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {

@@ -58,10 +58,10 @@ func Benchmark_many(b *testing.B) {
 }
 
 func Benchmark_one(b *testing.B) {
-	dK := 5
+	dK := 15
 	hK := 1
-	yK := 3
-	bK := 3
+	yK := 4
+	bK := 7
 	for n := 0; n < b.N; n++ {
 		playGames(dK, hK, yK, bK, 1, false)
 	}
