@@ -9,6 +9,9 @@ import (
 
 func main() {
 
+// 15	1	4	8	78.792	103.333
+// 15	2	3	7	78.708	106.042
+
 	// if two same shapes make sure first one land in better place test for
 	// this to prove ut
 

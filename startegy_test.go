@@ -132,8 +132,8 @@ func Benchmark_strategy(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
 		for d := 8; d <= 15; d++ {
-			for b := 4; b <= 12; b++ {
-				for y := 2; y <= 6; y++ {
+			for b := 5; b <= 12; b++ {
+				for y := 2; y <= 4; y++ {
 					for h := 1; h <= 2; h++ {
 						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
 						go playGames(d, h, y, b, 26, false)
