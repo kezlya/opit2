@@ -97,7 +97,6 @@ func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
 			fieldAfter := f.After(i, r, piece)
 			if !f.Equal(fieldAfter) {
 				burn := fieldAfter.WillBurn()
-				fieldAfter.Burn()
 				//holes := f.FindHoles()
 				picksAfter := fieldAfter.Picks()
 				damage, _, highY, step := picks.Damage(picksAfter)
