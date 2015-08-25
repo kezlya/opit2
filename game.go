@@ -25,12 +25,6 @@ type Game struct {
 	HoleK   int
 	DamageK int
 	PostyK  int
-	
-	SavePlay bool
-	BurnKs   int
-	HoleKs   int
-	DamageKs int
-	PostyKs  int
 }
 
 func (g *Game) asignSettings(action, value string) {
@@ -104,14 +98,6 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Position {
-	if !g.SavePlay && !g.isSafe() {
-		g.DamageK = g.DamageKs
-		g.PostyK = g.PostyKs
-		g.HoleK = g.HoleKs
-		g.BurnK = g.BurnKs
-		g.SavePlay = true
-	}
-
 	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
 
 	if g.MyPlayer.Combo >= 2 {
