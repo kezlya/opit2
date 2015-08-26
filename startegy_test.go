@@ -130,6 +130,10 @@ func Benchmark_one(b *testing.B) {
 	}
 }*/
 
+// when testing strategy output range of all games
+// when testing strategy output range of all games
+// when testing strategy output range of all games
+// when testing strategy output range of all games
 func Benchmark_strategy(b *testing.B) {
 	fmt.Println("")
 	fmt.Println("damadge	step	postY	burn	score	round")

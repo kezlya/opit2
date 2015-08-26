@@ -14,9 +14,7 @@ func main() {
 
 	// shift left or right
 
-	//validate path to move piece to the place
-
-	//investigate performance by returning fieldAfter nil
+	// validate path to move piece to the place
 
 	// when testing strategy output range of all games
 
