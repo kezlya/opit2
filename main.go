@@ -20,11 +20,13 @@ func main() {
 
 	//init position
 
+	//10	2	3	5	76.283	103.609
+
 	strategy := Strategy{
-		DamageK: 9,
-		StepK:   1,
+		DamageK: 10,
+		StepK:   2,
 		PostyK:  3,
-		BurnK:   8,
+		BurnK:   5,
 	}
 	game := Game{Strategy: strategy}
 	consolereader := bufio.NewReader(os.Stdin)
