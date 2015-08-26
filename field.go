@@ -82,6 +82,8 @@ func (f Field) Trim(trim int) Field {
 func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
 	w := f.Width()
 	picks := f.Picks()
+	hBlocked, hLeft, hRight := f.FindHoles(picks)
+	//hBlocked, _, _ := f.FindHoles(picks)
 	var positions []Position
 	rotationMax := 1
 
@@ -97,9 +99,8 @@ func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
 			fieldAfter := f.After(i, r, piece)
 			if !f.Equal(fieldAfter) {
 				burn := fieldAfter.WillBurn()
-				holes := f.FindHoles(picks)
 				picksAfter := fieldAfter.Picks()
-				damage, _, highY, step, hole := picks.Damage(picksAfter, holes)
+				damage, _, highY, step, hole := picks.Damage(picksAfter, hBlocked)
 				p := Position{
 					Rotation:   r,
 					X:          i,
@@ -112,6 +113,12 @@ func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
 					FieldAfter: fieldAfter}
 				positions = append(positions, p)
 			}
+		}
+		for _, h := range hLeft {
+			fieldAfterLeft := f.LeftFix(r, piece, hLeft)
+		}
+		for _, h := range hRight {
+			fieldAfterRight := f.RightFix(r, piece, hLeft)
 		}
 	}
 	return positions
@@ -149,17 +156,25 @@ func (f Field) Burn() {
 	}
 }
 
-func (f Field) FindHoles(picks Picks) []Hole {
-	holes := make([]Hole, 0)
-
+func (f Field) FindHoles(picks Picks) ([]Hole, []Hole, []Hole) {
+	blocked := make([]Hole, 0)
+	left := make([]Hole, 0)
+	right := make([]Hole, 0)
 	for i, pick := range picks {
 		for j := 0; j < pick; j++ {
 			if !f[j][i] {
-				holes = append(holes, Hole{X: i, Y: j})
+				hole := Hole{X: i, Y: j}
+				if i-2 > -1 && !f[j][i-1] && !f[j][i-2] {
+					left = append(left, hole)
+				} else if i+2 < f.Width() && !f[j][i+1] && !f[j][i+2] {
+					right = append(right, hole)
+				} else {
+					blocked = append(blocked, hole)
+				}
 			}
 		}
 	}
-	return holes
+	return blocked, left, right
 }
 
 func (f Field) After(x, r int, piece string) Field {

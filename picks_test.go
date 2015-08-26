@@ -46,11 +46,11 @@ func Test_DamageHoleScore(t *testing.T) {
 	piksAfterGood := afterGood.Picks()
 	piksAfterNoHole := afterNoHole.Picks()
 
-	holes := before.FindHoles(piksBefore)
+	hBlocked, _, _ := before.FindHoles(piksBefore)
 
-	_, _, _, _, holeBad := piksBefore.Damage(piksAfterBad, holes)
-	_, _, _, _, holeGood := piksBefore.Damage(piksAfterGood, holes)
-	_, _, _, _, holeNo := piksBefore.Damage(piksAfterNoHole, holes)
+	_, _, _, _, holeBad := piksBefore.Damage(piksAfterBad, hBlocked)
+	_, _, _, _, holeGood := piksBefore.Damage(piksAfterGood, hBlocked)
+	_, _, _, _, holeNo := piksBefore.Damage(piksAfterNoHole, hBlocked)
 
 	if holeBad != 5 {
 		fmt.Println("bad holes is wrong", holeBad)

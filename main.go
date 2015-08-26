@@ -14,6 +14,12 @@ func main() {
 
 	// shift left or right
 
+	//validate path to move piece to the place
+
+	//investigate performance by returning fieldAfter nil
+
+	//init position
+
 	game := Game{
 		DamageK: 9,
 		HoleK:   1,

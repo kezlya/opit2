@@ -7,20 +7,6 @@ type Player struct {
 	Combo  int
 }
 
-type Position struct {
-	Rotation     int
-	X            int
-	Burn         int
-	Step         int
-	Hole         int
-	Damage       int
-	LowY         int
-	HighY        int
-	Score        int
-	ColumnsAfter Picks
-	FieldAfter   Field
-}
-
 type Hole struct {
 	X int
 	Y int
