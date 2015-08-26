@@ -20,12 +20,13 @@ func main() {
 
 	//init position
 
-	game := Game{
+	strategy := Strategy{
 		DamageK: 9,
-		HoleK:   1,
+		StepK:   1,
 		PostyK:  3,
 		BurnK:   8,
 	}
+	game := Game{Strategy: strategy}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
 		input, _ := consolereader.ReadString('\n')

@@ -79,11 +79,10 @@ func (f Field) Trim(trim int) Field {
 	return trimed
 }
 
-func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
+func (f Field) Positions(piece string, strategy Strategy) []Position {
 	w := f.Width()
 	picks := f.Picks()
 	hBlocked, hLeft, hRight := f.FindHoles(picks)
-	//hBlocked, _, _ := f.FindHoles(picks)
 	var positions []Position
 	rotationMax := 1
 
@@ -97,28 +96,27 @@ func (f Field) Positions(piece string, dK, yK, sK, bK int) []Position {
 	for r := 0; r < rotationMax; r++ {
 		for i := 0; i < w; i++ {
 			fieldAfter := f.After(i, r, piece)
-			if !f.Equal(fieldAfter) {
-				burn := fieldAfter.WillBurn()
-				picksAfter := fieldAfter.Picks()
-				damage, _, highY, step, hole := picks.Damage(picksAfter, hBlocked)
-				p := Position{
-					Rotation:   r,
-					X:          i,
-					Burn:       burn,
-					Step:       step,
-					Hole:       hole,
-					Damage:     damage,
-					HighY:      highY,
-					Score:      damage*dK + highY*yK + step*sK - burn*bK + hole,
-					FieldAfter: fieldAfter}
+			if fieldAfter != nil {
+				p := Position{Rotation: r, X: i}
+				p.Init(picks, fieldAfter, hBlocked, strategy)
 				positions = append(positions, p)
 			}
 		}
 		for _, h := range hLeft {
-			fieldAfterLeft := f.LeftFix(r, piece, hLeft)
+			fieldAfterLeft := f.LeftFix(r, piece, h)
+			if fieldAfterLeft != nil {
+				p := Position{Rotation: r, X: h.X}
+				p.Init(picks, fieldAfterLeft, hBlocked, strategy)
+				positions = append(positions, p)
+			}
 		}
 		for _, h := range hRight {
-			fieldAfterRight := f.RightFix(r, piece, hLeft)
+			fieldAfterRight := f.RightFix(r, piece, h)
+			if fieldAfterRight != nil {
+				p := Position{Rotation: r, X: h.X}
+				p.Init(picks, fieldAfterRight, hBlocked, strategy)
+				positions = append(positions, p)
+			}
 		}
 	}
 	return positions
@@ -178,6 +176,7 @@ func (f Field) FindHoles(picks Picks) ([]Hole, []Hole, []Hole) {
 }
 
 func (f Field) After(x, r int, piece string) Field {
+	valid := false
 	picks := f.Picks()
 	w := f.Width()
 	a := make([][]bool, f.Height())
@@ -197,6 +196,7 @@ func (f Field) After(x, r int, piece string) Field {
 					a[pick][x+1] = true
 					a[pick][x+2] = true
 					a[pick][x+3] = true
+					valid = true
 				}
 			}
 		case 1:
@@ -206,6 +206,7 @@ func (f Field) After(x, r int, piece string) Field {
 				a[pick+1][x] = true
 				a[pick+2][x] = true
 				a[pick+3][x] = true
+				valid = true
 			}
 		}
 	case "J":
@@ -218,6 +219,7 @@ func (f Field) After(x, r int, piece string) Field {
 					a[pick+1][x] = true
 					a[pick][x+1] = true
 					a[pick][x+2] = true
+					valid = true
 				}
 			}
 		case 1:
@@ -230,6 +232,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[l2][x+1] = true
 						a[l2-1][x] = true
 						a[l2-2][x] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(l, 3) {
@@ -237,6 +240,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[l+1][x] = true
 						a[l+2][x] = true
 						a[l+2][x+1] = true
+						valid = true
 					}
 				}
 			}
@@ -250,6 +254,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
 						a[pick][x+2] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
@@ -257,6 +262,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x+1] = true
 						a[pick][x+2] = true
 						a[pick-1][x+2] = true
+						valid = true
 					}
 				}
 			}
@@ -268,6 +274,7 @@ func (f Field) After(x, r int, piece string) Field {
 					a[pick][x+1] = true
 					a[pick+1][x+1] = true
 					a[pick+2][x+1] = true
+					valid = true
 				}
 			}
 		}
@@ -281,6 +288,7 @@ func (f Field) After(x, r int, piece string) Field {
 					a[pick][x+1] = true
 					a[pick][x+2] = true
 					a[pick+1][x+2] = true
+					valid = true
 				}
 			}
 		case 1:
@@ -291,6 +299,7 @@ func (f Field) After(x, r int, piece string) Field {
 					a[pick+1][x] = true
 					a[pick+2][x] = true
 					a[pick][x+1] = true
+					valid = true
 				}
 			}
 		case 2:
@@ -303,6 +312,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
@@ -310,6 +320,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
+						valid = true
 					}
 				}
 			}
@@ -323,6 +334,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[l][x+1] = true
 						a[l-1][x+1] = true
 						a[l-2][x+1] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(l2, 3) {
@@ -330,6 +342,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[l2][x+1] = true
 						a[l2+1][x+1] = true
 						a[l2+2][x+1] = true
+						valid = true
 					}
 				}
 			}
@@ -342,6 +355,7 @@ func (f Field) After(x, r int, piece string) Field {
 				a[pick+1][x] = true
 				a[pick][x+1] = true
 				a[pick+1][x+1] = true
+				valid = true
 			}
 		}
 	case "S":
@@ -357,6 +371,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
@@ -364,6 +379,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick-1][x+1] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
+						valid = true
 					}
 				}
 			}
@@ -377,6 +393,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
@@ -384,6 +401,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
+						valid = true
 					}
 				}
 			}
@@ -398,6 +416,7 @@ func (f Field) After(x, r int, piece string) Field {
 					a[pick][x+1] = true
 					a[pick+1][x+1] = true
 					a[pick][x+2] = true
+					valid = true
 				}
 			}
 		case 1:
@@ -410,6 +429,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+2][x] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
@@ -417,6 +437,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x] = true
+						valid = true
 					}
 				}
 			}
@@ -430,6 +451,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
@@ -437,6 +459,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
 						a[pick][x+2] = true
+						valid = true
 					}
 				}
 			}
@@ -450,6 +473,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
@@ -457,6 +481,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
+						valid = true
 					}
 				}
 			}
@@ -474,6 +499,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
@@ -481,6 +507,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
 						a[pick-1][x+2] = true
+						valid = true
 					}
 				}
 			}
@@ -494,6 +521,7 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+2][x+1] = true
+						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
@@ -501,10 +529,22 @@ func (f Field) After(x, r int, piece string) Field {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
+						valid = true
 					}
 				}
 			}
 		}
 	}
-	return a
+	if valid {
+		return a
+	}
+	return nil
+}
+
+func (f Field) LeftFix(r int, piece string, hole Hole) Field {
+	return nil
+}
+
+func (f Field) RightFix(r int, piece string, hole Hole) Field {
+	return nil
 }

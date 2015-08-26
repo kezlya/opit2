@@ -20,11 +20,7 @@ type Game struct {
 	MyPlayer       *Player
 	CurrentPiece   string
 	NextPiece      string
-
-	BurnK   int
-	HoleK   int
-	DamageK int
-	PostyK  int
+	Strategy       Strategy
 }
 
 func (g *Game) asignSettings(action, value string) {
@@ -98,7 +94,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Position {
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
+	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
 
 	if g.MyPlayer.Combo >= 2 {
 		burned := g.keepBurning(positions)
@@ -111,14 +107,17 @@ func (g *Game) calculateMoves() *Position {
 }
 
 func (g *Game) keepBurning(positions []Position) *Position {
-
 	var burned []Position
-
+	var burnStrategy = Strategy{
+		BurnK:   g.Strategy.BurnK + 100,
+		StepK:   g.Strategy.StepK,
+		DamageK: g.Strategy.DamageK,
+		PostyK:  g.Strategy.PostyK,
+	}
 	for i, position := range positions {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
-			b := g.BurnK + 100
-			nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, b)
+			nextPositions := position.FieldAfter.Positions(g.NextPiece, burnStrategy)
 			if len(nextPositions) > 0 {
 				OrderedBy(SCORE).Sort(nextPositions)
 				minNextScore := nextPositions[0].Score
@@ -143,7 +142,7 @@ func (g *Game) clasic(positions []Position) *Position {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
 		}
-		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.DamageK, g.PostyK, g.HoleK, g.BurnK)
+		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.Strategy)
 		if len(nextPositions) > 0 {
 			OrderedBy(SCORE).Sort(nextPositions)
 			minNextScore := nextPositions[0].Score
@@ -152,7 +151,6 @@ func (g *Game) clasic(positions []Position) *Position {
 			positions[i].Score += 10000000000000
 		}
 	}
-
 	if len(positions) > 0 {
 		OrderedBy(SCORE).Sort(positions)
 		return &positions[0]

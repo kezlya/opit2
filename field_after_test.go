@@ -68,7 +68,7 @@ func Test_I_FailTall(t *testing.T) {
 
 	result := arange.After(x, rotation, piece)
 
-	if !expect.Equal(result) {
+	if result != nil {
 		t.Fail()
 		y := len(expect) - 1
 		for i := range expect {

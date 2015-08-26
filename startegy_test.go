@@ -48,27 +48,31 @@ func Benchmark_moves(b *testing.B) {
 }
 
 func Benchmark_many(b *testing.B) {
-	dK := 5
-	hK := 1
-	yK := 3
-	bK := 3
+	strategy := Strategy{
+		DamageK: 9,
+		StepK:   1,
+		PostyK:  3,
+		BurnK:   8,
+	}
 	for n := 0; n < b.N; n++ {
-		playGames(dK, hK, yK, bK, 100, true)
+		playGames(strategy, 100, false)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
-	dK := 15
-	hK := 1
-	yK := 4
-	bK := 7
+	strategy := Strategy{
+		DamageK: 9,
+		StepK:   1,
+		PostyK:  3,
+		BurnK:   8,
+	}
 	for n := 0; n < b.N; n++ {
-		playGames(dK, hK, yK, bK, 1, false)
+		playGames(strategy, 1, false)
 	}
 }
 
 func Benchmark_best_strategy(b *testing.B) {
-	for n := 0; n < b.N; n++ {
+	/*for n := 0; n < b.N; n++ {
 		go playGames(7, 1, 2, 4, 10, false)
 		go playGames(6, 1, 5, 3, 10, false)
 		go playGames(7, 3, 4, 6, 10, false)
@@ -123,7 +127,7 @@ func Benchmark_best_strategy(b *testing.B) {
 		go playGames(6, 1, 5, 6, 10, false)
 		go playGames(7, 3, 2, 5, 10, false)
 		time.Sleep(30000000000)
-	}
+	}*/
 }
 
 func Benchmark_strategy(b *testing.B) {
@@ -134,18 +138,10 @@ func Benchmark_strategy(b *testing.B) {
 		for d := 8; d <= 15; d++ {
 			for b := 5; b <= 12; b++ {
 				for y := 2; y <= 4; y++ {
-					for h := 1; h <= 2; h++ {
-						//avrPoint, avrRound := playGames(d, h, y, b, 100, true)
-						go playGames(d, h, y, b, 26, false)
-						//strategy := []string{
-						//	strconv.FormatFloat(avrPoint, 'f', 3, 64),
-						//	strconv.FormatFloat(avrRound, 'f', 3, 64),
-						//	"d" + strconv.Itoa(d) + " h" + strconv.Itoa(h) + " y" + strconv.Itoa(y) + " b" + strconv.Itoa(b)}
-						//strategies = append(strategies, strategy)
+					for s := 1; s <= 2; s++ {
+						st := Strategy{DamageK: d, StepK: s, PostyK: y, BurnK: b}
+						go playGames(st, 26, false)
 					}
-					//fmt.Println("start sleep")
-					//time.Sleep(15000000000)
-					//fmt.Println("end sleep")
 				}
 				//fmt.Println("start sleep")
 				time.Sleep(60000000000)
@@ -156,17 +152,13 @@ func Benchmark_strategy(b *testing.B) {
 	}
 }
 
-func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
+func playGames(st Strategy, amount int, saveReport bool) {
 	records := [][]string{}
 	scores := []int{}
 	rounds := []int{}
 	for i := 0; i < amount; i++ {
-		g := Game{
-			DamageK: dK,
-			HoleK:   hK,
-			PostyK:  yK,
-			BurnK:   bK,
-		}
+
+		g := Game{Strategy: st}
 		roud, score := playGame(&g)
 		records = append(records, []string{strconv.Itoa(roud), strconv.Itoa(score)})
 		scores = append(scores, score)
@@ -177,16 +169,16 @@ func playGames(dK, hK, yK, bK, amount int, saveReport bool) {
 	avrRound := average(rounds)
 
 	if saveReport {
-		filename := "d" + strconv.Itoa(dK) + "_h" + strconv.Itoa(hK) + "_y" + strconv.Itoa(yK) + "_b" + strconv.Itoa(bK) +
+		filename := "d" + strconv.Itoa(st.DamageK) + "_s" + strconv.Itoa(st.StepK) + "_y" + strconv.Itoa(st.PostyK) + "_b" + strconv.Itoa(st.BurnK) +
 			"_s" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
 			"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
 			"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
 		save(filename, records)
 	}
-	result := strconv.Itoa(dK) +
-		"	" + strconv.Itoa(hK) +
-		"	" + strconv.Itoa(yK) +
-		"	" + strconv.Itoa(bK) +
+	result := strconv.Itoa(st.DamageK) +
+		"	" + strconv.Itoa(st.StepK) +
+		"	" + strconv.Itoa(st.PostyK) +
+		"	" + strconv.Itoa(st.BurnK) +
 		"	" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
 		"	" + strconv.FormatFloat(avrRound, 'f', 3, 64)
 	fmt.Println(result)
