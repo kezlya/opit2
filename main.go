@@ -18,7 +18,7 @@ func main() {
 
 	//investigate performance by returning fieldAfter nil
 
-	//init position
+	// when testing strategy output range of all games
 
 	//10	2	3	5	76.283	103.609
 

@@ -135,8 +135,8 @@ func Benchmark_strategy(b *testing.B) {
 	fmt.Println("damadge	step	postY	burn	score	round")
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
-		for d := 8; d <= 15; d++ {
-			for b := 5; b <= 10; b++ {
+		for d := 7; d <= 15; d++ {
+			for b := 4; b <= 10; b++ {
 				for y := 2; y <= 3; y++ {
 					for s := 1; s <= 2; s++ {
 						st := Strategy{DamageK: d, StepK: s, PostyK: y, BurnK: b}
