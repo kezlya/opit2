@@ -71,8 +71,8 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 
-func Benchmark_best_strategy(b *testing.B) {
-	/*for n := 0; n < b.N; n++ {
+/*func Benchmark_best_strategy(b *testing.B) {
+	for n := 0; n < b.N; n++ {
 		go playGames(7, 1, 2, 4, 10, false)
 		go playGames(6, 1, 5, 3, 10, false)
 		go playGames(7, 3, 4, 6, 10, false)
@@ -127,24 +127,24 @@ func Benchmark_best_strategy(b *testing.B) {
 		go playGames(6, 1, 5, 6, 10, false)
 		go playGames(7, 3, 2, 5, 10, false)
 		time.Sleep(30000000000)
-	}*/
-}
+	}
+}*/
 
 func Benchmark_strategy(b *testing.B) {
 	fmt.Println("")
-	fmt.Println("damadge	hole	postY	burn	score	round")
+	fmt.Println("damadge	step	postY	burn	score	round")
 	for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
 		for d := 8; d <= 15; d++ {
-			for b := 5; b <= 12; b++ {
-				for y := 2; y <= 4; y++ {
+			for b := 5; b <= 10; b++ {
+				for y := 2; y <= 3; y++ {
 					for s := 1; s <= 2; s++ {
 						st := Strategy{DamageK: d, StepK: s, PostyK: y, BurnK: b}
-						go playGames(st, 26, false)
+						go playGames(st, 48, false)
 					}
 				}
 				//fmt.Println("start sleep")
-				time.Sleep(60000000000)
+				time.Sleep(15000000000)
 				//fmt.Println("end sleep")
 			}
 		}
