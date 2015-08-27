@@ -55,7 +55,10 @@ func (p Piece) Turnright() Piece {
 			delete(res, "m3")
 			res["t2"] = Cell{X: nX, Y: nY}
 		case 3:
-
+			nX := res["b2"].X + 1
+			nY := res["b2"].Y + 1
+			delete(res, "b2")
+			res["m3"] = Cell{X: nX, Y: nY}
 		}
 	}
 
