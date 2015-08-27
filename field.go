@@ -563,13 +563,13 @@ func (f Field) After(x, r int, piece string) Field {
 	return nil
 }
 
-func (f Field) AfterLeftFix(r int, piece string, hole Hole) Field {
+func (f Field) AfterLeftFix(r int, piece string, h Hole) Field {
 	valid := false
-	picks := f.Picks()
-	w := f.Width()
-	a := make([][]bool, f.Height())
+	fw := f.Width()
+	fh := f.Height()
+	a := make([][]bool, fh)
 	for i, row := range f {
-		a[i] = make([]bool, w)
+		a[i] = make([]bool, fw)
 		copy(a[i], row[:])
 	}
 
@@ -598,50 +598,250 @@ func (f Field) AfterLeftFix(r int, piece string, hole Hole) Field {
 		}
 	}
 	*/
-	case "J":
+	/*case "J":
+	switch r {
+	case 0:
+		if picks.IsRight(x, 2) {
+			pick := picks.MaxR(x, 2)
+			if f.IsFit(pick, 2) {
+				a[pick][x] = true
+				a[pick+1][x] = true
+				a[pick][x+1] = true
+				a[pick][x+2] = true
+				valid = true
+			}
+		}
+	case 1:
+		if picks.IsRight(x, 1) {
+			l := picks[x]
+			l2 := picks[x+1]
+			if l2 >= l+2 {
+				if f.IsFit(l2, 1) {
+					a[l2][x] = true
+					a[l2][x+1] = true
+					a[l2-1][x] = true
+					a[l2-2][x] = true
+					valid = true
+				}
+			} else {
+				if f.IsFit(l, 3) {
+					a[l][x] = true
+					a[l+1][x] = true
+					a[l+2][x] = true
+					a[l+2][x+1] = true
+					valid = true
+				}
+			}
+		}
+	case 2:
+		if picks.IsRight(x, 2) {
+			pick := picks.MaxR(x, 2)
+			l3 := picks[x+2]
+			if pick == l3 {
+				if f.IsFit(l3, 2) {
+					a[pick+1][x] = true
+					a[pick+1][x+1] = true
+					a[pick+1][x+2] = true
+					a[pick][x+2] = true
+					valid = true
+				}
+			} else {
+				if f.IsFit(pick, 1) {
+					a[pick][x] = true
+					a[pick][x+1] = true
+					a[pick][x+2] = true
+					a[pick-1][x+2] = true
+					valid = true
+				}
+			}
+		}
+	case 3:
+		if picks.IsRight(x, 1) {
+			pick := picks.MaxR(x, 1)
+			if f.IsFit(pick, 3) {
+				a[pick][x] = true
+				a[pick][x+1] = true
+				a[pick+1][x+1] = true
+				a[pick+2][x+1] = true
+				valid = true
+			}
+		}
+	}*/
+	/*case "L":
 		switch r {
 		case 0:
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
 				if f.IsFit(pick, 2) {
 					a[pick][x] = true
-					a[pick+1][x] = true
 					a[pick][x+1] = true
 					a[pick][x+2] = true
+					a[pick+1][x+2] = true
 					valid = true
 				}
 			}
 		case 1:
 			if picks.IsRight(x, 1) {
-				l := picks[x]
-				l2 := picks[x+1]
-				if l2 >= l+2 {
-					if f.IsFit(l2, 1) {
-						a[l2][x] = true
-						a[l2][x+1] = true
-						a[l2-1][x] = true
-						a[l2-2][x] = true
-						valid = true
-					}
-				} else {
-					if f.IsFit(l, 3) {
-						a[l][x] = true
-						a[l+1][x] = true
-						a[l+2][x] = true
-						a[l+2][x+1] = true
-						valid = true
-					}
+				pick := picks.MaxR(x, 1)
+				if f.IsFit(pick, 3) {
+					a[pick][x] = true
+					a[pick+1][x] = true
+					a[pick+2][x] = true
+					a[pick][x+1] = true
+					valid = true
 				}
 			}
 		case 2:
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
-				l3 := picks[x+2]
-				if pick == l3 {
-					if f.IsFit(l3, 2) {
+				l := picks[x]
+				if pick == l {
+					if f.IsFit(l, 2) {
+						a[pick][x] = true
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						valid = true
+					}
+				} else {
+					if f.IsFit(pick, 1) {
+						a[pick-1][x] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick][x+2] = true
+						valid = true
+					}
+				}
+			}
+		case 3:
+			if picks.IsRight(x, 1) {
+				l := picks[x]
+				l2 := picks[x+1]
+				if l >= l2+2 {
+					if f.IsFit(l, 1) {
+						a[l][x] = true
+						a[l][x+1] = true
+						a[l-1][x+1] = true
+						a[l-2][x+1] = true
+						valid = true
+					}
+				} else {
+					if f.IsFit(l2, 3) {
+						a[l2+2][x] = true
+						a[l2][x+1] = true
+						a[l2+1][x+1] = true
+						a[l2+2][x+1] = true
+						valid = true
+					}
+				}
+			}
+		}
+	case "O":
+		if picks.IsRight(x, 1) {
+			pick := picks.MaxR(x, 1)
+			if f.IsFit(pick, 2) {
+				a[pick][x] = true
+				a[pick+1][x] = true
+				a[pick][x+1] = true
+				a[pick+1][x+1] = true
+				valid = true
+			}
+		}
+	case "S":
+		switch r {
+		case 0:
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				l := picks[x]
+				l1 := picks[x+1]
+				if pick == l || pick == l1 {
+					if f.IsFit(pick, 2) {
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick+1][x+1] = true
+						a[pick+1][x+2] = true
+						valid = true
+					}
+				} else {
+					if f.IsFit(pick, 1) {
+						a[pick-1][x] = true
+						a[pick-1][x+1] = true
+						a[pick][x+1] = true
+						a[pick][x+2] = true
+						valid = true
+					}
+				}
+			}
+		case 1:
+			if picks.IsRight(x, 1) {
+				pick := picks.MaxR(x, 1)
+				l2 := picks[x+1]
+				if pick == l2 {
+					if f.IsFit(pick, 3) {
+						a[pick+2][x] = true
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick][x+1] = true
+						valid = true
+					}
+				} else {
+					if f.IsFit(pick, 2) {
+						a[pick+1][x] = true
+						a[pick][x] = true
+						a[pick][x+1] = true
+						a[pick-1][x+1] = true
+						valid = true
+					}
+				}
+			}
+		}*/
+	case "T":
+		switch r {
+		case 0:
+			if !f[h.Y][h.X-1] && !f[h.Y+1][h.X-1] && !f[h.Y][h.X-2] {
+				a[h.Y][h.X] = true
+				a[h.Y][h.X-1] = true
+				a[h.Y+1][h.X-1] = true
+				a[h.Y][h.X-2] = true
+				valid = true
+			}
+		case 1:
+			if h.Y-1 > -1 && !f[h.Y][h.X-1] && !f[h.Y+1][h.X-1] && !f[h.Y-1][h.X-1] {
+				a[h.Y][h.X] = true
+				a[h.Y][h.X-1] = true
+				a[h.Y+1][h.X-1] = true
+				a[h.Y-1][h.X-1] = true
+				valid = true
+			}
+		case 2:
+			if h.Y-1 > -1 && !f[h.Y][h.X-1] && !f[h.Y][h.X-2] && !f[h.Y-1][h.X-1] {
+				a[h.Y][h.X] = true
+				a[h.Y][h.X-1] = true
+				a[h.Y][h.X-2] = true
+				a[h.Y-1][h.X-1] = true
+				valid = true
+			}
+		case 3:
+			if h.Y+2 < fh && !f[h.Y+1][h.X] && !f[h.Y+1][h.X-1] && !f[h.Y+2][h.X] {
+				a[h.Y][h.X] = true
+				a[h.Y+1][h.X] = true
+				a[h.Y+1][h.X-1] = true
+				a[h.Y+2][h.X] = true
+				valid = true
+			}
+		}
+		/*case "Z":
+		switch r {
+		case 0:
+			if picks.IsRight(x, 2) {
+				pick := picks.MaxR(x, 2)
+				l1 := picks[x+1]
+				l2 := picks[x+2]
+				if pick == l1 || pick == l2 {
+					if f.IsFit(pick, 2) {
+						a[pick+1][x] = true
+						a[pick+1][x+1] = true
+						a[pick][x+1] = true
 						a[pick][x+2] = true
 						valid = true
 					}
@@ -649,280 +849,35 @@ func (f Field) AfterLeftFix(r int, piece string, hole Hole) Field {
 					if f.IsFit(pick, 1) {
 						a[pick][x] = true
 						a[pick][x+1] = true
-						a[pick][x+2] = true
+						a[pick-1][x+1] = true
 						a[pick-1][x+2] = true
 						valid = true
 					}
 				}
 			}
-		case 3:
+		case 1:
 			if picks.IsRight(x, 1) {
 				pick := picks.MaxR(x, 1)
-				if f.IsFit(pick, 3) {
-					a[pick][x] = true
-					a[pick][x+1] = true
-					a[pick+1][x+1] = true
-					a[pick+2][x+1] = true
-					valid = true
-				}
-			}
-		}
-		/*case "L":
-			switch r {
-			case 0:
-				if picks.IsRight(x, 2) {
-					pick := picks.MaxR(x, 2)
-					if f.IsFit(pick, 2) {
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick][x+2] = true
-						a[pick+1][x+2] = true
-						valid = true
-					}
-				}
-			case 1:
-				if picks.IsRight(x, 1) {
-					pick := picks.MaxR(x, 1)
+				l := picks[x]
+				if pick == l {
 					if f.IsFit(pick, 3) {
 						a[pick][x] = true
 						a[pick+1][x] = true
-						a[pick+2][x] = true
-						a[pick][x+1] = true
+						a[pick+1][x+1] = true
+						a[pick+2][x+1] = true
 						valid = true
 					}
-				}
-			case 2:
-				if picks.IsRight(x, 2) {
-					pick := picks.MaxR(x, 2)
-					l := picks[x]
-					if pick == l {
-						if f.IsFit(l, 2) {
-							a[pick][x] = true
-							a[pick+1][x] = true
-							a[pick+1][x+1] = true
-							a[pick+1][x+2] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 1) {
-							a[pick-1][x] = true
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick][x+2] = true
-							valid = true
-						}
-					}
-				}
-			case 3:
-				if picks.IsRight(x, 1) {
-					l := picks[x]
-					l2 := picks[x+1]
-					if l >= l2+2 {
-						if f.IsFit(l, 1) {
-							a[l][x] = true
-							a[l][x+1] = true
-							a[l-1][x+1] = true
-							a[l-2][x+1] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(l2, 3) {
-							a[l2+2][x] = true
-							a[l2][x+1] = true
-							a[l2+1][x+1] = true
-							a[l2+2][x+1] = true
-							valid = true
-						}
-					}
-				}
-			}
-		case "O":
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				if f.IsFit(pick, 2) {
-					a[pick][x] = true
-					a[pick+1][x] = true
-					a[pick][x+1] = true
-					a[pick+1][x+1] = true
-					valid = true
-				}
-			}
-		case "S":
-			switch r {
-			case 0:
-				if picks.IsRight(x, 2) {
-					pick := picks.MaxR(x, 2)
-					l := picks[x]
-					l1 := picks[x+1]
-					if pick == l || pick == l1 {
-						if f.IsFit(pick, 2) {
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick+1][x+1] = true
-							a[pick+1][x+2] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 1) {
-							a[pick-1][x] = true
-							a[pick-1][x+1] = true
-							a[pick][x+1] = true
-							a[pick][x+2] = true
-							valid = true
-						}
-					}
-				}
-			case 1:
-				if picks.IsRight(x, 1) {
-					pick := picks.MaxR(x, 1)
-					l2 := picks[x+1]
-					if pick == l2 {
-						if f.IsFit(pick, 3) {
-							a[pick+2][x] = true
-							a[pick+1][x] = true
-							a[pick+1][x+1] = true
-							a[pick][x+1] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 2) {
-							a[pick+1][x] = true
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick-1][x+1] = true
-							valid = true
-						}
-					}
-				}
-			}
-		case "T":
-			switch r {
-			case 0:
-				if picks.IsRight(x, 2) {
-					pick := picks.MaxR(x, 2)
+				} else {
 					if f.IsFit(pick, 2) {
+						a[pick-1][x] = true
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
-						a[pick][x+2] = true
 						valid = true
 					}
 				}
-			case 1:
-				if picks.IsRight(x, 1) {
-					pick := picks.MaxR(x, 1)
-					l := picks[x]
-					if pick == l {
-						if f.IsFit(pick, 3) {
-							a[pick][x] = true
-							a[pick+1][x] = true
-							a[pick+1][x+1] = true
-							a[pick+2][x] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 2) {
-							a[pick-1][x] = true
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick+1][x] = true
-							valid = true
-						}
-					}
-				}
-			case 2:
-				if picks.IsRight(x, 2) {
-					pick := picks.MaxR(x, 2)
-					c := picks[x+1]
-					if pick == c {
-						if f.IsFit(pick, 2) {
-							a[pick+1][x] = true
-							a[pick][x+1] = true
-							a[pick+1][x+1] = true
-							a[pick+1][x+2] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 1) {
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick-1][x+1] = true
-							a[pick][x+2] = true
-							valid = true
-						}
-					}
-				}
-			case 3:
-				if picks.IsRight(x, 1) {
-					pick := picks.MaxR(x, 1)
-					l2 := picks[x+1]
-					if pick == l2 {
-						if f.IsFit(pick, 3) {
-							a[pick+2][x+1] = true
-							a[pick+1][x] = true
-							a[pick+1][x+1] = true
-							a[pick][x+1] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 2) {
-							a[pick+1][x+1] = true
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick-1][x+1] = true
-							valid = true
-						}
-					}
-				}
 			}
-		case "Z":
-			switch r {
-			case 0:
-				if picks.IsRight(x, 2) {
-					pick := picks.MaxR(x, 2)
-					l1 := picks[x+1]
-					l2 := picks[x+2]
-					if pick == l1 || pick == l2 {
-						if f.IsFit(pick, 2) {
-							a[pick+1][x] = true
-							a[pick+1][x+1] = true
-							a[pick][x+1] = true
-							a[pick][x+2] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 1) {
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick-1][x+1] = true
-							a[pick-1][x+2] = true
-							valid = true
-						}
-					}
-				}
-			case 1:
-				if picks.IsRight(x, 1) {
-					pick := picks.MaxR(x, 1)
-					l := picks[x]
-					if pick == l {
-						if f.IsFit(pick, 3) {
-							a[pick][x] = true
-							a[pick+1][x] = true
-							a[pick+1][x+1] = true
-							a[pick+2][x+1] = true
-							valid = true
-						}
-					} else {
-						if f.IsFit(pick, 2) {
-							a[pick-1][x] = true
-							a[pick][x] = true
-							a[pick][x+1] = true
-							a[pick+1][x+1] = true
-							valid = true
-						}
-					}
-				}
-			}
+		}
 		*/
 	}
 	if valid {
