@@ -7,9 +7,9 @@ type Player struct {
 	Combo  int
 }
 
-type Hole struct {
-	X int
-	Y int
+type Cell struct {
+	X int8
+	Y int8
 }
 
 type Strategy struct {

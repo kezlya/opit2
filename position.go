@@ -15,7 +15,7 @@ type Position struct {
 	Type         string
 }
 
-func (p *Position) InitTop(picks Picks, fieldAfter Field, holes []Hole, s Strategy) {
+func (p *Position) InitTop(picks Picks, fieldAfter Field, holes []Cell, s Strategy) {
 	burn := fieldAfter.WillBurn()
 	picksAfter := fieldAfter.Picks()
 	damage, _, highY, step, hole := picks.Damage(picksAfter, holes)

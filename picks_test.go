@@ -12,7 +12,7 @@ func Test_Damage(t *testing.T) {
 	piksBefore := before.Picks()
 	piksAfter := after.Picks()
 
-	damage, lowY, highY, step, _ := piksBefore.Damage(piksAfter, []Hole{})
+	damage, lowY, highY, step, _ := piksBefore.Damage(piksAfter, []Cell{})
 
 	if damage != 5 {
 		fmt.Println("damage is wrong", damage)

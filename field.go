@@ -105,7 +105,7 @@ func (f Field) Positions(piece string, st Strategy) []Position {
 	return positions
 }
 
-func (f Field) topPositions(st Strategy, r, w int, picks Picks, piece string, holes []Hole) []Position {
+func (f Field) topPositions(st Strategy, r, w int, picks Picks, piece string, holes []Cell) []Position {
 	pos := make([]Position, 0)
 	for i := 0; i < w; i++ {
 		fieldAfter := f.After(i, r, piece)
@@ -118,12 +118,12 @@ func (f Field) topPositions(st Strategy, r, w int, picks Picks, piece string, ho
 	return pos
 }
 
-func (f Field) leftPositions(st Strategy, r int, piece string, holes []Hole) []Position {
+func (f Field) leftPositions(st Strategy, r int, piece string, holes []Cell) []Position {
 	pos := make([]Position, 0)
 	for _, h := range holes {
 		fieldAfterLeft := f.AfterLeftFix(r, piece, h)
 		if fieldAfterLeft != nil {
-			p := Position{Rotation: r, X: h.X}
+			p := Position{Rotation: r, X: int(h.X)}
 			p.InitLeft(fieldAfterLeft, st)
 			pos = append(pos, p)
 		}
@@ -131,12 +131,12 @@ func (f Field) leftPositions(st Strategy, r int, piece string, holes []Hole) []P
 	return pos
 }
 
-func (f Field) rightPositions(st Strategy, r int, piece string, holes []Hole) []Position {
+func (f Field) rightPositions(st Strategy, r int, piece string, holes []Cell) []Position {
 	pos := make([]Position, 0)
 	for _, h := range holes {
 		fieldAfterRight := f.AfterRightFix(r, piece, h)
 		if fieldAfterRight != nil {
-			p := Position{Rotation: r, X: h.X}
+			p := Position{Rotation: r, X: int(h.X)}
 			p.InitRight(fieldAfterRight, st)
 			pos = append(pos, p)
 		}
@@ -176,14 +176,14 @@ func (f Field) Burn() {
 	}
 }
 
-func (f Field) FindHoles(picks Picks) ([]Hole, []Hole, []Hole) {
-	blocked := make([]Hole, 0)
-	left := make([]Hole, 0)
-	right := make([]Hole, 0)
+func (f Field) FindHoles(picks Picks) ([]Cell, []Cell, []Cell) {
+	blocked := make([]Cell, 0)
+	left := make([]Cell, 0)
+	right := make([]Cell, 0)
 	for i, pick := range picks {
 		for j := 0; j < pick; j++ {
 			if !f[j][i] {
-				hole := Hole{X: i, Y: j}
+				hole := Cell{X: int8(i), Y: int8(j)}
 				if i-2 > -1 && !f[j][i-1] && !f[j][i-2] {
 					left = append(left, hole)
 				} else if i+2 < f.Width() && !f[j][i+1] && !f[j][i+2] {
@@ -563,10 +563,10 @@ func (f Field) After(x, r int, piece string) Field {
 	return nil
 }
 
-func (f Field) AfterLeftFix(r int, piece string, h Hole) Field {
+func (f Field) AfterLeftFix(r int, piece string, h Cell) Field {
 	valid := false
 	fw := f.Width()
-	fh := f.Height()
+	fh := int8(f.Height())
 	a := make([][]bool, fh)
 	for i, row := range f {
 		a[i] = make([]bool, fw)
@@ -886,10 +886,10 @@ func (f Field) AfterLeftFix(r int, piece string, h Hole) Field {
 	return nil
 }
 
-func (f Field) AfterRightFix(r int, piece string, h Hole) Field {
+func (f Field) AfterRightFix(r int, piece string, h Cell) Field {
 	valid := false
 	fw := f.Width()
-	fh := f.Height()
+	fh := int8(f.Height())
 	a := make([][]bool, fh)
 	for i, row := range f {
 		a[i] = make([]bool, fw)
@@ -1237,11 +1237,6 @@ func (f Field) IsValid(cells []Cell) bool {
 		}
 	}
 	return true
-}
-
-type Cell struct {
-	X int8
-	Y int8
 }
 
 type Path []string
