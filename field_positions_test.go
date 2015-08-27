@@ -5,7 +5,27 @@ import (
 	"testing"
 )
 
-var testField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+var testField = Field{
+	{true, false, true, true, true, true, true, true, true, true},
+	{true, true, false, true, true, false, true, true, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, false, true, true, false, true, true},
+	{false, true, true, true, true, true, true, true, true, true},
+	{true, true, true, true, false, true, true, true, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, false, false, false, true, true, true, true, true},
+	{true, true, true, false, false, false, true, true, true, true},
+	{false, true, true, false, false, true, true, true, true, true},
+	{false, true, true, false, false, false, true, true, false, true},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, false, false, false, false},
+	{false, false, false, false, false, false, false, false, false, false}}
 var strategy = Strategy{1, 1, 1, 1}
 
 func Test_availablePositions_I(t *testing.T) {
@@ -70,7 +90,7 @@ func Test_availablePositions_S(t *testing.T) {
 
 func Test_availablePositions_T(t *testing.T) {
 	piece := "T"
-	expectPositions := 24
+	expectPositions := 28
 
 	result := testField.Positions(piece, strategy)
 

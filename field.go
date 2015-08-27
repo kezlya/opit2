@@ -1217,3 +1217,8 @@ func (f Field) IsValid(cells []Cell) bool {
 	}
 	return true
 }
+
+func (f Field) CalculatePath(pos Position, piece Piece) *string {
+
+	return nil
+}
