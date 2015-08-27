@@ -1209,27 +1209,6 @@ func (f Field) AfterRightFix(r int, piece string, h Cell) Field {
 	return nil
 }
 
-func (f Field) ValidateMove(move, piece string) {
-
-	switch piece {
-	case "T":
-		switch move {
-		case "left":
-		case "right":
-		case "down":
-		case "turnleft":
-		case "turnright":
-		}
-	}
-
-}
-
-func (f Field) GetPaths(piece string, X, Y, R int) []Path {
-	path1 := []string{"left", "left", "down", "down", "down"}
-	path2 := []string{"left", "down", "left", "down", "down"}
-	return []Path{path1, path2}
-}
-
 func (f Field) IsValid(cells []Cell) bool {
 	for _, c := range cells {
 		if c.X < 0 || c.X >= int8(f.Width()) || c.Y < 0 || f[c.Y][c.X] {
@@ -1238,5 +1217,3 @@ func (f Field) IsValid(cells []Cell) bool {
 	}
 	return true
 }
-
-type Path []string
