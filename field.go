@@ -1244,9 +1244,4 @@ type Cell struct {
 	Y int8
 }
 
-type Piece struct {
-	Name  string
-	Space []Cell
-}
-
 type Path []string

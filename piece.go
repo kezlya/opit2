@@ -1,33 +1,59 @@
 package main
 
 type Piece struct {
-	Name  string
-	Space [4]Cell
+	Name     string
+	Rotation int8
+	Space    map[string]Cell
 }
 
 func (p Piece) Left() Piece {
-	res := [4]Cell{}
-	res[0] = Cell{X: p.Space[0].X - 1, Y: p.Space[0].Y}
-	res[1] = Cell{X: p.Space[1].X - 1, Y: p.Space[1].Y}
-	res[2] = Cell{X: p.Space[2].X - 1, Y: p.Space[2].Y}
-	res[3] = Cell{X: p.Space[3].X - 1, Y: p.Space[3].Y}
-	return Piece{Name: p.Name, Space: res}
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = Cell{X: v.X - 1, Y: v.Y}
+	}
+	return Piece{Name: p.Name, Rotation: p.Rotation, Space: res}
 }
 
 func (p Piece) Right() Piece {
-	res := [4]Cell{}
-	res[0] = Cell{X: p.Space[0].X + 1, Y: p.Space[0].Y}
-	res[1] = Cell{X: p.Space[1].X + 1, Y: p.Space[1].Y}
-	res[2] = Cell{X: p.Space[2].X + 1, Y: p.Space[2].Y}
-	res[3] = Cell{X: p.Space[3].X + 1, Y: p.Space[3].Y}
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = Cell{X: v.X + 1, Y: v.Y}
+	}
 	return Piece{Name: p.Name, Space: res}
 }
 
 func (p Piece) Down() Piece {
-	res := [4]Cell{}
-	res[0] = Cell{X: p.Space[0].X, Y: p.Space[0].Y - 1}
-	res[1] = Cell{X: p.Space[1].X, Y: p.Space[1].Y - 1}
-	res[2] = Cell{X: p.Space[2].X, Y: p.Space[2].Y - 1}
-	res[3] = Cell{X: p.Space[3].X, Y: p.Space[3].Y - 1}
-	return Piece{Name: p.Name, Space: res}
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = Cell{X: v.X, Y: v.Y - 1}
+	}
+	return Piece{Name: p.Name, Rotation: p.Rotation, Space: res}
+}
+
+func (p Piece) Turnright() Piece {
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = v
+	}
+
+	switch p.Name {
+	case "T":
+		switch p.Rotation {
+		case 0:
+			nX := res["m1"].X + 1
+			nY := res["m1"].Y - 1
+			delete(res, "m1")
+			res["b2"] = Cell{X: nX, Y: nY}
+		case 1:
+		case 2:
+		case 3:
+
+		}
+	}
+
+	rot := p.Rotation + 1
+	if rot > 3 {
+		rot = 0
+	}
+	return Piece{Name: p.Name, Rotation: rot, Space: res}
 }
