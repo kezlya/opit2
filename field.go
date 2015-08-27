@@ -1219,6 +1219,16 @@ func (f Field) IsValid(cells []Cell) bool {
 }
 
 func (f Field) CalculatePath(pos Position, piece Piece) *string {
+	switch piece.Name {
+	case "I":
+		switch pos.Rotation {
+		case 0:
 
+		case 1:
+			if pos.X == 0 {
+
+			}
+		}
+	}
 	return nil
 }

@@ -9,6 +9,9 @@ import (
 
 func main() {
 
+	// add coordinats of 3, -1  and 4, -1 => O when testing the game
+	// validate top positions shoud work already
+
 	// if two same shapes make sure first one land in better place test for
 	// this to prove ut
 
@@ -26,7 +29,11 @@ func main() {
 		PostyK:  3,
 		BurnK:   5,
 	}
-	game := Game{Strategy: strategy}
+	game := Game{
+		Strategy:     strategy,
+		CurrentPiece: Piece{},
+		NextPiece:    Piece{}}
+
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
 		input, _ := consolereader.ReadString('\n')

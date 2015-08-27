@@ -14,12 +14,10 @@ type Game struct {
 	Height         int
 	OriginalHeight int
 	Round          int
-	CurrentPieceX  int
-	CurrentPieceY  int
 	Players        []Player
 	MyPlayer       *Player
-	CurrentPiece   string
-	NextPiece      string
+	CurrentPiece   Piece
+	NextPiece      Piece
 	Strategy       Strategy
 }
 
@@ -56,13 +54,15 @@ func (g *Game) asignUpdates(who, action, value string) {
 		case "round":
 			g.Round, _ = strconv.Atoi(value)
 		case "this_piece_type":
-			g.CurrentPiece = value
+			g.CurrentPiece.Name = value
 		case "next_piece_type":
-			g.NextPiece = value
+			g.NextPiece.Name = value
 		case "this_piece_position":
 			cor := strings.Split(value, ",")
-			g.CurrentPieceX, _ = strconv.Atoi(cor[0])
-			g.CurrentPieceY, _ = strconv.Atoi(cor[1])
+
+			x, _ := strconv.Atoi(cor[0])
+			y, _ := strconv.Atoi(cor[1])
+			g.initPieceSpace(Cell{X: int8(x), Y: int8(y)})
 		}
 	default:
 		switch action {
@@ -93,8 +93,22 @@ func (g *Game) asignUpdates(who, action, value string) {
 	}
 }
 
+func (g *Game) initPieceSpace(cel Cell) map[string]Cell {
+	res := make(map[string]Cell, 4)
+	switch g.CurrentPiece.Name {
+	case "I":
+	case "J":
+	case "L":
+	case "O":
+	case "S":
+	case "T":
+	case "Z":
+	}
+	return res
+}
+
 func (g *Game) calculateMoves() *Position {
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
+	positions := g.MyPlayer.Field.Positions(g.CurrentPiece.Name, g.Strategy)
 
 	if g.MyPlayer.Combo >= 2 {
 		burned := g.keepBurning(positions)
@@ -117,7 +131,7 @@ func (g *Game) keepBurning(positions []Position) *Position {
 	for i, position := range positions {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
-			nextPositions := position.FieldAfter.Positions(g.NextPiece, burnStrategy)
+			nextPositions := position.FieldAfter.Positions(g.NextPiece.Name, burnStrategy)
 			if len(nextPositions) > 0 {
 				OrderedBy(SCORE).Sort(nextPositions)
 				minNextScore := nextPositions[0].Score
@@ -142,7 +156,7 @@ func (g *Game) clasic(positions []Position) *Position {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
 		}
-		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.Strategy)
+		nextPositions := position.FieldAfter.Positions(g.NextPiece.Name, g.Strategy)
 		if len(nextPositions) > 0 {
 			OrderedBy(SCORE).Sort(nextPositions)
 			minNextScore := nextPositions[0].Score
