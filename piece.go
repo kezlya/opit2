@@ -68,3 +68,42 @@ func (p Piece) Turnright() Piece {
 	}
 	return Piece{Name: p.Name, Rotation: rot, Space: res}
 }
+
+func (p Piece) Turnleft() Piece {
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = v
+	}
+
+	switch p.Name {
+	case "T":
+		switch p.Rotation {
+		case 0:
+			nX := res["m3"].X - 1
+			nY := res["m3"].Y - 1
+			delete(res, "m3")
+			res["b2"] = Cell{X: nX, Y: nY}
+		case 1:
+			nX := res["b2"].X - 1
+			nY := res["b2"].Y + 1
+			delete(res, "b2")
+			res["m1"] = Cell{X: nX, Y: nY}
+		case 2:
+			nX := res["m1"].X + 1
+			nY := res["m1"].Y + 1
+			delete(res, "m1")
+			res["t2"] = Cell{X: nX, Y: nY}
+		case 3:
+			nX := res["t2"].X + 1
+			nY := res["t2"].Y - 1
+			delete(res, "t2")
+			res["m3"] = Cell{X: nX, Y: nY}
+		}
+	}
+
+	rot := p.Rotation - 1
+	if rot < 0 {
+		rot = 3
+	}
+	return Piece{Name: p.Name, Rotation: rot, Space: res}
+}
