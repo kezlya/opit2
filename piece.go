@@ -47,6 +47,7 @@ func (p *Piece) InitSpace(start Cell) {
 		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
 	}
 	p.Space = space
+	p.CurrentX = start.X
 }
 
 func (p *Piece) Left() Piece {
@@ -74,79 +75,92 @@ func (p *Piece) Down() Piece {
 }
 
 func (p *Piece) Turnright() Piece {
-	res := make(map[string]Cell, 4)
-	for i, v := range p.Space {
-		res[i] = v
+	piece := Piece{Name: p.Name}
+
+	piece.Rotation = p.Rotation + 1
+	if piece.Rotation > 3 {
+		piece.Rotation = 0
 	}
 
+	sp := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		sp[i] = v
+	}
 	switch p.Name {
 	case "T":
 		switch p.Rotation {
 		case 0:
-			nX := res["m1"].X + 1
-			nY := res["m1"].Y - 1
-			delete(res, "m1")
-			res["b2"] = Cell{X: nX, Y: nY}
+			nX := sp["m1"].X + 1
+			nY := sp["m1"].Y - 1
+			delete(sp, "m1")
+			sp["b2"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = nX
 		case 1:
-			nX := res["t2"].X - 1
-			nY := res["t2"].Y - 1
-			delete(res, "t2")
-			res["m1"] = Cell{X: nX, Y: nY}
+			nX := sp["t2"].X - 1
+			nY := sp["t2"].Y - 1
+			delete(sp, "t2")
+			sp["m1"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = nX
 		case 2:
-			nX := res["m3"].X - 1
-			nY := res["m3"].Y + 1
-			delete(res, "m3")
-			res["t2"] = Cell{X: nX, Y: nY}
+			nX := sp["m3"].X - 1
+			nY := sp["m3"].Y + 1
+			delete(sp, "m3")
+			sp["t2"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = p.CurrentX
 		case 3:
-			nX := res["b2"].X + 1
-			nY := res["b2"].Y + 1
-			delete(res, "b2")
-			res["m3"] = Cell{X: nX, Y: nY}
+			nX := sp["b2"].X + 1
+			nY := sp["b2"].Y + 1
+			delete(sp, "b2")
+			sp["m3"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = p.CurrentX
 		}
 	}
-
-	rot := p.Rotation + 1
-	if rot > 3 {
-		rot = 0
-	}
-	return Piece{Name: p.Name, Rotation: rot, Space: res}
+	piece.Space = sp
+	return piece
 }
 
 func (p *Piece) Turnleft() Piece {
-	res := make(map[string]Cell, 4)
+	piece := Piece{Name: p.Name}
+
+	piece.Rotation = p.Rotation - 1
+	if piece.Rotation < 0 {
+		piece.Rotation = 3
+	}
+
+	sp := make(map[string]Cell, 4)
 	for i, v := range p.Space {
-		res[i] = v
+		sp[i] = v
 	}
 
 	switch p.Name {
 	case "T":
 		switch p.Rotation {
 		case 0:
-			nX := res["m3"].X - 1
-			nY := res["m3"].Y - 1
-			delete(res, "m3")
-			res["b2"] = Cell{X: nX, Y: nY}
+			nX := sp["m3"].X - 1
+			nY := sp["m3"].Y - 1
+			delete(sp, "m3")
+			sp["b2"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = p.CurrentX
 		case 1:
-			nX := res["b2"].X - 1
-			nY := res["b2"].Y + 1
-			delete(res, "b2")
-			res["m1"] = Cell{X: nX, Y: nY}
+			nX := sp["b2"].X - 1
+			nY := sp["b2"].Y + 1
+			delete(sp, "b2")
+			sp["m1"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = nX
 		case 2:
-			nX := res["m1"].X + 1
-			nY := res["m1"].Y + 1
-			delete(res, "m1")
-			res["t2"] = Cell{X: nX, Y: nY}
+			nX := sp["m1"].X + 1
+			nY := sp["m1"].Y + 1
+			delete(sp, "m1")
+			sp["t2"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = nX
 		case 3:
-			nX := res["t2"].X + 1
-			nY := res["t2"].Y - 1
-			delete(res, "t2")
-			res["m3"] = Cell{X: nX, Y: nY}
+			nX := sp["t2"].X + 1
+			nY := sp["t2"].Y - 1
+			delete(sp, "t2")
+			sp["m3"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = p.CurrentX
 		}
 	}
-
-	rot := p.Rotation - 1
-	if rot < 0 {
-		rot = 3
-	}
-	return Piece{Name: p.Name, Rotation: rot, Space: res}
+	piece.Space = sp
+	return piece
 }
