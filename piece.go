@@ -137,28 +137,24 @@ func (p *Piece) Turnright() Piece {
 	case "T":
 		switch p.Rotation {
 		case 0:
-			nX := sp["m1"].X + 1
-			nY := sp["m1"].Y - 1
+			b2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y - 1}
 			delete(sp, "m1")
-			sp["b2"] = Cell{X: nX, Y: nY}
-			piece.CurrentX = nX
+			sp["b2"] = b2
+			piece.CurrentX = b2.X
 		case 1:
-			nX := sp["t2"].X - 1
-			nY := sp["t2"].Y - 1
+			m1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 1}
 			delete(sp, "t2")
-			sp["m1"] = Cell{X: nX, Y: nY}
-			piece.CurrentX = nX
+			sp["m1"] = m1
+			piece.CurrentX = m1.X
 		case 2:
-			nX := sp["m3"].X - 1
-			nY := sp["m3"].Y + 1
+			t2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y + 1}
 			delete(sp, "m3")
-			sp["t2"] = Cell{X: nX, Y: nY}
+			sp["t2"] = t2
 			piece.CurrentX = p.CurrentX
 		case 3:
-			nX := sp["b2"].X + 1
-			nY := sp["b2"].Y + 1
+			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
 			delete(sp, "b2")
-			sp["m3"] = Cell{X: nX, Y: nY}
+			sp["m3"] = m3
 			piece.CurrentX = p.CurrentX
 		}
 	}
@@ -180,31 +176,38 @@ func (p *Piece) Turnleft() Piece {
 	}
 
 	switch p.Name {
+	case "I":
+		switch p.Rotation {
+		case 0:
+
+		case 1:
+
+		case 2:
+
+		case 3:
+
+		}
 	case "T":
 		switch p.Rotation {
 		case 0:
-			nX := sp["m3"].X - 1
-			nY := sp["m3"].Y - 1
+			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
 			delete(sp, "m3")
-			sp["b2"] = Cell{X: nX, Y: nY}
+			sp["b2"] = b2
 			piece.CurrentX = p.CurrentX
 		case 1:
-			nX := sp["b2"].X - 1
-			nY := sp["b2"].Y + 1
+			m1 := Cell{X: sp["b2"].X - 1, Y: sp["b2"].Y + 1}
 			delete(sp, "b2")
-			sp["m1"] = Cell{X: nX, Y: nY}
-			piece.CurrentX = nX
+			sp["m1"] = m1
+			piece.CurrentX = m1.X
 		case 2:
-			nX := sp["m1"].X + 1
-			nY := sp["m1"].Y + 1
+			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
 			delete(sp, "m1")
-			sp["t2"] = Cell{X: nX, Y: nY}
-			piece.CurrentX = nX
+			sp["t2"] = t2
+			piece.CurrentX = t2.X
 		case 3:
-			nX := sp["t2"].X + 1
-			nY := sp["t2"].Y - 1
+			m3 := Cell{X: sp["t2"].X + 1, Y: sp["t2"].Y - 1}
 			delete(sp, "t2")
-			sp["m3"] = Cell{X: nX, Y: nY}
+			sp["m3"] = m3
 			piece.CurrentX = p.CurrentX
 		}
 	}
