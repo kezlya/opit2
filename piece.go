@@ -179,9 +179,27 @@ func (p *Piece) Turnleft() Piece {
 	case "I":
 		switch p.Rotation {
 		case 0:
-
+			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
+			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
+			x2 := Cell{X: sp["m4"].X - 2, Y: sp["m4"].Y - 2}
+			delete(sp, "m1")
+			delete(sp, "m3")
+			delete(sp, "m4")
+			sp["t2"] = t2
+			sp["b2"] = b2
+			sp["x2"] = x2
+			piece.CurrentX = t2.X
 		case 1:
-
+			m1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y - 1}
+			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
+			m4 := Cell{X: sp["x3"].X + 1, Y: sp["x3"].Y + 2}
+			delete(sp, "t3")
+			delete(sp, "b3")
+			delete(sp, "x3")
+			sp["m1"] = m1
+			sp["m2"] = m2
+			sp["m4"] = m4
+			piece.CurrentX = m1.X
 		case 2:
 
 		case 3:
