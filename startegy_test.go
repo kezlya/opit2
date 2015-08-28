@@ -28,21 +28,20 @@ func Benchmark_moves(b *testing.B) {
 
 		row1 := make([]string, 10, 10)
 		for i := 0; i < 10; i++ {
-			row1[i] = strconv.Itoa(rand.Intn(4))
+			row1[i] = strconv.Itoa(rand.Intn(3))
 		}
 		row2 := make([]string, 10, 10)
 		for i := 0; i < 10; i++ {
-			row2[i] = strconv.Itoa(rand.Intn(4))
+			row2[i] = strconv.Itoa(rand.Intn(3))
 		}
 		row3 := make([]string, 10, 10)
 		for i := 0; i < 10; i++ {
-			row3[i] = strconv.Itoa(rand.Intn(4))
+			row3[i] = strconv.Itoa(rand.Intn(3))
 		}
 
 		game.asignUpdates("game", "this_piece_type", pieces[rand.Intn(len(pieces))])
 		game.asignUpdates("game", "this_piece_position", "3,-1")
-		game.asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;"+strings.Join(row1, ",")+";"+strings.Join(row2, ",")+";"+strings.Join(row1, ","))
-
+		game.asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;"+strings.Join(row1, ",")+";"+strings.Join(row2, ",")+";"+strings.Join(row3, ","))
 		game.calculateMoves()
 	}
 }

@@ -1218,7 +1218,10 @@ func (f Field) IsValid(cells []Cell) bool {
 	return true
 }
 
-func (f Field) CalculatePath(pos Position, piece Piece) *string {
+func (f Field) CalculatePath(pos Position, piece Piece) []string {
+	//	path := []string{}
+	// Top positions only
+
 	switch piece.Name {
 	case "I":
 		switch pos.Rotation {

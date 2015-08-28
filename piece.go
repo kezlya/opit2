@@ -4,6 +4,7 @@ type Piece struct {
 	Name     string
 	Rotation int
 	Space    map[string]Cell
+	CurrentX int
 }
 
 func (p *Piece) InitSpace(start Cell) {
@@ -53,7 +54,7 @@ func (p *Piece) Left() Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
 	}
-	return Piece{Name: p.Name, Rotation: p.Rotation, Space: res}
+	return Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, Space: res}
 }
 
 func (p *Piece) Right() Piece {
@@ -61,7 +62,7 @@ func (p *Piece) Right() Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
 	}
-	return Piece{Name: p.Name, Space: res}
+	return Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, Space: res}
 }
 
 func (p *Piece) Down() Piece {
@@ -69,7 +70,7 @@ func (p *Piece) Down() Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
-	return Piece{Name: p.Name, Rotation: p.Rotation, Space: res}
+	return Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, Space: res}
 }
 
 func (p *Piece) Turnright() Piece {
