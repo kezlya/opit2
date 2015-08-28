@@ -191,23 +191,24 @@ func playGames(st Strategy, amount int, saveReport bool) {
 }
 
 func playGame(g *Game) (int, int) {
-	rand.Seed(time.Now().UTC().UnixNano())
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
-	g.NextPiece = pieces[rand.Intn(len(pieces))]
+	g.Height = 20
+	g.Width = 10
 	g.MyPlayer.Points = 0
 	position := &Position{}
 	position.FieldAfter = initialField
+	assignPieces(g)
 	keepGoing := true
 
 	for keepGoing {
-		assignPieces(g)
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
 		addSolidLines(g)
 		addGarbageLines(g)
+		assignPieces(g)
 		g.Round++
 
 		position = g.calculateMoves()
@@ -223,7 +224,13 @@ func playGame(g *Game) (int, int) {
 func assignPieces(g *Game) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	g.CurrentPiece = g.NextPiece
-	g.NextPiece = pieces[rand.Intn(len(pieces))]
+	x := 3
+	piece := pieces[rand.Intn(len(pieces))]
+	if piece == "O" {
+		x = 4
+	}
+	g.NextPiece = Piece{Name: piece, Rotation: 0}
+	g.NextPiece.InitSpace(Cell{x, g.Height})
 }
 
 func applyPoints(g *Game, pos *Position) {
@@ -259,6 +266,7 @@ func addSolidLines(g *Game) {
 	r := g.Round % 20
 	if r == 0 {
 		g.MyPlayer.Field = g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1]
+		g.Height = g.Height - 1
 	}
 }
 

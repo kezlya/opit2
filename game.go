@@ -1,24 +1,23 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"strconv"
 	"strings"
 )
 
 type Game struct {
-	Timebank       int
-	TimePerMove    int
-	Width          int
-	Height         int
-	OriginalHeight int
-	Round          int
-	Players        []Player
-	MyPlayer       *Player
-	CurrentPiece   Piece
-	NextPiece      Piece
-	Strategy       Strategy
+	X            int
+	Y            int
+	Timebank     int
+	TimePerMove  int
+	Width        int
+	Height       int
+	Round        int
+	Players      []Player
+	MyPlayer     *Player
+	CurrentPiece Piece
+	NextPiece    Piece
+	Strategy     Strategy
 }
 
 func (g *Game) asignSettings(action, value string) {
@@ -55,14 +54,14 @@ func (g *Game) asignUpdates(who, action, value string) {
 			g.Round, _ = strconv.Atoi(value)
 		case "this_piece_type":
 			g.CurrentPiece.Name = value
+			g.CurrentPiece.Rotation = 0
 		case "next_piece_type":
 			g.NextPiece.Name = value
+			g.NextPiece.Rotation = 0
 		case "this_piece_position":
 			cor := strings.Split(value, ",")
-
-			x, _ := strconv.Atoi(cor[0])
-			y, _ := strconv.Atoi(cor[1])
-			g.initPieceSpace(Cell{X: int8(x), Y: int8(y)})
+			g.X, _ = strconv.Atoi(cor[0])
+			g.Y, _ = strconv.Atoi(cor[1])
 		}
 	default:
 		switch action {
@@ -81,30 +80,17 @@ func (g *Game) asignUpdates(who, action, value string) {
 				}
 			}
 		case "field":
-			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.OriginalHeight)
+			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
 			for i, p := range g.Players {
 				if p.Name == who {
 					var empty Field
 					g.Players[i].Field = empty.init(cleanSource)
+					g.Height = g.Players[i].Field.Height()
 					break
 				}
 			}
 		}
 	}
-}
-
-func (g *Game) initPieceSpace(cel Cell) map[string]Cell {
-	res := make(map[string]Cell, 4)
-	switch g.CurrentPiece.Name {
-	case "I":
-	case "J":
-	case "L":
-	case "O":
-	case "S":
-	case "T":
-	case "Z":
-	}
-	return res
 }
 
 func (g *Game) calculateMoves() *Position {
@@ -184,28 +170,5 @@ func (g *Game) isSafe() bool {
 }
 
 func (g *Game) printMoves() {
-	pos := g.calculateMoves()
 
-	var buffer bytes.Buffer
-	for i := 0; i < pos.Rotation; i++ {
-		buffer.WriteString("turnright,")
-	}
-	if pos.Rotation == 1 {
-		g.CurrentPieceX = g.CurrentPieceX + 1
-		if g.CurrentPiece == "I" {
-			g.CurrentPieceX = g.CurrentPieceX + 1
-		}
-	}
-	if g.CurrentPieceX > pos.X {
-		for i := 0; i < g.CurrentPieceX-pos.X; i++ {
-			buffer.WriteString("left,")
-		}
-	}
-	if g.CurrentPieceX < pos.X {
-		for i := 0; i < pos.X-g.CurrentPieceX; i++ {
-			buffer.WriteString("right,")
-		}
-	}
-	buffer.WriteString("drop")
-	fmt.Println(buffer.String())
 }

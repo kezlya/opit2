@@ -8,8 +8,8 @@ type Player struct {
 }
 
 type Cell struct {
-	X int8
-	Y int8
+	X int
+	Y int
 }
 
 type Strategy struct {

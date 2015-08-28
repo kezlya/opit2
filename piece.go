@@ -2,11 +2,53 @@ package main
 
 type Piece struct {
 	Name     string
-	Rotation int8
+	Rotation int
 	Space    map[string]Cell
 }
 
-func (p Piece) Left() Piece {
+func (p *Piece) InitSpace(start Cell) {
+	space := make(map[string]Cell, 4)
+	switch p.Name {
+	case "I":
+		space["m1"] = Cell{X: start.X, Y: start.Y}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+		space["m4"] = Cell{X: start.X + 3, Y: start.Y}
+	case "J":
+		space["m1"] = Cell{X: start.X, Y: start.Y}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
+	case "L":
+		space["m1"] = Cell{X: start.X, Y: start.Y}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+		space["t3"] = Cell{X: start.X + 2, Y: start.Y + 1}
+	case "O":
+		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
+		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
+		space["m1"] = Cell{X: start.X, Y: start.Y}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+	case "S":
+		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
+		space["t3"] = Cell{X: start.X + 2, Y: start.Y + 1}
+		space["m1"] = Cell{X: start.X, Y: start.Y}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+	case "T":
+		space["m1"] = Cell{X: start.X, Y: start.Y}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
+	case "Z":
+		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
+		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
+		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+	}
+	p.Space = space
+}
+
+func (p *Piece) Left() Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
@@ -14,7 +56,7 @@ func (p Piece) Left() Piece {
 	return Piece{Name: p.Name, Rotation: p.Rotation, Space: res}
 }
 
-func (p Piece) Right() Piece {
+func (p *Piece) Right() Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
@@ -22,7 +64,7 @@ func (p Piece) Right() Piece {
 	return Piece{Name: p.Name, Space: res}
 }
 
-func (p Piece) Down() Piece {
+func (p *Piece) Down() Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
@@ -30,7 +72,7 @@ func (p Piece) Down() Piece {
 	return Piece{Name: p.Name, Rotation: p.Rotation, Space: res}
 }
 
-func (p Piece) Turnright() Piece {
+func (p *Piece) Turnright() Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = v
@@ -69,7 +111,7 @@ func (p Piece) Turnright() Piece {
 	return Piece{Name: p.Name, Rotation: rot, Space: res}
 }
 
-func (p Piece) Turnleft() Piece {
+func (p *Piece) Turnleft() Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = v

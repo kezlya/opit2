@@ -13,6 +13,7 @@ type Position struct {
 	ColumnsAfter Picks
 	FieldAfter   Field
 	Type         string
+	Moves        string
 }
 
 func (p *Position) InitTop(picks Picks, fieldAfter Field, holes []Cell, s Strategy) {

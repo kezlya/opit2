@@ -46,7 +46,7 @@ func (p Picks) Damage(a Picks, holes []Cell) (int, int, int, int, int) {
 	lowY := 1000
 	step := 0
 	damage := 0
-	var holeDamage int8 = 0
+	holeDamage := 0
 	_left := -1
 	_right := 0
 	for i, col := range p {
@@ -69,7 +69,7 @@ func (p Picks) Damage(a Picks, holes []Cell) (int, int, int, int, int) {
 			_right = i
 
 			for _, hole := range holes {
-				if hole.X == int8(i) && holeDamage < hole.Y {
+				if hole.X == i && holeDamage < hole.Y {
 					holeDamage = hole.Y
 				}
 			}

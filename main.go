@@ -45,15 +45,14 @@ func main() {
 			game.asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			//time, _ := strconv.Atoi(parts[2])
+			game.CurrentPiece.InitSpace(Cell{X: game.X, Y: game.Height + game.Y})
+			game.NextPiece.InitSpace(Cell{X: 3, Y: game.Height + game.Y})
 			if game.Round == 1 {
-				roundOne()
+				fmt.Println("drop")
 			} else {
-				game.printMoves()
+				pos := game.calculateMoves()
+				fmt.Print(pos.Moves + ",drop")
 			}
 		}
 	}
-}
-
-func roundOne() {
-	fmt.Println("drop")
 }

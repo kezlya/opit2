@@ -183,7 +183,7 @@ func (f Field) FindHoles(picks Picks) ([]Cell, []Cell, []Cell) {
 	for i, pick := range picks {
 		for j := 0; j < pick; j++ {
 			if !f[j][i] {
-				hole := Cell{X: int8(i), Y: int8(j)}
+				hole := Cell{X: i, Y: j}
 				if i-2 > -1 && !f[j][i-1] && !f[j][i-2] {
 					left = append(left, hole)
 				} else if i+2 < f.Width() && !f[j][i+1] && !f[j][i+2] {
@@ -566,7 +566,7 @@ func (f Field) After(x, r int, piece string) Field {
 func (f Field) AfterLeftFix(r int, piece string, h Cell) Field {
 	valid := false
 	fw := f.Width()
-	fh := int8(f.Height())
+	fh := f.Height()
 	a := make([][]bool, fh)
 	for i, row := range f {
 		a[i] = make([]bool, fw)
@@ -889,7 +889,7 @@ func (f Field) AfterLeftFix(r int, piece string, h Cell) Field {
 func (f Field) AfterRightFix(r int, piece string, h Cell) Field {
 	valid := false
 	fw := f.Width()
-	fh := int8(f.Height())
+	fh := f.Height()
 	a := make([][]bool, fh)
 	for i, row := range f {
 		a[i] = make([]bool, fw)
@@ -1211,7 +1211,7 @@ func (f Field) AfterRightFix(r int, piece string, h Cell) Field {
 
 func (f Field) IsValid(cells []Cell) bool {
 	for _, c := range cells {
-		if c.X < 0 || c.X >= int8(f.Width()) || c.Y < 0 || f[c.Y][c.X] {
+		if c.X < 0 || c.X >= f.Width() || c.Y < 0 || f[c.Y][c.X] {
 			return false
 		}
 	}
@@ -1230,5 +1230,32 @@ func (f Field) CalculatePath(pos Position, piece Piece) *string {
 			}
 		}
 	}
+
+	/*
+			var buffer bytes.Buffer
+		for i := 0; i < pos.Rotation; i++ {
+			buffer.WriteString("turnright,")
+		}
+		if pos.Rotation == 1 {
+			g.CurrentPieceX = g.CurrentPieceX + 1
+			if g.CurrentPiece == "I" {
+				g.CurrentPieceX = g.CurrentPieceX + 1
+			}
+		}
+		if g.CurrentPieceX > pos.X {
+			for i := 0; i < g.CurrentPieceX-pos.X; i++ {
+				buffer.WriteString("left,")
+			}
+		}
+		if g.CurrentPieceX < pos.X {
+			for i := 0; i < pos.X-g.CurrentPieceX; i++ {
+				buffer.WriteString("right,")
+			}
+		}
+		buffer.WriteString("drop")
+		fmt.Println(buffer.String())
+	*/
+
+	pos.Moves = "left,left"
 	return nil
 }
