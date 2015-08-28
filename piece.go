@@ -99,7 +99,7 @@ func (p *Piece) Turnright() Piece {
 			sp["t3"] = t3
 			sp["b3"] = b3
 			sp["x3"] = x3
-			piece.CurrentX = sp["m3"].X
+			piece.CurrentX = t3.X
 		case 1:
 			b1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y - 2}
 			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
@@ -110,7 +110,7 @@ func (p *Piece) Turnright() Piece {
 			sp["b1"] = b1
 			sp["b2"] = b2
 			sp["b4"] = b4
-			piece.CurrentX = sp["b1"].X
+			piece.CurrentX = b1.X
 		case 2:
 			t2 := Cell{X: sp["b1"].X + 1, Y: sp["b1"].Y + 2}
 			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
@@ -121,9 +121,18 @@ func (p *Piece) Turnright() Piece {
 			sp["t2"] = t2
 			sp["m2"] = m2
 			sp["x2"] = x2
-			piece.CurrentX = sp["b2"].X
+			piece.CurrentX = t2.X
 		case 3:
-
+			m1 := Cell{X: sp["x2"].X - 1, Y: sp["x2"].Y + 2}
+			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
+			m4 := Cell{X: sp["t2"].X + 2, Y: sp["t2"].Y + -1}
+			delete(sp, "x2")
+			delete(sp, "b2")
+			delete(sp, "t2")
+			sp["m1"] = m1
+			sp["m3"] = m3
+			sp["m4"] = m4
+			piece.CurrentX = m1.X
 		}
 	case "T":
 		switch p.Rotation {
