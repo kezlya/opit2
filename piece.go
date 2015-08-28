@@ -112,7 +112,16 @@ func (p *Piece) Turnright() Piece {
 			sp["b4"] = b4
 			piece.CurrentX = sp["b1"].X
 		case 2:
-
+			t2 := Cell{X: sp["b1"].X + 1, Y: sp["b1"].Y + 2}
+			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
+			x2 := Cell{X: sp["b4"].X - 2, Y: sp["b4"].Y - 1}
+			delete(sp, "b1")
+			delete(sp, "b3")
+			delete(sp, "b4")
+			sp["t2"] = t2
+			sp["m2"] = m2
+			sp["x2"] = x2
+			piece.CurrentX = sp["b2"].X
 		case 3:
 
 		}
