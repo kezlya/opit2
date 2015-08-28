@@ -9,6 +9,8 @@ import (
 
 func main() {
 
+	//refactor init for Field
+
 	// add coordinats of 3, -1  and 4, -1 => O when testing the game
 	// validate top positions shoud work already
 

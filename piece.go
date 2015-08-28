@@ -87,6 +87,33 @@ func (p *Piece) Turnright() Piece {
 		sp[i] = v
 	}
 	switch p.Name {
+	case "I":
+		switch p.Rotation {
+		case 0:
+			nX := sp["m1"].X + 1
+			nY := sp["m1"].Y - 1
+			delete(sp, "m1")
+			sp["b2"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = nX
+		case 1:
+			nX := sp["t2"].X - 1
+			nY := sp["t2"].Y - 1
+			delete(sp, "t2")
+			sp["m1"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = nX
+		case 2:
+			nX := sp["m3"].X - 1
+			nY := sp["m3"].Y + 1
+			delete(sp, "m3")
+			sp["t2"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = p.CurrentX
+		case 3:
+			nX := sp["b2"].X + 1
+			nY := sp["b2"].Y + 1
+			delete(sp, "b2")
+			sp["m3"] = Cell{X: nX, Y: nY}
+			piece.CurrentX = p.CurrentX
+		}
 	case "T":
 		switch p.Rotation {
 		case 0:

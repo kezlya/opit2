@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"strings"
 )
 
@@ -1209,7 +1209,7 @@ func (f Field) AfterRightFix(r int, piece string, h Cell) Field {
 	return nil
 }
 
-func (f Field) IsValid(cells []Cell) bool {
+func (f Field) IsValid(cells map[string]Cell) bool {
 	for _, c := range cells {
 		if c.X < 0 || c.X >= f.Width() || c.Y < 0 || f[c.Y][c.X] {
 			return false
@@ -1218,20 +1218,63 @@ func (f Field) IsValid(cells []Cell) bool {
 	return true
 }
 
-func (f Field) CalculatePath(pos Position, piece Piece) []string {
-	//	path := []string{}
+func (f Field) CalculatePath(pos Position, piece Piece) string {
+	path := []string{}
 	// Top positions only
 
+	maxTry := 10
+	np := Piece{}
 	switch piece.Name {
 	case "I":
-		switch pos.Rotation {
-		case 0:
+		if pos.Rotation == 1 && pos.X <= piece.CurrentX {
+			pos.Rotation = 3
+		}
 
-		case 1:
-			if pos.X == 0 {
+		for (pos.X != piece.CurrentX || pos.Rotation != piece.Rotation) && maxTry > 0 {
+			fmt.Println(pos.X, piece.CurrentX, "	", pos.Rotation, piece.Rotation)
+			if pos.X < piece.CurrentX {
+				np = piece.Left()
+				if f.IsValid(np.Space) {
+					fmt.Println("valid")
+					piece = np
+					path = append(path, "left")
+				}
 
 			}
+
+			if pos.X == piece.CurrentX {
+				if pos.Rotation == 1 {
+					np = piece.Turnright()
+					if f.IsValid(np.Space) {
+						piece = np
+						path = append(path, "turnright")
+					}
+				}
+				if pos.Rotation == 3 {
+
+					np = piece.Turnleft()
+					fmt.Println("hello")
+					if f.IsValid(np.Space) {
+						fmt.Println("hello2")
+						piece = np
+						fmt.Println(np.CurrentX, np.Rotation)
+						fmt.Println(piece.CurrentX, piece.Rotation)
+						path = append(path, "turnleft")
+					}
+
+				}
+			}
+
+			if pos.X > piece.CurrentX {
+				np := piece.Right()
+				if f.IsValid(np.Space) {
+					piece = np
+					path = append(path, "right")
+				}
+			}
+			maxTry--
 		}
+
 	}
 
 	/*
@@ -1259,6 +1302,7 @@ func (f Field) CalculatePath(pos Position, piece Piece) []string {
 		fmt.Println(buffer.String())
 	*/
 
-	pos.Moves = "left,left"
-	return nil
+	pos.Moves = "left,left" //  ???????????????????
+	path = append(path, "drop")
+	return strings.Join(path, ",")
 }
