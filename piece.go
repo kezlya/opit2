@@ -201,7 +201,16 @@ func (p *Piece) Turnleft() Piece {
 			sp["m4"] = m4
 			piece.CurrentX = m1.X
 		case 2:
-
+			t3 := Cell{X: sp["b4"].X - 1, Y: sp["b4"].Y + 2}
+			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
+			x3 := Cell{X: sp["b1"].X + 2, Y: sp["b1"].Y - 1}
+			delete(sp, "b4")
+			delete(sp, "b2")
+			delete(sp, "b1")
+			sp["t3"] = t3
+			sp["m3"] = m3
+			sp["x3"] = x3
+			piece.CurrentX = t3.X
 		case 3:
 
 		}
