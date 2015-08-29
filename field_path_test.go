@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"testing"
 )
 
@@ -10,24 +10,24 @@ var arangePathField = Field{{true, false, true, true, true, true, true, true, tr
 func Test_pathTopPos_I(t *testing.T) {
 	piece := Piece{Name: "I", Rotation: 0}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	//pos1 := Position{X: 0, Rotation: 1}
+	pos1 := Position{X: 0, Rotation: 1}
 	/*pos2 := Position{X: 3, Rotation: 1}
 	pos3 := Position{X: 4, Rotation: 0}
 	pos4 := Position{X: 9, Rotation: 1}
 	pos5 := Position{X: 3, Rotation: 0}
 	pos6 := Position{X: 7, Rotation: 1}*/
 
-	//path1 := arangePathField.CalculatePath(pos1, piece)
+	path1 := arangePathField.CalculatePath(pos1, piece)
 	/*path2 := arangePathField.CalculatePath(pos2, piece)
 	path3 := arangePathField.CalculatePath(pos3, piece)
 	path4 := arangePathField.CalculatePath(pos4, piece)
 	path5 := arangePathField.CalculatePath(pos5, piece)
 	path6 := arangePathField.CalculatePath(pos6, piece)*/
 
-	/*if path1 != "left,left,left,turnleft,left,drop" {
+	if path1 != "left,left,left,turnleft,left,drop" {
 		fmt.Println("bad path1:", path1)
 		t.Fail()
-	}*/
+	}
 	/*if path2 != "left,turnleft,drop" {
 		fmt.Println("bad path2:", path2)
 		t.Fail()

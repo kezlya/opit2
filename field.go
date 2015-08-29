@@ -1211,7 +1211,10 @@ func (f Field) AfterRightFix(r int, piece string, h Cell) Field {
 
 func (f Field) IsValid(cells map[string]Cell) bool {
 	for _, c := range cells {
-		if c.X < 0 || c.X >= f.Width() || c.Y < 0 || f[c.Y][c.X] {
+		if c.X < 0 || c.X >= f.Width() || c.Y < 0 {
+			return false
+		}
+		if c.Y < f.Height() && f[c.Y][c.X] {
 			return false
 		}
 	}
