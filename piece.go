@@ -5,6 +5,8 @@ type Piece struct {
 	Rotation int
 	Space    map[string]Cell
 	CurrentX int
+	CurrentY int
+	Key      int
 }
 
 func (p *Piece) InitSpace(start Cell) {
@@ -48,6 +50,8 @@ func (p *Piece) InitSpace(start Cell) {
 	}
 	p.Space = space
 	p.CurrentX = start.X
+	p.CurrentY = start.Y
+	p.Key = p.key()
 }
 
 func (p *Piece) Left() Piece {
@@ -55,7 +59,9 @@ func (p *Piece) Left() Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
 	}
-	return Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, Space: res}
+	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, CurrentY: p.CurrentY, Space: res}
+	np.Key = np.key()
+	return np
 }
 
 func (p *Piece) Right() Piece {
@@ -63,7 +69,9 @@ func (p *Piece) Right() Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
 	}
-	return Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, Space: res}
+	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, CurrentY: p.CurrentY, Space: res}
+	np.Key = np.key()
+	return np
 }
 
 func (p *Piece) Down() Piece {
@@ -71,15 +79,17 @@ func (p *Piece) Down() Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
-	return Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, Space: res}
+	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - 1, Space: res}
+	np.Key = np.key()
+	return np
 }
 
 func (p *Piece) Turnright() Piece {
-	piece := Piece{Name: p.Name}
+	np := Piece{Name: p.Name}
 
-	piece.Rotation = p.Rotation + 1
-	if piece.Rotation > 3 {
-		piece.Rotation = 0
+	np.Rotation = p.Rotation + 1
+	if np.Rotation > 3 {
+		np.Rotation = 0
 	}
 
 	sp := make(map[string]Cell, 4)
@@ -99,7 +109,8 @@ func (p *Piece) Turnright() Piece {
 			sp["t3"] = t3
 			sp["b3"] = b3
 			sp["x3"] = x3
-			piece.CurrentX = t3.X
+			np.CurrentX = x3.X
+			np.CurrentY = x3.Y
 		case 1:
 			b1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y - 2}
 			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
@@ -110,7 +121,7 @@ func (p *Piece) Turnright() Piece {
 			sp["b1"] = b1
 			sp["b2"] = b2
 			sp["b4"] = b4
-			piece.CurrentX = b1.X
+			np.CurrentX = b1.X
 		case 2:
 			t2 := Cell{X: sp["b1"].X + 1, Y: sp["b1"].Y + 2}
 			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
@@ -121,7 +132,7 @@ func (p *Piece) Turnright() Piece {
 			sp["t2"] = t2
 			sp["m2"] = m2
 			sp["x2"] = x2
-			piece.CurrentX = t2.X
+			np.CurrentX = t2.X
 		case 3:
 			m1 := Cell{X: sp["x2"].X - 1, Y: sp["x2"].Y + 2}
 			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
@@ -132,7 +143,7 @@ func (p *Piece) Turnright() Piece {
 			sp["m1"] = m1
 			sp["m3"] = m3
 			sp["m4"] = m4
-			piece.CurrentX = m1.X
+			np.CurrentX = m1.X
 		}
 	case "T":
 		switch p.Rotation {
@@ -140,34 +151,35 @@ func (p *Piece) Turnright() Piece {
 			b2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y - 1}
 			delete(sp, "m1")
 			sp["b2"] = b2
-			piece.CurrentX = b2.X
+			np.CurrentX = b2.X
 		case 1:
 			m1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 1}
 			delete(sp, "t2")
 			sp["m1"] = m1
-			piece.CurrentX = m1.X
+			np.CurrentX = m1.X
 		case 2:
 			t2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y + 1}
 			delete(sp, "m3")
 			sp["t2"] = t2
-			piece.CurrentX = p.CurrentX
+			np.CurrentX = p.CurrentX
 		case 3:
 			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
 			delete(sp, "b2")
 			sp["m3"] = m3
-			piece.CurrentX = p.CurrentX
+			np.CurrentX = p.CurrentX
 		}
 	}
-	piece.Space = sp
-	return piece
+	np.Space = sp
+	np.Key = np.key()
+	return np
 }
 
 func (p *Piece) Turnleft() Piece {
-	piece := Piece{Name: p.Name}
+	np := Piece{Name: p.Name}
 
-	piece.Rotation = p.Rotation - 1
-	if piece.Rotation < 0 {
-		piece.Rotation = 3
+	np.Rotation = p.Rotation - 1
+	if np.Rotation < 0 {
+		np.Rotation = 3
 	}
 
 	sp := make(map[string]Cell, 4)
@@ -188,7 +200,7 @@ func (p *Piece) Turnleft() Piece {
 			sp["t2"] = t2
 			sp["b2"] = b2
 			sp["x2"] = x2
-			piece.CurrentX = t2.X
+			np.CurrentX = t2.X
 		case 1:
 			m1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y - 1}
 			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
@@ -199,7 +211,7 @@ func (p *Piece) Turnleft() Piece {
 			sp["m1"] = m1
 			sp["m2"] = m2
 			sp["m4"] = m4
-			piece.CurrentX = m1.X
+			np.CurrentX = m1.X
 		case 2:
 			t3 := Cell{X: sp["b4"].X - 1, Y: sp["b4"].Y + 2}
 			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
@@ -210,7 +222,7 @@ func (p *Piece) Turnleft() Piece {
 			sp["t3"] = t3
 			sp["m3"] = m3
 			sp["x3"] = x3
-			piece.CurrentX = t3.X
+			np.CurrentX = t3.X
 		case 3:
 			b1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 2}
 			b3 := Cell{X: sp["m2"].X + 1, Y: sp["m2"].Y - 1}
@@ -221,7 +233,7 @@ func (p *Piece) Turnleft() Piece {
 			sp["b1"] = b1
 			sp["b3"] = b3
 			sp["b4"] = b4
-			piece.CurrentX = b1.X
+			np.CurrentX = b1.X
 
 		}
 	case "T":
@@ -230,24 +242,29 @@ func (p *Piece) Turnleft() Piece {
 			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
 			delete(sp, "m3")
 			sp["b2"] = b2
-			piece.CurrentX = p.CurrentX
+			np.CurrentX = p.CurrentX
 		case 1:
 			m1 := Cell{X: sp["b2"].X - 1, Y: sp["b2"].Y + 1}
 			delete(sp, "b2")
 			sp["m1"] = m1
-			piece.CurrentX = m1.X
+			np.CurrentX = m1.X
 		case 2:
 			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
 			delete(sp, "m1")
 			sp["t2"] = t2
-			piece.CurrentX = t2.X
+			np.CurrentX = t2.X
 		case 3:
 			m3 := Cell{X: sp["t2"].X + 1, Y: sp["t2"].Y - 1}
 			delete(sp, "t2")
 			sp["m3"] = m3
-			piece.CurrentX = p.CurrentX
+			np.CurrentX = p.CurrentX
 		}
 	}
-	piece.Space = sp
-	return piece
+	np.Space = sp
+	np.Key = np.key()
+	return np
+}
+
+func (p *Piece) key() int {
+	return p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
 }

@@ -1311,20 +1311,74 @@ func (f Field) CalculatePath(pos Position, piece Piece) string {
 func (f Field) FixHole(piece Piece, hole Cell) []Position {
 	positions := make([]Position, 0)
 
+	bag := &Bag{Options: make(map[int]bool)}
+	fmt.Println(bag)
+	f.Search("left", piece, hole, bag)
+	f.Search("right", piece, hole, bag)
+	f.Search("down", piece, hole, bag)
+	f.Search("turnleft", piece, hole, bag)
+	f.Search("turnright", piece, hole, bag)
+
+	for k, v := range bag.Options {
+		fmt.Println(k, v)
+	}
+	fmt.Println(bag.TotalOp)
+
 	return positions
 }
 
-func (f Field) Search(dir string, piece Piece, hole Cell) {
+func (f Field) Search(dir string, piece Piece, hole Cell, bag *Bag) {
+	if bag.Found {
+		return
+	}
+	bag.TotalOp++
+
 	np := Piece{}
 	switch dir {
 	case "left":
+		//check keys before getting shifting
+		//check keys before getting shifting
+		//check keys before getting shifting
+		//check keys before getting shifting
+		np = piece.Left()
 	case "right":
+		np = piece.Right()
 	case "down":
+		np = piece.Down()
 	case "turnleft":
+		np = piece.Turnleft()
 	case "turnright":
+		np = piece.Turnright()
+	}
 
+	_, ok := bag.Options[np.Key]
+	if ok {
+		return
 	}
-	if f.IsValid(np.Space){
-		if
+
+	if f.IsValid(np.Space) {
+		bag.Options[np.Key] = true
+		fmt.Println(dir)
+		for _, cell := range np.Space {
+			if cell.X == hole.X && cell.Y == hole.Y {
+				fmt.Println("found")
+				bag.Found = true
+			}
+		}
+		if !bag.Found {
+			f.Search("left", np, hole, bag)
+			f.Search("right", np, hole, bag)
+			f.Search("down", np, hole, bag)
+			f.Search("turnleft", np, hole, bag)
+			f.Search("turnright", np, hole, bag)
+		}
+	} else {
+		bag.Options[np.Key] = false
 	}
+}
+
+type Bag struct {
+	Found   bool
+	Options map[int]bool
+	TotalOp int
 }

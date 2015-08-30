@@ -33,6 +33,11 @@ func pieceAssert(t *testing.T, a, b Piece) {
 		fmt.Println(a.CurrentX, b.CurrentX)
 		t.Fail()
 	}
+
+	if a.CurrentY != b.CurrentY {
+		fmt.Println(a.CurrentY, b.CurrentY)
+		t.Fail()
+	}
 }
 
 func Test_Left(t *testing.T) {
@@ -41,14 +46,14 @@ func Test_Left(t *testing.T) {
 	space["m3"] = Cell{X: 3, Y: 2}
 	space["b3"] = Cell{X: 3, Y: 3}
 	space["x3"] = Cell{X: 3, Y: 4}
-	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 3}
+	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 3, CurrentY: 1}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t3"] = Cell{X: 2, Y: 1}
 	ex_space["m3"] = Cell{X: 2, Y: 2}
 	ex_space["b3"] = Cell{X: 2, Y: 3}
 	ex_space["x3"] = Cell{X: 2, Y: 4}
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 2}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 2, CurrentY: 1}
 
 	result := arrange.Left()
 
@@ -61,14 +66,14 @@ func Test_Right(t *testing.T) {
 	space["m3"] = Cell{X: 3, Y: 2}
 	space["b3"] = Cell{X: 3, Y: 3}
 	space["x3"] = Cell{X: 3, Y: 4}
-	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 3}
+	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 3, CurrentY: 1}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t3"] = Cell{X: 4, Y: 1}
 	ex_space["m3"] = Cell{X: 4, Y: 2}
 	ex_space["b3"] = Cell{X: 4, Y: 3}
 	ex_space["x3"] = Cell{X: 4, Y: 4}
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 4, CurrentY: 1}
 
 	result := arrange.Right()
 
@@ -81,14 +86,14 @@ func Test_Down(t *testing.T) {
 	space["m3"] = Cell{X: 3, Y: 2}
 	space["b3"] = Cell{X: 3, Y: 3}
 	space["x3"] = Cell{X: 3, Y: 4}
-	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 3}
+	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 3, CurrentY: 1}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t3"] = Cell{X: 3, Y: 0}
 	ex_space["m3"] = Cell{X: 3, Y: 1}
 	ex_space["b3"] = Cell{X: 3, Y: 2}
 	ex_space["x3"] = Cell{X: 3, Y: 3}
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 3}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 3, CurrentY: 0}
 
 	result := arrange.Down()
 
@@ -101,14 +106,14 @@ func Test_TurnRight_I0(t *testing.T) {
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["m3"] = Cell{X: 6, Y: 12}
 	space["m4"] = Cell{X: 7, Y: 12}
-	arrange := Piece{Space: space, Name: "I", Rotation: 0, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "I", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t3"] = Cell{X: 6, Y: 13} //
 	ex_space["m3"] = Cell{X: 6, Y: 12}
 	ex_space["b3"] = Cell{X: 6, Y: 11} //
 	ex_space["x3"] = Cell{X: 6, Y: 10} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 6}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 6, CurrentY: 10}
 
 	result := arrange.Turnright()
 
@@ -121,14 +126,14 @@ func Test_TurnRight_I1(t *testing.T) {
 	space["m3"] = Cell{X: 6, Y: 12}
 	space["b3"] = Cell{X: 6, Y: 11}
 	space["x3"] = Cell{X: 6, Y: 10}
-	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 6}
+	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 6, CurrentY: 10}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["b1"] = Cell{X: 4, Y: 11} //
 	ex_space["b2"] = Cell{X: 5, Y: 11} //
 	ex_space["b3"] = Cell{X: 6, Y: 11}
 	ex_space["b4"] = Cell{X: 7, Y: 11} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 2, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	result := arrange.Turnright()
 
@@ -141,14 +146,14 @@ func Test_TurnRight_I2(t *testing.T) {
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["b3"] = Cell{X: 6, Y: 11}
 	space["b4"] = Cell{X: 7, Y: 11}
-	arrange := Piece{Space: space, Name: "I", Rotation: 2, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "I", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t2"] = Cell{X: 5, Y: 13} //
 	ex_space["m2"] = Cell{X: 5, Y: 12} //
 	ex_space["b2"] = Cell{X: 5, Y: 11}
 	ex_space["x2"] = Cell{X: 5, Y: 10} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 3, CurrentX: 5}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 3, CurrentX: 5, CurrentY: 10}
 
 	result := arrange.Turnright()
 
@@ -161,14 +166,14 @@ func Test_TurnRight_I3(t *testing.T) {
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["x2"] = Cell{X: 5, Y: 10}
-	arrange := Piece{Space: space, Name: "I", Rotation: 3, CurrentX: 5}
+	arrange := Piece{Space: space, Name: "I", Rotation: 3, CurrentX: 5, CurrentY: 10}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m1"] = Cell{X: 4, Y: 12} //
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["m3"] = Cell{X: 6, Y: 12} //
 	ex_space["m4"] = Cell{X: 7, Y: 12} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 0, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	result := arrange.Turnright()
 
@@ -181,14 +186,14 @@ func Test_TurnLeft_I0(t *testing.T) {
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["m3"] = Cell{X: 6, Y: 12}
 	space["m4"] = Cell{X: 7, Y: 12}
-	arrange := Piece{Space: space, Name: "I", Rotation: 0, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "I", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t2"] = Cell{X: 5, Y: 13} //
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["b2"] = Cell{X: 5, Y: 11} //
 	ex_space["x2"] = Cell{X: 5, Y: 10} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 3, CurrentX: 5}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 3, CurrentX: 5, CurrentY: 10}
 
 	result := arrange.Turnleft()
 
@@ -201,14 +206,14 @@ func Test_TurnLeft_I3(t *testing.T) {
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["x2"] = Cell{X: 5, Y: 10}
-	arrange := Piece{Space: space, Name: "I", Rotation: 3, CurrentX: 5}
+	arrange := Piece{Space: space, Name: "I", Rotation: 3, CurrentX: 5, CurrentY: 10}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["b1"] = Cell{X: 4, Y: 11} //
 	ex_space["b2"] = Cell{X: 5, Y: 11}
 	ex_space["b3"] = Cell{X: 6, Y: 11} //
 	ex_space["b4"] = Cell{X: 7, Y: 11} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 2, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	result := arrange.Turnleft()
 
@@ -221,14 +226,14 @@ func Test_TurnLeft_I2(t *testing.T) {
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["b3"] = Cell{X: 6, Y: 11}
 	space["b4"] = Cell{X: 7, Y: 11}
-	arrange := Piece{Space: space, Name: "I", Rotation: 2, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "I", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t3"] = Cell{X: 6, Y: 13} //
 	ex_space["m3"] = Cell{X: 6, Y: 12} //
 	ex_space["b3"] = Cell{X: 6, Y: 11}
 	ex_space["x3"] = Cell{X: 6, Y: 10} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 6}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 1, CurrentX: 6, CurrentY: 10}
 
 	result := arrange.Turnleft()
 
@@ -241,14 +246,14 @@ func Test_TurnLeft_I1(t *testing.T) {
 	space["m3"] = Cell{X: 6, Y: 12}
 	space["b3"] = Cell{X: 6, Y: 11}
 	space["x3"] = Cell{X: 6, Y: 10}
-	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 6}
+	arrange := Piece{Space: space, Name: "I", Rotation: 1, CurrentX: 6, CurrentY: 10}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m1"] = Cell{X: 4, Y: 12} //
 	ex_space["m2"] = Cell{X: 5, Y: 12} //
 	ex_space["m3"] = Cell{X: 6, Y: 12}
 	ex_space["m4"] = Cell{X: 7, Y: 12} //
-	expected := Piece{Space: ex_space, Name: "I", Rotation: 0, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "I", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	result := arrange.Turnleft()
 
@@ -261,14 +266,14 @@ func Test_TurnRight_T0(t *testing.T) {
 	space["m1"] = Cell{X: 4, Y: 12}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["m3"] = Cell{X: 6, Y: 12}
-	arrange := Piece{Space: space, Name: "T", Rotation: 0, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "T", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t2"] = Cell{X: 5, Y: 13}
 	ex_space["b2"] = Cell{X: 5, Y: 11} //
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["m3"] = Cell{X: 6, Y: 12}
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 1, CurrentX: 5}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 1, CurrentX: 5, CurrentY: 11}
 
 	result := arrange.Turnright()
 
@@ -281,14 +286,14 @@ func Test_TurnRight_T1(t *testing.T) {
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["m3"] = Cell{X: 6, Y: 12}
-	arrange := Piece{Space: space, Name: "T", Rotation: 1, CurrentX: 5}
+	arrange := Piece{Space: space, Name: "T", Rotation: 1, CurrentX: 5, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m1"] = Cell{X: 4, Y: 12} //
 	ex_space["b2"] = Cell{X: 5, Y: 11}
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["m3"] = Cell{X: 6, Y: 12}
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 2, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	result := arrange.Turnright()
 
@@ -301,14 +306,14 @@ func Test_TurnRight_T2(t *testing.T) {
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["m3"] = Cell{X: 6, Y: 12}
-	arrange := Piece{Space: space, Name: "T", Rotation: 2, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "T", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m1"] = Cell{X: 4, Y: 12}
 	ex_space["b2"] = Cell{X: 5, Y: 11}
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["t2"] = Cell{X: 5, Y: 13} //
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 3, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 3, CurrentX: 4, CurrentY: 11}
 
 	result := arrange.Turnright()
 
@@ -321,14 +326,14 @@ func Test_TurnRight_T3(t *testing.T) {
 	space["b2"] = Cell{X: 5, Y: 11}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["t2"] = Cell{X: 5, Y: 13}
-	arrange := Piece{Space: space, Name: "T", Rotation: 3, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "T", Rotation: 3, CurrentX: 4, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m1"] = Cell{X: 4, Y: 12}
 	ex_space["m3"] = Cell{X: 6, Y: 12} //
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["t2"] = Cell{X: 5, Y: 13}
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 0, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	result := arrange.Turnright()
 
@@ -341,14 +346,14 @@ func Test_TurnLeft_T0(t *testing.T) {
 	space["m1"] = Cell{X: 4, Y: 12}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["m3"] = Cell{X: 6, Y: 12}
-	arrange := Piece{Space: space, Name: "T", Rotation: 0, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "T", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["t2"] = Cell{X: 5, Y: 13}
 	ex_space["m1"] = Cell{X: 4, Y: 12}
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["b2"] = Cell{X: 5, Y: 11} //
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 3, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 3, CurrentX: 4, CurrentY: 11}
 
 	result := arrange.Turnleft()
 
@@ -361,14 +366,14 @@ func Test_TurnLeft_T3(t *testing.T) {
 	space["m1"] = Cell{X: 4, Y: 12}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["b2"] = Cell{X: 5, Y: 11}
-	arrange := Piece{Space: space, Name: "T", Rotation: 3, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "T", Rotation: 3, CurrentX: 4, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m3"] = Cell{X: 6, Y: 12} //
 	ex_space["m1"] = Cell{X: 4, Y: 12}
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["b2"] = Cell{X: 5, Y: 11}
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 2, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	result := arrange.Turnleft()
 
@@ -381,14 +386,14 @@ func Test_TurnLeft_T2(t *testing.T) {
 	space["m1"] = Cell{X: 4, Y: 12}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["b2"] = Cell{X: 5, Y: 11}
-	arrange := Piece{Space: space, Name: "T", Rotation: 2, CurrentX: 4}
+	arrange := Piece{Space: space, Name: "T", Rotation: 2, CurrentX: 4, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m3"] = Cell{X: 6, Y: 12}
 	ex_space["t2"] = Cell{X: 5, Y: 13} //
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["b2"] = Cell{X: 5, Y: 11}
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 1, CurrentX: 5}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 1, CurrentX: 5, CurrentY: 11}
 
 	result := arrange.Turnleft()
 
@@ -401,14 +406,14 @@ func Test_TurnLeft_T1(t *testing.T) {
 	space["t2"] = Cell{X: 5, Y: 13}
 	space["m2"] = Cell{X: 5, Y: 12}
 	space["b2"] = Cell{X: 5, Y: 11}
-	arrange := Piece{Space: space, Name: "T", Rotation: 1, CurrentX: 5}
+	arrange := Piece{Space: space, Name: "T", Rotation: 1, CurrentX: 5, CurrentY: 11}
 
 	ex_space := make(map[string]Cell, 4)
 	ex_space["m3"] = Cell{X: 6, Y: 12}
 	ex_space["t2"] = Cell{X: 5, Y: 13}
 	ex_space["m2"] = Cell{X: 5, Y: 12}
 	ex_space["m1"] = Cell{X: 4, Y: 12} //
-	expected := Piece{Space: ex_space, Name: "T", Rotation: 0, CurrentX: 4}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 0, CurrentX: 4, CurrentY: 12}
 
 	result := arrange.Turnleft()
 

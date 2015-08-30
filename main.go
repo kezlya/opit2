@@ -9,6 +9,10 @@ import (
 
 func main() {
 
+	//find datatype in golang like dictionary (map) but keys only
+
+	// try key in the piece to be int insted of string r3 x2 y6
+
 	//refactor init for Field
 
 	// add coordinats of 3, -1  and 4, -1 => O when testing the game
