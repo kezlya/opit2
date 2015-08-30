@@ -122,6 +122,7 @@ func (p *Piece) Turnright() Piece {
 			sp["b2"] = b2
 			sp["b4"] = b4
 			np.CurrentX = b1.X
+			np.CurrentY = b1.Y
 		case 2:
 			t2 := Cell{X: sp["b1"].X + 1, Y: sp["b1"].Y + 2}
 			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
@@ -132,7 +133,8 @@ func (p *Piece) Turnright() Piece {
 			sp["t2"] = t2
 			sp["m2"] = m2
 			sp["x2"] = x2
-			np.CurrentX = t2.X
+			np.CurrentX = x2.X
+			np.CurrentY = x2.Y
 		case 3:
 			m1 := Cell{X: sp["x2"].X - 1, Y: sp["x2"].Y + 2}
 			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
@@ -144,6 +146,7 @@ func (p *Piece) Turnright() Piece {
 			sp["m3"] = m3
 			sp["m4"] = m4
 			np.CurrentX = m1.X
+			np.CurrentY = m1.Y
 		}
 	case "T":
 		switch p.Rotation {
@@ -200,7 +203,8 @@ func (p *Piece) Turnleft() Piece {
 			sp["t2"] = t2
 			sp["b2"] = b2
 			sp["x2"] = x2
-			np.CurrentX = t2.X
+			np.CurrentX = x2.X
+			np.CurrentY = x2.Y
 		case 1:
 			m1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y - 1}
 			m2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y + 1}
@@ -212,6 +216,7 @@ func (p *Piece) Turnleft() Piece {
 			sp["m2"] = m2
 			sp["m4"] = m4
 			np.CurrentX = m1.X
+			np.CurrentY = m1.Y
 		case 2:
 			t3 := Cell{X: sp["b4"].X - 1, Y: sp["b4"].Y + 2}
 			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
@@ -222,7 +227,8 @@ func (p *Piece) Turnleft() Piece {
 			sp["t3"] = t3
 			sp["m3"] = m3
 			sp["x3"] = x3
-			np.CurrentX = t3.X
+			np.CurrentX = x3.X
+			np.CurrentY = x3.Y
 		case 3:
 			b1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 2}
 			b3 := Cell{X: sp["m2"].X + 1, Y: sp["m2"].Y - 1}
@@ -234,7 +240,7 @@ func (p *Piece) Turnleft() Piece {
 			sp["b3"] = b3
 			sp["b4"] = b4
 			np.CurrentX = b1.X
-
+			np.CurrentY = b1.Y
 		}
 	case "T":
 		switch p.Rotation {
