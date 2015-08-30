@@ -1234,11 +1234,11 @@ func (f Field) CalculatePath(pos Position, piece Piece) string {
 		}
 
 		for (pos.X != piece.CurrentX || pos.Rotation != piece.Rotation) && maxTry > 0 {
-			fmt.Println(pos.X, piece.CurrentX, "	", pos.Rotation, piece.Rotation)
+			//fmt.Println(pos.X, piece.CurrentX, "	", pos.Rotation, piece.Rotation)
 			if pos.X < piece.CurrentX {
 				np = piece.Left()
 				if f.IsValid(np.Space) {
-					fmt.Println("valid")
+					//fmt.Println("valid")
 					piece = np
 					path = append(path, "left")
 				}
@@ -1256,12 +1256,10 @@ func (f Field) CalculatePath(pos Position, piece Piece) string {
 				if pos.Rotation == 3 {
 
 					np = piece.Turnleft()
-					fmt.Println("hello")
 					if f.IsValid(np.Space) {
-						fmt.Println("hello2")
 						piece = np
-						fmt.Println(np.CurrentX, np.Rotation)
-						fmt.Println(piece.CurrentX, piece.Rotation)
+						//fmt.Println(np.CurrentX, np.Rotation)
+						//fmt.Println(piece.CurrentX, piece.Rotation)
 						path = append(path, "turnleft")
 					}
 
@@ -1308,4 +1306,25 @@ func (f Field) CalculatePath(pos Position, piece Piece) string {
 	pos.Moves = "left,left" //  ???????????????????
 	path = append(path, "drop")
 	return strings.Join(path, ",")
+}
+
+func (f Field) FixHole(piece Piece, hole Cell) []Position {
+	positions := make([]Position, 0)
+
+	return positions
+}
+
+func (f Field) Search(dir string, piece Piece, hole Cell) {
+	np := Piece{}
+	switch dir {
+	case "left":
+	case "right":
+	case "down":
+	case "turnleft":
+	case "turnright":
+
+	}
+	if f.IsValid(np.Space){
+		if
+	}
 }

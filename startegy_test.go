@@ -45,6 +45,15 @@ func Benchmark_moves(b *testing.B) {
 		game.calculateMoves()
 	}
 }
+func Benchmark_fixhole(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		testField := Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+		piece := Piece{Name: "T", Rotation: 0}
+		piece.InitSpace(Cell{X: 3, Y: 19})
+		hole := Cell{X: 7, Y: 12}
+		testField.FixHole(piece, hole)
+	}
+}
 
 func Benchmark_many(b *testing.B) {
 	strategy := Strategy{
