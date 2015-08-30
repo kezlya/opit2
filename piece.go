@@ -155,21 +155,25 @@ func (p *Piece) Turnright() Piece {
 			delete(sp, "m1")
 			sp["b2"] = b2
 			np.CurrentX = b2.X
+			np.CurrentY = b2.Y
 		case 1:
 			m1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 1}
 			delete(sp, "t2")
 			sp["m1"] = m1
 			np.CurrentX = m1.X
+			np.CurrentY = p.CurrentY
 		case 2:
 			t2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y + 1}
 			delete(sp, "m3")
 			sp["t2"] = t2
 			np.CurrentX = p.CurrentX
+			np.CurrentY = p.CurrentY
 		case 3:
 			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
 			delete(sp, "b2")
 			sp["m3"] = m3
 			np.CurrentX = p.CurrentX
+			np.CurrentY = m3.Y
 		}
 	}
 	np.Space = sp
@@ -249,21 +253,25 @@ func (p *Piece) Turnleft() Piece {
 			delete(sp, "m3")
 			sp["b2"] = b2
 			np.CurrentX = p.CurrentX
+			np.CurrentY = b2.Y
 		case 1:
 			m1 := Cell{X: sp["b2"].X - 1, Y: sp["b2"].Y + 1}
 			delete(sp, "b2")
 			sp["m1"] = m1
 			np.CurrentX = m1.X
+			np.CurrentY = m1.Y
 		case 2:
 			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
 			delete(sp, "m1")
 			sp["t2"] = t2
 			np.CurrentX = t2.X
+			np.CurrentY = p.CurrentY
 		case 3:
 			m3 := Cell{X: sp["t2"].X + 1, Y: sp["t2"].Y - 1}
 			delete(sp, "t2")
 			sp["m3"] = m3
 			np.CurrentX = p.CurrentX
+			np.CurrentY = p.CurrentY
 		}
 	}
 	np.Space = sp
