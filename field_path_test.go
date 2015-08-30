@@ -1,8 +1,8 @@
 package main
 
 import (
-//"fmt"
-//"testing"
+	"fmt"
+	"testing"
 )
 
 var arangePathField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
@@ -50,23 +50,22 @@ func Test_pathTopPos_I(t *testing.T) {
 		t.Fail()
 	}
 }
-
+*/
 func Test_path_T(t *testing.T) {
 	piece := Piece{Name: "T", Rotation: 0}
 	piece.InitSpace(Cell{X: 3, Y: 19})
 
-	hole1 := Cell{X: 2, Y: 13}
-	//hole2 := Cell{X: 3, Y: 11}
+	//hole1 := Cell{X: 2, Y: 13}
+	hole2 := Cell{X: 3, Y: 11}
 	//hole3_bad := Cell{X: 2, Y: 6}
 	//hole4 := Cell{X: 7, Y: 12}
 	//hole5_bad := Cell{X: 8, Y: 11}
 
-	arangePathField.FixHole(piece, hole1)
-	//arangePathField.FixHole(piece, hole2)
+	//arangePathField.FixHole(piece, hole1)
+	arangePathField.FixHole(piece, hole2)
 	//arangePathField.FixHole(piece, hole3_bad)
 	//arangePathField.FixHole(piece, hole4)
 	//arangePathField.FixHole(piece, hole5_bad)
 
 	fmt.Println("done ++++++")
 }
-*/

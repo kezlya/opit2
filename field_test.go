@@ -131,47 +131,47 @@ func Test_IsValid(t *testing.T) {
 	bad3 := Cell{X: 3, Y: -1}
 	bad4 := Cell{X: 2, Y: 18}
 
-	if !arrange.IsValid(map[string]Cell{"x": good1}) {
+	if !arrange.IsValid(&map[string]Cell{"x": good1}) {
 		fmt.Println("should be valid", good1)
 		t.Fail()
 	}
 
-	if !arrange.IsValid(map[string]Cell{"x": good2}) {
+	if !arrange.IsValid(&map[string]Cell{"x": good2}) {
 		fmt.Println("should be valid", good2)
 		t.Fail()
 	}
 
-	if !arrange.IsValid(map[string]Cell{"x": good3}) {
+	if !arrange.IsValid(&map[string]Cell{"x": good3}) {
 		fmt.Println("should be valid", good3)
 		t.Fail()
 	}
 
-	if !arrange.IsValid(map[string]Cell{"x": good4}) {
+	if !arrange.IsValid(&map[string]Cell{"x": good4}) {
 		fmt.Println("should be valid", good4)
 		t.Fail()
 	}
 
-	if arrange.IsValid(map[string]Cell{"x": bad1}) {
+	if arrange.IsValid(&map[string]Cell{"x": bad1}) {
 		fmt.Println("should not be valid", bad1)
 		t.Fail()
 	}
 
-	if arrange.IsValid(map[string]Cell{"x": bad2}) {
+	if arrange.IsValid(&map[string]Cell{"x": bad2}) {
 		fmt.Println("should not be valid", bad2)
 		t.Fail()
 	}
 
-	if arrange.IsValid(map[string]Cell{"x": bad3}) {
+	if arrange.IsValid(&map[string]Cell{"x": bad3}) {
 		fmt.Println("should not be valid", bad3)
 		t.Fail()
 	}
 
-	if arrange.IsValid(map[string]Cell{"x": bad4}) {
+	if arrange.IsValid(&map[string]Cell{"x": bad4}) {
 		fmt.Println("should not be valid", bad4)
 		t.Fail()
 	}
 
-	if arrange.IsValid(map[string]Cell{"1": good1, "2": good2, "3": good3, "4": good4, "5": bad1, "6": bad2, "7": bad3, "8": bad4}) {
+	if arrange.IsValid(&map[string]Cell{"1": good1, "2": good2, "3": good3, "4": good4, "5": bad1, "6": bad2, "7": bad3, "8": bad4}) {
 		fmt.Println("should not be valid")
 		t.Fail()
 	}
