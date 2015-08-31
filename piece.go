@@ -7,6 +7,7 @@ type Piece struct {
 	CurrentX int
 	CurrentY int
 	Key      int
+	Moves    []string
 }
 
 func (p *Piece) InitSpace(start Cell) {
@@ -280,5 +281,8 @@ func (p *Piece) Turnleft() Piece {
 }
 
 func (p *Piece) key() int {
+	if p.CurrentX < 0 || p.CurrentY < 0 {
+		return 0
+	}
 	return p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
 }

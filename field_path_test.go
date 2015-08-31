@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var arangePathField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+var arangePathField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 
 /*
 func Test_pathTopPos_I(t *testing.T) {
@@ -55,17 +55,24 @@ func Test_path_T(t *testing.T) {
 	piece := Piece{Name: "T", Rotation: 0}
 	piece.InitSpace(Cell{X: 3, Y: 19})
 
+	//hole0 := Cell{X: 3, Y: 16}
+
 	//hole1 := Cell{X: 2, Y: 13}
 	hole2 := Cell{X: 3, Y: 11}
 	//hole3_bad := Cell{X: 2, Y: 6}
 	//hole4 := Cell{X: 7, Y: 12}
 	//hole5_bad := Cell{X: 8, Y: 11}
 
+	//positions, total := arangePathField.FixHole(piece, hole0)
 	//arangePathField.FixHole(piece, hole1)
-	arangePathField.FixHole(piece, hole2)
+	positions, total := arangePathField.FixHole(piece, hole2)
 	//arangePathField.FixHole(piece, hole3_bad)
 	//arangePathField.FixHole(piece, hole4)
 	//arangePathField.FixHole(piece, hole5_bad)
 
+	for _, pos := range positions {
+		fmt.Println(pos.Moves)
+	}
+	fmt.Println(total, "=========================", len(positions))
 	fmt.Println("done ++++++")
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	//"fmt"
+	//"sort"
 	"strings"
 )
 
@@ -1309,81 +1310,215 @@ func (f Field) CalculatePath(pos Position, piece Piece) string {
 	return strings.Join(path, ",")
 }
 */
-func (f Field) FixHole(piece Piece, hole Cell) []Position {
-	positions := make([]Position, 0)
+func (f Field) FixHole(piece Piece, hole Cell) ([]Position, int) {
+	bag := &Bag{
+		Options: make(map[int]*Piece),
+		Hole:    hole,
+	}
+	bag.Options[piece.Key] = &piece
 
-	bag := &Bag{Options: make(map[int]bool), Hole: hole}
+	f.Search("down", &piece, bag)
 	f.Search("left", &piece, bag)
 	f.Search("right", &piece, bag)
-	f.Search("down", &piece, bag)
+
 	f.Search("turnleft", &piece, bag)
 	f.Search("turnright", &piece, bag)
 
-	//fmt.Println(bag.TotalOp, "=========================")
-	return positions
+	//fmt.Println(bag.Options)
+	/*
+		var keys []int
+		for k := range bag.Options {
+			keys = append(keys, k)
+		}
+		sort.Ints(keys)
+
+		// To perform the opertion you want
+		for _, k := range keys {
+			fmt.Println("Key:", k, "Value:", bag.Options[k])
+		}
+	*/
+	return CheckFix(bag), bag.Total
 }
 
 func (f Field) Search(dir string, piece *Piece, bag *Bag) {
-
 	bag.Total++
-	ok := false
-	var np Piece
+	var ok bool
+	var el *Piece = nil
+	//var np *Piece = nil
 
 	switch dir {
 	case "left":
-		_, ok = bag.Options[piece.Key-100]
+		nextKey := piece.Key - 100
+		el, ok = bag.Options[nextKey]
 		if ok {
+			if el != nil && len(piece.Moves)+1 < len(el.Moves) {
+				bag.Options[nextKey].Moves = append(piece.Moves, dir)
+				//f.Search("left", bag.Options[nextKey], bag)
+				//f.Search("down", bag.Options[nextKey], bag)
+				//f.Search("turnleft", bag.Options[nextKey], bag)
+				//f.Search("turnright", bag.Options[nextKey], bag)
+				//replace moves in added positions
+			}
 			return
-		}
-		np = piece.Left()
-	case "right":
-		_, ok = bag.Options[piece.Key+100]
-		if ok {
-			return
-		}
-		np = piece.Right()
-	case "down":
-		_, ok = bag.Options[piece.Key-1]
-		if ok {
-			return
-		}
-		np = piece.Down()
-	case "turnleft":
-		np = piece.Turnleft()
-		_, ok = bag.Options[np.Key]
-		if ok {
-			return
-		}
-	case "turnright":
-		np = piece.Turnright()
-		_, ok = bag.Options[np.Key]
-		if ok {
-			return
-		}
-	}
+		} else {
+			np := piece.Left()
+			if f.IsValid(&np.Space) {
+				np.Moves = append(piece.Moves, dir)
+				bag.Options[np.Key] = &np
+				//AddFix(bag, &np)
 
-	if f.IsValid(&np.Space) {
-		bag.Options[np.Key] = true
-		for _, cell := range np.Space {
-			if cell.X == bag.Hole.X && cell.Y == bag.Hole.Y {
-				//fmt.Println("found+++++++++++++++++++++++++++++++++")
-				//fmt.Println(np.Space)
-				bag.Found = true
+				f.Search("down", &np, bag)
+				f.Search("left", &np, bag)
+
+				f.Search("turnleft", &np, bag)
+				f.Search("turnright", &np, bag)
+
+			} else {
+				bag.Options[np.Key] = nil
 			}
 		}
-		f.Search("left", &np, bag)
-		f.Search("right", &np, bag)
-		f.Search("down", &np, bag)
-		f.Search("turnleft", &np, bag)
-		f.Search("turnright", &np, bag)
-	} else {
-		bag.Options[np.Key] = false
+	case "right":
+		nextKey := piece.Key + 100
+		el, ok = bag.Options[nextKey]
+		if ok {
+			if el != nil && len(piece.Moves)+1 < len(el.Moves) {
+				bag.Options[nextKey].Moves = append(piece.Moves, dir)
+				//f.Search("right", bag.Options[nextKey], bag)
+				//f.Search("down", bag.Options[nextKey], bag)
+				//f.Search("turnleft", bag.Options[nextKey], bag)
+				//f.Search("turnright", bag.Options[nextKey], bag)
+			}
+			return
+		} else {
+			np := piece.Right()
+			if f.IsValid(&np.Space) {
+				np.Moves = append(piece.Moves, dir)
+				bag.Options[np.Key] = &np
+				//AddFix(bag, &np)
+
+				f.Search("down", &np, bag)
+				f.Search("right", &np, bag)
+
+				f.Search("turnleft", &np, bag)
+				f.Search("turnright", &np, bag)
+
+			} else {
+				bag.Options[np.Key] = nil
+			}
+		}
+	case "down":
+		nextKey := piece.Key - 1
+		el, ok = bag.Options[nextKey]
+		if ok {
+			if el != nil && len(piece.Moves)+1 < len(el.Moves) {
+				bag.Options[nextKey].Moves = append(piece.Moves, dir)
+				//f.Search("left", bag.Options[nextKey], bag)
+				//f.Search("right", bag.Options[nextKey], bag)
+				//f.Search("turnleft", bag.Options[nextKey], bag)
+				//f.Search("turnright", bag.Options[nextKey], bag)
+			}
+			return
+		} else {
+			np := piece.Down()
+			if f.IsValid(&np.Space) {
+				np.Moves = append(piece.Moves, dir)
+				bag.Options[np.Key] = &np
+				//AddFix(bag, &np)
+
+				f.Search("left", &np, bag)
+				f.Search("right", &np, bag)
+				f.Search("turnleft", &np, bag)
+				f.Search("turnright", &np, bag)
+
+			} else {
+				bag.Options[np.Key] = nil
+			}
+		}
+
+	case "turnleft":
+		np := piece.Turnleft()
+		el, ok = bag.Options[np.Key]
+		if ok {
+			if el != nil && len(piece.Moves)+1 < len(el.Moves) {
+				bag.Options[np.Key].Moves = append(piece.Moves, dir)
+				//f.Search("left", bag.Options[np.Key], bag)
+				//f.Search("right", bag.Options[np.Key], bag)
+				//f.Search("down", bag.Options[np.Key], bag)
+				//f.Search("turnleft", bag.Options[np.Key], bag)
+
+			}
+			return
+		} else {
+			if f.IsValid(&np.Space) {
+				np.Moves = append(piece.Moves, dir)
+				bag.Options[np.Key] = &np
+				//AddFix(bag, &np)
+
+				f.Search("down", &np, bag)
+				f.Search("left", &np, bag)
+				f.Search("right", &np, bag)
+
+				f.Search("turnleft", &np, bag)
+
+			} else {
+				bag.Options[np.Key] = nil
+			}
+		}
+
+	case "turnright":
+		np := piece.Turnright()
+		el, ok = bag.Options[np.Key]
+		if ok {
+			if el != nil && len(piece.Moves)+1 < len(el.Moves) {
+				bag.Options[np.Key].Moves = append(piece.Moves, dir)
+				//f.Search("left", bag.Options[np.Key], bag)
+				//f.Search("right", bag.Options[np.Key], bag)
+				//f.Search("down", bag.Options[np.Key], bag)
+				//f.Search("turnright", bag.Options[np.Key], bag)
+
+			}
+			return
+		} else {
+			if f.IsValid(&np.Space) {
+				np.Moves = append(piece.Moves, dir)
+				bag.Options[np.Key] = &np
+				//AddFix(bag, &np)
+
+				f.Search("down", &np, bag)
+				f.Search("left", &np, bag)
+				f.Search("right", &np, bag)
+
+				f.Search("turnright", &np, bag)
+
+			} else {
+				bag.Options[np.Key] = nil
+			}
+		}
 	}
 }
 
+func CheckFix(bag *Bag) []Position {
+	positions := make([]Position, 0)
+
+	for _, piece := range bag.Options {
+		if piece != nil {
+			for _, cell := range piece.Space {
+				if cell.X == bag.Hole.X && cell.Y == bag.Hole.Y {
+					pos := Position{
+						Rotation: piece.Rotation,
+						X:        piece.CurrentX,
+						Moves:    strings.Join(piece.Moves, ","),
+					}
+					positions = append(positions, pos)
+				}
+			}
+		}
+	}
+	return positions
+}
+
 type Bag struct {
-	Found   bool
-	Options map[int]bool
+	Options map[int]*Piece
 	Total   int
 	Hole    Cell
 }
