@@ -7,7 +7,7 @@ type Piece struct {
 	CurrentX int
 	CurrentY int
 	Key      int
-	Moves    []string
+	Moves    string
 }
 
 func (p *Piece) InitSpace(start Cell) {
