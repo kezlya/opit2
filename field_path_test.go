@@ -58,14 +58,14 @@ func Test_path_T(t *testing.T) {
 	hole0 := Cell{X: 3, Y: 16}
 
 	//hole1 := Cell{X: 2, Y: 13}
-	//hole2 := Cell{X: 3, Y: 11}
+	hole2 := Cell{X: 3, Y: 11}
 	//hole3_bad := Cell{X: 2, Y: 6}
 	//hole4 := Cell{X: 7, Y: 12}
 	//hole5_bad := Cell{X: 8, Y: 11}
 
-	positions, total := arangePathField.FixHole(piece, hole0)
+	//positions, total := arangePathField.FixHole(piece, hole0)
 	//arangePathField.FixHole(piece, hole1)
-	//positions, total := arangePathField.FixHole(piece, hole2)
+	positions, total := arangePathField.FixHole(piece, []Cell{hole0, hole2})
 	//arangePathField.FixHole(piece, hole3_bad)
 	//arangePathField.FixHole(piece, hole4)
 	//arangePathField.FixHole(piece, hole5_bad)

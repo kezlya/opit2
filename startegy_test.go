@@ -51,7 +51,7 @@ func Benchmark_fixhole(b *testing.B) {
 		piece := Piece{Name: "T", Rotation: 0}
 		piece.InitSpace(Cell{X: 3, Y: 19})
 		hole := Cell{X: 7, Y: 12}
-		testField.FixHole(piece, hole)
+		testField.FixHole(piece, []Cell{hole})
 	}
 }
 

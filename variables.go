@@ -18,3 +18,9 @@ type Strategy struct {
 	DamageK int
 	PostyK  int
 }
+
+type Bag struct {
+	Options map[int]*Piece
+	Total   int
+	Holes   []Cell
+}

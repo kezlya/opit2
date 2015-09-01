@@ -1,8 +1,6 @@
 package main
 
 import (
-	//"fmt"
-	//"sort"
 	"strings"
 )
 
@@ -1222,98 +1220,10 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-/*
-func (f Field) CalculatePath(pos Position, piece Piece) string {
-	path := []string{}
-	// Top positions only
-
-	maxTry := 10
-	np := Piece{}
-	switch piece.Name {
-	case "I":
-		if pos.Rotation == 1 && pos.X <= piece.CurrentX {
-			pos.Rotation = 3
-		}
-
-		for (pos.X != piece.CurrentX || pos.Rotation != piece.Rotation) && maxTry > 0 {
-			//fmt.Println(pos.X, piece.CurrentX, "	", pos.Rotation, piece.Rotation)
-			if pos.X < piece.CurrentX {
-				np = piece.Left()
-				if f.IsValid(np.Space) {
-					//fmt.Println("valid")
-					piece = np
-					path = append(path, "left")
-				}
-
-			}
-
-			if pos.X == piece.CurrentX {
-				if pos.Rotation == 1 {
-					np = piece.Turnright()
-					if f.IsValid(np.Space) {
-						piece = np
-						path = append(path, "turnright")
-					}
-				}
-				if pos.Rotation == 3 {
-
-					np = piece.Turnleft()
-					if f.IsValid(np.Space) {
-						piece = np
-						//fmt.Println(np.CurrentX, np.Rotation)
-						//fmt.Println(piece.CurrentX, piece.Rotation)
-						path = append(path, "turnleft")
-					}
-
-				}
-			}
-
-			if pos.X > piece.CurrentX {
-				np := piece.Right()
-				if f.IsValid(np.Space) {
-					piece = np
-					path = append(path, "right")
-				}
-			}
-			maxTry--
-		}
-
-	}
-
-
-			var buffer bytes.Buffer
-		for i := 0; i < pos.Rotation; i++ {
-			buffer.WriteString("turnright,")
-		}
-		if pos.Rotation == 1 {
-			g.CurrentPieceX = g.CurrentPieceX + 1
-			if g.CurrentPiece == "I" {
-				g.CurrentPieceX = g.CurrentPieceX + 1
-			}
-		}
-		if g.CurrentPieceX > pos.X {
-			for i := 0; i < g.CurrentPieceX-pos.X; i++ {
-				buffer.WriteString("left,")
-			}
-		}
-		if g.CurrentPieceX < pos.X {
-			for i := 0; i < pos.X-g.CurrentPieceX; i++ {
-				buffer.WriteString("right,")
-			}
-		}
-		buffer.WriteString("drop")
-		fmt.Println(buffer.String())
-
-
-	pos.Moves = "left,left" //  ???????????????????
-	path = append(path, "drop")
-	return strings.Join(path, ",")
-}
-*/
-func (f Field) FixHole(piece Piece, hole Cell) ([]Position, int) {
+func (f Field) FixHole(piece Piece, holes []Cell) ([]Position, int) {
 	bag := &Bag{
 		Options: make(map[int]*Piece),
-		Hole:    hole,
+		Holes:   holes,
 	}
 	bag.Options[piece.Key] = &piece
 
@@ -1347,20 +1257,6 @@ func (f Field) FixHole(piece Piece, hole Cell) ([]Position, int) {
 		}
 		queue = tmp
 	}
-
-	//fmt.Println(bag.Options)
-	/*
-		var keys []int
-		for k := range bag.Options {
-			keys = append(keys, k)
-		}
-		sort.Ints(keys)
-
-		// To perform the opertion you want
-		for _, k := range keys {
-			fmt.Println("Key:", k, "Value:", bag.Options[k])
-		}
-	*/
 	return CheckFix(bag), bag.Total
 }
 
@@ -1368,7 +1264,6 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 	bag.Total++
 	var ok bool
 	var el *Piece = nil
-
 	nMoves := bag.Options[key].Moves + "," + dir
 
 	switch dir {
@@ -1471,22 +1366,18 @@ func CheckFix(bag *Bag) []Position {
 	for _, piece := range bag.Options {
 		if piece != nil {
 			for _, cell := range piece.Space {
-				if cell.X == bag.Hole.X && cell.Y == bag.Hole.Y {
-					pos := Position{
-						Rotation: piece.Rotation,
-						X:        piece.CurrentX,
-						Moves:    strings.TrimPrefix(piece.Moves, ","),
+				for _, hole := range bag.Holes {
+					if cell.X == hole.X && cell.Y == hole.Y {
+						pos := Position{
+							Rotation: piece.Rotation,
+							X:        piece.CurrentX,
+							Moves:    strings.TrimPrefix(piece.Moves, ","),
+						}
+						positions = append(positions, pos)
 					}
-					positions = append(positions, pos)
 				}
 			}
 		}
 	}
 	return positions
-}
-
-type Bag struct {
-	Options map[int]*Piece
-	Total   int
-	Hole    Cell
 }
