@@ -82,7 +82,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 	positions := make([]Position, 0)
 	w := f.Width()
 	picks := f.Picks()
-	hBlocked, _ := f.FindHoles(picks)
+	hBlocked, hFixable := f.FindHoles(picks)
 	rotationMax := 1
 
 	switch piece.Name {
@@ -97,14 +97,20 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 			fieldAfter := f.After(i, r, piece.Name)
 			if fieldAfter != nil {
 				p := Position{Rotation: r, X: i}
-				p.InitTop(picks, fieldAfter, hBlocked, st)
+				p.Init(picks, fieldAfter, hBlocked, st)
 				positions = append(positions, p)
 			}
 		}
 	}
-	/*if len(hFixable) > 0 {
-		positions = append(positions, f.FixHoles(piece, hFixable)...)
-	}*/
+	if len(hFixable) > 0 {
+		fixes := f.FixHoles(piece, hFixable)
+		for _, fix := range fixes {
+			p := Position{}
+			p.Init(picks, f.AfterHole(fix.Space), hBlocked, st)
+			p.Moves = strings.TrimPrefix(piece.Moves, ",")
+			positions = append(positions, p)
+		}
+	}
 	return positions
 }
 
@@ -558,8 +564,8 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-func (f Field) FixHoles(piece Piece, holes []Cell) []Position {
-	positions := make([]Position, 0)
+func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
+	fixes := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece), Holes: holes}
 	bag.Options[piece.Key] = &piece
 	queue := make(map[int]bool)
@@ -593,23 +599,19 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Position {
 		queue = tmp
 	}
 
-	for _, piece := range bag.Options {
-		if piece != nil {
-			for _, cell := range piece.Space {
+	for _, p := range bag.Options {
+		if p != nil {
+			for _, cell := range p.Space {
 				for _, hole := range bag.Holes {
 					if cell.X == hole.X && cell.Y == hole.Y {
-						pos := Position{
-							Rotation: piece.Rotation,
-							X:        piece.CurrentX,
-							Moves:    strings.TrimPrefix(piece.Moves, ","),
-						}
-						positions = append(positions, pos)
+						fixes = append(fixes, *p)
+						break
 					}
 				}
 			}
 		}
 	}
-	return positions
+	return fixes
 }
 
 func (f Field) Search(dir string, key int, bag *Bag) int {

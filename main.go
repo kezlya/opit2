@@ -9,6 +9,8 @@ import (
 
 func main() {
 
+	// test performance FixHoles before return fixes assign bag to nil
+
 	//see afect on performance if you pass Picks to this function
 	//func (f Field) After(x, r int, piece string) Field {
 

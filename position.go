@@ -16,7 +16,7 @@ type Position struct {
 	Moves        string
 }
 
-func (p *Position) InitTop(picks Picks, fieldAfter Field, holes []Cell, s Strategy) {
+func (p *Position) Init(picks Picks, fieldAfter Field, holes []Cell, s Strategy) {
 	burn := fieldAfter.WillBurn()
 	picksAfter := fieldAfter.Picks()
 	damage, _, highY, step, hole := picks.Damage(picksAfter, holes)
@@ -27,37 +27,5 @@ func (p *Position) InitTop(picks Picks, fieldAfter Field, holes []Cell, s Strate
 	p.Damage = damage
 	p.HighY = highY
 	p.Score = damage*s.DamageK + highY*s.PostyK + step*s.StepK - burn*s.BurnK + hole
-	p.FieldAfter = fieldAfter
-}
-
-func (p *Position) InitLeft(fieldAfter Field, s Strategy) {
-	//burn := fieldAfter.WillBurn()
-	//picksAfter := fieldAfter.Picks()
-	//damage, _, highY, step, hole := picks.Damage(picksAfter, holes)
-	//p.Rotation =   r
-	//p.X=          i
-	p.Type = "left"
-	/*p.Burn = burn
-	p.Step = step
-	p.Hole = hole
-	p.Damage = damage
-	p.HighY = highY
-	p.Score = damage*s.DamageK + highY*s.PostyK + step*s.StepK - burn*s.BurnK + hole*/
-	p.FieldAfter = fieldAfter
-}
-
-func (p *Position) InitRight(fieldAfter Field, s Strategy) {
-	//burn := fieldAfter.WillBurn()
-	//picksAfter := fieldAfter.Picks()
-	//damage, _, highY, step, hole := picks.Damage(picksAfter, holes)
-	//p.Rotation =   r
-	//p.X=          i
-	p.Type = "right"
-	/*p.Burn = burn
-	p.Step = step
-	p.Hole = hole
-	p.Damage = damage
-	p.HighY = highY
-	p.Score = damage*s.DamageK + highY*s.PostyK + step*s.StepK - burn*s.BurnK + hole*/
 	p.FieldAfter = fieldAfter
 }
