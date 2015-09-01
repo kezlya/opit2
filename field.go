@@ -96,9 +96,13 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		for i := 0; i < w; i++ {
 			fieldAfter := f.After(i, r, piece.Name)
 			if fieldAfter != nil {
-				p := Position{Rotation: r, X: i}
-				p.Init(picks, fieldAfter, hBlocked, st)
-				positions = append(positions, p)
+				vp := f.ValidatePosition(piece, i, r)
+				if vp != nil {
+					p := Position{}
+					p.Init(picks, fieldAfter, hBlocked, st)
+					p.Moves = strings.TrimPrefix(vp.Moves, ",")
+					positions = append(positions, p)
+				}
 			}
 		}
 	}
@@ -107,7 +111,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		for _, fix := range fixes {
 			p := Position{}
 			p.Init(picks, f.AfterHole(fix.Space), hBlocked, st)
-			p.Moves = strings.TrimPrefix(piece.Moves, ",")
+			p.Moves = strings.TrimPrefix(fix.Moves, ",")
 			positions = append(positions, p)
 		}
 	}
@@ -564,9 +568,48 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
+func (f Field) ValidatePosition(piece Piece, x, r int) *Piece {
+	bag := &Bag{Options: make(map[int]*Piece)}
+	bag.Options[piece.Key] = &piece
+	queue := make(map[int]bool)
+	queue[piece.Key] = true
+	nkey := 0
+
+	for len(queue) > 0 {
+		tmp := make(map[int]bool)
+		for k, _ := range queue {
+			nkey = f.Search("left", k, bag)
+			if nkey > 0 {
+				tmp[nkey] = false
+			}
+			nkey = f.Search("right", k, bag)
+			if nkey > 0 {
+				tmp[nkey] = false
+			}
+			nkey = f.Search("turnleft", k, bag)
+			if nkey > 0 {
+				tmp[nkey] = false
+			}
+			nkey = f.Search("turnright", k, bag)
+			if nkey > 0 {
+				tmp[nkey] = false
+			}
+		}
+		queue = tmp
+	}
+	minKey := r*10000 + (x-1)*100
+	maxKey := r*10000 + (x+1)*100
+	for _, p := range bag.Options {
+		if p != nil && p.Key > minKey && p.Key < maxKey {
+			return p
+		}
+	}
+	return nil
+}
+
 func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 	fixes := make([]Piece, 0)
-	bag := &Bag{Options: make(map[int]*Piece), Holes: holes}
+	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
 	queue := make(map[int]bool)
 	queue[piece.Key] = true
@@ -602,7 +645,7 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 	for _, p := range bag.Options {
 		if p != nil {
 			for _, cell := range p.Space {
-				for _, hole := range bag.Holes {
+				for _, hole := range holes {
 					if cell.X == hole.X && cell.Y == hole.Y {
 						fixes = append(fixes, *p)
 						break

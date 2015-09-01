@@ -9,6 +9,8 @@ import (
 
 func main() {
 
+	// rebuild gametest into visual and remove rotation and X from position Object
+
 	// to dramaticly improve performance do a drop on empty rows when fixing the holes
 
 	// when testing strategy output range of all games
