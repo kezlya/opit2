@@ -5,6 +5,46 @@ import (
 	"testing"
 )
 
+func PrintVisual(f Field) {
+	y := len(f) - 1
+	for i := range f {
+		fmt.Print(y-i, "	")
+		for _, c := range f[y-i] {
+			if c {
+				fmt.Print("⬛ ")
+			} else {
+				fmt.Print("⬜ ")
+			}
+		}
+		fmt.Println()
+	}
+	fmt.Println("	 0 1 2 3 4 5 6 7 8 9")
+}
+
+func PrintVisuals(a, b Field) {
+	y := len(a) - 1
+	for i := range a {
+		fmt.Print(y-i, "	")
+		for _, c := range a[y-i] {
+			if c {
+				fmt.Print("⬛ ")
+			} else {
+				fmt.Print("⬜ ")
+			}
+		}
+		fmt.Print("   ")
+		for _, c := range b[y-i] {
+			if c {
+				fmt.Print("⬛ ")
+			} else {
+				fmt.Print("⬜ ")
+			}
+		}
+		fmt.Println()
+	}
+	fmt.Println("	 0 1 2 3 4 5 6 7 8 9    0 1 2 3 4 5 6 7 8 9")
+}
+
 func Test_convertField(t *testing.T) {
 	cleanInput := "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,0,0,0;0,0,0,0,0,0,2,2,0,0;0,0,2,2,0,0,2,2,0,0;0,2,2,2,0,0,2,2,0,2;2,2,2,2,2,0,2,2,2,2;2,2,0,2,2,2,2,2,2,2;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0;2,2,2,2,2,2,2,2,2,0"
 	expect := Field{{true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, false, false, true, true, false, true}, {false, false, true, true, false, false, true, true, false, false}, {false, false, false, false, false, false, true, true, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, true, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
@@ -86,11 +126,13 @@ func Test_FindHoles(t *testing.T) {
 
 	if len(blocked) != len(expectedBlocked) {
 		fmt.Println("blocked: ", len(blocked), len(expectedBlocked))
+		PrintVisual(arrange)
 		t.Fail()
 	}
 
 	if len(fixable) != len(expectedFixable) {
-		fmt.Println("left: ", len(fixable), len(expectedFixable))
+		fmt.Println("fixable: ", len(fixable), len(expectedFixable))
+		PrintVisual(arrange)
 		t.Fail()
 	}
 
@@ -162,6 +204,38 @@ func Test_IsValid(t *testing.T) {
 
 	if arrange.IsValid(&map[string]Cell{"1": good1, "2": good2, "3": good3, "4": good4, "5": bad1, "6": bad2, "7": bad3, "8": bad4}) {
 		fmt.Println("should not be valid")
+		t.Fail()
+	}
+}
+
+func Test_FixHoles_T(t *testing.T) {
+	var arangePathField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	piece := Piece{Name: "T", Rotation: 0}
+	piece.InitSpace(Cell{X: 3, Y: 19})
+
+	hole0 := Cell{X: 3, Y: 16}
+	hole1 := Cell{X: 2, Y: 13}
+	hole2 := Cell{X: 3, Y: 11}
+	hole3 := Cell{X: 7, Y: 12}
+	hole_bad1 := Cell{X: 2, Y: 6}
+	hole_bad2 := Cell{X: 8, Y: 11}
+
+	good_positions := arangePathField.FixHoles(piece, []Cell{hole0, hole1, hole2, hole3})
+	bad_positions := arangePathField.FixHoles(piece, []Cell{hole_bad1, hole_bad2})
+
+	if len(good_positions) != 12 {
+		for _, pos := range good_positions {
+			fmt.Println(pos.Moves)
+			PrintVisual(arangePathField)
+		}
+		t.Fail()
+	}
+
+	if len(bad_positions) != 0 {
+		for _, pos := range bad_positions {
+			fmt.Println(pos.Moves)
+			PrintVisual(arangePathField)
+		}
 		t.Fail()
 	}
 }
