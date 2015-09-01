@@ -7,11 +7,8 @@ import (
 
 func checkResults(t *testing.T, expect, result Field) {
 	if !expect.Equal(result) {
+		PrintVisuals(expect, result)
 		t.Fail()
-		y := len(expect) - 1
-		for i := range expect {
-			fmt.Println(expect[y-i], result[y-i])
-		}
 	}
 }
 
@@ -403,4 +400,19 @@ func Test_Z2_2(t *testing.T) {
 	result := arange.After(x, rotation, piece)
 
 	checkResults(t, expect, result)
+}
+
+func Test_AfterHole(t *testing.T) {
+	var arangeT = Field{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, true, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	space := make(map[string]Cell, 4)
+	space["m1"] = Cell{X: 0, Y: 13}
+	space["m2"] = Cell{X: 1, Y: 13}
+	space["m3"] = Cell{X: 2, Y: 13}
+	space["t2"] = Cell{X: 1, Y: 14}
+	piece := Piece{Name: "T", Space: space}
+
+	expected := Field{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, true, false, false}, {true, true, true, true, false, false, false, true, false, false}, {false, true, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	result := arangeT.AfterHole(piece.Space)
+
+	checkResults(t, expected, result)
 }

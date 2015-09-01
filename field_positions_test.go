@@ -105,17 +105,3 @@ func Test_availablePositions_Z(t *testing.T) {
 		PrintVisual(testField)
 	}
 }
-
-func PrintVisual(f Field) {
-	y := len(f) - 1
-	for i := range f {
-		for _, c := range f[y-i] {
-			if c {
-				fmt.Print("⬛ ")
-			} else {
-				fmt.Print("⬜ ")
-			}
-		}
-		fmt.Println()
-	}
-}
