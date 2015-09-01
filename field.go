@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -103,13 +102,8 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 			}
 		}
 	}
-	fmt.Println(piece.Name, len(positions))
 	if len(hFixable) > 0 {
-		pos4holes := f.FixHoles(piece, hFixable)
-		for _, p4h := range pos4holes {
-			fmt.Println(p4h.X, p4h.Moves)
-		}
-		positions = append(positions, pos4holes...)
+		positions = append(positions, f.FixHoles(piece, hFixable)...)
 	}
 	return positions
 }
