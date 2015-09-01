@@ -9,6 +9,8 @@ import (
 
 func main() {
 
+	// when testing strategy output range of all games
+
 	// test performance FixHoles before return fixes assign bag to nil
 
 	//see afect on performance if you pass Picks to this function

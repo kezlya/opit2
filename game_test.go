@@ -82,25 +82,3 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 		PrintVisual(field)
 	}
 }
-
-/*
-func Test_55c2d43635ec1d070e2b697c_63(t *testing.T) {
-	game := Game{
-		DamageK: 1,
-		HoleK:   1,
-		PostyK:  1,
-		BurnK:   1,
-	}
-	field := Field{{false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, false, true, true, true, false}, {true, false, false, false, false, false, false, true, true, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	game.MyPlayer = &Player{Field: field}
-	game.CurrentPiece = "I"
-	game.NextPiece = "L"
-
-	pos := game.calculateMoves()
-
-	if pos.X != 1 || pos.Rotation != 0 {
-		t.Fail()
-		fmt.Println(pos.X, pos.Rotation)
-	}
-}
-*/
