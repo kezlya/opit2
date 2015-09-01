@@ -1273,7 +1273,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[nextKey].Moves = nMoves
-				return nextKey
+				return 0
 			}
 			return 0
 		}
@@ -1292,7 +1292,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[nextKey].Moves = nMoves
-				return nextKey
+				return 0
 			}
 			return 0
 		}
@@ -1310,7 +1310,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[nextKey].Moves = nMoves
-				return nextKey
+				return 0
 			}
 			return 0
 		}
@@ -1328,7 +1328,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[np.Key].Moves = nMoves
-				return np.Key
+				return 0
 			}
 			return 0
 		}
@@ -1345,7 +1345,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[np.Key].Moves = nMoves
-				return np.Key
+				return 0
 			}
 			return 0
 		}
