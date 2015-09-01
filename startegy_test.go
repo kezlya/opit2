@@ -17,12 +17,19 @@ var pieces = []string{"I", "J", "L", "O", "S", "T", "Z"}
 func Benchmark_moves(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
-
-		game := Game{}
-		game.asignSettings("field_width", "10")
-		game.asignSettings("field_height", "20")
+		strategy := Strategy{
+			DamageK: 9,
+			StepK:   1,
+			PostyK:  3,
+			BurnK:   8,
+		}
+		game := Game{Strategy: strategy}
+		game.asignSettings("timebank", "10000")
+		game.asignSettings("time_per_move", "500")
 		game.asignSettings("player_names", "player1,player2")
 		game.asignSettings("your_bot", "player1")
+		game.asignSettings("field_width", "10")
+		game.asignSettings("field_height", "20")
 
 		rand.Seed(time.Now().UTC().UnixNano())
 
@@ -39,14 +46,17 @@ func Benchmark_moves(b *testing.B) {
 			row3[i] = strconv.Itoa(rand.Intn(3))
 		}
 
+		game.asignUpdates("game", "round", "4")
 		game.asignUpdates("game", "this_piece_type", pieces[rand.Intn(len(pieces))])
-		game.asignUpdates("game", "this_piece_position", "3,-1")
 		game.asignUpdates("game", "next_piece_type", pieces[rand.Intn(len(pieces))])
+		game.asignUpdates("game", "this_piece_position", "3,-1")
 		game.asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;"+strings.Join(row1, ",")+";"+strings.Join(row2, ",")+";"+strings.Join(row3, ","))
+		game.asignUpdates("player1", "row_points", "0")
+		game.asignUpdates("player1", "combo", "0")
 		game.calculateMoves()
 	}
 }
-func Benchmark_fixhole(b *testing.B) {
+func Benchmark_fixholes(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		testField := Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 		piece := Piece{Name: "T", Rotation: 0}

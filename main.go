@@ -9,9 +9,9 @@ import (
 
 func main() {
 
-	// when testing strategy output range of all games
+	// to dramaticly improve performance do a drop on empty rows when fixing the holes
 
-	// test performance FixHoles before return fixes assign bag to nil
+	// when testing strategy output range of all games
 
 	//see afect on performance if you pass Picks to this function
 	//func (f Field) After(x, r int, piece string) Field {

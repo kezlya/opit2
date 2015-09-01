@@ -6,6 +6,7 @@ import (
 )
 
 func PrintVisual(f Field) {
+	fmt.Println()
 	y := len(f) - 1
 	for i := range f {
 		fmt.Print(y-i, "	")
@@ -22,6 +23,7 @@ func PrintVisual(f Field) {
 }
 
 func PrintVisuals(a, b Field) {
+	fmt.Println()
 	y := len(a) - 1
 	for i := range a {
 		fmt.Print(y-i, "	")
@@ -225,6 +227,7 @@ func Test_FixHoles_T(t *testing.T) {
 
 	if len(good_positions) != 12 {
 		for _, pos := range good_positions {
+			fmt.Println("good positions failed")
 			fmt.Println(pos.Moves)
 			PrintVisual(arangePathField)
 		}
@@ -233,6 +236,7 @@ func Test_FixHoles_T(t *testing.T) {
 
 	if len(bad_positions) != 0 {
 		for _, pos := range bad_positions {
+			fmt.Println("bad positions failed")
 			fmt.Println(pos.Moves)
 			PrintVisual(arangePathField)
 		}

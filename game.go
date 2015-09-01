@@ -95,7 +95,6 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Position {
 	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
-
 	if g.MyPlayer.Combo >= 2 {
 		burned := g.keepBurning(positions)
 		if burned != nil {
@@ -155,7 +154,6 @@ func (g *Game) clasic(positions []Position) *Position {
 		OrderedBy(SCORE).Sort(positions)
 		return &positions[0]
 	}
-
 	return nil
 }
 
@@ -167,8 +165,4 @@ func (g *Game) isSafe() bool {
 		return true
 	}
 	return false
-}
-
-func (g *Game) printMoves() {
-
 }
