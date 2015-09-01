@@ -18,8 +18,8 @@ func Test_path_T(t *testing.T) {
 	hole_bad1 := Cell{X: 2, Y: 6}
 	hole_bad2 := Cell{X: 8, Y: 11}
 
-	good_positions, good_total := arangePathField.FixHole(piece, []Cell{hole0, hole1, hole2, hole3})
-	bad_positions, bad_total := arangePathField.FixHole(piece, []Cell{hole_bad1, hole_bad2})
+	good_positions := arangePathField.FixHoles(piece, []Cell{hole0, hole1, hole2, hole3})
+	bad_positions := arangePathField.FixHoles(piece, []Cell{hole_bad1, hole_bad2})
 
 	if len(good_positions) != 12 {
 		for _, pos := range good_positions {
@@ -32,11 +32,6 @@ func Test_path_T(t *testing.T) {
 		for _, pos := range bad_positions {
 			fmt.Println(pos.Moves)
 		}
-		t.Fail()
-	}
-
-	if good_total != bad_total {
-		fmt.Println("should be the same", good_total, bad_total)
 		t.Fail()
 	}
 }

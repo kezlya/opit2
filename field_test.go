@@ -72,36 +72,25 @@ func Test_FindHoles(t *testing.T) {
 		Cell{X: 7, Y: 2},
 		Cell{X: 8, Y: 3},
 	}
-
-	expectedLeft := []Cell{
+	expectedFixable := []Cell{
 		Cell{X: 2, Y: 13},
 		Cell{X: 8, Y: 9},
-	}
-
-	expectedRight := []Cell{
 		Cell{X: 3, Y: 11},
 		Cell{X: 6, Y: 9},
 		Cell{X: 7, Y: 9},
 	}
-	expectedHoles := append(expectedBlocked, expectedLeft...)
-	expectedHoles = append(expectedHoles, expectedRight...)
+	expectedHoles := append(expectedBlocked, expectedFixable...)
 
-	blocked, left, right := arrange.FindHoles(arrange.Picks())
-	holes := append(blocked, left...)
-	holes = append(holes, right...)
+	blocked, fixable := arrange.FindHoles(arrange.Picks())
+	holes := append(blocked, fixable...)
 
 	if len(blocked) != len(expectedBlocked) {
 		fmt.Println("blocked: ", len(blocked), len(expectedBlocked))
 		t.Fail()
 	}
 
-	if len(left) != len(expectedLeft) {
-		fmt.Println("left: ", len(left), len(expectedLeft))
-		t.Fail()
-	}
-
-	if len(right) != len(expectedRight) {
-		fmt.Println("right: ", len(right), len(expectedRight))
+	if len(fixable) != len(expectedFixable) {
+		fmt.Println("left: ", len(fixable), len(expectedFixable))
 		t.Fail()
 	}
 

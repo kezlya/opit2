@@ -46,7 +46,7 @@ func Test_DamageHoleScore(t *testing.T) {
 	piksAfterGood := afterGood.Picks()
 	piksAfterNoHole := afterNoHole.Picks()
 
-	hBlocked, _, _ := before.FindHoles(piksBefore)
+	hBlocked, _ := before.FindHoles(piksBefore)
 
 	_, _, _, _, holeBad := piksBefore.Damage(piksAfterBad, hBlocked)
 	_, _, _, _, holeGood := piksBefore.Damage(piksAfterGood, hBlocked)

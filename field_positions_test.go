@@ -29,7 +29,8 @@ var testField = Field{
 var strategy = Strategy{1, 1, 1, 1}
 
 func Test_availablePositions_I(t *testing.T) {
-	piece := "I"
+	piece := Piece{Name: "I"}
+	piece.InitSpace(Cell{X: 3, Y: 19})
 	expectPositions := 15
 
 	result := testField.Positions(piece, strategy)
@@ -41,7 +42,8 @@ func Test_availablePositions_I(t *testing.T) {
 }
 
 func Test_availablePositions_J(t *testing.T) {
-	piece := "J"
+	piece := Piece{Name: "J"}
+	piece.InitSpace(Cell{X: 3, Y: 19})
 	expectPositions := 24
 
 	result := testField.Positions(piece, strategy)
@@ -53,7 +55,8 @@ func Test_availablePositions_J(t *testing.T) {
 }
 
 func Test_availablePositions_L(t *testing.T) {
-	piece := "L"
+	piece := Piece{Name: "L"}
+	piece.InitSpace(Cell{X: 3, Y: 19})
 	expectPositions := 24
 
 	result := testField.Positions(piece, strategy)
@@ -65,7 +68,8 @@ func Test_availablePositions_L(t *testing.T) {
 }
 
 func Test_availablePositions_O(t *testing.T) {
-	piece := "O"
+	piece := Piece{Name: "O"}
+	piece.InitSpace(Cell{X: 4, Y: 19})
 	expectPositions := 7
 
 	result := testField.Positions(piece, strategy)
@@ -77,7 +81,8 @@ func Test_availablePositions_O(t *testing.T) {
 }
 
 func Test_availablePositions_S(t *testing.T) {
-	piece := "S"
+	piece := Piece{Name: "S"}
+	piece.InitSpace(Cell{X: 3, Y: 19})
 	expectPositions := 12
 
 	result := testField.Positions(piece, strategy)
@@ -89,8 +94,23 @@ func Test_availablePositions_S(t *testing.T) {
 }
 
 func Test_availablePositions_T(t *testing.T) {
-	piece := "T"
+	piece := Piece{Name: "T"}
+	piece.InitSpace(Cell{X: 3, Y: 19})
 	expectPositions := 28
+
+	result := testField.Positions(piece, strategy)
+
+	if len(result) != expectPositions {
+		t.Fail()
+		fmt.Println(expectPositions, "!=", len(result))
+		PrintVisual(testField)
+	}
+}
+
+func Test_availablePositions_Z(t *testing.T) {
+	piece := Piece{Name: "Z"}
+	piece.InitSpace(Cell{X: 3, Y: 19})
+	expectPositions := 12
 
 	result := testField.Positions(piece, strategy)
 
@@ -100,14 +120,17 @@ func Test_availablePositions_T(t *testing.T) {
 	}
 }
 
-func Test_availablePositions_Z(t *testing.T) {
-	piece := "Z"
-	expectPositions := 12
+func PrintVisual(f Field) {
+	y := len(f) - 1
+	for i := range f {
+		for _, c := range f[y-i] {
+			if c {
+				fmt.Print("⬛ ")
+			} else {
+				fmt.Print("⬜ ")
+			}
 
-	result := testField.Positions(piece, strategy)
-
-	if len(result) != expectPositions {
-		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		}
+		fmt.Println()
 	}
 }

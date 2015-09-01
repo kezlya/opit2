@@ -94,7 +94,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Position {
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece.Name, g.Strategy)
+	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
 
 	if g.MyPlayer.Combo >= 2 {
 		burned := g.keepBurning(positions)
@@ -117,7 +117,7 @@ func (g *Game) keepBurning(positions []Position) *Position {
 	for i, position := range positions {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
-			nextPositions := position.FieldAfter.Positions(g.NextPiece.Name, burnStrategy)
+			nextPositions := position.FieldAfter.Positions(g.NextPiece, burnStrategy)
 			if len(nextPositions) > 0 {
 				OrderedBy(SCORE).Sort(nextPositions)
 				minNextScore := nextPositions[0].Score
@@ -142,7 +142,7 @@ func (g *Game) clasic(positions []Position) *Position {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
 		}
-		nextPositions := position.FieldAfter.Positions(g.NextPiece.Name, g.Strategy)
+		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.Strategy)
 		if len(nextPositions) > 0 {
 			OrderedBy(SCORE).Sort(nextPositions)
 			minNextScore := nextPositions[0].Score

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -78,14 +79,14 @@ func (f Field) Trim(trim int) Field {
 	return trimed
 }
 
-func (f Field) Positions(piece string, st Strategy) []Position {
+func (f Field) Positions(piece Piece, st Strategy) []Position {
+	positions := make([]Position, 0)
 	w := f.Width()
 	picks := f.Picks()
-	hBlocked, hLeft, hRight := f.FindHoles(picks)
-	positions := make([]Position, 0)
+	hBlocked, hFixable := f.FindHoles(picks)
 	rotationMax := 1
 
-	switch piece {
+	switch piece.Name {
 	case "I", "Z", "S":
 		rotationMax = 2
 	case "J", "L", "T":
@@ -93,54 +94,24 @@ func (f Field) Positions(piece string, st Strategy) []Position {
 	}
 
 	for r := 0; r < rotationMax; r++ {
-		positions = append(positions, f.topPositions(st, r, w, picks, piece, hBlocked)...)
-		if len(hLeft) > 0 {
-			positions = append(positions, f.leftPositions(st, r, piece, hLeft)...)
+		for i := 0; i < w; i++ {
+			fieldAfter := f.After(i, r, piece.Name)
+			if fieldAfter != nil {
+				p := Position{Rotation: r, X: i}
+				p.InitTop(picks, fieldAfter, hBlocked, st)
+				positions = append(positions, p)
+			}
 		}
-		if len(hRight) > 0 {
-			positions = append(positions, f.rightPositions(st, r, piece, hRight)...)
+	}
+	fmt.Println(piece.Name, len(positions))
+	if len(hFixable) > 0 {
+		pos4holes := f.FixHoles(piece, hFixable)
+		for _, p4h := range pos4holes {
+			fmt.Println(p4h.X, p4h.Moves)
 		}
+		positions = append(positions, pos4holes...)
 	}
 	return positions
-}
-
-func (f Field) topPositions(st Strategy, r, w int, picks Picks, piece string, holes []Cell) []Position {
-	pos := make([]Position, 0)
-	for i := 0; i < w; i++ {
-		fieldAfter := f.After(i, r, piece)
-		if fieldAfter != nil {
-			p := Position{Rotation: r, X: i}
-			p.InitTop(picks, fieldAfter, holes, st)
-			pos = append(pos, p)
-		}
-	}
-	return pos
-}
-
-func (f Field) leftPositions(st Strategy, r int, piece string, holes []Cell) []Position {
-	pos := make([]Position, 0)
-	for _, h := range holes {
-		fieldAfterLeft := f.AfterLeftFix(r, piece, h)
-		if fieldAfterLeft != nil {
-			p := Position{Rotation: r, X: int(h.X)}
-			p.InitLeft(fieldAfterLeft, st)
-			pos = append(pos, p)
-		}
-	}
-	return pos
-}
-
-func (f Field) rightPositions(st Strategy, r int, piece string, holes []Cell) []Position {
-	pos := make([]Position, 0)
-	for _, h := range holes {
-		fieldAfterRight := f.AfterRightFix(r, piece, h)
-		if fieldAfterRight != nil {
-			p := Position{Rotation: r, X: int(h.X)}
-			p.InitRight(fieldAfterRight, st)
-			pos = append(pos, p)
-		}
-	}
-	return pos
 }
 
 func (f Field) WillBurn() int {
@@ -175,25 +146,23 @@ func (f Field) Burn() {
 	}
 }
 
-func (f Field) FindHoles(picks Picks) ([]Cell, []Cell, []Cell) {
+func (f Field) FindHoles(picks Picks) ([]Cell, []Cell) {
 	blocked := make([]Cell, 0)
-	left := make([]Cell, 0)
-	right := make([]Cell, 0)
+	fixable := make([]Cell, 0)
 	for i, pick := range picks {
 		for j := 0; j < pick; j++ {
 			if !f[j][i] {
 				hole := Cell{X: i, Y: j}
-				if i-2 > -1 && !f[j][i-1] && !f[j][i-2] {
-					left = append(left, hole)
-				} else if i+2 < f.Width() && !f[j][i+1] && !f[j][i+2] {
-					right = append(right, hole)
+				if (i-2 > -1 && !f[j][i-1] && !f[j][i-2]) ||
+					(i+2 < f.Width() && !f[j][i+1] && !f[j][i+2]) {
+					fixable = append(fixable, hole)
 				} else {
 					blocked = append(blocked, hole)
 				}
 			}
 		}
 	}
-	return blocked, left, right
+	return blocked, fixable
 }
 
 func (f Field) After(x, r int, piece string) Field {
@@ -1220,13 +1189,10 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-func (f Field) FixHole(piece Piece, holes []Cell) ([]Position, int) {
-	bag := &Bag{
-		Options: make(map[int]*Piece),
-		Holes:   holes,
-	}
+func (f Field) FixHoles(piece Piece, holes []Cell) []Position {
+	positions := make([]Position, 0)
+	bag := &Bag{Options: make(map[int]*Piece), Holes: holes}
 	bag.Options[piece.Key] = &piece
-
 	queue := make(map[int]bool)
 	queue[piece.Key] = true
 	nkey := 0
@@ -1257,7 +1223,24 @@ func (f Field) FixHole(piece Piece, holes []Cell) ([]Position, int) {
 		}
 		queue = tmp
 	}
-	return CheckFix(bag), bag.Total
+
+	for _, piece := range bag.Options {
+		if piece != nil {
+			for _, cell := range piece.Space {
+				for _, hole := range bag.Holes {
+					if cell.X == hole.X && cell.Y == hole.Y {
+						pos := Position{
+							Rotation: piece.Rotation,
+							X:        piece.CurrentX,
+							Moves:    strings.TrimPrefix(piece.Moves, ","),
+						}
+						positions = append(positions, pos)
+					}
+				}
+			}
+		}
+	}
+	return positions
 }
 
 func (f Field) Search(dir string, key int, bag *Bag) int {
@@ -1358,26 +1341,4 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		return 0
 	}
 	return 0
-}
-
-func CheckFix(bag *Bag) []Position {
-	positions := make([]Position, 0)
-
-	for _, piece := range bag.Options {
-		if piece != nil {
-			for _, cell := range piece.Space {
-				for _, hole := range bag.Holes {
-					if cell.X == hole.X && cell.Y == hole.Y {
-						pos := Position{
-							Rotation: piece.Rotation,
-							X:        piece.CurrentX,
-							Moves:    strings.TrimPrefix(piece.Moves, ","),
-						}
-						positions = append(positions, pos)
-					}
-				}
-			}
-		}
-	}
-	return positions
 }
