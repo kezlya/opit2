@@ -96,6 +96,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		}
 	}
 	if len(hFixable) > 0 && (piece.Name == "I" || piece.Name == "T") {
+		//fmt.Println(len(hFixable))
 		fixes := f.FixHoles(piece, hFixable)
 		for _, fix := range fixes {
 			p := Position{}

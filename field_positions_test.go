@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var testField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, false, false, true, true, true, true, true}, {true, true, true, false, false, false, true, true, true, true}, {false, true, true, false, false, true, true, true, true, true}, {false, true, true, false, false, false, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+var testField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, false, false, false, true, true, true, true}, {true, true, true, false, false, false, true, true, true, true}, {false, true, true, false, false, true, true, true, true, true}, {false, true, true, false, false, false, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 var strategy = Strategy{1, 1, 1, 1}
 
 func Test_availablePositions_I(t *testing.T) {
@@ -18,9 +18,6 @@ func Test_availablePositions_I(t *testing.T) {
 	if len(result) != expectPositions {
 		t.Fail()
 		fmt.Println(expectPositions, "!=", len(result))
-		for _, p := range result {
-			fmt.Println(p.Moves)
-		}
 		PrintVisual(testField)
 	}
 }
@@ -56,7 +53,7 @@ func Test_availablePositions_L(t *testing.T) {
 func Test_availablePositions_O(t *testing.T) {
 	piece := Piece{Name: "O"}
 	piece.InitSpace(Cell{X: 4, Y: 19})
-	expectPositions := 7
+	expectPositions := 6
 
 	result := testField.Positions(piece, strategy)
 
@@ -70,7 +67,7 @@ func Test_availablePositions_O(t *testing.T) {
 func Test_availablePositions_S(t *testing.T) {
 	piece := Piece{Name: "S"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 12
+	expectPositions := 14
 
 	result := testField.Positions(piece, strategy)
 
@@ -84,13 +81,16 @@ func Test_availablePositions_S(t *testing.T) {
 func Test_availablePositions_T(t *testing.T) {
 	piece := Piece{Name: "T"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 27
+	expectPositions := 29
 
 	result := testField.Positions(piece, strategy)
 
 	if len(result) != expectPositions {
 		t.Fail()
 		fmt.Println(expectPositions, "!=", len(result))
+		/*for _, p := range result {
+			fmt.Println(p.Moves)
+		}*/
 		PrintVisual(testField)
 	}
 }
@@ -98,7 +98,7 @@ func Test_availablePositions_T(t *testing.T) {
 func Test_availablePositions_Z(t *testing.T) {
 	piece := Piece{Name: "Z"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 12
+	expectPositions := 13
 
 	result := testField.Positions(piece, strategy)
 
