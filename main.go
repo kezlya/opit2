@@ -9,6 +9,8 @@ import (
 
 func main() {
 
+	// be caful when final print moves Need to check for "" and the do not add comma pos.Moves + "."+"drop"
+
 	// rebuild gametest into visual and remove rotation and X from position Object
 
 	// f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name) pass just Piece

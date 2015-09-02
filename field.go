@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"strings"
 )
 
@@ -589,15 +589,38 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 		}
 		queue = tmp
 	}
-	for _, p := range bag.Options {
-		if p != nil {
-			fmt.Println(p.Moves)
-			nkey = f.Search("down", p.Key, bag)
-			if nkey > 0 && bag.Options[nkey] != nil {
-				validPieces = append(validPieces, *p)
+
+	tempBag := &Bag{Options: make(map[int]*Piece)}
+	for k, p := range bag.Options {
+		if p == nil {
+			delete(bag.Options, k)
+			continue
+		}
+		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
+			(p.Rotation == 3 || p.Rotation == 2) {
+			_, ok := bag.Options[k-20000]
+			if ok {
+				delete(bag.Options, k)
+				continue
+			}
+			_, ok = bag.Options[k-20000+1]
+			if ok {
+				delete(bag.Options, k)
+				continue
 			}
 		}
+
+		if p.Name != "I" {
+			tempBag.Options[k] = p
+			nkey = f.Search("down", k, tempBag)
+			if nkey == 0 {
+				delete(bag.Options, k)
+				continue
+			}
+		}
+		validPieces = append(validPieces, *p)
 	}
+
 	return validPieces
 }
 
