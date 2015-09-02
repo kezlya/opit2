@@ -149,6 +149,57 @@ func (p *Piece) Turnright() Piece {
 			np.CurrentX = m1.X
 			np.CurrentY = m1.Y
 		}
+	case "J":
+		switch p.Rotation {
+		case 0:
+			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
+			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
+			t3 := Cell{X: sp["t1"].X + 2, Y: sp["t1"].Y}
+			delete(sp, "m3")
+			delete(sp, "m1")
+			delete(sp, "t1")
+			sp["b2"] = b2
+			sp["t2"] = t2
+			sp["t3"] = t3
+			np.CurrentX = b2.X
+			np.CurrentY = b2.Y
+		case 1:
+			m1 := Cell{X: sp["b2"].X - 1, Y: sp["b2"].Y + 1}
+			m3 := Cell{X: sp["t2"].X + 1, Y: sp["t2"].Y - 1}
+			b3 := Cell{X: sp["t3"].X, Y: sp["t3"].Y - 2}
+			delete(sp, "b2")
+			delete(sp, "t2")
+			delete(sp, "t3")
+			sp["m1"] = m1
+			sp["m3"] = m3
+			sp["b3"] = b3
+			np.CurrentX = m1.X
+			np.CurrentY = b3.Y
+		case 2:
+			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
+			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
+			b1 := Cell{X: sp["b3"].X - 2, Y: sp["b3"].Y}
+			delete(sp, "m1")
+			delete(sp, "m3")
+			delete(sp, "b3")
+			sp["t2"] = t2
+			sp["b2"] = b2
+			sp["b1"] = b1
+			np.CurrentX = b1.X
+			np.CurrentY = b1.Y
+		case 3:
+			m1 := Cell{X: sp["b2"].X - 1, Y: sp["b2"].Y + 1}
+			t1 := Cell{X: sp["b1"].X, Y: sp["b1"].Y + 2}
+			m3 := Cell{X: sp["t2"].X + 1, Y: sp["t2"].Y - 1}
+			delete(sp, "b2")
+			delete(sp, "b1")
+			delete(sp, "t2")
+			sp["m1"] = m1
+			sp["t1"] = t1
+			sp["m3"] = m3
+			np.CurrentX = m1.X
+			np.CurrentY = m1.Y
+		}
 	case "T":
 		switch p.Rotation {
 		case 0:
@@ -180,6 +231,20 @@ func (p *Piece) Turnright() Piece {
 	np.Space = sp
 	np.Key = np.key()
 	return np
+
+	/*
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+	*/
 }
 
 func (p *Piece) Turnleft() Piece {
@@ -246,6 +311,57 @@ func (p *Piece) Turnleft() Piece {
 			sp["b4"] = b4
 			np.CurrentX = b1.X
 			np.CurrentY = b1.Y
+		}
+	case "J":
+		switch p.Rotation {
+		case 0:
+			b1 := Cell{X: sp["t1"].X, Y: sp["t1"].Y - 2}
+			b2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y - 1}
+			t2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y + 1}
+			delete(sp, "t1")
+			delete(sp, "m1")
+			delete(sp, "m3")
+			sp["b1"] = b1
+			sp["b2"] = b2
+			sp["t2"] = t2
+			np.CurrentX = b1.X
+			np.CurrentY = b1.Y
+		case 1:
+			m1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 1}
+			t1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y}
+			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
+			delete(sp, "t2")
+			delete(sp, "t3")
+			delete(sp, "b2")
+			sp["m1"] = m1
+			sp["t1"] = t1
+			sp["m3"] = m3
+			np.CurrentX = m1.X
+			np.CurrentY = m1.Y
+		case 2:
+			t2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y + 1}
+			t3 := Cell{X: sp["b3"].X, Y: sp["b3"].Y + 2}
+			b2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y - 1}
+			delete(sp, "m3")
+			delete(sp, "b3")
+			delete(sp, "m1")
+			sp["t2"] = t2
+			sp["t3"] = t3
+			sp["b2"] = b2
+			np.CurrentX = b2.X
+			np.CurrentY = b2.Y
+		case 3:
+			m1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 1}
+			m3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 1}
+			b3 := Cell{X: sp["b1"].X + 2, Y: sp["b1"].Y}
+			delete(sp, "t2")
+			delete(sp, "b2")
+			delete(sp, "b1")
+			sp["m1"] = m1
+			sp["m3"] = m3
+			sp["b3"] = b3
+			np.CurrentX = m1.X
+			np.CurrentY = b3.Y
 		}
 	case "T":
 		switch p.Rotation {
