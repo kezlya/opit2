@@ -251,9 +251,9 @@ func Test_ValidatePosition_I(t *testing.T) {
 
 	validPieces := arangeField.ValidPosition(piece)
 
-	if len(validPieces) == 20 {
+	if len(validPieces) != 13 {
 		PrintVisual(arangeField)
-		fmt.Println("should be 20")
+		fmt.Println("should be 13 but returned", len(validPieces))
 		t.Fail()
 	}
 }
@@ -265,9 +265,13 @@ func Test_ValidatePosition_T(t *testing.T) {
 
 	validPieces := arangeField.ValidPosition(piece)
 
-	if len(validPieces) == 20 {
+	if len(validPieces) != 23 {
 		PrintVisual(arangeField)
-		fmt.Println("should be 20")
+		/*for _, p := range validPieces {
+			fmt.Println(p.Rotation, p.CurrentX)
+		}*/
+
+		fmt.Println("should be 23 but returned", len(validPieces))
 		t.Fail()
 	}
 }

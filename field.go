@@ -610,7 +610,10 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 			}
 		}
 
-		if p.Name != "I" {
+		if (p.Name == "I" && p.Rotation != 0) ||
+			(p.Name == "L" && p.Rotation != 2) ||
+			(p.Name == "J" && p.Rotation != 2) ||
+			(p.Name == "T" && p.Rotation != 2) {
 			tempBag.Options[k] = p
 			nkey = f.Search("down", k, tempBag)
 			if nkey == 0 {
