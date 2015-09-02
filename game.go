@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"strconv"
 	"strings"
 )
@@ -127,7 +128,7 @@ func (g *Game) keepBurning(positions []Position) *Position {
 			burned = append(burned, positions[i])
 		}
 	}
-
+	//fmt.Println("burn", len(burned))
 	if len(burned) > 0 {
 		OrderedBy(SCORE).Sort(burned)
 		return &burned[0]
@@ -150,6 +151,7 @@ func (g *Game) clasic(positions []Position) *Position {
 			positions[i].Score += 10000000000000
 		}
 	}
+	//fmt.Println("classic", len(positions))
 	if len(positions) > 0 {
 		OrderedBy(SCORE).Sort(positions)
 		return &positions[0]

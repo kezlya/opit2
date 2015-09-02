@@ -260,6 +260,166 @@ func Test_TurnLeft_I1(t *testing.T) {
 	pieceAssert(t, expected, result)
 }
 
+func Test_TurnRight_J0(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["m1"] = Cell{X: 1, Y: 12}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["m3"] = Cell{X: 3, Y: 12}
+	space["t1"] = Cell{X: 1, Y: 13}
+	arrange := Piece{Space: space, Name: "J", Rotation: 0, CurrentX: 1, CurrentY: 12}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["t2"] = Cell{X: 2, Y: 13}
+	ex_space["t3"] = Cell{X: 3, Y: 13}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["b2"] = Cell{X: 2, Y: 11}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 1, CurrentX: 2, CurrentY: 11}
+
+	result := arrange.Turnright()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_J1(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["t2"] = Cell{X: 2, Y: 13}
+	space["t3"] = Cell{X: 3, Y: 13}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["b2"] = Cell{X: 2, Y: 11}
+	arrange := Piece{Space: space, Name: "J", Rotation: 1, CurrentX: 2, CurrentY: 11}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["m1"] = Cell{X: 1, Y: 12}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["m3"] = Cell{X: 3, Y: 12}
+	ex_space["b3"] = Cell{X: 3, Y: 11}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 2, CurrentX: 1, CurrentY: 11}
+
+	result := arrange.Turnright()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_J2(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["m1"] = Cell{X: 1, Y: 12}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["m3"] = Cell{X: 3, Y: 12}
+	space["b3"] = Cell{X: 3, Y: 11}
+	arrange := Piece{Space: space, Name: "J", Rotation: 2, CurrentX: 1, CurrentY: 11}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["t2"] = Cell{X: 2, Y: 13}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["b2"] = Cell{X: 2, Y: 11}
+	ex_space["b1"] = Cell{X: 1, Y: 11}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 3, CurrentX: 1, CurrentY: 11}
+
+	result := arrange.Turnright()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_J3(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["t2"] = Cell{X: 2, Y: 13}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["b2"] = Cell{X: 2, Y: 11}
+	space["b1"] = Cell{X: 1, Y: 11}
+	arrange := Piece{Space: space, Name: "J", Rotation: 3, CurrentX: 1, CurrentY: 11}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["m1"] = Cell{X: 1, Y: 12}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["m3"] = Cell{X: 3, Y: 12}
+	ex_space["t1"] = Cell{X: 1, Y: 13}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 0, CurrentX: 1, CurrentY: 12}
+
+	result := arrange.Turnright()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_J0(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["m1"] = Cell{X: 1, Y: 12}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["m3"] = Cell{X: 3, Y: 12}
+	space["t1"] = Cell{X: 1, Y: 13}
+	arrange := Piece{Space: space, Name: "J", Rotation: 0, CurrentX: 1, CurrentY: 12}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["t2"] = Cell{X: 2, Y: 13}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["b2"] = Cell{X: 2, Y: 11}
+	ex_space["b1"] = Cell{X: 1, Y: 11}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 3, CurrentX: 1, CurrentY: 11}
+
+	result := arrange.Turnleft()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_J3(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["t2"] = Cell{X: 2, Y: 13}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["b2"] = Cell{X: 2, Y: 11}
+	space["b1"] = Cell{X: 1, Y: 11}
+	arrange := Piece{Space: space, Name: "J", Rotation: 3, CurrentX: 1, CurrentY: 11}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["m1"] = Cell{X: 1, Y: 12}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["m3"] = Cell{X: 3, Y: 12}
+	ex_space["b3"] = Cell{X: 3, Y: 11}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 2, CurrentX: 1, CurrentY: 11}
+
+	result := arrange.Turnleft()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_J2(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["m1"] = Cell{X: 1, Y: 12}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["m3"] = Cell{X: 3, Y: 12}
+	space["b3"] = Cell{X: 3, Y: 11}
+	arrange := Piece{Space: space, Name: "J", Rotation: 2, CurrentX: 1, CurrentY: 11}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["t2"] = Cell{X: 2, Y: 13}
+	ex_space["t3"] = Cell{X: 3, Y: 13}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["b2"] = Cell{X: 2, Y: 11}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 1, CurrentX: 2, CurrentY: 11}
+
+	result := arrange.Turnleft()
+
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_J1(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["t2"] = Cell{X: 2, Y: 13}
+	space["t3"] = Cell{X: 3, Y: 13}
+	space["m2"] = Cell{X: 2, Y: 12}
+	space["b2"] = Cell{X: 2, Y: 11}
+	arrange := Piece{Space: space, Name: "J", Rotation: 1, CurrentX: 2, CurrentY: 11}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["m1"] = Cell{X: 1, Y: 12}
+	ex_space["m2"] = Cell{X: 2, Y: 12}
+	ex_space["m3"] = Cell{X: 3, Y: 12}
+	ex_space["t1"] = Cell{X: 1, Y: 13}
+	expected := Piece{Space: ex_space, Name: "J", Rotation: 0, CurrentX: 1, CurrentY: 12}
+
+	result := arrange.Turnleft()
+
+	pieceAssert(t, expected, result)
+}
+
 func Test_TurnRight_T0(t *testing.T) {
 	space := make(map[string]Cell, 4)
 	space["t2"] = Cell{X: 5, Y: 13}
