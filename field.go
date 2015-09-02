@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -80,30 +81,18 @@ func (f Field) Trim(trim int) Field {
 
 func (f Field) Positions(piece Piece, st Strategy) []Position {
 	positions := make([]Position, 0)
-	w := f.Width()
 	picks := f.Picks()
 	hBlocked, hFixable := f.FindHoles(picks)
-	rotationMax := 1
 
-	switch piece.Name {
-	case "I", "Z", "S":
-		rotationMax = 2
-	case "J", "L", "T":
-		rotationMax = 4
-	}
+	validPieces := f.ValidPosition(piece)
 
-	for r := 0; r < rotationMax; r++ {
-		for i := 0; i < w; i++ {
-			fieldAfter := f.After(i, r, piece.Name)
-			if fieldAfter != nil {
-				vp := f.ValidatePosition(piece, i, r)
-				if vp != nil {
-					p := Position{}
-					p.Init(picks, fieldAfter, hBlocked, st)
-					p.Moves = strings.TrimPrefix(vp.Moves, ",")
-					positions = append(positions, p)
-				}
-			}
+	for _, validPiece := range validPieces {
+		fieldAfter := f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name)
+		if fieldAfter != nil {
+			p := Position{}
+			p.Init(picks, fieldAfter, hBlocked, st)
+			p.Moves = strings.TrimPrefix(validPiece.Moves, ",")
+			positions = append(positions, p)
 		}
 	}
 	if len(hFixable) > 0 && (piece.Name == "I" || piece.Name == "T") {
@@ -182,7 +171,7 @@ func (f Field) After(x, r int, piece string) Field {
 	switch piece {
 	case "I":
 		switch r {
-		case 0:
+		case 0, 2:
 			if picks.IsRight(x, 3) {
 				pick := picks.MaxR(x, 3)
 				if f.IsFit(pick, 1) {
@@ -193,7 +182,7 @@ func (f Field) After(x, r int, piece string) Field {
 					valid = true
 				}
 			}
-		case 1:
+		case 1, 3:
 			pick := picks[x]
 			if f.IsFit(pick, 4) {
 				a[pick][x] = true
@@ -354,7 +343,7 @@ func (f Field) After(x, r int, piece string) Field {
 		}
 	case "S":
 		switch r {
-		case 0:
+		case 0, 2:
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
 				l := picks[x]
@@ -377,7 +366,7 @@ func (f Field) After(x, r int, piece string) Field {
 					}
 				}
 			}
-		case 1:
+		case 1, 3:
 			if picks.IsRight(x, 1) {
 				pick := picks.MaxR(x, 1)
 				l2 := picks[x+1]
@@ -482,7 +471,7 @@ func (f Field) After(x, r int, piece string) Field {
 		}
 	case "Z":
 		switch r {
-		case 0:
+		case 0, 2:
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
 				l1 := picks[x+1]
@@ -505,7 +494,7 @@ func (f Field) After(x, r int, piece string) Field {
 					}
 				}
 			}
-		case 1:
+		case 1, 3:
 			if picks.IsRight(x, 1) {
 				pick := picks.MaxR(x, 1)
 				l := picks[x]
@@ -568,7 +557,8 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-func (f Field) ValidatePosition(piece Piece, x, r int) *Piece {
+func (f Field) ValidPosition(piece Piece) []Piece {
+	validPieces := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
 	queue := make(map[int]bool)
@@ -586,25 +576,29 @@ func (f Field) ValidatePosition(piece Piece, x, r int) *Piece {
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
-			nkey = f.Search("turnleft", k, bag)
-			if nkey > 0 {
-				tmp[nkey] = false
-			}
-			nkey = f.Search("turnright", k, bag)
-			if nkey > 0 {
-				tmp[nkey] = false
+			if piece.Name != "O" {
+				nkey = f.Search("turnleft", k, bag)
+				if nkey > 0 {
+					tmp[nkey] = false
+				}
+				nkey = f.Search("turnright", k, bag)
+				if nkey > 0 {
+					tmp[nkey] = false
+				}
 			}
 		}
 		queue = tmp
 	}
-	minKey := r*10000 + (x-1)*100
-	maxKey := r*10000 + (x+1)*100
 	for _, p := range bag.Options {
-		if p != nil && p.Key > minKey && p.Key < maxKey {
-			return p
+		if p != nil {
+			fmt.Println(p.Moves)
+			nkey = f.Search("down", p.Key, bag)
+			if nkey > 0 && bag.Options[nkey] != nil {
+				validPieces = append(validPieces, *p)
+			}
 		}
 	}
-	return nil
+	return validPieces
 }
 
 func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
@@ -630,13 +624,15 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
-			nkey = f.Search("turnleft", k, bag)
-			if nkey > 0 {
-				tmp[nkey] = false
-			}
-			nkey = f.Search("turnright", k, bag)
-			if nkey > 0 {
-				tmp[nkey] = false
+			if piece.Name != "O" {
+				nkey = f.Search("turnleft", k, bag)
+				if nkey > 0 {
+					tmp[nkey] = false
+				}
+				nkey = f.Search("turnright", k, bag)
+				if nkey > 0 {
+					tmp[nkey] = false
+				}
 			}
 		}
 		queue = tmp

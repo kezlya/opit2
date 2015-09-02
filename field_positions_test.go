@@ -18,6 +18,9 @@ func Test_availablePositions_I(t *testing.T) {
 	if len(result) != expectPositions {
 		t.Fail()
 		fmt.Println(expectPositions, "!=", len(result))
+		for _, p := range result {
+			fmt.Println(p.Moves)
+		}
 		PrintVisual(testField)
 	}
 }

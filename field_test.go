@@ -243,3 +243,31 @@ func Test_FixHoles_T(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func Test_ValidatePosition_I(t *testing.T) {
+	var arangeField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	piece := Piece{Name: "I", Rotation: 0}
+	piece.InitSpace(Cell{X: 3, Y: 19})
+
+	validPieces := arangeField.ValidPosition(piece)
+
+	if len(validPieces) == 20 {
+		PrintVisual(arangeField)
+		fmt.Println("should be 20")
+		t.Fail()
+	}
+}
+
+func Test_ValidatePosition_T(t *testing.T) {
+	var arangeField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	piece := Piece{Name: "T", Rotation: 0}
+	piece.InitSpace(Cell{X: 3, Y: 19})
+
+	validPieces := arangeField.ValidPosition(piece)
+
+	if len(validPieces) == 20 {
+		PrintVisual(arangeField)
+		fmt.Println("should be 20")
+		t.Fail()
+	}
+}

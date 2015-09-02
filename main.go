@@ -11,6 +11,8 @@ func main() {
 
 	// rebuild gametest into visual and remove rotation and X from position Object
 
+	// f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name) pass just Piece
+
 	// to dramaticly improve performance do a drop on empty rows when fixing the holes
 
 	// when testing strategy output range of all games

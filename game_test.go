@@ -1,9 +1,11 @@
 package main
 
+/*
 import (
 	"fmt"
 	"testing"
 )
+
 
 var gameSt = Strategy{DamageK: 9, PostyK: 3, StepK: 1, BurnK: 8}
 
@@ -82,3 +84,4 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 		PrintVisual(field)
 	}
 }
+*/
