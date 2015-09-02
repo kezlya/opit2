@@ -89,16 +89,18 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 	for _, validPiece := range validPieces {
 		fieldAfter := f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name)
 		if fieldAfter != nil {
+			//fmt.Println(validPiece.Rotation, validPiece.CurrentX)
 			p := Position{}
 			p.Init(picks, fieldAfter, hBlocked, st)
 			p.Moves = strings.TrimPrefix(validPiece.Moves, ",")
 			positions = append(positions, p)
 		}
 	}
-	if len(hFixable) > 0 && (piece.Name == "I" || piece.Name == "T") {
+	if len(hFixable) > 0 && (piece.Name == "I" || piece.Name == "T" || piece.Name == "J") {
 		//fmt.Println(len(hFixable))
 		fixes := f.FixHoles(piece, hFixable)
 		for _, fix := range fixes {
+			//fmt.Println(fix.Key, fix.Moves)
 			p := Position{}
 			p.Init(picks, f.AfterHole(fix.Space), hBlocked, st)
 			p.Moves = strings.TrimPrefix(fix.Moves, ",")
@@ -610,7 +612,6 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 				continue
 			}
 		}
-
 		if (p.Name == "I" && p.Rotation != 0) ||
 			(p.Name == "L" && p.Rotation != 2) ||
 			(p.Name == "J" && p.Rotation != 2) ||
@@ -664,16 +665,28 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 		}
 		queue = tmp
 	}
-
-	for _, p := range bag.Options {
-		if p != nil {
+	stop := false
+	for k, p := range bag.Options {
+		if p == nil {
+			delete(bag.Options, k)
+			continue
+		}
+		el, ok := bag.Options[k-1]
+		if ok && el != nil {
+			delete(bag.Options, k)
+			continue
+		}
+		stop = false
+		for _, hole := range holes {
 			for _, cell := range p.Space {
-				for _, hole := range holes {
-					if cell.X == hole.X && cell.Y == hole.Y {
-						fixes = append(fixes, *p)
-						break
-					}
+				if cell.X == hole.X && cell.Y == hole.Y {
+					fixes = append(fixes, *p)
+					stop = true
+					break
 				}
+			}
+			if stop {
+				break
 			}
 		}
 	}
