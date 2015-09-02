@@ -8,9 +8,6 @@ import (
 )
 
 func main() {
-
-	// be caful when final print moves Need to check for "" and the do not add comma pos.Moves + "."+"drop"
-
 	// f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name) pass just Piece
 
 	// to dramaticly improve performance do a drop on empty rows when fixing the holes
@@ -60,7 +57,11 @@ func main() {
 				fmt.Println("drop")
 			} else {
 				pos := game.calculateMoves()
-				fmt.Print(pos.Moves + ",drop")
+				if pos.Moves == "" {
+					fmt.Println("drop")
+				} else {
+					fmt.Print(pos.Moves + ",drop")
+				}
 			}
 		}
 	}
