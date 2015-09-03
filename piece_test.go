@@ -594,8 +594,8 @@ func Test_TurnLeft_L1(t *testing.T) {
 	ex_space["m1"] = Cell{X: 1, Y: 12}
 	ex_space["m2"] = Cell{X: 2, Y: 12}
 	ex_space["m3"] = Cell{X: 3, Y: 12}
-	ex_space["b1"] = Cell{X: 1, Y: 11}
-	expected := Piece{Space: ex_space, Name: "L", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	ex_space["t3"] = Cell{X: 3, Y: 13}
+	expected := Piece{Space: ex_space, Name: "L", Rotation: 0, CurrentX: 1, CurrentY: 12}
 
 	result := arrange.Turnleft()
 
