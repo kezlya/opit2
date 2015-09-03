@@ -45,6 +45,16 @@ var T1 = map[string]Cell{"m3": m3, "t2": t2, "m2": m2, "b2": b2}
 var T2 = map[string]Cell{"b2": b2, "m1": m1, "m2": m2, "m3": m3}
 var T3 = map[string]Cell{"m1": m1, "t2": t2, "m2": m2, "b2": b2}
 
+var S0 = map[string]Cell{"m1": m1, "m2": m2, "t2": t2, "t3": t3}
+var S1 = map[string]Cell{"t2": t2, "m2": m2, "m3": m3, "b3": b3}
+var S2 = map[string]Cell{"m2": m2, "m3": m3, "b1": b1, "b2": b2}
+var S3 = map[string]Cell{"t1": t1, "m1": m1, "m2": m2, "b2": b2}
+
+var Z0 = map[string]Cell{"t2": t2, "t1": t1, "m2": m2, "m3": m3}
+var Z1 = map[string]Cell{"m3": m3, "t3": t3, "m2": m2, "b2": b2}
+var Z2 = map[string]Cell{"b2": b2, "m1": m1, "m2": m2, "b3": b3}
+var Z3 = map[string]Cell{"m1": m1, "t2": t2, "m2": m2, "b1": b1}
+
 func pieceAssert(t *testing.T, a, b Piece) {
 	pass := true
 	for i, cell := range a.Space {
@@ -79,28 +89,6 @@ func pieceAssert(t *testing.T, a, b Piece) {
 		t.Fail()
 	}
 }
-
-/*
-func Test_TurnRight_L3(t *testing.T) {
-	space := make(map[string]Cell, 4)
-	space
-	space
-	space
-	space
-	arrange := Piece{Space: space, Name: "L", Rotation: 3, CurrentX: 1, CurrentY: 11}
-
-	ex_space := make(map[string]Cell, 4)
-	ex_space
-	ex_space
-	ex_space
-	ex_space
-	expected := Piece{Space: ex_space, Name: "L", Rotation: 0, CurrentX: 1, CurrentY: 12}
-
-	result := arrange.Turnright()
-
-	pieceAssert(t, expected, result)
-}
-*/
 
 func Test_Left(t *testing.T) {
 	arrange := Piece{Space: I1, Name: "I", Rotation: 1, CurrentX: 3, CurrentY: 10}
@@ -358,6 +346,118 @@ func Test_TurnLeft_T2(t *testing.T) {
 func Test_TurnLeft_T1(t *testing.T) {
 	arrange := Piece{Space: T1, Name: "T", Rotation: 1, CurrentX: 2, CurrentY: 11}
 	expected := Piece{Space: T0, Name: "T", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_S0(t *testing.T) {
+	arrange := Piece{Space: S0, Name: "S", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	expected := Piece{Space: S1, Name: "S", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_S1(t *testing.T) {
+	arrange := Piece{Space: S1, Name: "S", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	expected := Piece{Space: S2, Name: "S", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_S2(t *testing.T) {
+	arrange := Piece{Space: S2, Name: "S", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: S3, Name: "S", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_S3(t *testing.T) {
+	arrange := Piece{Space: S3, Name: "S", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: S0, Name: "S", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_S0(t *testing.T) {
+	arrange := Piece{Space: S0, Name: "S", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	expected := Piece{Space: S3, Name: "S", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_S3(t *testing.T) {
+	arrange := Piece{Space: S3, Name: "S", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: S2, Name: "S", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_S2(t *testing.T) {
+	arrange := Piece{Space: S2, Name: "S", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: S1, Name: "S", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_S1(t *testing.T) {
+	arrange := Piece{Space: S1, Name: "S", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	expected := Piece{Space: S0, Name: "S", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_Z0(t *testing.T) {
+	arrange := Piece{Space: Z0, Name: "Z", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	expected := Piece{Space: Z1, Name: "Z", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_Z1(t *testing.T) {
+	arrange := Piece{Space: Z1, Name: "Z", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	expected := Piece{Space: Z2, Name: "Z", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_Z2(t *testing.T) {
+	arrange := Piece{Space: Z2, Name: "Z", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: Z3, Name: "Z", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnRight_Z3(t *testing.T) {
+	arrange := Piece{Space: Z3, Name: "Z", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: Z0, Name: "Z", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	result := arrange.Turnright()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_Z0(t *testing.T) {
+	arrange := Piece{Space: Z0, Name: "Z", Rotation: 0, CurrentX: 1, CurrentY: 12}
+	expected := Piece{Space: Z3, Name: "Z", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_Z3(t *testing.T) {
+	arrange := Piece{Space: Z3, Name: "Z", Rotation: 3, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: Z2, Name: "Z", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_Z2(t *testing.T) {
+	arrange := Piece{Space: Z2, Name: "Z", Rotation: 2, CurrentX: 1, CurrentY: 11}
+	expected := Piece{Space: Z1, Name: "Z", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	result := arrange.Turnleft()
+	pieceAssert(t, expected, result)
+}
+
+func Test_TurnLeft_Z1(t *testing.T) {
+	arrange := Piece{Space: Z1, Name: "Z", Rotation: 1, CurrentX: 2, CurrentY: 11}
+	expected := Piece{Space: Z0, Name: "Z", Rotation: 0, CurrentX: 1, CurrentY: 12}
 	result := arrange.Turnleft()
 	pieceAssert(t, expected, result)
 }

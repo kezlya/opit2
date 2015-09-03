@@ -278,6 +278,84 @@ func (p *Piece) Turnright() Piece {
 			np.CurrentX = p.CurrentX
 			np.CurrentY = m3.Y
 		}
+	case "S":
+		switch p.Rotation {
+		case 0:
+			b3 := Cell{X: sp["m1"].X + 2, Y: sp["m1"].Y - 1}
+			m3 := Cell{X: sp["t3"].X, Y: sp["t3"].Y - 1}
+			delete(sp, "m1")
+			delete(sp, "t3")
+			sp["b3"] = b3
+			sp["m3"] = m3
+			np.CurrentX = sp["m2"].X
+			np.CurrentY = b3.Y
+		case 1:
+			b1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y - 2}
+			b2 := Cell{X: sp["b3"].X - 1, Y: sp["b3"].Y}
+			delete(sp, "t2")
+			delete(sp, "b3")
+			sp["b1"] = b1
+			sp["b2"] = b2
+			np.CurrentX = b1.X
+			np.CurrentY = b1.Y
+		case 2:
+			t1 := Cell{X: sp["m3"].X - 2, Y: sp["m3"].Y + 1}
+			m1 := Cell{X: sp["b1"].X, Y: sp["b1"].Y + 1}
+			delete(sp, "m3")
+			delete(sp, "b1")
+			sp["t1"] = t1
+			sp["m1"] = m1
+			np.CurrentX = t1.X
+			np.CurrentY = sp["b2"].Y
+		case 3:
+			t3 := Cell{X: sp["b2"].X + 1, Y: sp["b2"].Y + 2}
+			t2 := Cell{X: sp["t1"].X + 1, Y: sp["t1"].Y}
+			delete(sp, "b2")
+			delete(sp, "t1")
+			sp["t3"] = t3
+			sp["t2"] = t2
+			np.CurrentX = sp["m1"].X
+			np.CurrentY = sp["m1"].Y
+		}
+		/*case "Z":
+		switch p.Rotation {
+		case 0:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 1:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 2:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 3:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		}*/
 	}
 	np.Space = sp
 	np.Key = np.key()
@@ -286,11 +364,8 @@ func (p *Piece) Turnright() Piece {
 	/*
 		 := Cell{X: sp[""].X , Y: sp[""].Y }
 		 := Cell{X: sp[""].X , Y: sp[""].Y }
-		 := Cell{X: sp[""].X , Y: sp[""].Y }
 		delete(sp, "_")
 		delete(sp, "_")
-		delete(sp, "_")
-		sp["_"] = _
 		sp["_"] = _
 		sp["_"] = _
 		np.CurrentX = _.X
@@ -492,6 +567,84 @@ func (p *Piece) Turnleft() Piece {
 			np.CurrentX = p.CurrentX
 			np.CurrentY = p.CurrentY
 		}
+		/*case "S":
+		switch p.Rotation {
+		case 0:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 1:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 2:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 3:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		}*/
+		/*case "Z":
+		switch p.Rotation {
+		case 0:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 1:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 2:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		case 3:
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		 := Cell{X: sp[""].X , Y: sp[""].Y }
+		delete(sp, "_")
+		delete(sp, "_")
+		sp["_"] = _
+		sp["_"] = _
+		np.CurrentX = _.X
+		np.CurrentY = _.Y
+		}*/
 	}
 	np.Space = sp
 	np.Key = np.key()
