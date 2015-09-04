@@ -97,9 +97,10 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		}
 	}
 	if len(hFixable) > 0 {
+		//fmt.Println("+++++++++++++++++")
 		fixes := f.FixHoles(piece, hFixable)
 		for _, fix := range fixes {
-			//fmt.Println(fix.Key, fix.Moves)
+			//	fmt.Println(fix.Key, fix.Moves)
 			p := Position{}
 			p.Init(picks, f.AfterHole(fix.Space), hBlocked, st)
 			p.Moves = strings.TrimPrefix(fix.Moves, ",")
@@ -678,6 +679,11 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
 			(p.Rotation == 3 || p.Rotation == 2) {
 			_, ok := bag.Options[k-20000]
+			if ok {
+				delete(bag.Options, k)
+				continue
+			}
+			_, ok = bag.Options[k-20000-1]
 			if ok {
 				delete(bag.Options, k)
 				continue

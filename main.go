@@ -21,9 +21,6 @@ func main() {
 
 	//refactor init for Field
 
-	// add coordinats of 3, -1  and 4, -1 => O when testing the game
-	// validate top positions shoud work already
-
 	// if two same shapes make sure first one land in better place test for
 	// this to prove ut
 
