@@ -57,7 +57,7 @@ func main() {
 				if pos.Moves == "" {
 					fmt.Println("drop")
 				} else {
-					fmt.Print(pos.Moves + ",drop")
+					fmt.Println(pos.Moves + ",drop")
 				}
 			}
 		}
