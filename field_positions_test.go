@@ -64,7 +64,6 @@ func Test_availablePositions_O(t *testing.T) {
 	}
 }
 
-/*
 func Test_availablePositions_S(t *testing.T) {
 	piece := Piece{Name: "S"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
@@ -78,7 +77,7 @@ func Test_availablePositions_S(t *testing.T) {
 		PrintVisual(testField)
 	}
 }
-*/
+
 func Test_availablePositions_T(t *testing.T) {
 	piece := Piece{Name: "T"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
