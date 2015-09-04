@@ -74,7 +74,7 @@ func Benchmark_many(b *testing.B) {
 		BurnK:   8,
 	}
 	for n := 0; n < b.N; n++ {
-		playGames(strategy, 100, false)
+		playGames(strategy, 100, false, false)
 	}
 }
 
@@ -86,7 +86,7 @@ func Benchmark_one(b *testing.B) {
 		BurnK:   8,
 	}
 	for n := 0; n < b.N; n++ {
-		playGames(strategy, 1, false)
+		playGames(strategy, 1, false, true)
 	}
 }
 
@@ -163,7 +163,7 @@ func Benchmark_strategy(b *testing.B) {
 				for y := 2; y <= 3; y++ {
 					for s := 1; s <= 2; s++ {
 						st := Strategy{DamageK: d, StepK: s, PostyK: y, BurnK: b}
-						go playGames(st, 48, false)
+						go playGames(st, 48, false, false)
 					}
 				}
 				//fmt.Println("start sleep")
@@ -175,14 +175,14 @@ func Benchmark_strategy(b *testing.B) {
 	}
 }
 
-func playGames(st Strategy, amount int, saveReport bool) {
+func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 	records := [][]string{}
 	scores := []int{}
 	rounds := []int{}
 	for i := 0; i < amount; i++ {
 
 		g := Game{Strategy: st}
-		roud, score := playGame(&g)
+		roud, score := playGame(&g, visual)
 		records = append(records, []string{strconv.Itoa(roud), strconv.Itoa(score)})
 		scores = append(scores, score)
 		rounds = append(rounds, roud)
@@ -209,7 +209,7 @@ func playGames(st Strategy, amount int, saveReport bool) {
 	//return avrPoint, avrRound
 }
 
-func playGame(g *Game) (int, int) {
+func playGame(g *Game, visual bool) (int, int) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
@@ -230,9 +230,20 @@ func playGame(g *Game) (int, int) {
 		assignPieces(g)
 		g.Round++
 
+		if visual {
+			fmt.Println("D", position.Damage, "S", position.Score)
+			fmt.Println(g.CurrentPiece.Name)
+			PrintVisual(g.MyPlayer.Field)
+			time.Sleep(3000000000)
+		}
+
 		position = g.calculateMoves()
 
-		if position == nil || isRoof(g) {
+		if position == nil ||
+			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][3] ||
+			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][4] ||
+			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][5] ||
+			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][6] {
 			keepGoing = false
 		}
 	}
@@ -291,7 +302,7 @@ func addSolidLines(g *Game) {
 
 func addGarbageLines(g *Game) {
 	r := g.Round % 6
-	if r == 0 {
+	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
 		row := make([]bool, size, size)
 		for i := range row {
