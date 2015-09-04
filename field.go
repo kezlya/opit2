@@ -96,7 +96,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 			positions = append(positions, p)
 		}
 	}
-	if len(hFixable) > 0 && (piece.Name == "I" || piece.Name == "T" || piece.Name == "J" || piece.Name == "O" || piece.Name == "L") {
+	if len(hFixable) > 0 {
 		//fmt.Println(len(hFixable))
 		fixes := f.FixHoles(piece, hFixable)
 		for _, fix := range fixes {
@@ -676,6 +676,15 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 			delete(bag.Options, k)
 			continue
 		}
+		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
+			(p.Rotation == 3 || p.Rotation == 2) {
+			_, ok := bag.Options[k-20000]
+			if ok {
+				delete(bag.Options, k)
+				continue
+			}
+		}
+
 		stop = false
 		for _, hole := range holes {
 			for _, cell := range p.Space {

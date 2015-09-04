@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"testing"
 )
 
@@ -69,7 +69,7 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 
 	pos := game.calculateMoves()
 
-	fmt.Println(pos.Damage, pos.HighY, pos.LowY)
+	//fmt.Println(pos.Damage, pos.HighY, pos.LowY)
 
 	checkResults(t, expectedField, pos.FieldAfter)
 }
