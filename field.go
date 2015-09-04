@@ -101,6 +101,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		fixes := f.FixHoles(piece, hFixable)
 		for _, fix := range fixes {
 			//	fmt.Println(fix.Key, fix.Moves)
+			//fmt.Println(len(fix.Space), fix.Name)
 			p := Position{}
 			p.Init(picks, f.AfterHole(fix.Space), hBlocked, st)
 			p.Moves = strings.TrimPrefix(fix.Moves, ",")
@@ -531,7 +532,6 @@ func (f Field) AfterHole(space map[string]Cell) Field {
 	if len(space) != 4 {
 		return nil
 	}
-
 	w := f.Width()
 	a := make([][]bool, f.Height())
 	for i, row := range f {
@@ -665,7 +665,9 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 		}
 		queue = tmp
 	}
-	stop := false
+	found := false
+	invalid := false
+	maxY := f.Height()
 	for k, p := range bag.Options {
 		if p == nil {
 			delete(bag.Options, k)
@@ -690,16 +692,20 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 			}
 		}
 
-		stop = false
+		found = false
+		invalid = false
 		for _, hole := range holes {
 			for _, cell := range p.Space {
-				if cell.X == hole.X && cell.Y == hole.Y {
-					fixes = append(fixes, *p)
-					stop = true
+				if cell.Y >= maxY {
+					invalid = true
 					break
 				}
+				if cell.X == hole.X && cell.Y == hole.Y {
+					found = true
+				}
 			}
-			if stop {
+			if found && !invalid {
+				fixes = append(fixes, *p)
 				break
 			}
 		}
