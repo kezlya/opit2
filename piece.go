@@ -331,8 +331,8 @@ func (p *Piece) Turnright() Piece {
 		case 1:
 			m1 := Cell{X: sp["t3"].X - 2, Y: sp["t3"].Y - 1}
 			b3 := Cell{X: sp["m3"].X, Y: sp["m3"].Y - 1}
-			delete(sp, "_")
-			delete(sp, "_")
+			delete(sp, "t3")
+			delete(sp, "m3")
 			sp["m1"] = m1
 			sp["b3"] = b3
 			np.CurrentX = m1.X
@@ -350,7 +350,7 @@ func (p *Piece) Turnright() Piece {
 			m3 := Cell{X: sp["b1"].X + 2, Y: sp["b1"].Y + 1}
 			t1 := Cell{X: sp["m1"].X, Y: sp["m1"].Y + 1}
 			delete(sp, "b1")
-			delete(sp, "b1")
+			delete(sp, "m1")
 			sp["t1"] = t1
 			sp["m3"] = m3
 			np.CurrentX = t1.X

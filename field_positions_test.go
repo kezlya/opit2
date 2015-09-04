@@ -95,10 +95,10 @@ func Test_availablePositions_T(t *testing.T) {
 	}
 }
 
-/*
 func Test_availablePositions_Z(t *testing.T) {
 	piece := Piece{Name: "Z"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
+
 	expectPositions := 13
 
 	result := testField.Positions(piece, strategy)
@@ -109,4 +109,3 @@ func Test_availablePositions_Z(t *testing.T) {
 		PrintVisual(testField)
 	}
 }
-*/
