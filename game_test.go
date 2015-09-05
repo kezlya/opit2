@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"testing"
 )
 
@@ -71,5 +71,24 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 
 	//fmt.Println(pos.Damage, pos.HighY, pos.LowY)
 
+	checkResults(t, expectedField, pos.FieldAfter)
+}
+
+func Test_01(t *testing.T) {
+	game := Game{Strategy: gameSt}
+	field := Field{{true, true, true, true, true, true, true, true, false, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, false, true, true}, {false, true, true, true, true, true, true, false, true, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	//PrintVisual(field)
+	game.MyPlayer = &Player{Field: field}
+	game.CurrentPiece = Piece{Name: "L", Rotation: 0}
+	game.CurrentPiece.InitSpace(Cell{3, field.Height()})
+	game.NextPiece = Piece{Name: "S", Rotation: 0}
+	game.NextPiece.InitSpace(Cell{3, field.Height()})
+	game.MyPlayer.Combo = 0
+	expectedField := Field{{true, true, true, true, true, true, true, true, false, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, false}, {false, true, false, true, true, true, true, true, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+
+	pos := game.calculateMoves()
+
+	fmt.Println(pos.Score, pos.Damage, pos.HighY, pos.LowY)
+	fmt.Println(pos.Moves)
 	checkResults(t, expectedField, pos.FieldAfter)
 }

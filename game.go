@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -147,7 +147,7 @@ func (g *Game) clasic(positions []Position) *Position {
 			OrderedBy(SCORE).Sort(nextPositions)
 
 			minNextScore := nextPositions[0].Score
-			//fmt.Println("classic", nextPositions[0].Score, minNextScore)
+			fmt.Println("classic", position.Score, minNextScore)
 			positions[i].Score += minNextScore
 		} else {
 			positions[i].Score += 10000000000000

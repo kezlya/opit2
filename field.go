@@ -90,13 +90,15 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		fieldAfter := f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name)
 		if fieldAfter != nil {
 			picksAfter := fieldAfter.Picks()
-			_, haFixable := fieldAfter.FindHoles(picksAfter)
+			haBlocked, haFixable := fieldAfter.FindHoles(picksAfter)
+			damage := (len(haBlocked) + len(haFixable)) - (len(hBlocked) + len(hFixable))
 			p := Position{}
-			p.Init(picks, picksAfter, hBlocked, haFixable, fieldAfter.WillBurn(), st)
+			p.Init(picks, picksAfter, hBlocked, damage, fieldAfter.WillBurn(), st)
 			p.FieldAfter = fieldAfter
 			p.Moves = strings.TrimPrefix(validPiece.Moves, ",")
 			positions = append(positions, p)
-			if validPiece.Name == "S" {
+
+			if validPiece.Name == "L" {
 				fmt.Print(validPiece.Rotation, validPiece.CurrentX, "  ")
 				fmt.Print(p.Score, "=", p.Damage, "*", st.DamageK, "-",
 					p.Burn, "*", st.BurnK, "+",
@@ -105,6 +107,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 					p.Hole)
 				fmt.Println()
 			}
+
 		}
 	}
 	if len(hFixable) > 0 {
@@ -112,9 +115,10 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 		for _, fix := range fixes {
 			fieldAfter := f.AfterHole(fix.Space)
 			picksAfter := fieldAfter.Picks()
-			_, haFixable := fieldAfter.FindHoles(picksAfter)
+			haBlocked, haFixable := fieldAfter.FindHoles(picksAfter)
+			damage := (len(haBlocked) + len(haFixable)) - (len(hBlocked) + len(hFixable))
 			p := Position{}
-			p.Init(picks, picksAfter, hBlocked, haFixable, fieldAfter.WillBurn(), st)
+			p.Init(picks, picksAfter, hBlocked, damage, fieldAfter.WillBurn(), st)
 			p.FieldAfter = fieldAfter
 			p.Moves = strings.TrimPrefix(fix.Moves, ",")
 			positions = append(positions, p)

@@ -13,11 +13,8 @@ type Position struct {
 	Moves        string
 }
 
-func (p *Position) Init(picks, picksAfter Picks, holes, fixable []Cell, burn int, s Strategy) {
+func (p *Position) Init(picks, picksAfter Picks, holes []Cell, damage, burn int, s Strategy) {
 	_, _, highY, step, hole := picks.Damage(picksAfter, holes)
-	////
-	damage := len(fixable)
-	////
 	p.Burn = burn
 	p.Step = step
 	p.Hole = hole
