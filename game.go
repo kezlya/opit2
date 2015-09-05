@@ -145,7 +145,9 @@ func (g *Game) clasic(positions []Position) *Position {
 		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.Strategy)
 		if len(nextPositions) > 0 {
 			OrderedBy(SCORE).Sort(nextPositions)
+
 			minNextScore := nextPositions[0].Score
+			//fmt.Println("classic", nextPositions[0].Score, minNextScore)
 			positions[i].Score += minNextScore
 		} else {
 			positions[i].Score += 10000000000000
