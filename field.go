@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"strings"
 )
 
@@ -89,10 +89,10 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 	for _, validPiece := range validPieces {
 		fieldAfter := f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name)
 		if fieldAfter != nil {
-			//fmt.Println(validPiece.Rotation, validPiece.CurrentX)
 			p := Position{}
-			p.Init(picks, fieldAfter, hBlocked, st)
+			p.Init(picks, fieldAfter, hBlocked, hFixable, st)
 			p.Moves = strings.TrimPrefix(validPiece.Moves, ",")
+			fmt.Println(validPiece.Name, p.Score, validPiece.Rotation, validPiece.CurrentX)
 			positions = append(positions, p)
 		}
 	}
@@ -103,7 +103,7 @@ func (f Field) Positions(piece Piece, st Strategy) []Position {
 			//	fmt.Println(fix.Key, fix.Moves)
 			//fmt.Println(len(fix.Space), fix.Name)
 			p := Position{}
-			p.Init(picks, f.AfterHole(fix.Space), hBlocked, st)
+			p.Init(picks, f.AfterHole(fix.Space), hBlocked, hFixable, st)
 			p.Moves = strings.TrimPrefix(fix.Moves, ",")
 			positions = append(positions, p)
 		}

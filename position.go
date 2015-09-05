@@ -13,10 +13,13 @@ type Position struct {
 	Moves        string
 }
 
-func (p *Position) Init(picks Picks, fieldAfter Field, holes []Cell, s Strategy) {
+func (p *Position) Init(picks Picks, fieldAfter Field, holes, fixable []Cell, s Strategy) {
 	burn := fieldAfter.WillBurn()
 	picksAfter := fieldAfter.Picks()
-	damage, _, highY, step, hole := picks.Damage(picksAfter, holes)
+	_, _, highY, step, hole := picks.Damage(picksAfter, holes)
+	////
+	damage := len(fixable)
+	////
 	p.Burn = burn
 	p.Step = step
 	p.Hole = hole
