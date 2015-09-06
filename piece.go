@@ -1,14 +1,31 @@
 package main
 
 type Piece struct {
+	Key        int
 	Name       string
-	Rotation   int
-	Space      map[string]Cell
 	CurrentX   int
 	CurrentY   int
-	Key        int
+	Rotation   int
+	Space      map[string]Cell
 	FieldAfter Field
 	Moves      string
+	Score      Score
+}
+
+type Score struct {
+	Burn   int
+	Step   int
+	BHoles int
+	FHoles int
+	LowY   int
+	HighY  int
+	Total  int
+	NScore int
+}
+
+type Cell struct {
+	X int
+	Y int
 }
 
 func (p *Piece) InitSpace(start Cell) {
@@ -646,4 +663,15 @@ func (p *Piece) key() int {
 		return 0
 	}
 	return p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
+}
+
+func (p *Piece) score() Score {
+	/*_, _, highY, step, hole := picks.Damage(picksAfter, holes)
+	p.Burn = burn
+	p.Step = step
+	p.Hole = hole
+	p.Damage = damage
+	p.HighY = highY
+	p.Score = damage*s.DamageK + highY*s.PostyK + step*s.StepK - burn*s.BurnK + hole*/
+	return Score{}
 }

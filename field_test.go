@@ -261,7 +261,7 @@ func Test_ValidatePosition_I(t *testing.T) {
 	piece := Piece{Name: "I", Rotation: 0}
 	piece.InitSpace(Cell{X: 3, Y: 19})
 
-	validPieces := arangeField.ValidPosition(piece)
+	validPieces := arangeField.ValidPosition(piece, arangeField.Picks())
 
 	if len(validPieces) != 13 {
 		PrintVisual(arangeField)
@@ -275,7 +275,7 @@ func Test_ValidatePosition_T(t *testing.T) {
 	piece := Piece{Name: "T", Rotation: 0}
 	piece.InitSpace(Cell{X: 3, Y: 19})
 
-	validPieces := arangeField.ValidPosition(piece)
+	validPieces := arangeField.ValidPosition(piece, arangeField.Picks())
 
 	if len(validPieces) != 23 {
 		PrintVisual(arangeField)

@@ -6,6 +6,11 @@ import (
 
 type Field [][]bool
 
+type Bag struct {
+	Options map[int]*Piece
+	Total   int
+}
+
 func (f *Field) init(raw string) Field {
 	rows := strings.Split(raw, ";")
 	height := len(rows)

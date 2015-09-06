@@ -216,7 +216,7 @@ func playGame(g *Game, visual bool) (int, int) {
 	g.Height = 20
 	g.Width = 10
 	g.MyPlayer.Points = 0
-	position := &Position{}
+	position := &Piece{}
 	position.FieldAfter = initialField
 	assignPieces(g)
 	keepGoing := true
@@ -231,7 +231,7 @@ func playGame(g *Game, visual bool) (int, int) {
 		g.Round++
 
 		if visual {
-			fmt.Println("D", position.Damage, "S", position.Score)
+			//fmt.Println("D", position.Damage, "S", position.Score)
 			fmt.Println(g.CurrentPiece.Name)
 			if position.Moves == "" {
 				fmt.Println("drop")
@@ -268,11 +268,11 @@ func assignPieces(g *Game) {
 	g.NextPiece.InitSpace(Cell{x, g.Height})
 }
 
-func applyPoints(g *Game, pos *Position) {
-	if pos.Burn > 0 {
+func applyPoints(g *Game, p *Piece) {
+	if p.Score.Burn > 0 {
 		g.MyPlayer.Combo++
 		g.MyPlayer.Points += g.MyPlayer.Combo - 1
-		switch pos.Burn {
+		switch p.Score.Burn {
 		case 1:
 			g.MyPlayer.Points += 1
 		case 2:

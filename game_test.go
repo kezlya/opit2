@@ -88,7 +88,7 @@ func Test_01(t *testing.T) {
 
 	pos := game.calculateMoves()
 
-	fmt.Println(pos.Score, pos.Damage, pos.HighY, pos.LowY)
+	//	fmt.Println(pos.Score, pos.Damage, pos.HighY, pos.LowY)
 	fmt.Println(pos.Moves)
 	checkResults(t, expectedField, pos.FieldAfter)
 }

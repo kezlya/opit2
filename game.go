@@ -21,6 +21,20 @@ type Game struct {
 	Strategy     Strategy
 }
 
+type Player struct {
+	Name   string
+	Field  Field
+	Points int
+	Combo  int
+}
+
+type Strategy struct {
+	BurnK   int
+	StepK   int
+	DamageK int
+	PostyK  int
+}
+
 func (g *Game) asignSettings(action, value string) {
 	switch action {
 	case "timebank":
@@ -98,10 +112,9 @@ func (g *Game) calculateMoves() *Piece {
 
 	picks := g.MyPlayer.Field.Picks()
 
-	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(picks)
-
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, picks)
 
+	_, hFixable := g.MyPlayer.Field.FindHoles(picks)
 	if len(hFixable) > 0 {
 		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable)
 		positions = append(positions, fixes...)
@@ -152,19 +165,29 @@ func (g *Game) keepBurning(positions []Position) *Position {
 }
 */
 func (g *Game) clasic(positions []Piece) *Piece {
-	for i, position := range positions {
-		if position.Burn > 0 {
-			position.FieldAfter.Burn()
-		}
-		nextPositions := position.FieldAfter.Positions(g.NextPiece, g.Strategy)
-		if len(nextPositions) > 0 {
-			OrderedBy(SCORE).Sort(nextPositions)
+	for i, p := range positions {
 
-			minNextScore := nextPositions[0].Score
-			//fmt.Println("classic", position.Score, minNextScore)
-			positions[i].Score += minNextScore
+		if p.Score.Burn > 0 { ///I don't have Burn yet
+			p.FieldAfter.Burn()
+		}
+		nPicks := p.FieldAfter.Picks()
+		np := p.FieldAfter.ValidPosition(g.NextPiece, nPicks)
+		_, nhFixable := p.FieldAfter.FindHoles(nPicks)
+		p.Score = p.score()
+		// damage >3 discard
+
+		if len(nhFixable) > 0 {
+			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable)
+			np = append(np, nfixes...)
+		}
+
+		if len(np) > 0 {
+			OrderedBy(SCORE).Sort(np)
+
+			minNextScore := np[0].Score.Total
+			positions[i].Score.NScore = minNextScore
 		} else {
-			positions[i].Score += 10000000000000
+			positions[i].Score.NScore += 10000000000000 //maybe romove current piece
 		}
 	}
 	//fmt.Println("classic", len(positions))

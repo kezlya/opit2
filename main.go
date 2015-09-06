@@ -26,6 +26,8 @@ func main() {
 
 	// when testing strategy output range of all games
 
+	// to make it faster try to discard hiscore positions and position with big damage
+
 	strategy := Strategy{
 		DamageK: 10,
 		StepK:   2,
