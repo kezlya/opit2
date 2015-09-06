@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -79,55 +78,6 @@ func (f Field) Trim(trim int) Field {
 	return trimed
 }
 
-func (f Field) Positions(piece Piece, st Strategy) []Position {
-	positions := make([]Position, 0)
-	picks := f.Picks()
-	hBlocked, hFixable := f.FindHoles(picks)
-
-	validPieces := f.ValidPosition(piece)
-
-	for _, validPiece := range validPieces {
-		fieldAfter := f.After(validPiece.CurrentX, validPiece.Rotation, piece.Name)
-		if fieldAfter != nil {
-			picksAfter := fieldAfter.Picks()
-			haBlocked, haFixable := fieldAfter.FindHoles(picksAfter)
-			damage := (len(haBlocked) + len(haFixable)) - (len(hBlocked) + len(hFixable))
-			p := Position{}
-			p.Init(picks, picksAfter, hBlocked, damage, fieldAfter.WillBurn(), st)
-			p.FieldAfter = fieldAfter
-			p.Moves = strings.TrimPrefix(validPiece.Moves, ",")
-			positions = append(positions, p)
-
-			if validPiece.Name == "L" {
-				fmt.Print(validPiece.Rotation, validPiece.CurrentX, "  ")
-				fmt.Print(p.Score, "=", p.Damage, "*", st.DamageK, "-",
-					p.Burn, "*", st.BurnK, "+",
-					p.Step, "*", st.StepK, "+",
-					p.HighY, "*", st.PostyK, "+",
-					p.Hole)
-				fmt.Println()
-			}
-
-		}
-	}
-	if len(hFixable) > 0 {
-		fixes := f.FixHoles(piece, hFixable)
-		for _, fix := range fixes {
-			fieldAfter := f.AfterHole(fix.Space)
-			picksAfter := fieldAfter.Picks()
-			haBlocked, haFixable := fieldAfter.FindHoles(picksAfter)
-			damage := (len(haBlocked) + len(haFixable)) - (len(hBlocked) + len(hFixable))
-			p := Position{}
-			p.Init(picks, picksAfter, hBlocked, damage, fieldAfter.WillBurn(), st)
-			p.FieldAfter = fieldAfter
-			p.Moves = strings.TrimPrefix(fix.Moves, ",")
-			positions = append(positions, p)
-			//fmt.Println(fix.Name,fix.Key, fix.Moves)
-		}
-	}
-	return positions
-}
-
 func (f Field) WillBurn() int {
 	burn := 0
 	for _, row := range f {
@@ -179,17 +129,13 @@ func (f Field) FindHoles(picks Picks) ([]Cell, []Cell) {
 	return blocked, fixable
 }
 
-func (f Field) After(x, r int, piece string) Field {
+func (f Field) After(piece *Piece, picks Picks) Field {
+	x := piece.CurrentX
+	r := piece.Rotation
 	valid := false
-	picks := f.Picks()
-	w := f.Width()
-	a := make([][]bool, f.Height())
-	for i, row := range f {
-		a[i] = make([]bool, w)
-		copy(a[i], row[:])
-	}
+	a := f.Copy()
 
-	switch piece {
+	switch piece.Name {
 	case "I":
 		switch r {
 		case 0, 2:
@@ -549,12 +495,7 @@ func (f Field) AfterHole(space map[string]Cell) Field {
 	if len(space) != 4 {
 		return nil
 	}
-	w := f.Width()
-	a := make([][]bool, f.Height())
-	for i, row := range f {
-		a[i] = make([]bool, w)
-		copy(a[i], row[:])
-	}
+	a := f.Copy()
 	for _, cell := range space {
 		if a[cell.Y][cell.X] {
 			return nil
@@ -577,7 +518,7 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-func (f Field) ValidPosition(piece Piece) []Piece {
+func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 	validPieces := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
@@ -640,9 +581,15 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 				continue
 			}
 		}
+		fieldAfter := f.After(p, picks)
+		if fieldAfter == nil {
+			delete(bag.Options, k)
+			continue
+		}
+		p.FieldAfter = fieldAfter
+		p.Moves = strings.TrimPrefix(p.Moves, ",")
 		validPieces = append(validPieces, *p)
 	}
-
 	return validPieces
 }
 
@@ -722,6 +669,8 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 				}
 			}
 			if found && !invalid {
+				p.FieldAfter = f.AfterHole(p.Space)
+				p.Moves = strings.TrimPrefix(p.Moves, ",")
 				fixes = append(fixes, *p)
 				break
 			}
@@ -828,4 +777,14 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		return 0
 	}
 	return 0
+}
+
+func (f Field) Copy() Field {
+	w := f.Width()
+	a := make([][]bool, f.Height())
+	for i, row := range f {
+		a[i] = make([]bool, w)
+		copy(a[i], row[:])
+	}
+	return a
 }

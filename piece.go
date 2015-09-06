@@ -1,13 +1,14 @@
 package main
 
 type Piece struct {
-	Name     string
-	Rotation int
-	Space    map[string]Cell
-	CurrentX int
-	CurrentY int
-	Key      int
-	Moves    string
+	Name       string
+	Rotation   int
+	Space      map[string]Cell
+	CurrentX   int
+	CurrentY   int
+	Key        int
+	FieldAfter Field
+	Moves      string
 }
 
 func (p *Piece) InitSpace(start Cell) {

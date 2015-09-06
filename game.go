@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"strconv"
 	"strings"
 )
@@ -94,18 +94,32 @@ func (g *Game) asignUpdates(who, action, value string) {
 	}
 }
 
-func (g *Game) calculateMoves() *Position {
-	positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
-	if g.MyPlayer.Combo >= 2 {
-		burned := g.keepBurning(positions)
-		if burned != nil {
-			return burned
-		}
+func (g *Game) calculateMoves() *Piece {
+
+	picks := g.MyPlayer.Field.Picks()
+
+	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(picks)
+
+	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, picks)
+
+	if len(hFixable) > 0 {
+		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable)
+		positions = append(positions, fixes...)
 	}
 
+	//positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
+	/*
+		if g.MyPlayer.Combo >= 2 {
+			burned := g.keepBurning(positions)
+			if burned != nil {
+				return burned
+			}
+		}
+	*/
 	return g.clasic(positions)
 }
 
+/*
 func (g *Game) keepBurning(positions []Position) *Position {
 	var burned []Position
 	var burnStrategy = Strategy{
@@ -136,8 +150,8 @@ func (g *Game) keepBurning(positions []Position) *Position {
 
 	return nil
 }
-
-func (g *Game) clasic(positions []Position) *Position {
+*/
+func (g *Game) clasic(positions []Piece) *Piece {
 	for i, position := range positions {
 		if position.Burn > 0 {
 			position.FieldAfter.Burn()
@@ -147,7 +161,7 @@ func (g *Game) clasic(positions []Position) *Position {
 			OrderedBy(SCORE).Sort(nextPositions)
 
 			minNextScore := nextPositions[0].Score
-			fmt.Println("classic", position.Score, minNextScore)
+			//fmt.Println("classic", position.Score, minNextScore)
 			positions[i].Score += minNextScore
 		} else {
 			positions[i].Score += 10000000000000
