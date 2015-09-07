@@ -8,8 +8,8 @@ import (
 var gameSt = Strategy{
 	Burn:   4,
 	Step:   1,
-	BHoles: 4,
-	FHoles: 4,
+	BHoles: 9,
+	FHoles: 10,
 	HighY:  1,
 }
 
@@ -94,7 +94,7 @@ func Test_01(t *testing.T) {
 
 	pos := game.calculateMoves()
 
-	//	fmt.Println(pos.Score, pos.Damage, pos.HighY, pos.LowY)
+	fmt.Printf("%+v\n", pos.Score)
 	fmt.Println(pos.Moves)
 	checkResults(t, expectedField, pos.FieldAfter)
 }

@@ -163,6 +163,7 @@ func (g *Game) calculateMoves() *Piece {
 			p.Score.NScore = 10000000000000 //maybe romove current piece
 		}
 		p.setTotalScore(g.Strategy)
+		//fmt.Printf("%+v\n", p.sco)
 	}
 
 	if len(positions) > 0 {
