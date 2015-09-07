@@ -126,6 +126,24 @@ func Test_Down(t *testing.T) {
 	pieceAssert(t, expected, result)
 }
 
+func Test_Drop(t *testing.T) {
+	space := make(map[string]Cell, 4)
+	space["t2"] = Cell{X: 2, Y: 20}
+	space["m1"] = Cell{X: 1, Y: 19}
+	space["m2"] = Cell{X: 2, Y: 19}
+	space["m3"] = Cell{X: 3, Y: 19}
+	arrange := Piece{Space: space, Name: "T", Rotation: 0, CurrentX: 1, CurrentY: 19}
+
+	ex_space := make(map[string]Cell, 4)
+	ex_space["t2"] = Cell{X: 2, Y: 8}
+	ex_space["m1"] = Cell{X: 1, Y: 7}
+	ex_space["m2"] = Cell{X: 2, Y: 7}
+	ex_space["m3"] = Cell{X: 3, Y: 7}
+	expected := Piece{Space: ex_space, Name: "T", Rotation: 0, CurrentX: 1, CurrentY: 7}
+	result := arrange.Drop(7)
+	pieceAssert(t, expected, result)
+}
+
 func Test_TurnRight_I0(t *testing.T) {
 	arrange := Piece{Space: I0, Name: "I", Rotation: 0, CurrentX: 1, CurrentY: 12}
 	expected := Piece{Space: I1, Name: "I", Rotation: 1, CurrentX: 3, CurrentY: 10}

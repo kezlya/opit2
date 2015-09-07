@@ -117,8 +117,9 @@ func (f Field) FindHoles(picks Picks) ([]Cell, []Cell) {
 	return blocked, fixable
 }
 
-func (f Field) After(piece *Piece, picks Picks) Field {
+func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 	x := piece.CurrentX
+	y := 0
 	r := piece.Rotation
 	valid := false
 	a := f.Copy()
@@ -474,9 +475,9 @@ func (f Field) After(piece *Piece, picks Picks) Field {
 		}
 	}
 	if valid {
-		return a
+		return a, y
 	}
-	return nil
+	return nil, y
 }
 
 func (f Field) AfterHole(space map[string]Cell) Field {
@@ -569,15 +570,16 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 				continue
 			}
 		}
-		fieldAfter := f.After(p, picks)
+		fieldAfter, y := f.After(p, picks)
 		if fieldAfter == nil {
 			delete(bag.Options, k)
 			continue
 		}
-		p.FieldAfter = fieldAfter
-		p.setBurn()
-		p.Moves = strings.TrimPrefix(p.Moves, ",")
-		validPieces = append(validPieces, *p)
+		np := p.Drop(y)
+		np.FieldAfter = fieldAfter
+		np.setBurn()
+		np.Moves = strings.TrimPrefix(p.Moves, ",")
+		validPieces = append(validPieces, np)
 	}
 	return validPieces
 }

@@ -1,5 +1,10 @@
 package main
 
+import (
+//"errors"
+//"fmt"
+)
+
 type Piece struct {
 	Key        int
 	Name       string
@@ -18,7 +23,6 @@ type Score struct {
 	BHoles int
 	FHoles int
 	CHoles int
-	LowY   int
 	HighY  int
 	Total  int
 	NScore int
@@ -100,6 +104,23 @@ func (p *Piece) Down() Piece {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - 1, Space: res}
+	np.setKey()
+	return np
+}
+
+func (p *Piece) Drop(y int) Piece {
+	lowestY := 10000
+	for _, v := range p.Space {
+		if v.Y < lowestY {
+			lowestY = v.Y
+		}
+	}
+	drop := lowestY - y
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = Cell{X: v.X, Y: v.Y - drop}
+	}
+	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - drop, Space: res}
 	np.setKey()
 	return np
 }
@@ -690,15 +711,58 @@ func (p *Piece) setHighY() {
 	}
 }
 
-func (p *Piece) setLowY() {
-	p.Score.LowY = p.CurrentY
-}
+func (p *Piece) setStep(f Field) {
+	/*
+		if p.Score.HighY == 0 {
+			e := errors.New("HighY is not set")
+			panic(e)
+		}
+		y := p.Score.HighY
 
-func (p *Piece) setStep() {
+		maxX := 0
+		for _, c := range p.Space {
+			if c.X > maxX {
+				maxX = c.X
+			}
+		}
+
+		if p.CurrentX > 0 {
+			x := p.CurrentX - 1
+			fmt.Println(p.Space, x, y)
+
+			if f[y][x] { //up
+
+			} else { //down
+
+			}
+		}
+
+		if maxX < f.Width()-1 {
+			x := maxX + 1
+			fmt.Println(p.Space, x, y)
+			if f[y][x] { //up
+
+			} else { //down
+
+			}
+		}
+	*/
 	p.Score.Step = 0
 }
 
 func (p *Piece) setCHoles(hBlocked []Cell) {
+	var ps [4]int
+	i := 0
+	for _, v := range p.Space {
+		ps[i] = v.X
+		i++
+	}
+
+	for _, h := range hBlocked {
+		if h.X == ps[0] || h.X == ps[1] || h.X == ps[2] || h.X == ps[3] {
+			p.Score.CHoles += h.Y
+		}
+	}
 	p.Score.CHoles = 0
 }
 
@@ -706,7 +770,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
-		p.Score.LowY*st.LowY +
 		p.Score.Step*st.Step -
 		p.Score.Burn*st.Burn +
 		p.Score.NScore +

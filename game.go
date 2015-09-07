@@ -35,7 +35,6 @@ type Strategy struct {
 	Step   int
 	BHoles int
 	FHoles int
-	LowY   int
 	HighY  int
 }
 
@@ -138,9 +137,8 @@ func (g *Game) calculateMoves() *Piece {
 
 		p.Score.BHoles = len(nhBlocked) - len(hBlocked)
 		p.Score.FHoles = len(nhFixable) - len(hFixable)
-		p.setLowY()
 		p.setHighY()
-		p.setStep()
+		p.setStep(p.FieldAfter)
 		p.setCHoles(nhBlocked)
 
 		for _, np := range nPositions {
@@ -152,9 +150,8 @@ func (g *Game) calculateMoves() *Piece {
 
 			np.Score.BHoles = len(nnhBlocked) - len(nhBlocked)
 			np.Score.FHoles = len(nnhFixable) - len(nhFixable)
-			np.setLowY()
 			np.setHighY()
-			np.setStep()
+			np.setStep(np.FieldAfter)
 			np.setCHoles(nnhBlocked)
 			np.setTotalScore(g.Strategy)
 		}

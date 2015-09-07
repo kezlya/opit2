@@ -30,7 +30,6 @@ func main() {
 		Step:   1,
 		BHoles: 4,
 		FHoles: 4,
-		LowY:   2,
 		HighY:  1,
 	}
 	game := Game{
