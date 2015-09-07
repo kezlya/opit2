@@ -143,7 +143,7 @@ func (g *Game) calculateMoves() *Piece {
 
 		// damage >3 discard
 
-		for j, np := range nPositions {
+		for _, np := range nPositions {
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()
 			}
@@ -156,7 +156,7 @@ func (g *Game) calculateMoves() *Piece {
 			np.setHighY()
 			np.setStep()
 			np.setCHoles(nnhBlocked)
-			np.setTotalScore()
+			np.setTotalScore(g.Strategy)
 		}
 
 		if len(nPositions) > 0 {
@@ -165,7 +165,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			p.Score.NScore = 10000000000000 //maybe romove current piece
 		}
-		p.setTotalScore()
+		p.setTotalScore(g.Strategy)
 	}
 
 	if len(positions) > 0 {
