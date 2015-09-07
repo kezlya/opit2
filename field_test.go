@@ -47,8 +47,9 @@ func PrintVisuals(a, b Field) {
 	fmt.Println("	 0 1 2 3 4 5 6 7 8 9    0 1 2 3 4 5 6 7 8 9")
 }
 
+/*
 func PrintPositions(p Piece, st Strategy) {
-	/*if validPiece.Name == "L" {
+	if validPiece.Name == "L" {
 		fmt.Print(validPiece.Rotation, validPiece.CurrentX, "  ")
 		fmt.Print(p.Score, "=", p.Damage, "*", st.DamageK, "-",
 			p.Burn, "*", st.BurnK, "+",
@@ -56,7 +57,36 @@ func PrintPositions(p Piece, st Strategy) {
 			p.HighY, "*", st.PostyK, "+",
 			p.Hole)
 		fmt.Println()
-	}*/
+	}
+}*/
+
+func FieldIsEqual(a, b Field) bool {
+	if a.Height() != b.Height() {
+		return false
+	}
+	for i := range a {
+		if len(a[i]) != len(b[i]) {
+			return false
+		}
+		for j := range a[i] {
+			if a[i][j] != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func PicksIsEqual(a, b Picks) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func Test_convertField(t *testing.T) {
@@ -65,7 +95,7 @@ func Test_convertField(t *testing.T) {
 	var result Field
 	result = result.init(cleanInput)
 
-	if !expect.Equal(result) {
+	if !FieldIsEqual(expect, result) {
 		t.Fail()
 		y := len(expect) - 1
 		for i := range expect {
@@ -91,7 +121,7 @@ func Test_Burn(t *testing.T) {
 
 	arange.Burn()
 
-	if !arange.Equal(expect) {
+	if !FieldIsEqual(arange, expect) {
 		t.Fail()
 		y := len(expect) - 1
 		for i := range expect {
@@ -106,7 +136,7 @@ func Test_Picks(t *testing.T) {
 
 	result := arrange.Picks()
 
-	if !expect.Equal(result) {
+	if !PicksIsEqual(expect, result) {
 		fmt.Println(result)
 		fmt.Println(expect)
 		t.Fail()

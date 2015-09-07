@@ -29,18 +29,7 @@ func (p Picks) IsRight(x, n int) bool {
 	return false
 }
 
-func (p Picks) Equal(b Picks) bool {
-	if len(p) != len(b) {
-		return false
-	}
-	for i := range p {
-		if p[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
-
+//TODO need to remove this
 func (p Picks) Damage(a Picks, holes []Cell) (int, int, int, int, int) {
 	highY := 0
 	lowY := 1000

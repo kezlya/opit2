@@ -55,23 +55,6 @@ func (f Field) Picks() Picks {
 	return result
 }
 
-func (f Field) Equal(b Field) bool {
-	if f.Height() != b.Height() {
-		return false
-	}
-	for i := range f {
-		if len(f[i]) != len(b[i]) {
-			return false
-		}
-		for j := range f[i] {
-			if f[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-	return true
-}
-
 func (f Field) Trim(trim int) Field {
 	var trimed = make([][]bool, len(f))
 	newSize := len(f[0]) - trim

@@ -6,7 +6,7 @@ import (
 )
 
 func checkResults(t *testing.T, expect, result Field) {
-	if !expect.Equal(result) {
+	if !FieldIsEqual(expect, result) {
 		PrintVisuals(expect, result)
 		t.Fail()
 	}

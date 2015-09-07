@@ -11,13 +11,21 @@ var tfPicks = testField.Picks()
 func Test_availablePositions_I(t *testing.T) {
 	piece := Piece{Name: "I"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 15
+	expectVp := 15
+	expectedFh := 0
 
-	result := testField.ValidPosition(piece, tfPicks)
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
@@ -25,13 +33,21 @@ func Test_availablePositions_I(t *testing.T) {
 func Test_availablePositions_J(t *testing.T) {
 	piece := Piece{Name: "J"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 27
+	expectVp := 24
+	expectedFh := 3
 
-	result := testField.ValidPosition(piece, tfPicks)
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
@@ -39,13 +55,21 @@ func Test_availablePositions_J(t *testing.T) {
 func Test_availablePositions_L(t *testing.T) {
 	piece := Piece{Name: "L"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 25
+	expectVp := 23
+	expectedFh := 2
 
-	result := testField.ValidPosition(piece, tfPicks)
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
@@ -53,13 +77,21 @@ func Test_availablePositions_L(t *testing.T) {
 func Test_availablePositions_O(t *testing.T) {
 	piece := Piece{Name: "O"}
 	piece.InitSpace(Cell{X: 4, Y: 19})
-	expectPositions := 8
+	expectVp := 7
+	expectedFh := 1
 
-	result := testField.ValidPosition(piece, tfPicks)
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
@@ -67,13 +99,21 @@ func Test_availablePositions_O(t *testing.T) {
 func Test_availablePositions_S(t *testing.T) {
 	piece := Piece{Name: "S"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 15
+	expectVp := 12
+	expectedFh := 3
 
-	result := testField.ValidPosition(piece, tfPicks)
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
@@ -81,16 +121,21 @@ func Test_availablePositions_S(t *testing.T) {
 func Test_availablePositions_T(t *testing.T) {
 	piece := Piece{Name: "T"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
-	expectPositions := 28
+	expectVp := 24
+	expectedFh := 4
 
-	result := testField.ValidPosition(piece, tfPicks)
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
-		/*for _, p := range result {
-			fmt.Println(p.Moves)
-		}*/
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
@@ -98,14 +143,21 @@ func Test_availablePositions_T(t *testing.T) {
 func Test_availablePositions_Z(t *testing.T) {
 	piece := Piece{Name: "Z"}
 	piece.InitSpace(Cell{X: 3, Y: 19})
+	expectVp := 12
+	expectedFh := 1
 
-	expectPositions := 13
+	resultVp := testField.ValidPosition(piece, tfPicks)
+	_, hFixable := testField.FindHoles(testField.Picks())
+	resultFh := testField.FixHoles(piece, hFixable)
 
-	result := testField.ValidPosition(piece, tfPicks)
-
-	if len(result) != expectPositions {
+	if len(resultVp) != expectVp {
 		t.Fail()
-		fmt.Println(expectPositions, "!=", len(result))
+		fmt.Println(expectVp, "!=", len(resultVp))
+		PrintVisual(testField)
+	}
+	if len(resultFh) != expectedFh {
+		t.Fail()
+		fmt.Println(expectedFh, "!=", len(resultFh))
 		PrintVisual(testField)
 	}
 }
