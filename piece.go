@@ -725,8 +725,12 @@ func (p *Piece) setStep(f Field) {
 		}
 	}
 
-	leftY = leftY - p.Score.Burn
-	rightY = rightY - p.Score.Burn
+	if leftY > p.Score.Burn {
+		leftY = leftY - p.Score.Burn
+	}
+	if rightY > p.Score.Burn {
+		rightY = rightY - p.Score.Burn
+	}
 
 	if p.CurrentX > 0 {
 		x := p.CurrentX - 1

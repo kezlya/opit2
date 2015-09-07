@@ -102,7 +102,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 			for i, p := range g.Players {
 				if p.Name == who {
 					var pf Field
-					pf.init(cleanSource)
+					pf = pf.init(cleanSource)
 					pfp := pf.Picks()
 
 					g.Players[i].Field = pf
