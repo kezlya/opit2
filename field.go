@@ -575,6 +575,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 			continue
 		}
 		p.FieldAfter = fieldAfter
+		p.setBurn()
 		p.Moves = strings.TrimPrefix(p.Moves, ",")
 		validPieces = append(validPieces, *p)
 	}
@@ -658,6 +659,7 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 			}
 			if found && !invalid {
 				p.FieldAfter = f.AfterHole(p.Space)
+				p.setBurn()
 				p.Moves = strings.TrimPrefix(p.Moves, ",")
 				fixes = append(fixes, *p)
 				break

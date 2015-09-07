@@ -115,56 +115,62 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Piece {
-
-	picks := g.MyPlayer.Field.Picks()
-
-	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, picks)
-
-	_, hFixable := g.MyPlayer.Field.FindHoles(picks)
+	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks)
+	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
 	if len(hFixable) > 0 {
 		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable)
 		positions = append(positions, fixes...)
 	}
 
-	for i, p := range positions {
-
-		if p.Score.Burn > 0 { ///I don't have Burn yet
+	for _, p := range positions {
+		if p.Score.Burn > 0 {
 			p.FieldAfter.Burn()
 		}
-		nPicks := p.FieldAfter.Picks()
-		np := p.FieldAfter.ValidPosition(g.NextPiece, nPicks)
-		_, nhFixable := p.FieldAfter.FindHoles(nPicks)
-		p.Score = p.score()
-		// damage >3 discard
-
+		pp := p.FieldAfter.Picks()
+		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp)
+		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
 		if len(nhFixable) > 0 {
 			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable)
-			np = append(np, nfixes...)
+			nPositions = append(nPositions, nfixes...)
 		}
 
-		if len(np) > 0 {
-			OrderedBy(SCORE).Sort(np)
+		p.Score.BHoles = len(nhBlocked) - len(hBlocked)
+		p.Score.FHoles = len(nhFixable) - len(hFixable)
+		p.Score.LowY = p.CurrentY
+		p.setHighY()
+		p.setStep()
+		p.setCHoles(nhBlocked)
 
-			minNextScore := np[0].Score.Total
-			positions[i].Score.NScore = minNextScore
+		// damage >3 discard
+
+		for j, np := range nPositions {
+			if np.Score.Burn > 0 {
+				np.FieldAfter.Burn()
+			}
+			npp := np.FieldAfter.Picks()
+			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles(npp)
+
+			np.Score.BHoles = len(nnhBlocked) - len(nhBlocked)
+			np.Score.FHoles = len(nnhFixable) - len(nhFixable)
+			np.Score.LowY = np.CurrentY
+			np.setHighY()
+			np.setStep()
+			np.setCHoles(nnhBlocked)
+			np.setTotalScore()
+		}
+
+		if len(nPositions) > 0 {
+			OrderedBy(SCORE).Sort(nPositions)
+			p.Score.NScore = nPositions[0].Score.Total
 		} else {
-			positions[i].Score.NScore += 10000000000000 //maybe romove current piece
+			p.Score.NScore = 10000000000000 //maybe romove current piece
 		}
+		p.setTotalScore()
 	}
-	//fmt.Println("classic", len(positions))
+
 	if len(positions) > 0 {
 		OrderedBy(SCORE).Sort(positions)
 		return &positions[0]
 	}
 	return nil
-}
-
-func (g *Game) isSafe() bool {
-	picks := g.MyPlayer.Field.Picks()
-	y := picks.Max()
-	rowsLeft := g.MyPlayer.Field.Height() - y
-	if rowsLeft > 10 {
-		return true
-	}
-	return false
 }

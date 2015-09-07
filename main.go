@@ -13,9 +13,6 @@ func main() {
 
 	// when testing strategy output range of all games
 
-	//see afect on performance if you pass Picks to this function
-	//func (f Field) After(x, r int, piece string) Field {
-
 	//find datatype in golang like dictionary (map) but keys only
 
 	//refactor init for Field

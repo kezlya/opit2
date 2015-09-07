@@ -17,6 +17,7 @@ type Score struct {
 	Step   int
 	BHoles int
 	FHoles int
+	CHoles int
 	LowY   int
 	HighY  int
 	Total  int
@@ -70,7 +71,7 @@ func (p *Piece) InitSpace(start Cell) {
 	p.Space = space
 	p.CurrentX = start.X
 	p.CurrentY = start.Y
-	p.Key = p.key()
+	p.setKey()
 }
 
 func (p *Piece) Left() Piece {
@@ -79,7 +80,7 @@ func (p *Piece) Left() Piece {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, CurrentY: p.CurrentY, Space: res}
-	np.Key = np.key()
+	np.setKey()
 	return np
 }
 
@@ -89,7 +90,7 @@ func (p *Piece) Right() Piece {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, CurrentY: p.CurrentY, Space: res}
-	np.Key = np.key()
+	np.setKey()
 	return np
 }
 
@@ -99,7 +100,7 @@ func (p *Piece) Down() Piece {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - 1, Space: res}
-	np.Key = np.key()
+	np.setKey()
 	return np
 }
 
@@ -376,7 +377,7 @@ func (p *Piece) Turnright() Piece {
 		}
 	}
 	np.Space = sp
-	np.Key = np.key()
+	np.setKey()
 	return np
 }
 
@@ -654,18 +655,33 @@ func (p *Piece) Turnleft() Piece {
 		}
 	}
 	np.Space = sp
-	np.Key = np.key()
+	np.setKey()
 	return np
 }
 
-func (p *Piece) key() int {
-	if p.CurrentX < 0 || p.CurrentY < 0 {
-		return 0
+func (p *Piece) setKey() {
+	if p.CurrentX >= 0 && p.CurrentY >= 0 {
+		p.Key = p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
 	}
-	return p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
 }
 
-func (p *Piece) score() Score {
+func (p *Piece) setBurn() {
+	p.Score.Burn = p.FieldAfter.WillBurn()
+}
+
+func (p *Piece) setHighY() {
+	p.Score.HighY = 0
+}
+
+func (p *Piece) setStep() {
+	p.Score.Step = 0
+}
+
+func (p *Piece) setCHoles(hBlocked []Cell) {
+	p.Score.CHoles = 0
+}
+
+func (p *Piece) setTotalScore(st Strategy) {
 	/*_, _, highY, step, hole := picks.Damage(picksAfter, holes)
 	p.Burn = burn
 	p.Step = step
@@ -673,5 +689,5 @@ func (p *Piece) score() Score {
 	p.Damage = damage
 	p.HighY = highY
 	p.Score = damage*s.DamageK + highY*s.PostyK + step*s.StepK - burn*s.BurnK + hole*/
-	return Score{}
+	p.Score.Total = 0
 }
