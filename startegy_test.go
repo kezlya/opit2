@@ -213,8 +213,6 @@ func playGame(g *Game, visual bool) (int, int) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
-	g.Height = 20
-	g.Width = 10
 	g.MyPlayer.Points = 0
 	position := &Piece{}
 	position.FieldAfter = initialField
@@ -265,7 +263,7 @@ func assignPieces(g *Game) {
 		x = 4
 	}
 	g.NextPiece = Piece{Name: piece, Rotation: 0}
-	g.NextPiece.InitSpace(Cell{x, g.Height})
+	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height()})
 }
 
 func applyPoints(g *Game, p *Piece) {

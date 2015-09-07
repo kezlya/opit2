@@ -24,6 +24,8 @@ type Game struct {
 type Player struct {
 	Name   string
 	Field  Field
+	Picks  Picks
+	Empty  int
 	Points int
 	Combo  int
 }
@@ -96,11 +98,15 @@ func (g *Game) asignUpdates(who, action, value string) {
 			}
 		case "field":
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
-			for i, p := range g.Players {
+			for _, p := range g.Players {
 				if p.Name == who {
-					var empty Field
-					g.Players[i].Field = empty.init(cleanSource)
-					g.Height = g.Players[i].Field.Height()
+					var pf Field
+					pf.init(cleanSource)
+					pfp := pf.Picks()
+
+					p.Field = pf
+					p.Picks = pfp
+					p.Empty = pf.Height() - pfp.Max()
 					break
 				}
 			}
@@ -120,51 +126,6 @@ func (g *Game) calculateMoves() *Piece {
 		positions = append(positions, fixes...)
 	}
 
-	//positions := g.MyPlayer.Field.Positions(g.CurrentPiece, g.Strategy)
-	/*
-		if g.MyPlayer.Combo >= 2 {
-			burned := g.keepBurning(positions)
-			if burned != nil {
-				return burned
-			}
-		}
-	*/
-	return g.clasic(positions)
-}
-
-/*
-func (g *Game) keepBurning(positions []Position) *Position {
-	var burned []Position
-	var burnStrategy = Strategy{
-		BurnK:   g.Strategy.BurnK + 100,
-		StepK:   g.Strategy.StepK,
-		DamageK: g.Strategy.DamageK,
-		PostyK:  g.Strategy.PostyK,
-	}
-	for i, position := range positions {
-		if position.Burn > 0 {
-			position.FieldAfter.Burn()
-			nextPositions := position.FieldAfter.Positions(g.NextPiece, burnStrategy)
-			if len(nextPositions) > 0 {
-				OrderedBy(SCORE).Sort(nextPositions)
-				minNextScore := nextPositions[0].Score
-				positions[i].Score += minNextScore
-			} else {
-				positions[i].Score += 10000000000000
-			}
-			burned = append(burned, positions[i])
-		}
-	}
-	//fmt.Println("burn", len(burned))
-	if len(burned) > 0 {
-		OrderedBy(SCORE).Sort(burned)
-		return &burned[0]
-	}
-
-	return nil
-}
-*/
-func (g *Game) clasic(positions []Piece) *Piece {
 	for i, p := range positions {
 
 		if p.Score.Burn > 0 { ///I don't have Burn yet
