@@ -5,7 +5,14 @@ import (
 	"testing"
 )
 
-var gameSt = Strategy{DamageK: 9, PostyK: 3, StepK: 1, BurnK: 8}
+var gameSt = Strategy{
+	Burn:   4,
+	Step:   1,
+	BHoles: 4,
+	FHoles: 4,
+	LowY:   2,
+	HighY:  1,
+}
 
 func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 	game := Game{Strategy: gameSt}

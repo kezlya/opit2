@@ -31,10 +31,12 @@ type Player struct {
 }
 
 type Strategy struct {
-	BurnK   int
-	StepK   int
-	DamageK int
-	PostyK  int
+	Burn   int
+	Step   int
+	BHoles int
+	FHoles int
+	LowY   int
+	HighY  int
 }
 
 func (g *Game) asignSettings(action, value string) {
@@ -136,12 +138,10 @@ func (g *Game) calculateMoves() *Piece {
 
 		p.Score.BHoles = len(nhBlocked) - len(hBlocked)
 		p.Score.FHoles = len(nhFixable) - len(hFixable)
-		p.Score.LowY = p.CurrentY
+		p.setLowY()
 		p.setHighY()
 		p.setStep()
 		p.setCHoles(nhBlocked)
-
-		// damage >3 discard
 
 		for _, np := range nPositions {
 			if np.Score.Burn > 0 {
@@ -152,7 +152,7 @@ func (g *Game) calculateMoves() *Piece {
 
 			np.Score.BHoles = len(nnhBlocked) - len(nhBlocked)
 			np.Score.FHoles = len(nnhFixable) - len(nhFixable)
-			np.Score.LowY = np.CurrentY
+			np.setLowY()
 			np.setHighY()
 			np.setStep()
 			np.setCHoles(nnhBlocked)

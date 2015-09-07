@@ -15,15 +15,8 @@ var initialField = Field{{false, false, false, false, false, false, false, false
 var pieces = []string{"I", "J", "L", "O", "S", "T", "Z"}
 
 func Benchmark_moves(b *testing.B) {
-
 	for n := 0; n < b.N; n++ {
-		strategy := Strategy{
-			DamageK: 9,
-			StepK:   1,
-			PostyK:  3,
-			BurnK:   8,
-		}
-		game := Game{Strategy: strategy}
+		game := Game{Strategy: gameSt}
 		game.asignSettings("timebank", "10000")
 		game.asignSettings("time_per_move", "500")
 		game.asignSettings("player_names", "player1,player2")
@@ -67,26 +60,14 @@ func Benchmark_fixholes(b *testing.B) {
 }
 
 func Benchmark_many(b *testing.B) {
-	strategy := Strategy{
-		DamageK: 9,
-		StepK:   1,
-		PostyK:  3,
-		BurnK:   8,
-	}
 	for n := 0; n < b.N; n++ {
-		playGames(strategy, 100, false, false)
+		playGames(gameSt, 100, false, false)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
-	strategy := Strategy{
-		DamageK: 9,
-		StepK:   1,
-		PostyK:  3,
-		BurnK:   8,
-	}
 	for n := 0; n < b.N; n++ {
-		playGames(strategy, 1, false, true)
+		playGames(gameSt, 1, false, true)
 	}
 }
 
@@ -156,7 +137,7 @@ func Benchmark_one(b *testing.B) {
 func Benchmark_strategy(b *testing.B) {
 	fmt.Println("")
 	fmt.Println("damadge	step	postY	burn	score	round")
-	for n := 0; n < b.N; n++ {
+	/*for n := 0; n < b.N; n++ {
 		//strategies := [][]string{}
 		for d := 7; d <= 15; d++ {
 			for b := 4; b <= 10; b++ {
@@ -172,7 +153,7 @@ func Benchmark_strategy(b *testing.B) {
 			}
 		}
 		//save("strategies", strategies)
-	}
+	}*/
 }
 
 func playGames(st Strategy, amount int, saveReport bool, visual bool) {
@@ -188,24 +169,25 @@ func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 		rounds = append(rounds, roud)
 		//fmt.Println(roud, score)
 	}
-	avrPoint := average(scores)
-	avrRound := average(rounds)
+	//avrPoint := average(scores)
+	//avrRound := average(rounds)
 
-	if saveReport {
-		filename := "d" + strconv.Itoa(st.DamageK) + "_s" + strconv.Itoa(st.StepK) + "_y" + strconv.Itoa(st.PostyK) + "_b" + strconv.Itoa(st.BurnK) +
-			"_s" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
-			"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
-			"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
-		save(filename, records)
-	}
-	result := strconv.Itoa(st.DamageK) +
-		"	" + strconv.Itoa(st.StepK) +
-		"	" + strconv.Itoa(st.PostyK) +
-		"	" + strconv.Itoa(st.BurnK) +
-		"	" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
-		"	" + strconv.FormatFloat(avrRound, 'f', 3, 64)
-	fmt.Println(result)
-
+	/*
+		if saveReport {
+			filename := "d" + strconv.Itoa(st.DamageK) + "_s" + strconv.Itoa(st.StepK) + "_y" + strconv.Itoa(st.PostyK) + "_b" + strconv.Itoa(st.BurnK) +
+				"_s" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
+				"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
+				"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
+			save(filename, records)
+		}
+		result := strconv.Itoa(st.DamageK) +
+			"	" + strconv.Itoa(st.StepK) +
+			"	" + strconv.Itoa(st.PostyK) +
+			"	" + strconv.Itoa(st.BurnK) +
+			"	" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
+			"	" + strconv.FormatFloat(avrRound, 'f', 3, 64)
+		fmt.Println(result)
+	*/
 	//return avrPoint, avrRound
 }
 

@@ -670,7 +670,28 @@ func (p *Piece) setBurn() {
 }
 
 func (p *Piece) setHighY() {
-	p.Score.HighY = 0
+	switch p.Name {
+	case "I":
+		switch p.Rotation {
+		case 0, 2:
+			p.Score.HighY = p.CurrentY
+		case 1, 3:
+			p.Score.HighY = p.CurrentY + 3
+		}
+	case "J", "L", "S", "T", "Z":
+		switch p.Rotation {
+		case 0, 2:
+			p.Score.HighY = p.CurrentY + 1
+		case 1, 3:
+			p.Score.HighY = p.CurrentY + 2
+		}
+	case "O":
+		p.Score.HighY = p.CurrentY + 1
+	}
+}
+
+func (p *Piece) setLowY() {
+	p.Score.LowY = p.CurrentY
 }
 
 func (p *Piece) setStep() {
@@ -682,12 +703,12 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 }
 
 func (p *Piece) setTotalScore(st Strategy) {
-	/*_, _, highY, step, hole := picks.Damage(picksAfter, holes)
-	p.Burn = burn
-	p.Step = step
-	p.Hole = hole
-	p.Damage = damage
-	p.HighY = highY
-	p.Score = damage*s.DamageK + highY*s.PostyK + step*s.StepK - burn*s.BurnK + hole*/
-	p.Score.Total = 0
+	p.Score.Total = p.Score.BHoles*st.BHoles +
+		p.Score.FHoles*st.FHoles +
+		p.Score.HighY*st.HighY +
+		p.Score.LowY*st.LowY +
+		p.Score.Step*st.Step -
+		p.Score.Burn*st.Burn +
+		p.Score.NScore +
+		p.Score.CHoles
 }
