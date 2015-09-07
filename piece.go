@@ -767,6 +767,16 @@ func (p *Piece) setStep(f Field) {
 }
 
 func (p *Piece) setCHoles(hBlocked []Cell) {
+	var effective []Cell
+	lowEffectiveY := 0
+	if len(hBlocked) > 5 {
+		CellOrderedBy(MAXY).Sort(hBlocked)
+		effective = hBlocked[:5]
+		lowEffectiveY = effective[4].Y
+	} else {
+		effective = hBlocked
+	}
+
 	var ps [4]int
 	i := 0
 	for _, v := range p.Space {
@@ -774,9 +784,9 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 		i++
 	}
 
-	for _, h := range hBlocked {
+	for _, h := range effective {
 		if h.X == ps[0] || h.X == ps[1] || h.X == ps[2] || h.X == ps[3] {
-			p.Score.CHoles += h.Y
+			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
 }

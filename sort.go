@@ -48,3 +48,46 @@ func (ms *multiSorter) Less(i, j int) bool {
 	}
 	return ms.less[k](p, q)
 }
+
+var MAXY = func(c1, c2 *Cell) bool { return c1.Y > c2.Y }
+
+type cLessFunc func(p1, p2 *Cell) bool
+
+type cMultiSorter struct {
+	cells []Cell
+	less  []cLessFunc
+}
+
+func (ms *cMultiSorter) Sort(cells []Cell) {
+	ms.cells = cells
+	sort.Sort(ms)
+}
+
+func CellOrderedBy(less ...cLessFunc) *cMultiSorter {
+	return &cMultiSorter{
+		less: less,
+	}
+}
+
+func (ms *cMultiSorter) Len() int {
+	return len(ms.cells)
+}
+
+func (ms *cMultiSorter) Swap(i, j int) {
+	ms.cells[i], ms.cells[j] = ms.cells[j], ms.cells[i]
+}
+
+func (ms *cMultiSorter) Less(i, j int) bool {
+	p, q := &ms.cells[i], &ms.cells[j]
+	var k int
+	for k = 0; k < len(ms.less)-1; k++ {
+		less := ms.less[k]
+		switch {
+		case less(p, q):
+			return true
+		case less(q, p):
+			return false
+		}
+	}
+	return ms.less[k](p, q)
+}

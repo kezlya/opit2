@@ -99,15 +99,15 @@ func (g *Game) asignUpdates(who, action, value string) {
 			}
 		case "field":
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
-			for _, p := range g.Players {
+			for i, p := range g.Players {
 				if p.Name == who {
 					var pf Field
 					pf.init(cleanSource)
 					pfp := pf.Picks()
 
-					p.Field = pf
-					p.Picks = pfp
-					p.Empty = pf.Height() - pfp.Max()
+					g.Players[i].Field = pf
+					g.Players[i].Picks = pfp
+					g.Players[i].Empty = pf.Height() - pfp.Max()
 					break
 				}
 			}
@@ -123,7 +123,7 @@ func (g *Game) calculateMoves() *Piece {
 		positions = append(positions, fixes...)
 	}
 
-	for _, p := range positions {
+	for i, p := range positions {
 		if p.Score.Burn > 0 {
 			p.FieldAfter.Burn()
 		}
@@ -135,34 +135,34 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions = append(nPositions, nfixes...)
 		}
 
-		p.Score.BHoles = len(nhBlocked) - len(hBlocked)
-		p.Score.FHoles = len(nhFixable) - len(hFixable)
-		p.setHighY()
-		p.setStep(p.FieldAfter)
-		p.setCHoles(nhBlocked)
+		positions[i].Score.BHoles = len(nhBlocked) - len(hBlocked)
+		positions[i].Score.FHoles = len(nhFixable) - len(hFixable)
+		positions[i].setHighY()
+		positions[i].setStep(p.FieldAfter)
+		positions[i].setCHoles(nhBlocked)
 
-		for _, np := range nPositions {
+		for j, np := range nPositions {
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()
 			}
 			npp := np.FieldAfter.Picks()
 			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles(npp)
 
-			np.Score.BHoles = len(nnhBlocked) - len(nhBlocked)
-			np.Score.FHoles = len(nnhFixable) - len(nhFixable)
-			np.setHighY()
-			np.setStep(np.FieldAfter)
-			np.setCHoles(nnhBlocked)
-			np.setTotalScore(g.Strategy)
+			nPositions[j].Score.BHoles = len(nnhBlocked) - len(nhBlocked)
+			nPositions[j].Score.FHoles = len(nnhFixable) - len(nhFixable)
+			nPositions[j].setHighY()
+			nPositions[j].setStep(np.FieldAfter)
+			nPositions[j].setCHoles(nnhBlocked)
+			nPositions[j].setTotalScore(g.Strategy)
 		}
 
 		if len(nPositions) > 0 {
 			OrderedBy(SCORE).Sort(nPositions)
-			p.Score.NScore = nPositions[0].Score.Total
+			positions[i].Score.NScore = nPositions[0].Score.Total
 		} else {
-			p.Score.NScore = 10000000000000 //maybe romove current piece
+			positions[i].Score.NScore = 10000000000000 //maybe romove current piece
 		}
-		p.setTotalScore(g.Strategy)
+		positions[i].setTotalScore(g.Strategy)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 
