@@ -1,8 +1,8 @@
 package main
 
 import (
-//"errors"
-//"fmt"
+	"errors"
+	//"fmt"
 )
 
 type Piece struct {
@@ -712,42 +712,58 @@ func (p *Piece) setHighY() {
 }
 
 func (p *Piece) setStep(f Field) {
-	/*
-		if p.Score.HighY == 0 {
-			e := errors.New("HighY is not set")
-			panic(e)
-		}
-		y := p.Score.HighY
+	if p.Score.HighY == 0 {
+		e := errors.New("HighY is not set")
+		panic(e)
+	}
 
-		maxX := 0
-		for _, c := range p.Space {
-			if c.X > maxX {
-				maxX = c.X
+	h := f.Height()
+	y := p.Score.HighY
+	maxX := 0
+
+	for _, c := range p.Space {
+		if c.X > maxX {
+			maxX = c.X
+		}
+	}
+
+	if p.CurrentX > 0 {
+		x := p.CurrentX - 1
+		if f[y][x] { //up
+			for i := y + 1; i < h; i++ {
+				if !f[i][x] {
+					p.Score.Step += i - y - 1
+					break
+				}
+			}
+		} else { //down
+			for i := y - 1; i < 0; i-- {
+				if f[i][x] {
+					p.Score.Step += y - i - 1
+					break
+				}
 			}
 		}
+	}
 
-		if p.CurrentX > 0 {
-			x := p.CurrentX - 1
-			fmt.Println(p.Space, x, y)
-
-			if f[y][x] { //up
-
-			} else { //down
-
+	if maxX < f.Width()-1 {
+		x := maxX + 1
+		if f[y][x] { //up
+			for i := y + 1; i < h; i++ {
+				if !f[i][x] {
+					p.Score.Step += i - y - 1
+					break
+				}
+			}
+		} else { //down
+			for i := y - 1; i < 0; i-- {
+				if f[i][x] {
+					p.Score.Step += y - i - 1
+					break
+				}
 			}
 		}
-
-		if maxX < f.Width()-1 {
-			x := maxX + 1
-			fmt.Println(p.Space, x, y)
-			if f[y][x] { //up
-
-			} else { //down
-
-			}
-		}
-	*/
-	p.Score.Step = 0
+	}
 }
 
 func (p *Piece) setCHoles(hBlocked []Cell) {
@@ -763,7 +779,6 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 			p.Score.CHoles += h.Y
 		}
 	}
-	p.Score.CHoles = 0
 }
 
 func (p *Piece) setTotalScore(st Strategy) {

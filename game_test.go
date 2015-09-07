@@ -1,8 +1,8 @@
 package main
 
 import (
-//"fmt"
-//"testing"
+	"fmt"
+	"testing"
 )
 
 var gameSt = Strategy{
@@ -13,7 +13,6 @@ var gameSt = Strategy{
 	HighY:  1,
 }
 
-/*
 func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 	game := Game{Strategy: gameSt}
 	field := Field{{true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, false, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {false, true, true, false, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, false}, {false, true, true, false, false, true, true, true, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
@@ -99,4 +98,3 @@ func Test_01(t *testing.T) {
 	fmt.Println(pos.Moves)
 	checkResults(t, expectedField, pos.FieldAfter)
 }
-*/
