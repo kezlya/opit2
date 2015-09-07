@@ -1,10 +1,5 @@
 package main
 
-import (
-	"errors"
-	//"fmt"
-)
-
 type Piece struct {
 	Key        int
 	Name       string
@@ -712,34 +707,40 @@ func (p *Piece) setHighY() {
 }
 
 func (p *Piece) setStep(f Field) {
-	if p.Score.HighY == 0 {
-		e := errors.New("HighY is not set")
-		panic(e)
-	}
-
 	h := f.Height()
-	y := p.Score.HighY
-	maxX := 0
+	maxX, leftY, rightY := 0, 0, 0
 
 	for _, c := range p.Space {
 		if c.X > maxX {
 			maxX = c.X
+
+		}
+	}
+	for _, c := range p.Space {
+		if c.X == p.CurrentX && c.Y > leftY {
+			leftY = c.Y
+		}
+		if c.X == maxX && c.Y > rightY {
+			rightY = c.Y
 		}
 	}
 
+	leftY = leftY - p.Score.Burn
+	rightY = rightY - p.Score.Burn
+
 	if p.CurrentX > 0 {
 		x := p.CurrentX - 1
-		if f[y][x] { //up
-			for i := y + 1; i < h; i++ {
+		if f[leftY][x] { //up
+			for i := leftY + 1; i < h; i++ {
 				if !f[i][x] {
-					p.Score.Step += i - y - 1
+					p.Score.Step += i - leftY - 1
 					break
 				}
 			}
 		} else { //down
-			for i := y - 1; i < 0; i-- {
+			for i := leftY - 1; i >= 0; i-- {
 				if f[i][x] {
-					p.Score.Step += y - i - 1
+					p.Score.Step += leftY - i
 					break
 				}
 			}
@@ -748,17 +749,17 @@ func (p *Piece) setStep(f Field) {
 
 	if maxX < f.Width()-1 {
 		x := maxX + 1
-		if f[y][x] { //up
-			for i := y + 1; i < h; i++ {
+		if f[rightY][x] { //up
+			for i := rightY + 1; i < h; i++ {
 				if !f[i][x] {
-					p.Score.Step += i - y - 1
+					p.Score.Step += i - rightY - 1
 					break
 				}
 			}
 		} else { //down
-			for i := y - 1; i < 0; i-- {
+			for i := rightY - 1; i >= 0; i-- {
 				if f[i][x] {
-					p.Score.Step += y - i - 1
+					p.Score.Step += rightY - i
 					break
 				}
 			}
