@@ -135,6 +135,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 					a[pick][x+1] = true
 					a[pick][x+2] = true
 					a[pick][x+3] = true
+					y = pick
 					valid = true
 				}
 			}
@@ -145,6 +146,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				a[pick+1][x] = true
 				a[pick+2][x] = true
 				a[pick+3][x] = true
+				y = pick
 				valid = true
 			}
 		}
@@ -158,6 +160,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 					a[pick+1][x] = true
 					a[pick][x+1] = true
 					a[pick][x+2] = true
+					y = pick
 					valid = true
 				}
 			}
@@ -171,6 +174,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[l2][x+1] = true
 						a[l2-1][x] = true
 						a[l2-2][x] = true
+						y = l2 - 2
 						valid = true
 					}
 				} else {
@@ -179,6 +183,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[l+1][x] = true
 						a[l+2][x] = true
 						a[l+2][x+1] = true
+						y = l
 						valid = true
 					}
 				}
@@ -193,6 +198,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
 						a[pick][x+2] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -201,6 +207,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x+1] = true
 						a[pick][x+2] = true
 						a[pick-1][x+2] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -213,6 +220,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 					a[pick][x+1] = true
 					a[pick+1][x+1] = true
 					a[pick+2][x+1] = true
+					y = pick
 					valid = true
 				}
 			}
@@ -227,6 +235,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 					a[pick][x+1] = true
 					a[pick][x+2] = true
 					a[pick+1][x+2] = true
+					y = pick
 					valid = true
 				}
 			}
@@ -238,6 +247,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 					a[pick+1][x] = true
 					a[pick+2][x] = true
 					a[pick][x+1] = true
+					y = pick
 					valid = true
 				}
 			}
@@ -251,6 +261,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -259,6 +270,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -273,6 +285,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[l][x+1] = true
 						a[l-1][x+1] = true
 						a[l-2][x+1] = true
+						y = l - 2
 						valid = true
 					}
 				} else {
@@ -281,6 +294,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[l2][x+1] = true
 						a[l2+1][x+1] = true
 						a[l2+2][x+1] = true
+						y = l2
 						valid = true
 					}
 				}
@@ -294,6 +308,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				a[pick+1][x] = true
 				a[pick][x+1] = true
 				a[pick+1][x+1] = true
+				y = pick
 				valid = true
 			}
 		}
@@ -310,6 +325,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -318,6 +334,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick-1][x+1] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -332,6 +349,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -340,6 +358,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -355,6 +374,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 					a[pick][x+1] = true
 					a[pick+1][x+1] = true
 					a[pick][x+2] = true
+					y = pick
 					valid = true
 				}
 			}
@@ -368,6 +388,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+2][x] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -376,6 +397,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -390,6 +412,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
 						a[pick+1][x+2] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -398,6 +421,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
 						a[pick][x+2] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -412,6 +436,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -420,6 +445,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -438,6 +464,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x+1] = true
 						a[pick][x+1] = true
 						a[pick][x+2] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -446,6 +473,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x+1] = true
 						a[pick-1][x+1] = true
 						a[pick-1][x+2] = true
+						y = pick - 1
 						valid = true
 					}
 				}
@@ -460,6 +488,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick+1][x] = true
 						a[pick+1][x+1] = true
 						a[pick+2][x+1] = true
+						y = pick
 						valid = true
 					}
 				} else {
@@ -468,6 +497,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 						a[pick][x] = true
 						a[pick][x+1] = true
 						a[pick+1][x+1] = true
+						y = pick - 1
 						valid = true
 					}
 				}
