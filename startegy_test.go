@@ -169,8 +169,8 @@ func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 		rounds = append(rounds, roud)
 		//fmt.Println(roud, score)
 	}
-	//avrPoint := average(scores)
-	//avrRound := average(rounds)
+	avrPoint := average(scores)
+	avrRound := average(rounds)
 
 	/*
 		if saveReport {
@@ -179,15 +179,11 @@ func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 				"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
 				"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
 			save(filename, records)
-		}
-		result := strconv.Itoa(st.DamageK) +
-			"	" + strconv.Itoa(st.StepK) +
-			"	" + strconv.Itoa(st.PostyK) +
-			"	" + strconv.Itoa(st.BurnK) +
-			"	" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
-			"	" + strconv.FormatFloat(avrRound, 'f', 3, 64)
-		fmt.Println(result)
-	*/
+		}*/
+	fmt.Printf("%+v\n", st)
+	fmt.Println("points:", avrPoint)
+	fmt.Println("rounds", avrRound)
+
 	//return avrPoint, avrRound
 }
 
@@ -196,6 +192,8 @@ func playGame(g *Game, visual bool) (int, int) {
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
 	g.MyPlayer.Points = 0
+	g.MyPlayer.Field = initialField
+	g.MyPlayer.Picks = initialField.Picks()
 	position := &Piece{}
 	position.FieldAfter = initialField
 	assignPieces(g)
@@ -205,6 +203,7 @@ func playGame(g *Game, visual bool) (int, int) {
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
+		g.MyPlayer.Picks = position.FieldAfter.Picks()
 		addSolidLines(g)
 		addGarbageLines(g)
 		assignPieces(g)
@@ -219,7 +218,7 @@ func playGame(g *Game, visual bool) (int, int) {
 				fmt.Println(position.Moves + ",drop")
 			}
 			PrintVisual(g.MyPlayer.Field)
-			time.Sleep(3000000000)
+			//time.Sleep(1000000000)
 		}
 
 		position = g.calculateMoves()
@@ -245,7 +244,7 @@ func assignPieces(g *Game) {
 		x = 4
 	}
 	g.NextPiece = Piece{Name: piece, Rotation: 0}
-	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height()})
+	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height() - 1})
 }
 
 func applyPoints(g *Game, p *Piece) {
