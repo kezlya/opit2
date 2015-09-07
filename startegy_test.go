@@ -134,26 +134,28 @@ func Benchmark_one(b *testing.B) {
 // when testing strategy output range of all games
 // when testing strategy output range of all games
 // when testing strategy output range of all games
-func Benchmark_strategy(b *testing.B) {
+func Benchmark_strategy(banch *testing.B) {
 	fmt.Println("")
-	fmt.Println("damadge	step	postY	burn	score	round")
-	/*for n := 0; n < b.N; n++ {
-		//strategies := [][]string{}
-		for d := 7; d <= 15; d++ {
-			for b := 4; b <= 10; b++ {
-				for y := 2; y <= 3; y++ {
-					for s := 1; s <= 2; s++ {
-						st := Strategy{DamageK: d, StepK: s, PostyK: y, BurnK: b}
-						go playGames(st, 48, false, false)
+	fmt.Println("Burn	BHoles	FHoles	HighY	Step	Score	Round")
+	for n := 0; n < banch.N; n++ {
+		for b := 1; b <= 5; b++ {
+			for bh := 1; bh <= 5; bh++ {
+				for fh := 1; fh <= 5; fh++ {
+					for hy := 1; hy <= 5; hy++ {
+						for s := 1; s <= 5; s++ {
+							st := Strategy{Burn: b, BHoles: bh, FHoles: fh, HighY: hy, Step: s}
+							go playGames(st, 16, false, false)
+						}
+						//fmt.Println("start sleep")
+						time.Sleep(60000000000)
+						//fmt.Println("end sleep")
 					}
+					time.Sleep(10000000000)
 				}
-				//fmt.Println("start sleep")
-				time.Sleep(15000000000)
-				//fmt.Println("end sleep")
 			}
 		}
 		//save("strategies", strategies)
-	}*/
+	}
 }
 
 func playGames(st Strategy, amount int, saveReport bool, visual bool) {
@@ -180,9 +182,23 @@ func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 				"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
 			save(filename, records)
 		}*/
-	fmt.Printf("%+v\n", st)
-	fmt.Println("points:", avrPoint)
-	fmt.Println("rounds", avrRound)
+	//fmt.Printf("%+v\n", st)
+	//fmt.Println("points:", avrPoint)
+	//fmt.Println("rounds", avrRound)
+	fmt.Println()
+	fmt.Print(st.Burn)
+	fmt.Print("	")
+	fmt.Print(st.BHoles)
+	fmt.Print("	")
+	fmt.Print(st.FHoles)
+	fmt.Print("	")
+	fmt.Print(st.HighY)
+	fmt.Print("	")
+	fmt.Print(st.Step)
+	fmt.Print("	")
+	fmt.Print(avrPoint)
+	fmt.Print("	")
+	fmt.Print(avrRound)
 
 	//return avrPoint, avrRound
 }
@@ -203,9 +219,9 @@ func playGame(g *Game, visual bool) (int, int) {
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
-		g.MyPlayer.Picks = position.FieldAfter.Picks()
 		addSolidLines(g)
 		addGarbageLines(g)
+		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
 		assignPieces(g)
 		g.Round++
 
@@ -288,7 +304,7 @@ func addGarbageLines(g *Game) {
 	r := g.Round % 6
 	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
-		row := make([]bool, size, size)
+		row := make([]bool, size)
 		for i := range row {
 			row[i] = true
 		}
