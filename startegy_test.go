@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -49,6 +50,7 @@ func Benchmark_moves(b *testing.B) {
 		game.calculateMoves()
 	}
 }
+
 func Benchmark_fixholes(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		testField := Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
@@ -130,13 +132,9 @@ func Benchmark_one(b *testing.B) {
 	}
 }*/
 
-// when testing strategy output range of all games
-// when testing strategy output range of all games
-// when testing strategy output range of all games
-// when testing strategy output range of all games
 func Benchmark_strategy(banch *testing.B) {
 	fmt.Println("")
-	fmt.Println("Burn	BHoles	FHoles	HighY	Step	Score	Round")
+	fmt.Println("Burn	BHoles	FHoles	HighY	Step	Score	minS	maxS	Round	minR	maxR")
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 5; b++ {
 			for bh := 1; bh <= 5; bh++ {
@@ -171,8 +169,8 @@ func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 		rounds = append(rounds, roud)
 		//fmt.Println(roud, score)
 	}
-	avrPoint := average(scores)
-	avrRound := average(rounds)
+	avrScore, minScore, maxScore := statistic(scores)
+	avrRound, minRound, maxRound := statistic(rounds)
 
 	/*
 		if saveReport {
@@ -196,9 +194,17 @@ func playGames(st Strategy, amount int, saveReport bool, visual bool) {
 	fmt.Print("	")
 	fmt.Print(st.Step)
 	fmt.Print("	")
-	fmt.Print(avrPoint)
+	fmt.Print(avrScore)
+	fmt.Print("	")
+	fmt.Print(minScore)
+	fmt.Print("	")
+	fmt.Print(maxScore)
 	fmt.Print("	")
 	fmt.Print(avrRound)
+	fmt.Print("	")
+	fmt.Print(minRound)
+	fmt.Print("	")
+	fmt.Print(maxRound)
 
 	//return avrPoint, avrRound
 }
@@ -332,21 +338,12 @@ func save(fileName string, records [][]string) {
 	writer.Flush()
 }
 
-func average(a []int) float64 {
-	total := 0.0
-	min := 10000000000.0
-	max := 0.0
-	for _, v := range a {
-		vv := float64(v)
-		total += vv
-		if vv > max {
-			max = vv
-		}
-		if vv < min {
-			min = vv
-		}
+func statistic(a []int) (float64, int, int) {
+	sort.Ints(a)
+	var total float64
+	for i := 1; i < len(a)-1; i++ {
+		total += float64(a[i])
 	}
-	total = total - max - min
-
-	return total / float64(len(a)-2)
+	avr := total / float64(len(a)-2)
+	return avr, a[1], a[len(a)-2]
 }

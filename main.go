@@ -11,16 +11,12 @@ func main() {
 
 	//if next move burn 2rows vs 1row current move preoritize next move up to 4
 
-	// when testing strategy output range of all games
-
 	//find datatype in golang like dictionary (map) but keys only
 
 	//refactor init for Field
 
 	// if two same shapes make sure first one land in better place test for
 	// this to prove ut
-
-	// when testing strategy output range of all games
 
 	// to make it faster try to discard hiscore positions and position with big damage
 	// damage >3 discard
