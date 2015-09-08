@@ -142,10 +142,10 @@ func Benchmark_strategy(banch *testing.B) {
 					for hy := 1; hy <= 5; hy++ {
 						for s := 1; s <= 5; s++ {
 							st := Strategy{Burn: b, BHoles: bh, FHoles: fh, HighY: hy, Step: s}
-							go playGames(st, 16, false, false)
+							go playGames(st, 18, false, false)
 						}
 						//fmt.Println("start sleep")
-						time.Sleep(60000000000)
+						time.Sleep(45000000000)
 						//fmt.Println("end sleep")
 					}
 					time.Sleep(10000000000)
@@ -338,12 +338,12 @@ func save(fileName string, records [][]string) {
 	writer.Flush()
 }
 
-func statistic(a []int) (float64, int, int) {
+func statistic(a []int) (int, int, int) {
 	sort.Ints(a)
-	var total float64
+	var total int
 	for i := 1; i < len(a)-1; i++ {
-		total += float64(a[i])
+		total += a[i]
 	}
-	avr := total / float64(len(a)-2)
+	avr := total/len(a) - 2
 	return avr, a[1], a[len(a)-2]
 }
