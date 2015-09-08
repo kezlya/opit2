@@ -103,14 +103,8 @@ func (p *Piece) Down() Piece {
 	return np
 }
 
-func (p *Piece) Drop(y int) Piece {
-	lowestY := 10000
-	for _, v := range p.Space {
-		if v.Y < lowestY {
-			lowestY = v.Y
-		}
-	}
-	drop := lowestY - y
+func (p *Piece) DropTo(y int) Piece {
+	drop := p.CurrentY - y
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - drop}

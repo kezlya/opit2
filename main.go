@@ -11,8 +11,6 @@ func main() {
 
 	//if next move burn 2rows vs 1row current move preoritize next move up to 4
 
-	// to dramaticly improve performance do a drop on empty rows when fixing the holes
-
 	// when testing strategy output range of all games
 
 	//find datatype in golang like dictionary (map) but keys only

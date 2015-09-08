@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"strings"
 )
 
@@ -605,7 +606,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 			delete(bag.Options, k)
 			continue
 		}
-		np := p.Drop(y)
+		np := p.DropTo(y)
 		np.FieldAfter = fieldAfter
 		np.setBurn()
 		np.Moves = strings.TrimPrefix(p.Moves, ",")
@@ -614,13 +615,25 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 	return validPieces
 }
 
-func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
+func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
 	fixes := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
-	bag.Options[piece.Key] = &piece
 	queue := make(map[int]bool)
-	queue[piece.Key] = true
 	nkey := 0
+
+	drop = drop + 1
+	if piece.CurrentY > drop {
+		countD := piece.CurrentY - drop
+		fp := piece.DropTo(drop)
+		for i := 0; i < countD; i++ {
+			fp.Moves += ",down"
+		}
+		bag.Options[fp.Key] = &fp
+		queue[fp.Key] = true
+	} else {
+		bag.Options[piece.Key] = &piece
+		queue[piece.Key] = true
+	}
 
 	for len(queue) > 0 {
 		tmp := make(map[int]bool)

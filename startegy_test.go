@@ -54,8 +54,8 @@ func Benchmark_fixholes(b *testing.B) {
 		testField := Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 		piece := Piece{Name: "T", Rotation: 0}
 		piece.InitSpace(Cell{X: 3, Y: 19})
-		hole := Cell{X: 7, Y: 12}
-		testField.FixHoles(piece, []Cell{hole})
+		hole := Cell{X: 5, Y: 0}
+		testField.FixHoles(piece, []Cell{hole}, testField.Picks().Max())
 	}
 }
 

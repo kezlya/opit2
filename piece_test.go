@@ -140,7 +140,7 @@ func Test_Drop(t *testing.T) {
 	ex_space["m2"] = Cell{X: 2, Y: 7}
 	ex_space["m3"] = Cell{X: 3, Y: 7}
 	expected := Piece{Space: ex_space, Name: "T", Rotation: 0, CurrentX: 1, CurrentY: 7}
-	result := arrange.Drop(7)
+	result := arrange.DropTo(7)
 	pieceAssert(t, expected, result)
 }
 

@@ -119,7 +119,7 @@ func (g *Game) calculateMoves() *Piece {
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
 	if len(hFixable) > 0 {
-		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable)
+		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable, g.MyPlayer.Picks.Max())
 		positions = append(positions, fixes...)
 	}
 
@@ -131,7 +131,7 @@ func (g *Game) calculateMoves() *Piece {
 		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp)
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
 		if len(nhFixable) > 0 {
-			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable)
+			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable, pp.Max())
 			nPositions = append(nPositions, nfixes...)
 		}
 
