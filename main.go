@@ -22,11 +22,11 @@ func main() {
 	// damage >3 discard
 
 	strategy := Strategy{
-		Burn:   1,
-		BHoles: 3,
-		FHoles: 1,
-		HighY:  1,
-		Step:   1,
+		Burn:   2,
+		BHoles: 5,
+		FHoles: 3,
+		HighY:  2,
+		Step:   2,
 	}
 	game := Game{
 		Strategy:     strategy,
