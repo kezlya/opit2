@@ -121,10 +121,10 @@ func (g *Game) calculateMoves() *Piece {
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
 	if len(hFixable) > 0 {
-		fixes, countNotFixed := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable, g.MyPlayer.Picks.Max())
+		fixes, _ := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable, g.MyPlayer.Picks.Max())
 		positions = append(positions, fixes...)
-		countBh = countBh + countNotFixed
-		countFh = countFh - countNotFixed
+		//countBh = countBh + countNotFixed
+		//countFh = countFh - countNotFixed
 	}
 
 	for i, p := range positions {
@@ -138,10 +138,10 @@ func (g *Game) calculateMoves() *Piece {
 		ncountBh := len(nhBlocked)
 		ncountFh := len(nhFixable)
 		if len(nhFixable) > 0 {
-			nfixes, ncountNotFixed := p.FieldAfter.FixHoles(g.NextPiece, nhFixable, pp.Max())
+			nfixes, _ := p.FieldAfter.FixHoles(g.NextPiece, nhFixable, pp.Max())
 			nPositions = append(nPositions, nfixes...)
-			ncountBh = ncountBh + ncountNotFixed
-			ncountFh = ncountFh - ncountNotFixed
+			//ncountBh = ncountBh + ncountNotFixed
+			//ncountFh = ncountFh - ncountNotFixed
 		}
 
 		positions[i].Score.BHoles = ncountBh - countBh
