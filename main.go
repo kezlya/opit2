@@ -9,6 +9,12 @@ import (
 
 func main() {
 
+	// fix step when fixing holes
+
+	// impliment t spin extra points
+
+	// fix toll bildings
+
 	//if next move burn 2rows vs 1row current move preoritize next move up to 4
 
 	//find datatype in golang like dictionary (map) but keys only
