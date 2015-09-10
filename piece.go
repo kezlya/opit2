@@ -10,6 +10,7 @@ type Piece struct {
 	FieldAfter Field
 	Moves      string
 	Score      Score
+	IsHole     bool
 }
 
 type Score struct {
@@ -798,4 +799,8 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.Burn*st.Burn +
 		p.Score.NScore +
 		p.Score.CHoles
+
+	if p.Name == "T" && p.IsHole && p.Rotation == 2 && (p.Score.Burn == 2 || p.Score.Burn == 1) {
+		p.Score.Total = p.Score.Total - 100
+	}
 }

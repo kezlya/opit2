@@ -610,6 +610,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 		np.FieldAfter = fieldAfter
 		np.setBurn()
 		np.Moves = strings.TrimPrefix(p.Moves, ",")
+		np.IsHole = false
 		validPieces = append(validPieces, np)
 	}
 	return validPieces
@@ -707,6 +708,7 @@ func (f Field) FixHoles(piece Piece, holes []Cell, drop int) ([]Piece, int) {
 				p.FieldAfter = f.AfterHole(p.Space)
 				p.setBurn()
 				p.Moves = strings.TrimPrefix(p.Moves, ",")
+				p.IsHole = true
 				fixes = append(fixes, *p)
 				fixedHoles[hole.X*100+hole.Y] = true
 				break

@@ -325,6 +325,9 @@ func save(fileName string, records [][]string) {
 }
 
 func statistic(a []int) (int, int, int) {
+	if len(a) < 4 {
+		return a[0], a[0], a[0]
+	}
 	sort.Ints(a)
 	var total int
 	for i := 1; i < len(a)-1; i++ {
