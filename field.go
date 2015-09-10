@@ -615,7 +615,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 	return validPieces
 }
 
-func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
+func (f Field) FixHoles(piece Piece, holes []Cell, drop int) ([]Piece, int) {
 	fixes := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	queue := make(map[int]bool)
@@ -665,6 +665,7 @@ func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
 	}
 	found := false
 	invalid := false
+	fixedHoles := make(map[int]bool)
 	maxY := f.Height()
 	for k, p := range bag.Options {
 		if p == nil {
@@ -707,11 +708,12 @@ func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
 				p.setBurn()
 				p.Moves = strings.TrimPrefix(p.Moves, ",")
 				fixes = append(fixes, *p)
+				fixedHoles[hole.X*100+hole.Y] = true
 				break
 			}
 		}
 	}
-	return fixes
+	return fixes, len(holes) - len(fixedHoles)
 }
 
 func (f Field) Search(dir string, key int, bag *Bag) int {

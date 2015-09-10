@@ -136,20 +136,20 @@ func Benchmark_strategy(banch *testing.B) {
 	fmt.Println("")
 	fmt.Println("Burn	BHoles	FHoles	HighY	Step	Score	minS	maxS	Round	minR	maxR")
 	for n := 0; n < banch.N; n++ {
-		for s := 2; s <= 3; s++ {
+		for b := 1; b <= 5; b++ {
 			for bh := 4; bh <= 7; bh++ {
 				for fh := 1; fh <= 4; fh++ {
-					for hy := 1; hy <= 4; hy++ {
-						for b := 1; b <= 5; b++ {
+					for hy := 2; hy <= 3; hy++ {
+						for s := 2; s <= 3; s++ {
 							st := Strategy{Burn: b, BHoles: bh, FHoles: fh, HighY: hy, Step: s}
 							go playGames(st, 22, false, false)
 						}
-						//fmt.Println("start sleep")
-						time.Sleep(60000000000)
-						//fmt.Println("end sleep")
 					}
+					//fmt.Println("start sleep")
 					time.Sleep(60000000000)
+					//fmt.Println("end sleep")
 				}
+				time.Sleep(60000000000)
 			}
 		}
 		//save("strategies", strategies)

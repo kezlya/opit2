@@ -118,9 +118,13 @@ func (g *Game) asignUpdates(who, action, value string) {
 func (g *Game) calculateMoves() *Piece {
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
+	countBh := len(hBlocked)
+	countFh := len(hFixable)
 	if len(hFixable) > 0 {
-		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable, g.MyPlayer.Picks.Max())
+		fixes, countNotFixed := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable, g.MyPlayer.Picks.Max())
 		positions = append(positions, fixes...)
+		countBh = countBh + countNotFixed
+		countFh = countFh - countNotFixed
 	}
 
 	for i, p := range positions {
@@ -129,14 +133,19 @@ func (g *Game) calculateMoves() *Piece {
 		}
 		pp := p.FieldAfter.Picks()
 		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp)
+
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
+		ncountBh := len(nhBlocked)
+		ncountFh := len(nhFixable)
 		if len(nhFixable) > 0 {
-			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable, pp.Max())
+			nfixes, ncountNotFixed := p.FieldAfter.FixHoles(g.NextPiece, nhFixable, pp.Max())
 			nPositions = append(nPositions, nfixes...)
+			ncountBh = ncountBh + ncountNotFixed
+			ncountFh = ncountFh - ncountNotFixed
 		}
 
-		positions[i].Score.BHoles = len(nhBlocked) - len(hBlocked)
-		positions[i].Score.FHoles = len(nhFixable) - len(hFixable)
+		positions[i].Score.BHoles = ncountBh - countBh
+		positions[i].Score.FHoles = ncountFh - countFh
 		positions[i].setHighY()
 		positions[i].setStep(p.FieldAfter)
 		positions[i].setCHoles(nhBlocked)
@@ -147,9 +156,8 @@ func (g *Game) calculateMoves() *Piece {
 			}
 			npp := np.FieldAfter.Picks()
 			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles(npp)
-
-			nPositions[j].Score.BHoles = len(nnhBlocked) - len(nhBlocked)
-			nPositions[j].Score.FHoles = len(nnhFixable) - len(nhFixable)
+			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
+			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
 			nPositions[j].setStep(np.FieldAfter)
 			nPositions[j].setCHoles(nnhBlocked)
