@@ -73,7 +73,7 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 
-func Benchmark_best_strategy(b *testing.B) {
+func Benchmark_beststrategy(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 7, FHoles: 3, HighY: 2}, 22, false, false)
 		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 7, FHoles: 4, HighY: 1}, 22, false, false)
