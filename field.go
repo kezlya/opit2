@@ -106,8 +106,8 @@ func (f Field) FindHoles(picks Picks) ([]Cell, []Cell) {
 		for j := 0; j < pick; j++ {
 			if !f[j][i] {
 				hole := Cell{X: i, Y: j}
-				if (i-2 > -1 && !f[j][i-1] && !f[j][i-2]) ||
-					(i+2 < f.Width() && !f[j][i+1] && !f[j][i+2]) {
+				if (i-2 > -1 && !f[j][i-1] && !f[j][i-2] && !f[j+1][i-1] && !f[j+1][i-2]) ||
+					(i+2 < f.Width() && !f[j][i+1] && !f[j][i+2] && !f[j+1][i+1] && !f[j+1][i+2]) {
 					fixable = append(fixable, hole)
 				} else {
 					blocked = append(blocked, hole)

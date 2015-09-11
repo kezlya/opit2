@@ -167,13 +167,13 @@ func Test_FindHoles(t *testing.T) {
 		Cell{X: 6, Y: 6},
 		Cell{X: 7, Y: 2},
 		Cell{X: 8, Y: 3},
+		Cell{X: 6, Y: 9},
+		Cell{X: 7, Y: 9},
+		Cell{X: 8, Y: 9},
 	}
 	expectedFixable := []Cell{
 		Cell{X: 2, Y: 13},
-		Cell{X: 8, Y: 9},
 		Cell{X: 3, Y: 11},
-		Cell{X: 6, Y: 9},
-		Cell{X: 7, Y: 9},
 	}
 	expectedHoles := append(expectedBlocked, expectedFixable...)
 
