@@ -702,7 +702,6 @@ func (p *Piece) setHighY() {
 }
 
 func (p *Piece) setStep(f Field) {
-	h := f.Height()
 	maxX, leftY, rightY := 0, 0, 0
 
 	for _, c := range p.Space {
@@ -729,14 +728,7 @@ func (p *Piece) setStep(f Field) {
 
 	if p.CurrentX > 0 {
 		x := p.CurrentX - 1
-		if f[leftY][x] { //up
-			for i := leftY + 1; i < h; i++ {
-				if !f[i][x] {
-					p.Score.Step += i - leftY - 1
-					break
-				}
-			}
-		} else { //down
+		if !f[leftY][x] {
 			for i := leftY - 1; i >= 0; i-- {
 				if f[i][x] {
 					p.Score.Step += leftY - i
@@ -748,14 +740,7 @@ func (p *Piece) setStep(f Field) {
 
 	if maxX < f.Width()-1 {
 		x := maxX + 1
-		if f[rightY][x] { //up
-			for i := rightY + 1; i < h; i++ {
-				if !f[i][x] {
-					p.Score.Step += i - rightY - 1
-					break
-				}
-			}
-		} else { //down
+		if !f[rightY][x] {
 			for i := rightY - 1; i >= 0; i-- {
 				if f[i][x] {
 					p.Score.Step += rightY - i

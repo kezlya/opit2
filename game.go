@@ -116,6 +116,17 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Piece {
+	st := g.Strategy
+	/*if g.MyPlayer.Picks.IsTowers() && g.CurrentPiece!= {
+		st = Strategy{
+			Burn:   g.Strategy.Burn,
+			BHoles: g.Strategy.BHoles,
+			FHoles: g.Strategy.FHoles,
+			HighY:  g.Strategy.HighY + 10,
+			Step:   g.Strategy.Step + 10,
+		}
+	}*/
+
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
 	countBh := len(hBlocked)
@@ -161,7 +172,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(np.FieldAfter)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(g.Strategy)
+			nPositions[j].setTotalScore(st)
 		}
 
 		if len(nPositions) > 0 {
@@ -170,7 +181,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000 //maybe romove current piece
 		}
-		positions[i].setTotalScore(g.Strategy)
+		positions[i].setTotalScore(st)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 

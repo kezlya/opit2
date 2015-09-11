@@ -147,7 +147,7 @@ func Test_01(t *testing.T) {
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
 	game.MyPlayer.Combo = 0
 	expectedField := Field{{true, true, true, true, true, true, true, true, false, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, false}, {false, true, false, true, true, true, true, true, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 10, Step: 2}
+	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 10, Step: 1}
 
 	pos := game.calculateMoves()
 
