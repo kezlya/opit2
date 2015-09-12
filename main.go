@@ -28,9 +28,9 @@ func main() {
 	// damage >3 discard
 
 	strategy := Strategy{
-		Burn:   4,
-		BHoles: 8,
-		FHoles: 4,
+		Burn:   5,
+		BHoles: 10,
+		FHoles: 6,
 		HighY:  2,
 		Step:   2,
 	}
