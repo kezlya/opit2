@@ -734,6 +734,9 @@ func (p *Piece) setStep(f Field) {
 					p.Score.Step += leftY - i
 					break
 				}
+				if i == 0 {
+					p.Score.Step += rightY - i
+				}
 			}
 		}
 	}
@@ -745,6 +748,9 @@ func (p *Piece) setStep(f Field) {
 				if f[i][x] {
 					p.Score.Step += rightY - i
 					break
+				}
+				if i == 0 {
+					p.Score.Step += rightY - i
 				}
 			}
 		}
@@ -784,6 +790,12 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.Burn*st.Burn +
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles
+
+	nK := p.Score.NScore / 10
+	if nK < 0 {
+		nK = 0 - nK
+	}
+	p.Score.Total = p.Score.Total - nK
 
 	if p.Name == "T" && p.IsHole && p.Rotation == 2 && p.Score.Burn == 2 {
 		p.Score.Total = p.Score.Total - 100

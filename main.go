@@ -9,8 +9,6 @@ import (
 
 func main() {
 
-	// fix step when fixing holes
-
 	// fix toll bildings
 
 	// step calculate only when creating a bigger tower not when making tower smaller
@@ -21,18 +19,15 @@ func main() {
 
 	//refactor init for Field
 
-	// if two same shapes make sure first one land in better place test for
-	// this to prove ut
-
 	// to make it faster try to discard hiscore positions and position with big damage
 	// damage >3 discard
 
 	strategy := Strategy{
-		Burn:   5,
+		Burn:   4,
 		BHoles: 10,
 		FHoles: 6,
 		HighY:  2,
-		Step:   2,
+		Step:   3,
 	}
 	game := Game{
 		Strategy:     strategy,
