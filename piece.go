@@ -783,7 +783,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.Step*st.Step -
 		p.Score.Burn*st.Burn +
 		p.Score.NScore +
-		p.Score.CHoles
+		p.Score.CHoles*st.CHoles
 
 	if p.Name == "T" && p.IsHole && p.Rotation == 2 && p.Score.Burn == 2 {
 		p.Score.Total = p.Score.Total - 100

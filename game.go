@@ -35,6 +35,7 @@ type Strategy struct {
 	Step   int
 	BHoles int
 	FHoles int
+	CHoles int
 	HighY  int
 }
 
