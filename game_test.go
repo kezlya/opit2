@@ -10,6 +10,7 @@ var gameSt = Strategy{
 	Step:   1,
 	BHoles: 9,
 	FHoles: 10,
+	CHoles: 1,
 	HighY:  1,
 }
 
