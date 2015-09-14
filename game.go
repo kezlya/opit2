@@ -173,7 +173,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(np.FieldAfter)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(st)
+			nPositions[j].setTotalScore(st, g.MyPlayer.Empty)
 		}
 
 		if len(nPositions) > 0 {
@@ -182,7 +182,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000 //maybe romove current piece
 		}
-		positions[i].setTotalScore(st)
+		positions[i].setTotalScore(st, g.MyPlayer.Empty)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 

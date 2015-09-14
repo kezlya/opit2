@@ -782,7 +782,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 	}
 }
 
-func (p *Piece) setTotalScore(st Strategy) {
+func (p *Piece) setTotalScore(st Strategy, empty int) {
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
@@ -799,5 +799,9 @@ func (p *Piece) setTotalScore(st Strategy) {
 
 	if p.Name == "T" && p.IsHole && p.Rotation == 2 && p.Score.Burn == 2 {
 		p.Score.Total = p.Score.Total - 100
+	}
+
+	if p.Name == "T" && p.IsHole && p.Rotation == 2 && p.Score.Burn == 1 && empty > 10 {
+		p.Score.Total = p.Score.Total - 50
 	}
 }
