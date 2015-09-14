@@ -26,6 +26,7 @@ func main() {
 		Burn:   4,
 		BHoles: 10,
 		FHoles: 6,
+		CHoles: 1,
 		HighY:  2,
 		Step:   3,
 	}
