@@ -118,6 +118,16 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
+	if g.MyPlayer.Combo >= 4 { // force keep burning
+		st = Strategy{
+			Burn:   g.Strategy.Burn + 10,
+			BHoles: g.Strategy.BHoles,
+			FHoles: g.Strategy.FHoles,
+			CHoles: g.Strategy.CHoles,
+			HighY:  g.Strategy.HighY,
+			Step:   g.Strategy.Step,
+		}
+	}
 	/*if g.MyPlayer.Picks.IsTowers() && g.CurrentPiece!= {
 		st = Strategy{
 			Burn:   g.Strategy.Burn,
