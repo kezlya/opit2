@@ -797,11 +797,19 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 	}
 	p.Score.Total = p.Score.Total - nK
 
-	if p.Name == "T" && p.IsHole && p.Rotation == 2 && p.Score.Burn == 2 {
+	if p.Name == "T" &&
+		p.IsHole && p.Rotation == 2 &&
+		p.Score.Burn == 2 &&
+		(p.FieldAfter[p.Space["m1"].Y-2][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-2][p.Space["m3"].X]) {
 		p.Score.Total = p.Score.Total - 100
 	}
 
-	if p.Name == "T" && p.IsHole && p.Rotation == 2 && p.Score.Burn == 1 && empty > 10 {
+	if p.Name == "T" &&
+		p.IsHole &&
+		p.Rotation == 2 &&
+		p.Score.Burn == 1 &&
+		(p.FieldAfter[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-1][p.Space["m3"].X]) &&
+		empty > 10 {
 		p.Score.Total = p.Score.Total - 50
 	}
 }
