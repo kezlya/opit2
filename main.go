@@ -28,7 +28,7 @@ func main() {
 		FHoles: 6,
 		CHoles: 1,
 		HighY:  2,
-		Step:   3,
+		Step:   2,
 	}
 	game := Game{
 		Strategy:     strategy,
