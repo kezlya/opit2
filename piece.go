@@ -782,7 +782,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 	}
 }
 
-func (p *Piece) setTotalScore(st Strategy, empty int) {
+func (p *Piece) setTotalScore(st Strategy, combo int) {
 	burn := 0
 	switch p.Score.Burn {
 	case 1:
@@ -801,6 +801,10 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 
 	if p.isDoubleTSpin() {
 		burn = 12
+	}
+
+	if p.Score.Burn > 0 && combo > 1 {
+		burn = burn + combo - 1
 	}
 
 	if p.isPerfectClear() {

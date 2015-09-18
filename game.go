@@ -118,16 +118,6 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
-	if g.MyPlayer.Combo >= 4 { // force keep burning
-		st = Strategy{
-			Burn:   g.Strategy.Burn + 10,
-			BHoles: g.Strategy.BHoles,
-			FHoles: g.Strategy.FHoles,
-			CHoles: g.Strategy.CHoles,
-			HighY:  g.Strategy.HighY,
-			Step:   g.Strategy.Step,
-		}
-	}
 	/*if g.MyPlayer.Picks.IsTowers() && g.CurrentPiece!= {
 		st = Strategy{
 			Burn:   g.Strategy.Burn,
@@ -173,6 +163,10 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
+			ncombo := 0
+			if p.Score.Burn > 0 {
+				ncombo = g.MyPlayer.Combo + 1
+			}
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()
 			}
@@ -183,7 +177,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(np.FieldAfter)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(st, g.MyPlayer.Empty)
+			nPositions[j].setTotalScore(st, ncombo)
 		}
 
 		if len(nPositions) > 0 {
@@ -192,7 +186,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000 //maybe romove current piece
 		}
-		positions[i].setTotalScore(st, g.MyPlayer.Empty)
+		positions[i].setTotalScore(st, g.MyPlayer.Combo)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 
