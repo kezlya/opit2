@@ -9,12 +9,6 @@ import (
 
 func main() {
 
-	// fix toll bildings
-
-	// step calculate only when creating a bigger tower not when making tower smaller
-
-	//if next move burn 2rows vs 1row current move preoritize next move up to 4
-
 	//find datatype in golang like dictionary (map) but keys only
 
 	//refactor init for Field
@@ -22,13 +16,15 @@ func main() {
 	// to make it faster try to discard hiscore positions and position with big damage
 	// damage >3 discard
 
+	//new statistic showed that this is the best strategy after new inprovements
+	//4	14	5	1	2	3	110	73	188	139	107	203
 	strategy := Strategy{
 		Burn:   4,
-		BHoles: 10,
-		FHoles: 6,
+		BHoles: 14,
+		FHoles: 5,
 		CHoles: 1,
 		HighY:  2,
-		Step:   2,
+		Step:   3,
 	}
 	game := Game{
 		Strategy:     strategy,
