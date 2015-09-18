@@ -479,3 +479,78 @@ func Test_TurnLeft_Z1(t *testing.T) {
 	result := arrange.Turnleft()
 	pieceAssert(t, expected, result)
 }
+
+func Test_isPerfectClear(t *testing.T) {
+	notclearField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, false, false, false, false, false, true, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	clearField := Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+
+	piece1 := Piece{FieldAfter: notclearField}
+	piece2 := Piece{FieldAfter: clearField}
+
+	if piece1.isPerfectClear() {
+		t.Fail()
+		fmt.Println("should not be perfect clear")
+	}
+
+	if !piece2.isPerfectClear() {
+		t.Fail()
+		fmt.Println("should be perfect clear")
+	}
+}
+
+func Test_isSingleTSpin(t *testing.T) {
+	badField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, true, false, false, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	goodField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, true, true, true, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+
+	piece1 := Piece{Name: "T", Score: Score{Burn: 1}, Space: T2, Rotation: 2, IsHole: true}
+	piece1.Space["m1"] = Cell{X: 5, Y: 7}
+	piece1.Space["m2"] = Cell{X: 6, Y: 7}
+	piece1.Space["b2"] = Cell{X: 6, Y: 6}
+	piece1.Space["m3"] = Cell{X: 7, Y: 7}
+	piece1.FieldAfter = badField.AfterHole(piece1.Space)
+	piece1.FieldAfter.Burn()
+
+	if piece1.isSingleTSpin() {
+		t.Fail()
+		PrintVisuals(badField, piece1.FieldAfter)
+		fmt.Println("should not be single T spin")
+	}
+
+	piece1.FieldAfter = goodField.AfterHole(piece1.Space)
+	piece1.FieldAfter.Burn()
+
+	if !piece1.isSingleTSpin() {
+		t.Fail()
+		PrintVisuals(goodField, piece1.FieldAfter)
+		fmt.Println("should be single T spin")
+	}
+}
+
+func Test_isDoubleTSpin(t *testing.T) {
+	badField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, false, false, false, true, true}, {false, false, true, true, true, false, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	goodField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, false, false, false, true, true}, {false, false, true, true, true, true, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+
+	piece1 := Piece{Name: "T", Score: Score{Burn: 2}, Space: T2, Rotation: 2, IsHole: true}
+	piece1.Space["m1"] = Cell{X: 5, Y: 7}
+	piece1.Space["m2"] = Cell{X: 6, Y: 7}
+	piece1.Space["b2"] = Cell{X: 6, Y: 6}
+	piece1.Space["m3"] = Cell{X: 7, Y: 7}
+	piece1.FieldAfter = badField.AfterHole(piece1.Space)
+	piece1.FieldAfter.Burn()
+	//piece1.FieldAfter.Burn()
+
+	if piece1.isDoubleTSpin() {
+		t.Fail()
+		PrintVisuals(badField, piece1.FieldAfter)
+		fmt.Println("should not be single T spin")
+	}
+
+	piece1.FieldAfter = goodField.AfterHole(piece1.Space)
+	piece1.FieldAfter.Burn()
+
+	if !piece1.isDoubleTSpin() {
+		t.Fail()
+		PrintVisuals(goodField, piece1.FieldAfter)
+		fmt.Println("should be single T spin")
+	}
+}

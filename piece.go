@@ -783,35 +783,99 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 }
 
 func (p *Piece) setTotalScore(st Strategy, empty int) {
+	burn := 0
+	switch p.Score.Burn {
+	case 1:
+		burn = 1
+	case 2:
+		burn = 3
+	case 3:
+		burn = 6
+	case 4:
+		burn = 12
+	}
+
+	if p.isSingleTSpin() {
+		burn = 6
+	}
+
+	if p.isDoubleTSpin() {
+		burn = 12
+	}
+
+	if p.isPerfectClear() {
+		burn = 24
+	}
+
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
-		p.Score.Step*st.Step -
-		p.Score.Burn*st.Burn +
+		p.Score.Step*st.Step +
 		p.Score.NScore +
-		p.Score.CHoles*st.CHoles
+		p.Score.CHoles*st.CHoles - burn*st.Burn
 
+	p.lowerNextScore()
+}
+
+func (p *Piece) isSingleTSpin() bool {
+	if p.Name != "T" {
+		return false
+	}
+	if !p.IsHole {
+		return false
+	}
+	if p.Rotation != 2 {
+		return false
+	}
+	if p.Score.Burn != 1 {
+		return false
+	}
+	if p.Space["m1"].Y-1 < 0 {
+		return false
+	}
+	if p.FieldAfter[p.Space["m1"].Y][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y][p.Space["m3"].X] {
+		return true
+	}
+	return false
+}
+
+func (p *Piece) isDoubleTSpin() bool {
+	if p.Name != "T" {
+		return false
+	}
+	if !p.IsHole {
+		return false
+	}
+	if p.Rotation != 2 {
+		return false
+	}
+	if p.Score.Burn != 2 {
+		return false
+	}
+	if p.Space["m1"].Y-2 < 0 {
+		return false
+	}
+	if p.FieldAfter[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-1][p.Space["m3"].X] {
+		return true
+	}
+	return false
+}
+
+func (p *Piece) isPerfectClear() bool {
+	for _, row := range p.FieldAfter {
+		for _, col := range row {
+			if col {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func (p *Piece) lowerNextScore() {
 	nK := p.Score.NScore / 10
 	if nK < 0 {
 		nK = 0 - nK
 	}
 	p.Score.Total = p.Score.Total - nK
-
-	if p.Name == "T" &&
-		p.IsHole && p.Rotation == 2 &&
-		p.Score.Burn == 2 &&
-		p.Space["m1"].Y-2 > 0 &&
-		(p.FieldAfter[p.Space["m1"].Y-2][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-2][p.Space["m3"].X]) {
-		p.Score.Total = p.Score.Total - 100
-	}
-
-	if p.Name == "T" &&
-		p.IsHole &&
-		p.Rotation == 2 &&
-		p.Score.Burn == 1 &&
-		p.Space["m1"].Y-1 > 0 &&
-		(p.FieldAfter[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-1][p.Space["m3"].X]) &&
-		empty > 10 {
-		p.Score.Total = p.Score.Total - 50
-	}
 }
