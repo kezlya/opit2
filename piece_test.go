@@ -537,7 +537,6 @@ func Test_isDoubleTSpin(t *testing.T) {
 	piece1.Space["m3"] = Cell{X: 7, Y: 7}
 	piece1.FieldAfter = badField.AfterHole(piece1.Space)
 	piece1.FieldAfter.Burn()
-	//piece1.FieldAfter.Burn()
 
 	if piece1.isDoubleTSpin() {
 		t.Fail()

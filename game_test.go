@@ -128,10 +128,12 @@ func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
 	game.MyPlayer.Combo = 0
 	expectedField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, false, false, false, false, false, true, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	expectedScore := Score{Burn: 2, BHoles: 0, FHoles: -1, CHoles: 4, HighY: 8, Step: 0}
+	expectedScore := Score{Burn: 2, BHoles: -1, FHoles: -1, CHoles: 0, HighY: 8, Step: 0}
 
 	pos := game.calculateMoves()
 	pos.FieldAfter.Burn()
+
+	//PrintVisuals(field, pos.FieldAfter)
 
 	checkResults(t, expectedField, pos.FieldAfter)
 	checkScores(t, expectedScore, pos.Score)
