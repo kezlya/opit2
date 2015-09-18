@@ -85,16 +85,20 @@ func (f Field) WillBurn() int {
 }
 
 func (f Field) Burn() {
-	for i, row := range f {
+	totalRows := f.Height()
+	for i := 0; i < totalRows; i++ {
 		check := true
-		for _, col := range row {
+		for _, col := range f[i] {
 			if !col {
 				check = false
+				break
 			}
 		}
-		if check && i < len(f) { //delete line
+		if check { //delete line
 			//fmt.Println(len(f), i)
 			f = append(f[:i], f[i+1:]...)
+			totalRows--
+			i--
 		}
 	}
 }
