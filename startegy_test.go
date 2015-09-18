@@ -421,14 +421,14 @@ func playGame(g *Game, visual bool) (int, int) {
 
 		if visual {
 			//fmt.Println("D", position.Damage, "S", position.Score)
-			fmt.Println(g.CurrentPiece.Name)
+			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
 			if position.Moves == "" {
 				fmt.Println("drop")
 			} else {
 				fmt.Println(position.Moves + ",drop")
 			}
 			PrintVisual(g.MyPlayer.Field)
-			//time.Sleep(1000000000)
+			time.Sleep(1000000000)
 		}
 
 		position = g.calculateMoves()
@@ -458,21 +458,14 @@ func assignPieces(g *Game) {
 }
 
 func applyPoints(g *Game, p *Piece) {
-	if p.Score.Burn > 0 {
-		g.MyPlayer.Combo++
-		g.MyPlayer.Points += g.MyPlayer.Combo - 1
-		switch p.Score.Burn {
-		case 1:
-			g.MyPlayer.Points += 1
-		case 2:
-			g.MyPlayer.Points += 3
-		case 3:
-			g.MyPlayer.Points += 6
-		case 4:
-			g.MyPlayer.Points += 12
+	if g.Round > 1 {
+		points := p.getPoints(g.MyPlayer.Combo)
+		if points > 0 {
+			g.MyPlayer.Combo++
+		} else {
+			g.MyPlayer.Combo = 0
 		}
-	} else {
-		g.MyPlayer.Combo = 0
+		g.MyPlayer.Points += points
 	}
 }
 
@@ -495,7 +488,7 @@ func addSolidLines(g *Game) {
 }
 
 func addGarbageLines(g *Game) {
-	r := g.Round % 6
+	r := g.Round % 5
 	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
 		row := make([]bool, size)
