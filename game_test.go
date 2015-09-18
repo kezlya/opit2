@@ -53,6 +53,7 @@ func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
 	game.NextPiece = Piece{Name: "T", Rotation: 0}
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
 	game.MyPlayer.Combo = 2
+
 	expectedField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, true, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	expectedField.Burn()
 	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 1, CHoles: 0, HighY: 5, Step: 4}
@@ -155,3 +156,5 @@ func Test_01(t *testing.T) {
 	checkResults(t, expectedField, pos.FieldAfter)
 	checkScores(t, expectedScore, pos.Score)
 }
+
+//http://theaigames.com/competitions/ai-block-battle/games/55fbdcdc35ec1d23317675e4 round 6
