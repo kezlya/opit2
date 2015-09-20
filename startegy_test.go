@@ -36,6 +36,15 @@ var g18 = [300]string{"L", "L", "T", "I", "Z", "S", "Z", "Z", "I", "O", "Z", "J"
 var g19 = [300]string{"Z", "L", "T", "I", "L", "I", "L", "L", "O", "Z", "Z", "S", "L", "O", "O", "O", "I", "T", "I", "T", "O", "J", "T", "I", "S", "Z", "T", "Z", "L", "O", "O", "S", "T", "L", "Z", "T", "Z", "T", "S", "J", "L", "Z", "I", "O", "Z", "Z", "L", "I", "O", "O", "O", "J", "L", "Z", "J", "I", "S", "L", "I", "O", "S", "I", "L", "I", "S", "I", "I", "O", "O", "J", "L", "L", "I", "S", "S", "I", "S", "S", "L", "L", "O", "Z", "O", "Z", "T", "I", "I", "Z", "Z", "S", "L", "Z", "S", "O", "Z", "J", "O", "I", "L", "T", "S", "O", "S", "S", "O", "S", "T", "T", "S", "J", "T", "O", "T", "T", "J", "J", "O", "Z", "S", "O", "J", "O", "O", "T", "I", "L", "J", "L", "O", "O", "J", "Z", "I", "I", "T", "J", "T", "S", "J", "T", "O", "S", "S", "S", "T", "J", "S", "L", "S", "T", "I", "O", "O", "J", "O", "J", "I", "T", "T", "S", "J", "L", "S", "L", "S", "O", "T", "Z", "Z", "J", "O", "O", "Z", "T", "J", "L", "O", "O", "O", "L", "Z", "S", "J", "S", "Z", "I", "L", "J", "T", "J", "T", "J", "J", "O", "I", "L", "Z", "J", "Z", "J", "Z", "J", "L", "L", "T", "O", "I", "Z", "L", "T", "S", "L", "T", "O", "O", "S", "J", "O", "Z", "J", "L", "I", "S", "L", "Z", "Z", "Z", "Z", "S", "L", "I", "T", "J", "S", "L", "S", "O", "L", "I", "O", "T", "I", "O", "T", "T", "S", "I", "I", "O", "T", "S", "J", "I", "T", "J", "J", "S", "L", "T", "L", "J", "O", "S", "T", "S", "I", "Z", "S", "Z", "L", "L", "L", "J", "O", "L", "S", "J", "Z", "T", "J", "I", "S", "S", "J", "Z", "L", "I", "O", "S", "O", "L", "J", "J", "T", "O", "I", "L", "J", "S", "S"}
 var g20 = [300]string{"L", "L", "T", "I", "L", "J", "S", "S", "S", "T", "O", "J", "Z", "Z", "J", "Z", "T", "J", "I", "Z", "L", "I", "O", "T", "L", "T", "S", "I", "J", "I", "I", "I", "T", "Z", "J", "J", "T", "O", "Z", "I", "J", "Z", "S", "O", "O", "T", "O", "J", "L", "Z", "L", "Z", "S", "L", "S", "T", "T", "S", "O", "J", "I", "Z", "Z", "L", "I", "L", "O", "T", "L", "T", "S", "O", "Z", "T", "I", "T", "O", "Z", "J", "S", "T", "J", "S", "S", "I", "L", "Z", "J", "O", "S", "J", "J", "L", "L", "J", "Z", "J", "T", "L", "Z", "Z", "O", "T", "S", "J", "S", "O", "T", "J", "J", "S", "O", "J", "L", "S", "T", "Z", "O", "T", "L", "Z", "J", "T", "Z", "J", "S", "T", "S", "S", "L", "O", "Z", "J", "S", "T", "I", "O", "T", "I", "Z", "I", "J", "T", "S", "O", "J", "L", "I", "T", "Z", "T", "S", "I", "S", "L", "L", "T", "I", "S", "Z", "S", "S", "I", "Z", "I", "T", "L", "L", "S", "Z", "O", "L", "T", "O", "T", "T", "T", "J", "J", "Z", "O", "J", "L", "S", "I", "I", "J", "S", "J", "S", "L", "O", "J", "J", "J", "Z", "Z", "T", "T", "L", "L", "T", "J", "Z", "O", "O", "T", "T", "O", "J", "J", "J", "S", "Z", "T", "Z", "Z", "Z", "J", "I", "Z", "Z", "Z", "Z", "Z", "L", "Z", "I", "L", "O", "S", "J", "S", "L", "T", "I", "Z", "S", "O", "I", "I", "O", "J", "I", "O", "J", "Z", "L", "O", "Z", "T", "J", "I", "S", "Z", "L", "I", "J", "T", "T", "S", "L", "Z", "T", "T", "T", "J", "S", "I", "Z", "S", "O", "J", "S", "S", "I", "J", "I", "Z", "L", "O", "T", "Z", "S", "I", "O", "Z", "J", "I", "T", "J", "O", "T", "J", "I", "L", "Z", "T", "O", "S"}
 
+var defaultStrategy = Strategy{
+	Burn:   4,
+	BHoles: 14,
+	FHoles: 5,
+	CHoles: 1,
+	HighY:  2,
+	Step:   3,
+}
+
 /*
 func Test_generate(t *testing.T) {
 	for j := 1; j <= 20; j++ {
@@ -102,255 +111,13 @@ func Benchmark_fixholes(b *testing.B) {
 
 func Benchmark_many(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		playGames(gameSt, 100, false, false)
+		playGame(&Game{Strategy: defaultStrategy}, g1, false)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		playGames(gameSt, 1, false, true)
-	}
-}
-
-func Benchmark_best(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		/*	go playGames(Strategy{Burn: 3, Step: 1, BHoles: 7, FHoles: 3, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 5, Step: 2, BHoles: 7, FHoles: 4, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 1, Step: 1, BHoles: 6, FHoles: 4, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 2, Step: 2, BHoles: 5, FHoles: 3, HighY: 2}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 4, Step: 1, BHoles: 6, FHoles: 4, HighY: 3}, 22, false, false)
-			go playGames(Strategy{Burn: 1, Step: 1, BHoles: 4, FHoles: 3, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 2, Step: 1, BHoles: 4, FHoles: 3, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 1, Step: 2, BHoles: 6, FHoles: 4, HighY: 1}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 3, Step: 2, BHoles: 6, FHoles: 3, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 4, HighY: 3}, 22, false, false)
-			go playGames(Strategy{Burn: 5, Step: 1, BHoles: 4, FHoles: 2, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 1, Step: 1, BHoles: 6, FHoles: 4, HighY: 3}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 2, Step: 1, BHoles: 6, FHoles: 4, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 2, Step: 2, BHoles: 7, FHoles: 2, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 4, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 3, HighY: 4}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 1, Step: 1, BHoles: 5, FHoles: 2, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 1, Step: 2, BHoles: 7, FHoles: 4, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 2, Step: 2, BHoles: 7, FHoles: 4, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 5, Step: 2, BHoles: 4, FHoles: 4, HighY: 1}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 4, Step: 1, BHoles: 6, FHoles: 3, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 3, Step: 1, BHoles: 7, FHoles: 2, HighY: 4}, 22, false, false)
-			go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 2, HighY: 4}, 22, false, false)
-			go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 4, HighY: 2}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 5, Step: 2, BHoles: 7, FHoles: 3, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 2, Step: 2, BHoles: 5, FHoles: 2, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 2, Step: 1, BHoles: 5, FHoles: 4, HighY: 2}, 22, false, false)
-			go playGames(Strategy{Burn: 4, Step: 1, BHoles: 5, FHoles: 2, HighY: 1}, 22, false, false)
-			time.Sleep(50000000000)
-			go playGames(Strategy{Burn: 1, Step: 2, BHoles: 7, FHoles: 4, HighY: 3}, 22, false, false)
-			go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 3, HighY: 1}, 22, false, false)
-			go playGames(Strategy{Burn: 4, Step: 1, BHoles: 7, FHoles: 2, HighY: 3}, 22, false, false)
-			time.Sleep(50000000000)
-		*/
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 7, FHoles: 6, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 8, FHoles: 6, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 6, FHoles: 6, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 6, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 10, FHoles: 6, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 7, FHoles: 5, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 6, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 8, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 10, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 7, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 8, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 8, FHoles: 1, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 10, FHoles: 4, CHoles: 1, HighY: 4}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 10, FHoles: 5, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 6, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 10, FHoles: 1, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 5, FHoles: 4, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 9, FHoles: 2, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 9, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 1, BHoles: 10, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 6, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 6, FHoles: 4, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 10, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 9, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 9, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 9, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 5, FHoles: 5, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 1, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 10, FHoles: 5, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 6, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 9, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 6, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 10, FHoles: 1, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 5, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 8, FHoles: 5, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 10, FHoles: 1, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 6, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 5, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 6, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 6, FHoles: 5, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 6, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 8, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 8, FHoles: 1, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 10, FHoles: 5, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 7, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 6, FHoles: 2, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 8, FHoles: 5, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 4, BHoles: 9, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 6, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 9, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 4, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 6, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 9, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 7, FHoles: 1, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 1, BHoles: 7, FHoles: 5, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 8, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 9, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 9, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 6, FHoles: 1, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 7, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 4, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 6, FHoles: 2, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 7, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 8, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 8, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 9, FHoles: 3, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 4, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 6, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 3, BHoles: 7, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 9, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 9, FHoles: 3, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 10, FHoles: 4, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 1, BHoles: 8, FHoles: 2, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 8, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 1, BHoles: 6, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 1, BHoles: 7, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 8, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 9, FHoles: 1, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 4, BHoles: 10, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 4, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 7, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 1, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 4}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 1, BHoles: 10, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 10, FHoles: 6, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 5, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 8, FHoles: 2, CHoles: 1, HighY: 3}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 2, Step: 1, BHoles: 9, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 2, Step: 2, BHoles: 10, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 1, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 4, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 7, FHoles: 5, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 3, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 3, Step: 2, BHoles: 10, FHoles: 4, CHoles: 1, HighY: 3}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 5, FHoles: 6, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 6, FHoles: 2, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 6, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 6, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 1, BHoles: 7, FHoles: 1, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 8, FHoles: 5, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 3, BHoles: 8, FHoles: 6, CHoles: 1, HighY: 2}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 1, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 4, Step: 2, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 8, FHoles: 2, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 3, BHoles: 8, FHoles: 3, CHoles: 1, HighY: 1}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 8, FHoles: 5, CHoles: 1, HighY: 4}, 22, false, false)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 9, FHoles: 5, CHoles: 1, HighY: 2}, 22, false, false)
-		time.Sleep(50000000000)
-		go playGames(Strategy{Burn: 5, Step: 2, BHoles: 10, FHoles: 3, CHoles: 1, HighY: 4}, 22, false, false)
-
-		//time.Sleep(600000000000)
-
-		//fmt.Println("end sleep")
+		playGame(&Game{Strategy: defaultStrategy}, g1, true)
 	}
 }
 
@@ -364,8 +131,8 @@ func Benchmark_strategy(banch *testing.B) {
 					//for ch := 1; ch <= 1; ch++ {
 					for hy := 1; hy <= 3; hy++ {
 						for s := 1; s <= 3; s++ {
-							st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: 1, HighY: hy, Step: s}
-							go playGames(st, 22, false, false)
+							//							st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: 1, HighY: hy, Step: s}
+							//go playGames(st, 22, false, false)
 						}
 					}
 					//fmt.Println("start sleep")
@@ -381,62 +148,7 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-func playGames(st Strategy, amount int, saveReport bool, visual bool) {
-	records := [][]string{}
-	scores := []int{}
-	rounds := []int{}
-	for i := 0; i < amount; i++ {
-
-		g := Game{Strategy: st}
-		roud, score := playGame(&g, visual)
-		records = append(records, []string{strconv.Itoa(roud), strconv.Itoa(score)})
-		scores = append(scores, score)
-		rounds = append(rounds, roud)
-		//fmt.Println(roud, score)
-	}
-	avrScore, minScore, maxScore := statistic(scores)
-	avrRound, minRound, maxRound := statistic(rounds)
-
-	/*
-		if saveReport {
-			filename := "d" + strconv.Itoa(st.DamageK) + "_s" + strconv.Itoa(st.StepK) + "_y" + strconv.Itoa(st.PostyK) + "_b" + strconv.Itoa(st.BurnK) +
-				"_s" + strconv.FormatFloat(avrPoint, 'f', 3, 64) +
-				"_r" + strconv.FormatFloat(avrRound, 'f', 3, 64) +
-				"_" + strconv.FormatInt(int64(time.Now().UTC().UnixNano()), 10)
-			save(filename, records)
-		}*/
-	//fmt.Printf("%+v\n", st)
-	//fmt.Println("points:", avrPoint)
-	//fmt.Println("rounds", avrRound)
-	fmt.Println()
-	fmt.Print(st.Burn)
-	fmt.Print("	")
-	fmt.Print(st.BHoles)
-	fmt.Print("	")
-	fmt.Print(st.FHoles)
-	fmt.Print("	")
-	fmt.Print(st.CHoles)
-	fmt.Print("	")
-	fmt.Print(st.HighY)
-	fmt.Print("	")
-	fmt.Print(st.Step)
-	fmt.Print("	")
-	fmt.Print(avrScore)
-	fmt.Print("	")
-	fmt.Print(minScore)
-	fmt.Print("	")
-	fmt.Print(maxScore)
-	fmt.Print("	")
-	fmt.Print(avrRound)
-	fmt.Print("	")
-	fmt.Print(minRound)
-	fmt.Print("	")
-	fmt.Print(maxRound)
-
-	//return avrPoint, avrRound
-}
-
-func playGame(g *Game, visual bool) (int, int) {
+func playGame(g *Game, input [300]string, visual bool) (int, int) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
@@ -445,9 +157,10 @@ func playGame(g *Game, visual bool) (int, int) {
 	g.MyPlayer.Picks = initialField.Picks()
 	position := &Piece{}
 	position.FieldAfter = initialField
-	assignPieces(g)
+	assignPieces(g, input[0])
 	keepGoing := true
 
+	i := 0
 	for keepGoing {
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
@@ -455,7 +168,7 @@ func playGame(g *Game, visual bool) (int, int) {
 		addSolidLines(g)
 		addGarbageLines(g)
 		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
-		assignPieces(g)
+		assignPieces(g, input[i])
 		g.Round++
 
 		if visual {
@@ -479,16 +192,15 @@ func playGame(g *Game, visual bool) (int, int) {
 			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][6] {
 			keepGoing = false
 		}
+		i++
 	}
 
 	return g.Round, g.MyPlayer.Points
 }
 
-func assignPieces(g *Game) {
-	rand.Seed(time.Now().UTC().UnixNano())
+func assignPieces(g *Game, piece string) {
 	g.CurrentPiece = g.NextPiece
 	x := 3
-	piece := pieces[rand.Intn(len(pieces))]
 	if piece == "O" {
 		x = 4
 	}
