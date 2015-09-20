@@ -110,8 +110,10 @@ func Benchmark_fixholes(b *testing.B) {
 }
 
 func Benchmark_many(b *testing.B) {
+	fmt.Println()
 	for n := 0; n < b.N; n++ {
-		playGame(&Game{Strategy: defaultStrategy}, g1, false)
+		round, score := playGame(&Game{Strategy: defaultStrategy}, g1, false)
+		fmt.Println("Score:", score, "Round", round)
 	}
 }
 
