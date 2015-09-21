@@ -13,6 +13,7 @@ func main() {
 	// planing to impliment micro coofecent into Piece.Totalscore() that adding score to determent if pice in on a side of the field then 0 if more to center then 5 points
 	// idea was to push piecec closer to the sides of the field but it will break covered hols or maybe not
 	//
+	//stil don't know how to stibolise game to see same resalt...
 
 	//find datatype in golang like dictionary (map) but keys only
 
