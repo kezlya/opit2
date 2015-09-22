@@ -14,6 +14,7 @@ func main() {
 	// idea was to push piecec closer to the sides of the field but it will break covered hols or maybe not
 	//
 	//stil don't know how to stibolise game to see same resalt...
+	// still no idea how to stabolise the game to see same result after multiple runs
 
 	//find datatype in golang like dictionary (map) but keys only
 
