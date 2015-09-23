@@ -149,14 +149,14 @@ func Benchmark_fixholes(b *testing.B) {
 func Benchmark_many(b *testing.B) {
 	fmt.Println()
 	for n := 0; n < b.N; n++ {
-		round, score := playGame(&Game{Strategy: defaultStrategy}, g1, false)
+		round, score := playGame(&Game{Strategy: defaultStrategy}, g1, gr1, false)
 		fmt.Println("Score:", score, "Round", round)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		playGame(&Game{Strategy: defaultStrategy}, g1, true)
+		playGame(&Game{Strategy: defaultStrategy}, g1, gr1, true)
 	}
 }
 
@@ -187,7 +187,7 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-func playGame(g *Game, input [300]string, visual bool) (int, int) {
+func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, int) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
@@ -205,7 +205,7 @@ func playGame(g *Game, input [300]string, visual bool) (int, int) {
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
 		addSolidLines(g)
-		addGarbageLines(g)
+		addGarbageLines(g, garbage)
 		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
 		assignPieces(g, input[i])
 		g.Round++
@@ -277,7 +277,7 @@ func addSolidLines(g *Game) {
 	}
 }
 
-func addGarbageLines(g *Game) {
+func addGarbageLines(g *Game, garbage [300]int) {
 	r := g.Round % 5
 	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
@@ -285,8 +285,7 @@ func addGarbageLines(g *Game) {
 		for i := range row {
 			row[i] = true
 		}
-		hole := rand.Intn(size)
-		row[hole] = false
+		row[garbage[g.Round/5]] = false
 		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
 	}
 }
