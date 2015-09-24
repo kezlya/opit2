@@ -92,7 +92,7 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
 	game.MyPlayer.Combo = 3
 	expectedField := Field{{true, false, true, true, true, true, true, true, true, false}, {true, false, false, false, true, false, false, true, true, false}, {true, false, false, false, true, false, false, true, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 2, Step: 3}
+	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 2, Step: 4}
 
 	pos := game.calculateMoves()
 
@@ -110,7 +110,7 @@ func Test_55ededec1c687b0946a7e6c6_08(t *testing.T) {
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
 	game.MyPlayer.Combo = 0
 	expectedField := Field{{true, true, true, true, true, true, true, false, false, false}, {true, true, true, true, false, true, true, false, false, false}, {true, true, true, true, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 2, Step: 3}
+	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 2, Step: 4}
 
 	pos := game.calculateMoves()
 
@@ -133,8 +133,6 @@ func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
 	pos := game.calculateMoves()
 	pos.FieldAfter.Burn()
 
-	//PrintVisuals(field, pos.FieldAfter)
-
 	checkResults(t, expectedField, pos.FieldAfter)
 	checkScores(t, expectedScore, pos.Score)
 }
@@ -152,6 +150,9 @@ func Test_01(t *testing.T) {
 	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 10, Step: 1}
 
 	pos := game.calculateMoves()
+
+	//	fmt.Println(pos.CurrentX, pos.Rotation)
+	//	PrintVisual(field)
 
 	checkResults(t, expectedField, pos.FieldAfter)
 	checkScores(t, expectedScore, pos.Score)

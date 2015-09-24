@@ -1,5 +1,7 @@
 package main
 
+//import "fmt"
+
 type Piece struct {
 	Key        int
 	Name       string
@@ -701,13 +703,12 @@ func (p *Piece) setHighY() {
 	}
 }
 
-func (p *Piece) setStep(f Field) {
+func (p *Piece) setStep(pp Picks) {
 	maxX, leftY, rightY := 0, 0, 0
 
 	for _, c := range p.Space {
 		if c.X > maxX {
 			maxX = c.X
-
 		}
 	}
 	for _, c := range p.Space {
@@ -719,40 +720,19 @@ func (p *Piece) setStep(f Field) {
 		}
 	}
 
-	if leftY > p.Score.Burn {
-		leftY = leftY - p.Score.Burn
-	}
-	if rightY > p.Score.Burn {
-		rightY = rightY - p.Score.Burn
-	}
-
 	if p.CurrentX > 0 {
 		x := p.CurrentX - 1
-		if !f[leftY][x] {
-			for i := leftY - 1; i >= 0; i-- {
-				if f[i][x] {
-					p.Score.Step += leftY - i
-					break
-				}
-				if i == 0 {
-					p.Score.Step += rightY - i
-				}
-			}
+		pick := pp[x] - 1
+		if leftY > pick {
+			p.Score.Step += leftY - pick
 		}
 	}
 
-	if maxX < f.Width()-1 {
+	if maxX < p.FieldAfter.Width()-1 {
 		x := maxX + 1
-		if !f[rightY][x] {
-			for i := rightY - 1; i >= 0; i-- {
-				if f[i][x] {
-					p.Score.Step += rightY - i
-					break
-				}
-				if i == 0 {
-					p.Score.Step += rightY - i
-				}
-			}
+		pick := pp[x] - 1
+		if rightY > pick {
+			p.Score.Step += rightY - pick
 		}
 	}
 }

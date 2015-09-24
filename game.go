@@ -159,7 +159,7 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].Score.BHoles = ncountBh - countBh
 		positions[i].Score.FHoles = ncountFh - countFh
 		positions[i].setHighY()
-		positions[i].setStep(p.FieldAfter)
+		positions[i].setStep(g.MyPlayer.Picks)
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
@@ -175,7 +175,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
 			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
-			nPositions[j].setStep(np.FieldAfter)
+			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
 			nPositions[j].setTotalScore(st, ncombo)
 		}
@@ -184,7 +184,7 @@ func (g *Game) calculateMoves() *Piece {
 			OrderedBy(SCORE).Sort(nPositions)
 			positions[i].Score.NScore = nPositions[0].Score.Total
 		} else {
-			positions[i].Score.NScore = 10000000000000 //maybe romove current piece
+			positions[i].Score.NScore = 10000000000000 //maybe remove current piece
 		}
 		positions[i].setTotalScore(st, g.MyPlayer.Combo)
 		//fmt.Printf("%+v\n", p.sco)
@@ -192,6 +192,12 @@ func (g *Game) calculateMoves() *Piece {
 
 	if len(positions) > 0 {
 		OrderedBy(SCORE).Sort(positions)
+
+		/*for _, tempP := range positions {
+			fmt.Printf("%+v\n", tempP.Score)
+			fmt.Println(tempP.CurrentX, tempP.Name, tempP.Rotation)
+		}*/
+
 		return &positions[0]
 	}
 	return nil

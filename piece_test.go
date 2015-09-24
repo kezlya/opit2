@@ -553,3 +553,25 @@ func Test_isDoubleTSpin(t *testing.T) {
 		fmt.Println("should be single T spin")
 	}
 }
+
+func Test_setStep(t *testing.T) {
+	empty := Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	fieldAfter := Field{{false, false, true, true, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	L1["b3"] = Cell{X: 3, Y: 0}
+	L1["t2"] = Cell{X: 2, Y: 2}
+	L1["m2"] = Cell{X: 2, Y: 1}
+	L1["b2"] = Cell{X: 2, Y: 0}
+	arrangePiece := Piece{Name: "L", CurrentX: 2, CurrentY: 0, Rotation: 1, Space: L1}
+	arrangePiece.FieldAfter = fieldAfter
+	arrangePiece.setStep(empty.Picks())
+
+	if arrangePiece.Score.Step != 4 {
+		t.Fail()
+		fmt.Println("score should be: 4 but actual ", arrangePiece.Score.Step)
+	}
+
+}
+
+func Test_setHighY(t *testing.T) {
+
+}
