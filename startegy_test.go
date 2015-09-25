@@ -218,11 +218,7 @@ func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, i
 		if visual {
 			//fmt.Println("D", position.Damage, "S", position.Score)
 			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
-			if position.Moves == "" {
-				fmt.Println("drop")
-			} else {
-				fmt.Println(position.Moves + ",drop")
-			}
+			fmt.Printf("%+v %+v\n", position.Score, position.Name)
 			PrintVisual(g.MyPlayer.Field)
 			time.Sleep(1000000000)
 		}
