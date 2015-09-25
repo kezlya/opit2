@@ -53,12 +53,19 @@ var SCORE = func(c1, c2 *Piece) bool {
 		c2x = 5 - c2.CurrentX
 	}
 
-	/*if c1x == c2x {
-		fmt.Println("+++++++++++++++")
-		fmt.Printf("%+v %+v %+v %+v %+v\n", c1.Score, c1.CurrentX, c1.Rotation, c1.CurrentY, c1.Name)
-		fmt.Printf("%+v %+v %+v %+v %+v\n", c2.Score, c2.CurrentX, c2.Rotation, c2.CurrentY, c2.Name)
-	}*/
-	return c1x < c2x
+	if c1x != c2x {
+		return c1x < c2x
+	}
+
+	if c1.CurrentX != c2.CurrentX {
+		return c1.CurrentX < c2.CurrentX
+	}
+
+	if c1.Rotation != c2.Rotation {
+		return c1.Rotation < c2.Rotation
+	}
+
+	return true
 }
 
 type lessFunc func(p1, p2 *Piece) bool
