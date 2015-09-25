@@ -1,12 +1,65 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 )
 
 //http://golang.org/pkg/sort/#example_Interface
 
-var SCORE = func(c1, c2 *Piece) bool { return c1.Score.Total < c2.Score.Total }
+var SCORE = func(c1, c2 *Piece) bool {
+	if c1.Score.Total != c2.Score.Total {
+		return c1.Score.Total < c2.Score.Total
+	}
+
+	if c1.Score.Burn != c2.Score.Burn {
+		return c1.Score.Burn > c2.Score.Burn
+	}
+
+	if c1.Score.HighY != c2.Score.HighY {
+		return c1.Score.HighY < c2.Score.HighY
+	}
+
+	if c1.Score.BHoles != c2.Score.BHoles {
+		return c1.Score.BHoles < c2.Score.BHoles
+	}
+
+	if c1.Score.FHoles != c2.Score.FHoles {
+		return c1.Score.FHoles < c2.Score.FHoles
+	}
+
+	if c1.Score.Step != c2.Score.Step {
+		return c1.Score.Step < c2.Score.Step
+	}
+
+	if c1.Score.CHoles != c2.Score.CHoles {
+		return c1.Score.CHoles < c2.Score.CHoles
+	}
+
+	if c1.CurrentY != c2.CurrentY {
+		return c1.CurrentY < c2.CurrentY
+	}
+
+	c1x, c2x := 0, 0
+	if c1.CurrentX > 5 {
+		c1x = c1.CurrentX - 5
+	} else {
+		c1x = 5 - c1.CurrentX
+	}
+
+	if c2.CurrentX > 5 {
+		c2x = c2.CurrentX - 5
+	} else {
+		c2x = 5 - c2.CurrentX
+	}
+
+	/*if c1x == c2x {
+		fmt.Println("+++++++++++++++")
+		fmt.Printf("%+v %+v %+v %+v %+v\n", c1.Score, c1.CurrentX, c1.Rotation, c1.CurrentY, c1.Name)
+		fmt.Printf("%+v %+v %+v %+v %+v\n", c2.Score, c2.CurrentX, c2.Rotation, c2.CurrentY, c2.Name)
+	}*/
+	return c1x < c2x
+}
 
 type lessFunc func(p1, p2 *Piece) bool
 

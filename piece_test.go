@@ -571,7 +571,3 @@ func Test_setStep(t *testing.T) {
 	}
 
 }
-
-func Test_setHighY(t *testing.T) {
-
-}
