@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"strconv"
 	"strings"
 )
@@ -162,7 +162,6 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setStep(g.MyPlayer.Picks)
 		positions[i].setCHoles(nhBlocked)
 
-		fmt.Println(len(nPositions))
 		for j, np := range nPositions {
 			ncombo := 0
 			if p.Score.Burn > 0 {

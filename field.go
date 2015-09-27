@@ -684,13 +684,13 @@ func (f Field) FixHoles(piece Piece, holes []Cell, drop int) ([]Piece, int) {
 		}
 		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
 			(p.Rotation == 3 || p.Rotation == 2) {
-			_, ok := bag.Options[k-20000]
-			if ok {
+			el, ok := bag.Options[k-20000]
+			if ok && el != nil {
 				delete(bag.Options, k)
 				continue
 			}
-			_, ok = bag.Options[k-20000-1]
-			if ok {
+			el, ok = bag.Options[k-20000-1]
+			if ok && el != nil {
 				delete(bag.Options, k)
 				continue
 			}
