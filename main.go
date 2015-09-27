@@ -26,11 +26,11 @@ func main() {
 	//new statistic showed that this is the best strategy after new inprovements
 	//4	14	5	1	2	3	110	73	188	139	107	203
 	strategy := Strategy{
-		Burn:   3,
-		BHoles: 14,
-		FHoles: 6,
+		Burn:   2,
+		BHoles: 10,
+		FHoles: 4,
 		CHoles: 1,
-		HighY:  2,
+		HighY:  3,
 		Step:   3,
 	}
 	game := Game{

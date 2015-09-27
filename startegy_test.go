@@ -168,7 +168,7 @@ func Benchmark_one(b *testing.B) {
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 5; b++ {
-			for bh := 5; bh <= 10; bh++ {
+			for bh := 10; bh <= 15; bh++ {
 				for fh := 1; fh <= 5; fh++ {
 					for ch := 1; ch <= 1; ch++ {
 						for hy := 1; hy <= 3; hy++ {
@@ -180,11 +180,11 @@ func Benchmark_strategy(banch *testing.B) {
 							time.Sleep(50000000000)
 							//fmt.Println("end sleep")
 						}
-						time.Sleep(30000000000)
+						time.Sleep(10000000000)
 					}
-					time.Sleep(30000000000)
+					time.Sleep(10000000000)
 				}
-				time.Sleep(30000000000)
+				time.Sleep(10000000000)
 			}
 		}
 	}
