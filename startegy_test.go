@@ -64,7 +64,7 @@ var gr20 = [300]int{5, 6, 2, 9, 8, 2, 2, 8, 6, 2, 0, 2, 2, 9, 4, 5, 7, 0, 7, 5, 
 // Score: 121 Round 162
 var defaultStrategy = Strategy{
 	Burn:   4,
-	BHoles: 14,
+	BHoles: 12,
 	FHoles: 5,
 	CHoles: 1,
 	HighY:  2,
@@ -154,14 +154,14 @@ func Benchmark_fixholes(b *testing.B) {
 func Benchmark_many(b *testing.B) {
 	fmt.Println()
 	for n := 0; n < b.N; n++ {
-		round, score := playGame(&Game{Strategy: defaultStrategy}, g1, gr1, false)
+		round, score := playGame(&Game{Strategy: defaultStrategy}, g4, gr4, false)
 		fmt.Println("Score:", score, "Round", round)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		playGame(&Game{Strategy: defaultStrategy}, g1, gr1, true)
+		playGame(&Game{Strategy: defaultStrategy}, g4, gr4, true)
 	}
 }
 
@@ -172,17 +172,17 @@ func Benchmark_strategy(banch *testing.B) {
 		for b := 1; b <= 5; b++ {
 			for bh := 5; bh <= 10; bh++ {
 				for fh := 1; fh <= 5; fh++ {
-					//for ch := 1; ch <= 1; ch++ {
-					for hy := 1; hy <= 3; hy++ {
-						for s := 1; s <= 3; s++ {
-							//							st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: 1, HighY: hy, Step: s}
-							//go playGames(st, 22, false, false)
+					for ch := 1; ch <= 1; ch++ {
+						for hy := 1; hy <= 3; hy++ {
+							for s := 1; s <= 3; s++ {
+								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: 1, HighY: hy, Step: s}
+								playGames(st)
+							}
 						}
+						//fmt.Println("start sleep")
+						time.Sleep(95000000000)
+						//fmt.Println("end sleep")
 					}
-					//fmt.Println("start sleep")
-					time.Sleep(95000000000)
-					//fmt.Println("end sleep")
-					//}
 					//time.Sleep(30000000000)
 				}
 				time.Sleep(30000000000)
@@ -238,6 +238,47 @@ func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, i
 	return g.Round, g.MyPlayer.Points
 }
 
+func playGames(st Strategy) {
+	fmt.Println(".")
+	r1, s1 := playGame(&Game{Strategy: st}, g1, gr1, false)
+	r2, s2 := playGame(&Game{Strategy: st}, g2, gr2, false)
+	r3, s3 := playGame(&Game{Strategy: st}, g3, gr3, false)
+	r4, s4 := playGame(&Game{Strategy: st}, g4, gr4, false)
+		fmt.Println(".")
+
+	r5, s5 := playGame(&Game{Strategy: st}, g5, gr5, false)
+	r6, s6 := playGame(&Game{Strategy: st}, g6, gr6, false)
+	r7, s7 := playGame(&Game{Strategy: st}, g7, gr7, false)
+		fmt.Println(".")
+
+	r8, s8 := playGame(&Game{Strategy: st}, g8, gr8, false)
+	r9, s9 := playGame(&Game{Strategy: st}, g9, gr9, false)
+	r10, s10 := playGame(&Game{Strategy: st}, g10, gr10, false)
+	r11, s11 := playGame(&Game{Strategy: st}, g11, gr11, false)
+	r12, s12 := playGame(&Game{Strategy: st}, g12, gr12, false)
+	r13, s13 := playGame(&Game{Strategy: st}, g13, gr13, false)
+		fmt.Println(".")
+
+	r14, s14 := playGame(&Game{Strategy: st}, g14, gr14, false)
+	r15, s15 := playGame(&Game{Strategy: st}, g15, gr15, false)
+	r16, s16 := playGame(&Game{Strategy: st}, g16, gr16, false)
+	r17, s17 := playGame(&Game{Strategy: st}, g17, gr17, false)
+	r18, s18 := playGame(&Game{Strategy: st}, g18, gr18, false)
+		fmt.Println(".")
+
+	r19, s19 := playGame(&Game{Strategy: st}, g19, gr19, false)
+	r20, s20 := playGame(&Game{Strategy: st}, g20, gr20, false)
+		fmt.Println(".")
+
+	scores := []string{strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
+	rounds := []string{strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
+	fmt.Println(scores)
+	fmt.Println(rounds)
+	
+	save("score", scores)
+	save("round", rounds)
+}
+
 func assignPieces(g *Game, piece string) {
 	g.CurrentPiece = g.NextPiece
 	x := 3
@@ -291,20 +332,18 @@ func addGarbageLines(g *Game, garbage [300]int) {
 	}
 }
 
-func save(fileName string, records [][]string) {
-	csvfile, err := os.Create("output/" + fileName + ".csv")
+func save(fileName string, record []string) {
+	csvfile, err := os.Open("output/" + fileName + ".csv")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 	defer csvfile.Close()
 	writer := csv.NewWriter(csvfile)
-	for _, record := range records {
-		err := writer.Write(record)
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
+	err = writer.Write(record)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
 	}
 	writer.Flush()
 }
