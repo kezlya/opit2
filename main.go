@@ -27,11 +27,11 @@ func main() {
 	//4	14	5	1	2	3	110	73	188	139	107	203
 	strategy := Strategy{
 		Burn:   2,
-		BHoles: 8,
+		BHoles: 7,
 		FHoles: 4,
 		CHoles: 1,
 		HighY:  1,
-		Step:   1,
+		Step:   2,
 	}
 	game := Game{
 		Strategy:     strategy,
