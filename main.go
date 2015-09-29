@@ -28,10 +28,10 @@ func main() {
 	strategy := Strategy{
 		Burn:   2,
 		BHoles: 10,
-		FHoles: 4,
+		FHoles: 5,
 		CHoles: 1,
-		HighY:  3,
-		Step:   3,
+		HighY:  1,
+		Step:   1,
 	}
 	game := Game{
 		Strategy:     strategy,
