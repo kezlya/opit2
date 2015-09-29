@@ -174,7 +174,7 @@ func Benchmark_strategy(banch *testing.B) {
 						for hy := 1; hy <= 3; hy++ {
 							for s := 1; s <= 3; s++ {
 								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: 1, HighY: hy, Step: s}
-								go playGames(st)
+								go playGames(st, "")
 							}
 							//fmt.Println("start sleep")
 							time.Sleep(50000000000)
@@ -187,6 +187,21 @@ func Benchmark_strategy(banch *testing.B) {
 				time.Sleep(10000000000)
 			}
 		}
+	}
+}
+
+func Benchmark_investigate(banch *testing.B) {
+	for n := 0; n < banch.N; n++ {
+		strategy := Strategy{
+			Burn:   2,
+			BHoles: 7,
+			FHoles: 4,
+			CHoles: 1,
+			HighY:  1,
+			Step:   2,
+		}
+		go playGames(strategy, "investigation_")
+		time.Sleep(50000000000)
 	}
 }
 
@@ -210,6 +225,7 @@ func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, i
 		addSolidLines(g)
 		addGarbageLines(g, garbage)
 		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
+		g.MyPlayer.Empty = g.MyPlayer.Field.Height() - g.MyPlayer.Picks.Max()
 		assignPieces(g, input[i])
 		g.Round++
 
@@ -236,7 +252,7 @@ func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, i
 	return g.Round, g.MyPlayer.Points
 }
 
-func playGames(st Strategy) {
+func playGames(st Strategy, filename string) {
 	r1, s1 := playGame(&Game{Strategy: st}, g1, gr1, false)
 	r2, s2 := playGame(&Game{Strategy: st}, g2, gr2, false)
 	r3, s3 := playGame(&Game{Strategy: st}, g3, gr3, false)
@@ -257,17 +273,17 @@ func playGames(st Strategy) {
 	r18, s18 := playGame(&Game{Strategy: st}, g18, gr18, false)
 	r19, s19 := playGame(&Game{Strategy: st}, g19, gr19, false)
 	r20, s20 := playGame(&Game{Strategy: st}, g20, gr20, false)
-	
-	strategyName := "b"+strconv.Itoa(st.Burn)+" bh"+strconv.Itoa(st.BHoles)+" fh"+strconv.Itoa(st.FHoles)+" ch"+strconv.Itoa(st.CHoles)+" y"+strconv.Itoa(st.HighY)+" s"+strconv.Itoa(st.Step)
 
-	scores := []string{strategyName,strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
-	rounds := []string{strategyName,strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
-	
+	strategyName := "b" + strconv.Itoa(st.Burn) + " bh" + strconv.Itoa(st.BHoles) + " fh" + strconv.Itoa(st.FHoles) + " ch" + strconv.Itoa(st.CHoles) + " y" + strconv.Itoa(st.HighY) + " s" + strconv.Itoa(st.Step)
+
+	scores := []string{strategyName, strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
+	rounds := []string{strategyName, strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
+
 	fmt.Println(scores)
 	fmt.Println(rounds)
-	
-	save("score", scores)
-	save("round", rounds)
+
+	save(filename+"score", scores)
+	save(filename+"round", rounds)
 }
 
 func assignPieces(g *Game, piece string) {
@@ -324,7 +340,7 @@ func addGarbageLines(g *Game, garbage [300]int) {
 }
 
 func save(fileName string, record []string) {
-	csvfile, err := os.OpenFile("output/" + fileName + ".csv",os.O_APPEND|os.O_WRONLY,0777)
+	csvfile, err := os.OpenFile("output/"+fileName+".csv", os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

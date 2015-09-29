@@ -178,3 +178,5 @@ func Test_01(t *testing.T) {
 }
 
 //http://theaigames.com/competitions/ai-block-battle/games/55fbdcdc35ec1d23317675e4 round 6
+
+//http://theaigames.com/competitions/ai-block-battle/games/560b136035ec1d3214e473b8
