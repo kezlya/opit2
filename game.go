@@ -118,7 +118,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
-	if g.MyPlayer.Empty < 7 {
+	/*if g.MyPlayer.Empty < 7 {
 		st = Strategy{
 			Burn:   g.Strategy.Burn + 1,
 			BHoles: g.Strategy.BHoles - 1,
@@ -127,7 +127,7 @@ func (g *Game) calculateMoves() *Piece {
 			HighY:  g.Strategy.HighY + 1,
 			Step:   g.Strategy.Step + 1,
 		}
-	}
+	}*/
 
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
