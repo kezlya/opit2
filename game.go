@@ -120,9 +120,9 @@ func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
 	if g.MyPlayer.Empty < 7 && g.MyPlayer.Empty >= 4 {
 		st = Strategy{
-			Burn:   g.Strategy.Burn,
-			BHoles: g.Strategy.BHoles,
-			FHoles: g.Strategy.FHoles,
+			Burn:   g.Strategy.Burn + 1,
+			BHoles: g.Strategy.BHoles - 1,
+			FHoles: g.Strategy.FHoles - 1,
 			CHoles: g.Strategy.CHoles,
 			HighY:  g.Strategy.HighY + 1,
 			Step:   g.Strategy.Step + 1,
@@ -130,9 +130,9 @@ func (g *Game) calculateMoves() *Piece {
 	}
 	if g.MyPlayer.Empty < 4 {
 		st = Strategy{
-			Burn:   g.Strategy.Burn,
-			BHoles: g.Strategy.BHoles,
-			FHoles: g.Strategy.FHoles,
+			Burn:   g.Strategy.Burn + 2,
+			BHoles: g.Strategy.BHoles - 2,
+			FHoles: g.Strategy.FHoles - 2,
 			CHoles: g.Strategy.CHoles,
 			HighY:  g.Strategy.HighY + 2,
 			Step:   g.Strategy.Step + 2,
