@@ -63,12 +63,12 @@ var gr20 = [300]int{5, 6, 2, 9, 8, 2, 2, 8, 6, 2, 0, 2, 2, 9, 4, 5, 7, 0, 7, 5, 
 // Score: 139 Round 181
 // Score: 121 Round 162
 var defaultStrategy = Strategy{
-	Burn:   4,
-	BHoles: 12,
-	FHoles: 5,
+	Burn:   2,
+	BHoles: 7,
+	FHoles: 4,
 	CHoles: 1,
-	HighY:  2,
-	Step:   3,
+	HighY:  1,
+	Step:   2,
 }
 
 /*

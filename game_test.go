@@ -156,6 +156,25 @@ func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
 	checkScores(t, expectedScore, pos.Score)
 }
 
+func Test_560b136035ec1d3214e473b8_74(t *testing.T) {
+	game := Game{Strategy: gameSt}
+	field := Field{{true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, false, true, true, true, true, true, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
+	game.CurrentPiece = Piece{Name: "I", Rotation: 0}
+	game.CurrentPiece.InitSpace(Cell{3, field.Height()})
+	game.NextPiece = Piece{Name: "L", Rotation: 0}
+	game.NextPiece.InitSpace(Cell{3, field.Height()})
+	game.MyPlayer.Combo = 0
+	game.MyPlayer.Empty = 1
+	expectedField := Field{{true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, false, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	expectedScore := Score{Burn: 2, BHoles: -1, FHoles: 0, CHoles: 3, HighY: 17, Step: 3}
+
+	pos := game.calculateMoves()
+
+	checkResults(t, expectedField, pos.FieldAfter)
+	checkScores(t, expectedScore, pos.Score)
+}
+
 func Test_01(t *testing.T) {
 	game := Game{Strategy: gameSt}
 	field := Field{{true, true, true, true, true, true, true, true, false, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, false, true, true}, {false, true, true, true, true, true, true, false, true, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
@@ -178,5 +197,3 @@ func Test_01(t *testing.T) {
 }
 
 //http://theaigames.com/competitions/ai-block-battle/games/55fbdcdc35ec1d23317675e4 round 6
-
-//http://theaigames.com/competitions/ai-block-battle/games/560b136035ec1d3214e473b8
