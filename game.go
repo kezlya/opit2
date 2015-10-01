@@ -128,8 +128,20 @@ func (g *Game) calculateMoves() *Piece {
 			Step:   g.Strategy.Step + 1,
 		}
 	}*/
+	trim := 0
+	if g.MyPlayer.Empty > 16 {
+		trim = 1
+		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 3 {
+			trim = 0
+		}
+		if g.CurrentPiece.Name == "L" && g.NextPiece.Name != "I" &&
+			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-3]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]) > 0 &&
+			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
+			trim = 0
+		}
+	}
 
-	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks)
+	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
@@ -145,7 +157,7 @@ func (g *Game) calculateMoves() *Piece {
 			p.FieldAfter.Burn()
 		}
 		pp := p.FieldAfter.Picks()
-		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp)
+		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp, trim)
 
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
 		ncountBh := len(nhBlocked)

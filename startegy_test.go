@@ -67,7 +67,7 @@ var defaultStrategy = Strategy{
 	BHoles: 7,
 	FHoles: 4,
 	CHoles: 1,
-	HighY:  1,
+	HighY:  2,
 	Step:   2,
 }
 
@@ -192,6 +192,7 @@ func Benchmark_strategy(banch *testing.B) {
 
 func Benchmark_investigate(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
+		fmt.Println()
 		strategy := Strategy{
 			Burn:   2,
 			BHoles: 7,
@@ -201,7 +202,7 @@ func Benchmark_investigate(banch *testing.B) {
 			Step:   2,
 		}
 		go playGames(strategy, "investigation_")
-		time.Sleep(50000000000)
+		time.Sleep(30000000000)
 	}
 }
 
@@ -279,8 +280,8 @@ func playGames(st Strategy, filename string) {
 	scores := []string{strategyName, strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
 	rounds := []string{strategyName, strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
 
-	fmt.Println(scores)
-	fmt.Println(rounds)
+	fmt.Println("scores:", scores)
+	fmt.Println("rounds:", rounds)
 
 	save(filename+"score", scores)
 	save(filename+"round", rounds)
@@ -320,7 +321,7 @@ func isRoof(g *Game) bool {
 
 func addSolidLines(g *Game) {
 	r := g.Round % 20
-	if r == 0 {
+	if r == 0 && g.Round != 0 {
 		g.MyPlayer.Field = g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1]
 		g.Height = g.Height - 1
 	}

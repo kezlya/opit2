@@ -542,7 +542,7 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
+func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
 	validPieces := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
@@ -550,23 +550,28 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 	queue[piece.Key] = true
 	nkey := 0
 
+	currentFiled := f
+	if trim > 0 {
+		currentFiled = f.Trim(trim)
+	}
+
 	for len(queue) > 0 {
 		tmp := make(map[int]bool)
 		for k, _ := range queue {
-			nkey = f.Search("left", k, bag)
+			nkey = currentFiled.Search("left", k, bag)
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
-			nkey = f.Search("right", k, bag)
+			nkey = currentFiled.Search("right", k, bag)
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
-				nkey = f.Search("turnleft", k, bag)
+				nkey = currentFiled.Search("turnleft", k, bag)
 				if nkey > 0 {
 					tmp[nkey] = false
 				}
-				nkey = f.Search("turnright", k, bag)
+				nkey = currentFiled.Search("turnright", k, bag)
 				if nkey > 0 {
 					tmp[nkey] = false
 				}
@@ -617,6 +622,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks) []Piece {
 		np.IsHole = false
 		validPieces = append(validPieces, np)
 	}
+
 	return validPieces
 }
 
