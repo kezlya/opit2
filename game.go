@@ -129,12 +129,12 @@ func (g *Game) calculateMoves() *Piece {
 		}
 	}*/
 	trim := 0
-	if g.MyPlayer.Empty > 16 {
+	if g.MyPlayer.Empty > 9 {
 		trim = 1
 		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 3 {
 			trim = 0
 		}
-		if g.CurrentPiece.Name == "L" && g.NextPiece.Name != "I" &&
+		if g.CurrentPiece.Name == "L" &&
 			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-3]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]) > 0 &&
 			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
 			trim = 0
