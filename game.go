@@ -118,18 +118,20 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
-	/*if g.MyPlayer.Empty < 7 {
+	if g.MyPlayer.Empty > 10 {
 		st = Strategy{
-			Burn:   g.Strategy.Burn + 1,
-			BHoles: g.Strategy.BHoles - 1,
-			FHoles: g.Strategy.FHoles - 1,
-			CHoles: g.Strategy.CHoles,
-			HighY:  g.Strategy.HighY + 1,
-			Step:   g.Strategy.Step + 1,
+			Burn:   g.Strategy.Burn,
+			BHoles: g.Strategy.BHoles + 5,
+			FHoles: g.Strategy.FHoles,
+			CHoles: g.Strategy.CHoles - 1,
+			HighY:  g.Strategy.HighY,
+			Step:   g.Strategy.Step,
 		}
-	}*/
+	}
+
 	trim := 0
-	if g.MyPlayer.Empty > 9 {
+	//trim 1 doesn't work
+	/*if g.MyPlayer.Empty > 8 {
 		trim = 1
 		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 3 {
 			trim = 0
@@ -139,7 +141,7 @@ func (g *Game) calculateMoves() *Piece {
 			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
 			trim = 0
 		}
-	}
+	}*/
 
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
