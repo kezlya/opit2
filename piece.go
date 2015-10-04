@@ -740,10 +740,10 @@ func (p *Piece) setStep(pp Picks) {
 func (p *Piece) setCHoles(hBlocked []Cell) {
 	var effective []Cell
 	lowEffectiveY := 0
-	if len(hBlocked) > 5 {
+	if len(hBlocked) > 4 {
 		CellOrderedBy(MAXY).Sort(hBlocked)
-		effective = hBlocked[:5]
-		lowEffectiveY = effective[4].Y
+		effective = hBlocked[:4]
+		lowEffectiveY = effective[3].Y
 	} else {
 		effective = hBlocked
 	}
