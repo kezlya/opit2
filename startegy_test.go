@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/agonopol/gosplat"
 	"math/rand"
 	"os"
 	"sort"
@@ -211,6 +212,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string,
 }
 
 func playGames(st Strategy, filename string) {
+
 	buff := 20
 	ch_round := make(chan int, buff)
 	ch_score := make(chan int, buff)
@@ -245,10 +247,18 @@ func playGames(st Strategy, filename string) {
 
 	//save(filename+"score", scores)
 	//save(filename+"round", rounds)
+	scores := make([]int, 20)
+	rounds := make([]int, 20)
 	for k := 0; k < buff; k++ {
-		fmt.Println(<-ch_score)
-		fmt.Println(<-ch_round)
+		scores[k] = <-ch_score
+		rounds[k] = <-ch_round
 	}
+	sort.Ints(scores)
+	sort.Ints(rounds)
+
+	fmt.Println(scores)
+	fmt.Println(rounds)
+	Linechart(&scores, &rounds)
 }
 
 func assignPieces(g *Game, piece string) {
@@ -331,4 +341,44 @@ func statistic(a []int) (int, int, int) {
 	}
 	avr := total/len(a) - 2
 	return avr, a[1], a[len(a)-2]
+}
+
+func Linechart(scores *[]int, rounds *[]int) {
+	//Create a frame to put charts in
+	f := gosplat.NewFrame("Linechart Example Frame")
+
+	//Create a chart
+	v := gosplat.NewChart()
+	vv := gosplat.NewChart()
+
+	for i, s := range *scores {
+		v.Append(map[string]interface{}{"game": i, "score": s})
+	}
+
+	for i, r := range *rounds {
+		vv.Append(map[string]interface{}{"game": i, "round": r})
+	}
+
+	//Add the chart to the Frame
+	f.Append("Score", v.Linechart(map[string]interface{}{
+		"series": map[string]interface{}{
+			"0": map[string]interface{}{
+				"color": "red"}}}))
+	f.Append("Round", vv.Linechart(map[string]interface{}{
+		"series": map[string]interface{}{
+			"0": map[string]interface{}{
+				"color": "red"}}}))
+
+	//Preview generates a tmp html file and opens it with the default browser
+	err := f.Preview()
+	if err != nil {
+		panic(err)
+	}
+
+	//Html returns bytes.Buffer of the html
+	//buffer, err := f.Html()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//println(buffer.String())
 }
