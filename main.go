@@ -7,6 +7,15 @@ import (
 	"strings"
 )
 
+var strategy = Strategy{
+	Burn:   2,
+	BHoles: 7,
+	FHoles: 4,
+	CHoles: 1,
+	HighY:  1,
+	Step:   2,
+}
+
 func main() {
 
 	//trim 1 tested doesn't really work
@@ -20,19 +29,8 @@ func main() {
 
 	//new statistic showed that this is the best strategy after new inprovements
 	//4	14	5	1	2	3	110	73	188	139	107	203
-	strategy := Strategy{
-		Burn:   2,
-		BHoles: 7,
-		FHoles: 4,
-		CHoles: 1,
-		HighY:  1,
-		Step:   2,
-	}
-	game := Game{
-		Strategy:     strategy,
-		CurrentPiece: Piece{},
-		NextPiece:    Piece{}}
 
+	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
 		input, _ := consolereader.ReadString('\n')

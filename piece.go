@@ -794,7 +794,7 @@ func (p *Piece) setTotalScore(st Strategy, combo int) {
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles - points*st.Burn
 
-	p.lowerNextScore()
+	//p.lowerNextScore()
 }
 
 func (p *Piece) getPoints(combo int) int {
@@ -888,5 +888,5 @@ func (p *Piece) lowerNextScore() {
 	if nK < 0 {
 		nK = 0 - nK
 	}
-	p.Score.Total = p.Score.Total - nK
+	p.Score.Total = p.Score.Total - (nK * 2)
 }

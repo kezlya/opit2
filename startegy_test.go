@@ -13,20 +13,6 @@ import (
 	"time"
 )
 
-// game one Score: 105 Round 145
-// Score: 108 Round 146
-// Score: 115 Round 158
-// Score: 139 Round 181
-// Score: 121 Round 162
-var defaultStrategy = Strategy{
-	Burn:   2,
-	BHoles: 7,
-	FHoles: 4,
-	CHoles: 1,
-	HighY:  2,
-	Step:   2,
-}
-
 /*
 func Test_generateGames(t *testing.T) {
 	for j := 1; j <= 20; j++ {
@@ -64,7 +50,7 @@ func Test_generateGarbageRows(t *testing.T) {
 
 func Benchmark_moves(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		game := Game{Strategy: gameSt}
+		game := Game{Strategy: strategy}
 		game.asignSettings("timebank", "10000")
 		game.asignSettings("time_per_move", "500")
 		game.asignSettings("player_names", "player1,player2")
@@ -112,14 +98,14 @@ func Benchmark_fixholes(b *testing.B) {
 func Benchmark_many(b *testing.B) {
 	fmt.Println()
 	for n := 0; n < b.N; n++ {
-		round, score := playGame(&Game{Strategy: defaultStrategy}, g4, gr4, false)
+		round, score := playGame(&Game{Strategy: strategy}, g4, gr4, false)
 		fmt.Println("Score:", score, "Round", round)
 	}
 }
 
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		playGame(&Game{Strategy: defaultStrategy}, g4, gr4, true)
+		playGame(&Game{Strategy: strategy}, g4, gr4, true)
 	}
 }
 */
@@ -150,8 +136,8 @@ func Benchmark_strategy(banch *testing.B) {
 }
 */
 func Benchmark_investigate(banch *testing.B) {
-	oldScores := []int{38, 48, 58, 63, 69, 69, 71, 79, 81, 81, 82, 90, 94, 102, 108, 110, 128, 169, 180, 180}
-	oldRounds := []int{76, 81, 93, 101, 101, 107, 111, 111, 113, 116, 119, 121, 126, 143, 150, 161, 176, 201, 213, 225}
+	oldScores := []int{58, 63, 68, 69, 72, 73, 74, 76, 78, 78, 85, 85, 90, 95, 99, 115, 130, 169, 174, 200}
+	oldRounds := []int{100, 101, 101, 107, 108, 109, 111, 112, 121, 121, 122, 124, 128, 129, 140, 156, 166, 201, 214, 221}
 	for n := 0; n < banch.N; n++ {
 		fmt.Println()
 		st := Strategy{

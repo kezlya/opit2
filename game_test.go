@@ -5,15 +5,6 @@ import (
 	"testing"
 )
 
-var gameSt = Strategy{
-	Burn:   4,
-	Step:   1,
-	BHoles: 9,
-	FHoles: 10,
-	CHoles: 1,
-	HighY:  1,
-}
-
 func checkScores(t *testing.T, e, a Score) {
 	if e.BHoles != a.BHoles ||
 		e.Burn != a.Burn ||
@@ -28,7 +19,7 @@ func checkScores(t *testing.T, e, a Score) {
 }
 
 func Test_calculateMoves(t *testing.T) {
-	game := Game{Strategy: defaultStrategy}
+	game := Game{Strategy: strategy}
 	field := Field{{false, false, false, false, true, true, true, true, true, true}, {false, false, false, false, false, false, true, true, true, true}, {false, false, false, false, false, false, false, false, true, true}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "I", Rotation: 0}
@@ -45,7 +36,7 @@ func Test_calculateMoves(t *testing.T) {
 }
 
 func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, false, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {false, true, true, false, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, false}, {false, true, true, false, false, true, true, true, false, false}, {false, true, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "T", Rotation: 0}
@@ -62,7 +53,7 @@ func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 }
 
 func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "Z", Rotation: 0}
@@ -82,7 +73,7 @@ func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
 }
 
 func Test_55dc7ff01c687b0946a742f3_67(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, false, false, true, true, true}, {false, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "T", Rotation: 0}
@@ -100,7 +91,7 @@ func Test_55dc7ff01c687b0946a742f3_67(t *testing.T) {
 }
 
 func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, false, true, true, true, true, true, true, false, false}, {true, false, false, false, true, false, false, false, false, false}, {true, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "S", Rotation: 0}
@@ -119,7 +110,7 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 }
 
 func Test_55ededec1c687b0946a7e6c6_08(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, true, true, true, false, false, false, false}, {true, true, true, true, false, false, false, false, false, false}, {true, true, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "S", Rotation: 0}
@@ -138,7 +129,7 @@ func Test_55ededec1c687b0946a7e6c6_08(t *testing.T) {
 }
 
 func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, false, false, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, false, false, false, false, false, true, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "T", Rotation: 0}
@@ -157,7 +148,7 @@ func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
 }
 
 func Test_560b136035ec1d3214e473b8_74(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, false, true, true, true, true, true, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "I", Rotation: 0}
@@ -176,7 +167,7 @@ func Test_560b136035ec1d3214e473b8_74(t *testing.T) {
 }
 
 func Test_01(t *testing.T) {
-	game := Game{Strategy: gameSt}
+	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, true, true, true, true, true, false, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, false, true, true}, {false, true, true, true, true, true, true, false, true, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
 	game.CurrentPiece = Piece{Name: "L", Rotation: 0}
