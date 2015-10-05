@@ -136,8 +136,8 @@ func Benchmark_strategy(banch *testing.B) {
 }
 */
 func Benchmark_investigate(banch *testing.B) {
-	oldScores := []int{51, 53, 63, 64, 67, 69, 70, 73, 84, 88, 91, 91, 100, 122, 124, 130, 139, 148, 161, 178}
-	oldRounds := []int{92, 96, 100, 101, 106, 107, 113, 118, 122, 126, 131, 131, 136, 146, 155, 161, 171, 196, 212, 221}
+	oldScores := []int{30, 32, 35, 36, 40, 41, 44, 44, 44, 45, 45, 46, 48, 51, 53, 53, 53, 55, 56, 57, 57, 61, 61, 62, 63, 64, 64, 65, 65, 65, 66, 66, 68, 69, 70, 70, 71, 72, 72, 74, 75, 77, 77, 78, 78, 81, 81, 83, 83, 83, 83, 86, 86, 86, 87, 91, 92, 92, 92, 92, 93, 94, 94, 96, 97, 97, 100, 101, 101, 101, 103, 111, 114, 115, 116, 116, 120, 120, 120, 121, 123, 124, 125, 127, 131, 134, 135, 142, 142, 144, 145, 147, 149, 152, 155, 161, 162, 168, 172, 199}
+	oldRounds := []int{61, 66, 66, 71, 75, 76, 76, 76, 77, 79, 80, 81, 81, 81, 82, 83, 85, 90, 94, 96, 99, 99, 101, 101, 101, 101, 101, 101, 102, 102, 102, 103, 103, 104, 105, 106, 107, 108, 109, 110, 110, 111, 111, 112, 113, 115, 116, 121, 121, 121, 121, 121, 121, 121, 124, 126, 126, 126, 126, 127, 128, 129, 130, 130, 131, 131, 137, 138, 138, 139, 141, 141, 143, 146, 149, 152, 156, 156, 161, 161, 161, 163, 165, 165, 169, 170, 171, 171, 175, 176, 184, 185, 190, 191, 196, 196, 206, 211, 211, 221}
 	for n := 0; n < banch.N; n++ {
 		fmt.Println()
 		strategyName := "b" + strconv.Itoa(strategy.Burn) +
@@ -201,7 +201,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string,
 }
 
 func playGames(st Strategy) (*[]int, *[]int) {
-	buff := 20
+	buff := 100
 	ch_round := make(chan int, buff)
 	ch_score := make(chan int, buff)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr1, false)
@@ -225,8 +225,92 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr19, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr20, false)
 
-	scores := make([]int, 20)
-	rounds := make([]int, 20)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr2, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr3, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr4, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr5, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr6, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr7, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr8, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr9, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr10, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr11, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr12, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr13, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr14, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr15, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr16, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr17, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr18, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr19, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr20, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr1, false)
+
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr3, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr4, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr5, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr6, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr7, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr8, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr9, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr10, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr11, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr12, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr13, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr14, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr15, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr16, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr17, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr18, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr19, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr20, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr1, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr2, false)
+
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr4, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr5, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr6, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr7, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr8, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr9, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr10, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr11, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr12, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr13, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr14, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr15, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr16, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr17, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr18, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr19, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr20, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr1, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr2, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr3, false)
+
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr5, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr6, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr7, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr8, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr9, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr10, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr11, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr12, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr13, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr14, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr15, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr16, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr17, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr18, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr19, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr20, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr1, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr2, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr3, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr4, false)
+
+	scores := make([]int, buff)
+	rounds := make([]int, buff)
 	for k := 0; k < buff; k++ {
 		scores[k] = <-ch_score
 		rounds[k] = <-ch_round
