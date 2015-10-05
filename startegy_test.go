@@ -107,6 +107,7 @@ func Benchmark_fixholes(b *testing.B) {
 	}
 }
 
+/*
 func Benchmark_many(b *testing.B) {
 	fmt.Println()
 	for n := 0; n < b.N; n++ {
@@ -120,7 +121,7 @@ func Benchmark_one(b *testing.B) {
 		playGame(&Game{Strategy: defaultStrategy}, g4, gr4, true)
 	}
 }
-
+*/
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 5; b++ {
@@ -157,12 +158,12 @@ func Benchmark_investigate(banch *testing.B) {
 			HighY:  1,
 			Step:   2,
 		}
-		go playGames(strategy, "investigation_")
-		time.Sleep(45000000000)
+		playGames(strategy, "investigation_")
+		fmt.Println("done")
 	}
 }
 
-func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, int) {
+func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string, garbage *[300]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
@@ -205,42 +206,49 @@ func playGame(g *Game, input [300]string, garbage [300]int, visual bool) (int, i
 		}
 		i++
 	}
-
-	return g.Round, g.MyPlayer.Points
+	ch_round <- g.Round
+	ch_score <- g.MyPlayer.Points
 }
 
 func playGames(st Strategy, filename string) {
-	r1, s1 := playGame(&Game{Strategy: st}, g1, gr1, false)
-	r2, s2 := playGame(&Game{Strategy: st}, g2, gr2, false)
-	r3, s3 := playGame(&Game{Strategy: st}, g3, gr3, false)
-	r4, s4 := playGame(&Game{Strategy: st}, g4, gr4, false)
-	r5, s5 := playGame(&Game{Strategy: st}, g5, gr5, false)
-	r6, s6 := playGame(&Game{Strategy: st}, g6, gr6, false)
-	r7, s7 := playGame(&Game{Strategy: st}, g7, gr7, false)
-	r8, s8 := playGame(&Game{Strategy: st}, g8, gr8, false)
-	r9, s9 := playGame(&Game{Strategy: st}, g9, gr9, false)
-	r10, s10 := playGame(&Game{Strategy: st}, g10, gr10, false)
-	r11, s11 := playGame(&Game{Strategy: st}, g11, gr11, false)
-	r12, s12 := playGame(&Game{Strategy: st}, g12, gr12, false)
-	r13, s13 := playGame(&Game{Strategy: st}, g13, gr13, false)
-	r14, s14 := playGame(&Game{Strategy: st}, g14, gr14, false)
-	r15, s15 := playGame(&Game{Strategy: st}, g15, gr15, false)
-	r16, s16 := playGame(&Game{Strategy: st}, g16, gr16, false)
-	r17, s17 := playGame(&Game{Strategy: st}, g17, gr17, false)
-	r18, s18 := playGame(&Game{Strategy: st}, g18, gr18, false)
-	r19, s19 := playGame(&Game{Strategy: st}, g19, gr19, false)
-	r20, s20 := playGame(&Game{Strategy: st}, g20, gr20, false)
+	buff := 20
+	ch_round := make(chan int, buff)
+	ch_score := make(chan int, buff)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr1, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr2, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr3, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr4, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr5, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr6, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr7, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr8, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr9, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr10, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr11, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr12, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr13, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr14, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr15, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr16, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr17, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr18, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr19, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr20, false)
 
-	strategyName := "b" + strconv.Itoa(st.Burn) + " bh" + strconv.Itoa(st.BHoles) + " fh" + strconv.Itoa(st.FHoles) + " ch" + strconv.Itoa(st.CHoles) + " y" + strconv.Itoa(st.HighY) + " s" + strconv.Itoa(st.Step)
+	//strategyName := "b" + strconv.Itoa(st.Burn) + " bh" + strconv.Itoa(st.BHoles) + " fh" + strconv.Itoa(st.FHoles) + " ch" + strconv.Itoa(st.CHoles) + " y" + strconv.Itoa(st.HighY) + " s" + strconv.Itoa(st.Step)
 
-	scores := []string{strategyName, strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
-	rounds := []string{strategyName, strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
+	//scores := []string{strategyName, strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
+	//rounds := []string{strategyName, strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
 
-	fmt.Println("scores:", scores)
-	fmt.Println("rounds:", rounds)
+	//fmt.Println("scores:", scores)
+	//fmt.Println("rounds:", rounds)
 
-	save(filename+"score", scores)
-	save(filename+"round", rounds)
+	//save(filename+"score", scores)
+	//save(filename+"round", rounds)
+	for k := 0; k < buff; k++ {
+		fmt.Println(<-ch_score)
+		fmt.Println(<-ch_round)
+	}
 }
 
 func assignPieces(g *Game, piece string) {
@@ -283,7 +291,7 @@ func addSolidLines(g *Game) {
 	}
 }
 
-func addGarbageLines(g *Game, garbage [300]int) {
+func addGarbageLines(g *Game, garbage *[300]int) {
 	r := g.Round % 5
 	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
