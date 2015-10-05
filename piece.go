@@ -740,10 +740,10 @@ func (p *Piece) setStep(pp Picks) {
 func (p *Piece) setCHoles(hBlocked []Cell) {
 	var effective []Cell
 	lowEffectiveY := 0
-	if len(hBlocked) > 4 {
+	if len(hBlocked) > 5 {
 		CellOrderedBy(MAXY).Sort(hBlocked)
-		effective = hBlocked[:4]
-		lowEffectiveY = effective[3].Y
+		effective = hBlocked[:5]
+		lowEffectiveY = effective[4].Y
 	} else {
 		effective = hBlocked
 	}
@@ -760,6 +760,29 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
+
+	/*
+		for _, h := range effective {
+			stucking := 0
+			if h.X == ps[0] {
+				stucking++
+			}
+			if h.X == ps[1] {
+				stucking++
+			}
+			if h.X == ps[2] {
+				stucking++
+
+			}
+			if h.X == ps[3] {
+				stucking++
+			}
+
+			if stucking > 0 {
+				p.Score.CHoles += h.Y - lowEffectiveY + stucking - 1
+			}
+		}
+	*/
 }
 
 func (p *Piece) setTotalScore(st Strategy, combo int) {

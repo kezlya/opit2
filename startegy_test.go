@@ -123,6 +123,7 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 */
+/*
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 5; b++ {
@@ -147,11 +148,13 @@ func Benchmark_strategy(banch *testing.B) {
 		}
 	}
 }
-
+*/
 func Benchmark_investigate(banch *testing.B) {
+	oldScores := []int{38, 48, 58, 63, 69, 69, 71, 79, 81, 81, 82, 90, 94, 102, 108, 110, 128, 169, 180, 180}
+	oldRounds := []int{76, 81, 93, 101, 101, 107, 111, 111, 113, 116, 119, 121, 126, 143, 150, 161, 176, 201, 213, 225}
 	for n := 0; n < banch.N; n++ {
 		fmt.Println()
-		strategy := Strategy{
+		st := Strategy{
 			Burn:   2,
 			BHoles: 7,
 			FHoles: 4,
@@ -159,7 +162,10 @@ func Benchmark_investigate(banch *testing.B) {
 			HighY:  1,
 			Step:   2,
 		}
-		playGames(strategy, "investigation_")
+		strategyName := "b" + strconv.Itoa(st.Burn) + " bh" + strconv.Itoa(st.BHoles) + " fh" + strconv.Itoa(st.FHoles) + " ch" + strconv.Itoa(st.CHoles) + " y" + strconv.Itoa(st.HighY) + " s" + strconv.Itoa(st.Step)
+		scores, rounds := playGames(st)
+		//Linechart(scores, scores, rounds, rounds, strategyName)
+		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
 		fmt.Println("done")
 	}
 }
@@ -211,8 +217,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string,
 	ch_score <- g.MyPlayer.Points
 }
 
-func playGames(st Strategy, filename string) {
-
+func playGames(st Strategy) (*[]int, *[]int) {
 	buff := 20
 	ch_round := make(chan int, buff)
 	ch_score := make(chan int, buff)
@@ -237,16 +242,6 @@ func playGames(st Strategy, filename string) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr19, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr20, false)
 
-	//strategyName := "b" + strconv.Itoa(st.Burn) + " bh" + strconv.Itoa(st.BHoles) + " fh" + strconv.Itoa(st.FHoles) + " ch" + strconv.Itoa(st.CHoles) + " y" + strconv.Itoa(st.HighY) + " s" + strconv.Itoa(st.Step)
-
-	//scores := []string{strategyName, strconv.Itoa(s1), strconv.Itoa(s2), strconv.Itoa(s3), strconv.Itoa(s4), strconv.Itoa(s5), strconv.Itoa(s6), strconv.Itoa(s7), strconv.Itoa(s8), strconv.Itoa(s9), strconv.Itoa(s10), strconv.Itoa(s11), strconv.Itoa(s12), strconv.Itoa(s13), strconv.Itoa(s14), strconv.Itoa(s15), strconv.Itoa(s16), strconv.Itoa(s17), strconv.Itoa(s18), strconv.Itoa(s19), strconv.Itoa(s20)}
-	//rounds := []string{strategyName, strconv.Itoa(r1), strconv.Itoa(r2), strconv.Itoa(r3), strconv.Itoa(r4), strconv.Itoa(r5), strconv.Itoa(r6), strconv.Itoa(r7), strconv.Itoa(r8), strconv.Itoa(r9), strconv.Itoa(r10), strconv.Itoa(r11), strconv.Itoa(r12), strconv.Itoa(r13), strconv.Itoa(r14), strconv.Itoa(r15), strconv.Itoa(r16), strconv.Itoa(r17), strconv.Itoa(r18), strconv.Itoa(r19), strconv.Itoa(r20)}
-
-	//fmt.Println("scores:", scores)
-	//fmt.Println("rounds:", rounds)
-
-	//save(filename+"score", scores)
-	//save(filename+"round", rounds)
 	scores := make([]int, 20)
 	rounds := make([]int, 20)
 	for k := 0; k < buff; k++ {
@@ -255,10 +250,9 @@ func playGames(st Strategy, filename string) {
 	}
 	sort.Ints(scores)
 	sort.Ints(rounds)
-
-	fmt.Println(scores)
-	fmt.Println(rounds)
-	Linechart(&scores, &rounds)
+	fmt.Println("scores:", scores)
+	fmt.Println("rounds:", rounds)
+	return &scores, &rounds
 }
 
 func assignPieces(g *Game, piece string) {
@@ -343,31 +337,27 @@ func statistic(a []int) (int, int, int) {
 	return avr, a[1], a[len(a)-2]
 }
 
-func Linechart(scores *[]int, rounds *[]int) {
-	//Create a frame to put charts in
-	f := gosplat.NewFrame("Linechart Example Frame")
-
-	//Create a chart
-	v := gosplat.NewChart()
-	vv := gosplat.NewChart()
-
-	for i, s := range *scores {
-		v.Append(map[string]interface{}{"game": i, "score": s})
+func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
+	cScores := gosplat.NewChart()
+	cRounds := gosplat.NewChart()
+	for i := 0; i < len(*scores); i++ {
+		cScores.Append(map[string]interface{}{"game": i, "old": (*scores)[i], "new": (*new_scores)[i]})
+		cRounds.Append(map[string]interface{}{"game": i, "old": (*rounds)[i], "new": (*new_rounds)[i]})
 	}
 
-	for i, r := range *rounds {
-		vv.Append(map[string]interface{}{"game": i, "round": r})
-	}
-
-	//Add the chart to the Frame
-	f.Append("Score", v.Linechart(map[string]interface{}{
+	f := gosplat.NewFrame(strategy)
+	f.Append("Score", cScores.Linechart(map[string]interface{}{
 		"series": map[string]interface{}{
 			"0": map[string]interface{}{
-				"color": "red"}}}))
-	f.Append("Round", vv.Linechart(map[string]interface{}{
+				"color": "red"},
+			"1": map[string]interface{}{
+				"color": "black"}}}))
+	f.Append("Round", cRounds.Linechart(map[string]interface{}{
 		"series": map[string]interface{}{
 			"0": map[string]interface{}{
-				"color": "red"}}}))
+				"color": "red"},
+			"1": map[string]interface{}{
+				"color": "black"}}}))
 
 	//Preview generates a tmp html file and opens it with the default browser
 	err := f.Preview()
