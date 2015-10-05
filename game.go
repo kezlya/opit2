@@ -120,6 +120,7 @@ func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
 	if g.MyPlayer.Empty < 3 {
 		st = Strategy{
+			Burn:  g.Strategy.Burn + 2,
 			HighY: g.Strategy.HighY + 2,
 		}
 	}
@@ -138,8 +139,8 @@ func (g *Game) calculateMoves() *Piece {
 		}
 	}*/
 
-	/*if g.MyPlayer.Empty > 12 && g.MyPlayer.Combo < 2 {
-		trim = 2
+	/*	if g.MyPlayer.Empty > 10 && g.MyPlayer.Combo < 3 {
+		trim = 3
 
 	}*/
 

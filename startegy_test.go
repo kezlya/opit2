@@ -86,11 +86,10 @@ func Benchmark_moves(b *testing.B) {
 
 func Benchmark_fixholes(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		testField := Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 		piece := Piece{Name: "T", Rotation: 0}
 		piece.InitSpace(Cell{X: 3, Y: 19})
 		hole := Cell{X: 5, Y: 0}
-		testField.FixHoles(piece, []Cell{hole}, testField.Picks().Max())
+		testHolesField.FixHoles(piece, []Cell{hole}, testField.Picks().Max())
 	}
 }
 
@@ -136,8 +135,6 @@ func Benchmark_strategy(banch *testing.B) {
 }
 */
 func Benchmark_investigate(banch *testing.B) {
-	oldScores := []int{30, 32, 35, 36, 40, 41, 44, 44, 44, 45, 45, 46, 48, 51, 53, 53, 53, 55, 56, 57, 57, 61, 61, 62, 63, 64, 64, 65, 65, 65, 66, 66, 68, 69, 70, 70, 71, 72, 72, 74, 75, 77, 77, 78, 78, 81, 81, 83, 83, 83, 83, 86, 86, 86, 87, 91, 92, 92, 92, 92, 93, 94, 94, 96, 97, 97, 100, 101, 101, 101, 103, 111, 114, 115, 116, 116, 120, 120, 120, 121, 123, 124, 125, 127, 131, 134, 135, 142, 142, 144, 145, 147, 149, 152, 155, 161, 162, 168, 172, 199}
-	oldRounds := []int{61, 66, 66, 71, 75, 76, 76, 76, 77, 79, 80, 81, 81, 81, 82, 83, 85, 90, 94, 96, 99, 99, 101, 101, 101, 101, 101, 101, 102, 102, 102, 103, 103, 104, 105, 106, 107, 108, 109, 110, 110, 111, 111, 112, 113, 115, 116, 121, 121, 121, 121, 121, 121, 121, 124, 126, 126, 126, 126, 127, 128, 129, 130, 130, 131, 131, 137, 138, 138, 139, 141, 141, 143, 146, 149, 152, 156, 156, 161, 161, 161, 163, 165, 165, 169, 170, 171, 171, 175, 176, 184, 185, 190, 191, 196, 196, 206, 211, 211, 221}
 	for n := 0; n < banch.N; n++ {
 		fmt.Println()
 		strategyName := "b" + strconv.Itoa(strategy.Burn) +
