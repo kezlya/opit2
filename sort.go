@@ -15,12 +15,12 @@ var SCORE = func(c1, c2 *Piece) bool {
 		return c1.Score.Burn > c2.Score.Burn
 	}
 
-	if c1.Score.HighY != c2.Score.HighY {
-		return c1.Score.HighY < c2.Score.HighY
-	}
-
 	if c1.Score.BHoles != c2.Score.BHoles {
 		return c1.Score.BHoles < c2.Score.BHoles
+	}
+
+	if c1.Score.HighY != c2.Score.HighY {
+		return c1.Score.HighY < c2.Score.HighY
 	}
 
 	if c1.Score.FHoles != c2.Score.FHoles {

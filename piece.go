@@ -888,5 +888,5 @@ func (p *Piece) lowerNextScore() {
 	if nK < 0 {
 		nK = 0 - nK
 	}
-	p.Score.Total = p.Score.Total - (nK * 2)
+	p.Score.Total = p.Score.Total - nK
 }

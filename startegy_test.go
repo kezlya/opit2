@@ -140,16 +140,13 @@ func Benchmark_investigate(banch *testing.B) {
 	oldRounds := []int{100, 101, 101, 107, 108, 109, 111, 112, 121, 121, 122, 124, 128, 129, 140, 156, 166, 201, 214, 221}
 	for n := 0; n < banch.N; n++ {
 		fmt.Println()
-		st := Strategy{
-			Burn:   2,
-			BHoles: 7,
-			FHoles: 4,
-			CHoles: 1,
-			HighY:  1,
-			Step:   2,
-		}
-		strategyName := "b" + strconv.Itoa(st.Burn) + " bh" + strconv.Itoa(st.BHoles) + " fh" + strconv.Itoa(st.FHoles) + " ch" + strconv.Itoa(st.CHoles) + " y" + strconv.Itoa(st.HighY) + " s" + strconv.Itoa(st.Step)
-		scores, rounds := playGames(st)
+		strategyName := "b" + strconv.Itoa(strategy.Burn) +
+			" bh" + strconv.Itoa(strategy.BHoles) +
+			" fh" + strconv.Itoa(strategy.FHoles) +
+			" ch" + strconv.Itoa(strategy.CHoles) +
+			" y" + strconv.Itoa(strategy.HighY) +
+			" s" + strconv.Itoa(strategy.Step)
+		scores, rounds := playGames(strategy)
 		//Linechart(scores, scores, rounds, rounds, strategyName)
 		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
 		fmt.Println("done")

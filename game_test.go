@@ -26,6 +26,7 @@ func Test_calculateMoves(t *testing.T) {
 	game.CurrentPiece.InitSpace(Cell{3, field.Height()})
 	game.NextPiece = Piece{Name: "Z", Rotation: 0}
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
+	game.MyPlayer.Empty = 18
 	expectedField := Field{{false, false, false, false, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, true, true}, {false, false, false, false, false, false, false, false, true, true}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	expectedScore := Score{Burn: 0, BHoles: 1, FHoles: 1, CHoles: 0, HighY: 1, Step: 2}
 
@@ -43,6 +44,7 @@ func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 	game.CurrentPiece.InitSpace(Cell{3, field.Height()})
 	game.NextPiece = Piece{Name: "J", Rotation: 0}
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
+	game.MyPlayer.Empty = 5
 	expectedField := Field{{true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, false, true, false, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {false, true, true, false, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, false, false, true, true, true, true, true}, {false, true, true, false, false, false, false, false, false, true}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	expectedScore := Score{Burn: 0, BHoles: 0, FHoles: 0, CHoles: 0, HighY: 14, Step: 0}
 
@@ -61,6 +63,7 @@ func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
 	game.NextPiece = Piece{Name: "T", Rotation: 0}
 	game.NextPiece.InitSpace(Cell{3, field.Height()})
 	game.MyPlayer.Combo = 2
+	game.MyPlayer.Empty = 15
 
 	expectedField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, true, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	expectedField.Burn()
@@ -186,5 +189,3 @@ func Test_01(t *testing.T) {
 	checkResults(t, expectedField, pos.FieldAfter)
 	checkScores(t, expectedScore, pos.Score)
 }
-
-//http://theaigames.com/competitions/ai-block-battle/games/55fbdcdc35ec1d23317675e4 round 6
