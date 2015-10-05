@@ -126,7 +126,7 @@ func (g *Game) calculateMoves() *Piece {
 
 	trim := 0
 	//trim 1 doesn't work
-	/*if g.MyPlayer.Empty > 8 {
+	/*if g.MyPlayer.Empty > 15 {
 		trim = 1
 		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 3 {
 			trim = 0
@@ -136,6 +136,11 @@ func (g *Game) calculateMoves() *Piece {
 			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
 			trim = 0
 		}
+	}*/
+
+	/*if g.MyPlayer.Empty > 12 && g.MyPlayer.Combo < 2 {
+		trim = 2
+
 	}*/
 
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)

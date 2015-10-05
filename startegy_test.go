@@ -136,8 +136,8 @@ func Benchmark_strategy(banch *testing.B) {
 }
 */
 func Benchmark_investigate(banch *testing.B) {
-	oldScores := []int{58, 63, 68, 69, 72, 73, 74, 76, 78, 78, 85, 85, 90, 95, 99, 115, 130, 169, 174, 200}
-	oldRounds := []int{100, 101, 101, 107, 108, 109, 111, 112, 121, 121, 122, 124, 128, 129, 140, 156, 166, 201, 214, 221}
+	oldScores := []int{51, 53, 63, 64, 67, 69, 70, 73, 84, 88, 91, 91, 100, 122, 124, 130, 139, 148, 161, 178}
+	oldRounds := []int{92, 96, 100, 101, 106, 107, 113, 118, 122, 126, 131, 131, 136, 146, 155, 161, 171, 196, 212, 221}
 	for n := 0; n < banch.N; n++ {
 		fmt.Println()
 		strategyName := "b" + strconv.Itoa(strategy.Burn) +
