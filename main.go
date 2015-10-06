@@ -9,11 +9,11 @@ import (
 
 var strategy = Strategy{
 	Burn:   6,
-	BHoles: 26,
+	BHoles: 29,
 	FHoles: 13,
-	CHoles: 3,
-	HighY:  3,
-	Step:   5,
+	CHoles: 7,
+	HighY:  7,
+	Step:   7,
 }
 
 func main() {

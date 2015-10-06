@@ -118,7 +118,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
-	if g.MyPlayer.Empty < 3 {
+	if g.MyPlayer.Empty < 2 {
 		st = Strategy{
 			Burn:  g.Strategy.Burn + 2,
 			HighY: g.Strategy.HighY + 2,
