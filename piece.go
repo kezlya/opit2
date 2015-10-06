@@ -761,27 +761,28 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 		}
 	}
 
-	/*
-		for _, h := range effective {
-			stucking := 0
-			if h.X == ps[0] {
-				stucking++
-			}
-			if h.X == ps[1] {
-				stucking++
-			}
-			if h.X == ps[2] {
-				stucking++
-
-			}
-			if h.X == ps[3] {
-				stucking++
-			}
-
-			if stucking > 0 {
-				p.Score.CHoles += h.Y - lowEffectiveY + stucking - 1
-			}
+	/*for _, h := range effective {
+		stucking := 0
+		if h.X == ps[0] {
+			stucking++
 		}
+		if h.X == ps[1] {
+			stucking++
+		}
+		if h.X == ps[2] {
+			stucking++
+
+		}
+		if h.X == ps[3] {
+			stucking++
+		}
+
+		if stucking > 0 {
+			deep := h.Y - lowEffectiveY + 1
+
+			p.Score.CHoles += deep + stucking
+		}
+	}
 	*/
 }
 
