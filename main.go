@@ -10,9 +10,9 @@ import (
 var strategy = Strategy{
 	Burn:   6,
 	BHoles: 29,
-	FHoles: 13,
-	CHoles: 7,
-	HighY:  7,
+	FHoles: 22,
+	CHoles: 6,
+	HighY:  5,
 	Step:   7,
 }
 
