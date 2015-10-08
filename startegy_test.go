@@ -125,7 +125,11 @@ func Benchmark_strategy(banch *testing.B) {
 								strategyName := st.name()
 								fmt.Println(strategyName)
 								scores, rounds := playGames(strategy)
-								Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
+								if CheckIfStrategyIsBetter(&oldScores, scores, &oldRounds, rounds) {
+									Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
+								} else {
+									fmt.Println("Bad")
+								}
 							}
 						}
 					}
@@ -441,6 +445,23 @@ func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	os.Rename(p.Name(), name)
 	open.Run(name)
 	fmt.Println(name)
+}
+
+func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool {
+	counterS := 0
+	counterR := 0
+	half := len(*new_scores) / 2
+	for i := 0; i < len(*new_scores); i++ {
+		if (*scores)[i]-(*new_scores)[i] < 0 {
+			counterS++
+		}
+		if (*rounds)[i]-(*new_rounds)[i] < 0 {
+			counterR++
+		}
+	}
+	fmt.Println("Better Scores:", counterS)
+	fmt.Println("Better Rounds:", counterR)
+	return (counterS > half || counterR > half)
 }
 
 func (s *Strategy) name() string {
