@@ -4,6 +4,8 @@ import (
 	"encoding/csv"
 	"fmt"
 	"github.com/agonopol/gosplat"
+	"github.com/skratchdot/open-golang/open"
+	"io/ioutil"
 	"math/rand"
 	"os"
 	"sort"
@@ -108,41 +110,38 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 */
-/*
+
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
-		for b := 1; b <= 5; b++ {
-			for bh := 5; bh <= 15; bh++ {
-				for fh := 1; fh <= 5; fh++ {
-					for ch := 2; ch <= 3; ch++ {
-						for hy := 1; hy <= 3; hy++ {
-							for s := 1; s <= 3; s++ {
-								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: 1, HighY: hy, Step: s}
-								go playGames(st, "")
+		for b := 1; b <= 10; b++ {
+			for bh := 1; bh <= 10; bh++ {
+				for fh := 1; fh <= 10; fh++ {
+					for ch := 1; ch <= 10; ch++ {
+						for hy := 1; hy <= 10; hy++ {
+							for s := 1; s <= 10; s++ {
+								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: ch, HighY: hy, Step: s}
+								fmt.Println("================================")
+								strategyName := st.name()
+								fmt.Println(strategyName)
+								scores, rounds := playGames(strategy)
+								Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
 							}
-							//fmt.Println("start sleep")
-							time.Sleep(50000000000)
-							//fmt.Println("end sleep")
 						}
-						time.Sleep(10000000000)
 					}
-					time.Sleep(10000000000)
 				}
-				time.Sleep(10000000000)
 			}
 		}
 	}
 }
-*/
+
 func Benchmark_investigate(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
+
+		strategyName := strategy.name()
 		fmt.Println()
-		strategyName := "b" + strconv.Itoa(strategy.Burn) +
-			" bh" + strconv.Itoa(strategy.BHoles) +
-			" fh" + strconv.Itoa(strategy.FHoles) +
-			" ch" + strconv.Itoa(strategy.CHoles) +
-			" y" + strconv.Itoa(strategy.HighY) +
-			" s" + strconv.Itoa(strategy.Step)
+		fmt.Println("================================")
+		fmt.Println(strategyName)
+
 		scores, rounds := playGames(strategy)
 		//Linechart(scores, scores, rounds, rounds, strategyName)
 		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
@@ -424,15 +423,30 @@ func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 				"color": "black"}}}))
 
 	//Preview generates a tmp html file and opens it with the default browser
-	err := f.Preview()
+	html, err := f.Html()
 	if err != nil {
 		panic(err)
 	}
+	p, err := ioutil.TempFile("", "go2splat.preview.")
+	if err != nil {
+		panic(err)
+	}
+	_, err = p.Write(html.Bytes())
+	if err != nil {
+		panic(err)
+	}
+	p.Close()
+	name := fmt.Sprintf("%s.html", p.Name())
+	os.Rename(p.Name(), name)
+	open.Run(name)
+	fmt.Println(name)
+}
 
-	//Html returns bytes.Buffer of the html
-	//buffer, err := f.Html()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//println(buffer.String())
+func (s *Strategy) name() string {
+	return "b" + strconv.Itoa(s.Burn) +
+		" bh" + strconv.Itoa(s.BHoles) +
+		" fh" + strconv.Itoa(s.FHoles) +
+		" ch" + strconv.Itoa(s.CHoles) +
+		" y" + strconv.Itoa(s.HighY) +
+		" s" + strconv.Itoa(s.Step)
 }
