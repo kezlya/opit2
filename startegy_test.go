@@ -113,13 +113,14 @@ func Benchmark_one(b *testing.B) {
 
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
-		for b := 1; b <= 10; b++ {
-			for bh := 1; bh <= 10; bh++ {
-				for fh := 1; fh <= 10; fh++ {
-					for ch := 1; ch <= 10; ch++ {
-						for hy := 1; hy <= 10; hy++ {
-							for s := 1; s <= 10; s++ {
+		for b := 1; b <= 5; b++ {
+			for bh := 1; bh <= 5; bh++ {
+				for fh := 1; fh <= 5; fh++ {
+					for ch := 1; ch <= 5; ch++ {
+						for hy := 1; hy <= 5; hy++ {
+							for s := 1; s <= 5; s++ {
 								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: ch, HighY: hy, Step: s}
+								fmt.Println()
 								fmt.Println("================================")
 								strategyName := st.name()
 								fmt.Println(strategyName)
@@ -136,7 +137,7 @@ func Benchmark_strategy(banch *testing.B) {
 
 func Benchmark_investigate(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
-
+		// strategy taking from main file current Strategy for the bot
 		strategyName := strategy.name()
 		fmt.Println()
 		fmt.Println("================================")
@@ -197,7 +198,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string,
 }
 
 func playGames(st Strategy) (*[]int, *[]int) {
-	buff := 50
+	buff := 26
 	ch_round := make(chan int, buff)
 	ch_score := make(chan int, buff)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr1, false)
@@ -227,7 +228,7 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr5, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr6, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr7, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr8, false)
+	/*go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr8, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr9, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr10, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr11, false)
@@ -252,7 +253,7 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr10, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr11, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr12, false)
-	/*go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr13, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr13, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr14, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr15, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr16, false)
