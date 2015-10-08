@@ -198,7 +198,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string,
 }
 
 func playGames(st Strategy) (*[]int, *[]int) {
-	buff := 100
+	buff := 50
 	ch_round := make(chan int, buff)
 	ch_score := make(chan int, buff)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr1, false)
@@ -253,7 +253,7 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr10, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr11, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr12, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr13, false)
+	/*go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr13, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr14, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr15, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr16, false)
@@ -304,7 +304,7 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr1, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr2, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr3, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr4, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr4, false)*/
 
 	scores := make([]int, buff)
 	rounds := make([]int, buff)
@@ -404,7 +404,7 @@ func statistic(a []int) (int, int, int) {
 func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	cScores := gosplat.NewChart()
 	cRounds := gosplat.NewChart()
-	for i := 0; i < len(*scores); i++ {
+	for i := 0; i < len(*new_scores); i++ {
 		cScores.Append(map[string]interface{}{"game": i, "old": (*scores)[i], "new": (*new_scores)[i]})
 		cRounds.Append(map[string]interface{}{"game": i, "old": (*rounds)[i], "new": (*new_rounds)[i]})
 	}
