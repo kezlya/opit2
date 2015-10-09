@@ -114,7 +114,7 @@ func Benchmark_one(b *testing.B) {
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 5; b++ {
-			for bh := 1; bh <= 5; bh++ {
+			for bh := 6; bh <= 10; bh++ {
 				for fh := 1; fh <= 5; fh++ {
 					for ch := 1; ch <= 5; ch++ {
 						for hy := 1; hy <= 5; hy++ {
@@ -124,7 +124,7 @@ func Benchmark_strategy(banch *testing.B) {
 								fmt.Println("================================")
 								strategyName := st.name()
 								fmt.Println(strategyName)
-								scores, rounds := playGames(strategy)
+								scores, rounds := playGames(st)
 								if CheckIfStrategyIsBetter(&oldScores, scores, &oldRounds, rounds) {
 									Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
 								} else {
