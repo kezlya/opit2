@@ -793,7 +793,7 @@ func (p *Piece) setTotalScore(st Strategy, combo int) {
 		p.Score.HighY*st.HighY +
 		p.Score.Step*st.Step +
 		p.Score.NScore +
-		p.Score.CHoles*st.CHoles - points*st.Burn
+		p.Score.CHoles*st.CHoles - p.Score.Burn*st.Burn - points
 
 	//p.lowerNextScore()
 }
