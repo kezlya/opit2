@@ -795,7 +795,7 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.Step*st.Step +
 		p.Score.CHoles*st.CHoles - points - p.Score.Burn*st.Burn
 
-	if p.Score.Burn > 0 && combo > 4 {
+	if p.Score.Burn > 0 && combo > 2 {
 		score = score - (combo - 2)
 	}
 
