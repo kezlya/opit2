@@ -8,12 +8,12 @@ import (
 )
 
 var strategy = Strategy{
-	Burn:   1,
-	BHoles: 10,
+	Burn:   4,
+	BHoles: 11,
 	FHoles: 5,
-	CHoles: 1,
-	HighY:  1,
-	Step:   2,
+	CHoles: 2,
+	HighY:  2,
+	Step:   3,
 }
 
 func main() {

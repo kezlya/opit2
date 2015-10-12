@@ -15,10 +15,6 @@ var SCORE = func(c1, c2 *Piece) bool {
 		return c1.Score.Pivotal
 	}
 
-	if c1.Score.Burn != c2.Score.Burn {
-		return c1.Score.Burn > c2.Score.Burn
-	}
-
 	if c1.Score.BHoles != c2.Score.BHoles {
 		return c1.Score.BHoles < c2.Score.BHoles
 	}

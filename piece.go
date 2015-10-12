@@ -756,13 +756,13 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 		i++
 	}
 
-	for _, h := range effective {
+	/*for _, h := range effective {
 		if h.X == ps[0] || h.X == ps[1] || h.X == ps[2] || h.X == ps[3] {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
-	}
+	}*/
 
-	/*for _, h := range effective {
+	for _, h := range effective {
 		stucking := 0
 		if h.X == ps[0] {
 			stucking++
@@ -784,7 +784,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 			p.Score.CHoles += deep + stucking
 		}
 	}
-	*/
+
 }
 
 func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
@@ -793,19 +793,19 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
 		p.Score.Step*st.Step +
-		p.Score.CHoles*st.CHoles - points*st.Burn
+		p.Score.CHoles*st.CHoles - points - p.Score.Burn*st.Burn
 
-	if p.Score.Burn > 0 && combo > 3 {
+	if p.Score.Burn > 0 && combo > 4 {
 		score = score - (combo - 2)
 	}
 
 	p.Score.Pivotal = false
-	if empty > 7 {
-		if p.Score.Burn > 0 {
+	if empty > 4 {
+		if p.Score.Burn == 0 {
 			p.Score.Pivotal = true
 		}
 	} else {
-		if p.Score.Burn == 0 {
+		if p.Score.Burn > 0 {
 			p.Score.Pivotal = true
 		}
 	}

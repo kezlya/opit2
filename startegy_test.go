@@ -113,12 +113,12 @@ func Benchmark_one(b *testing.B) {
 
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
-		for b := 1; b <= 5; b++ {
-			for bh := 6; bh <= 10; bh++ {
-				for fh := 1; fh <= 5; fh++ {
-					for ch := 1; ch <= 5; ch++ {
-						for hy := 1; hy <= 5; hy++ {
-							for s := 1; s <= 5; s++ {
+		for b := 2; b <= 5; b++ {
+			for bh := 6; bh <= 11; bh++ {
+				for fh := 3; fh <= 6; fh++ {
+					for ch := 1; ch <= 2; ch++ {
+						for hy := 1; hy <= 3; hy++ {
+							for s := 1; s <= 3; s++ {
 								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: ch, HighY: hy, Step: s}
 								fmt.Println()
 								fmt.Println("================================")
@@ -452,10 +452,10 @@ func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool
 	counterR := 0
 	half := len(*new_scores) / 2
 	for i := 0; i < len(*new_scores); i++ {
-		if (*scores)[i]-(*new_scores)[i] < 0 {
+		if (*scores)[i]-(*new_scores)[i] <= 0 {
 			counterS++
 		}
-		if (*rounds)[i]-(*new_rounds)[i] < 0 {
+		if (*rounds)[i]-(*new_rounds)[i] <= 0 {
 			counterR++
 		}
 	}
