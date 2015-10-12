@@ -16,14 +16,15 @@ type Piece struct {
 }
 
 type Score struct {
-	Burn   int
-	Step   int
-	BHoles int
-	FHoles int
-	CHoles int
-	HighY  int
-	Total  int
-	NScore int
+	Burn    int
+	Step    int
+	BHoles  int
+	FHoles  int
+	CHoles  int
+	HighY   int
+	Total   int
+	NScore  int
+	Pivotal bool
 }
 
 type Cell struct {
@@ -786,14 +787,30 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 	*/
 }
 
-func (p *Piece) setTotalScore(st Strategy, combo int) {
+func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 	points := p.getPoints(combo)
-	p.Score.Total = p.Score.BHoles*st.BHoles +
+	score := p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
 		p.Score.Step*st.Step +
-		p.Score.NScore +
-		p.Score.CHoles*st.CHoles - p.Score.Burn*st.Burn - points
+		p.Score.CHoles*st.CHoles - points*st.Burn
+
+	if p.Score.Burn > 0 && combo > 3 {
+		score = score - (combo - 2)
+	}
+
+	p.Score.Pivotal = false
+	if empty > 7 {
+		if p.Score.Burn > 0 {
+			p.Score.Pivotal = true
+		}
+	} else {
+		if p.Score.Burn == 0 {
+			p.Score.Pivotal = true
+		}
+	}
+
+	p.Score.Total = score + p.Score.NScore
 
 	//p.lowerNextScore()
 }

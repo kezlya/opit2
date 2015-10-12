@@ -193,7 +193,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(st, ncombo)
+			nPositions[j].setTotalScore(st, ncombo, g.MyPlayer.Empty)
 		}
 
 		if len(nPositions) > 0 {
@@ -202,7 +202,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000 //maybe remove current piece
 		}
-		positions[i].setTotalScore(st, g.MyPlayer.Combo)
+		positions[i].setTotalScore(st, g.MyPlayer.Combo, g.MyPlayer.Empty)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 
