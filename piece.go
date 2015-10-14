@@ -812,6 +812,17 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 
 	p.Score.Total = score + p.Score.NScore
 
+	//if empty <= 2 && p.Score.Burn > 0 {
+	//	p.Score.Pivotal = true
+	//}
+
+	if p.isSingleTSpin() || p.isDoubleTSpin() {
+		p.Score.Pivotal = true
+		p.Score.Total = p.Score.Total - 4
+	} else if combo > 4 && p.Score.Burn > 0 {
+		p.Score.Pivotal = true
+	}
+
 	//p.lowerNextScore()
 }
 
