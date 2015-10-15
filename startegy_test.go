@@ -17,7 +17,7 @@ import (
 
 /*
 func Test_generateGames(t *testing.T) {
-	for j := 1; j <= 20; j++ {
+	for j := 1; j <= 26; j++ {
 
 		i := 1
 		rand.Seed(time.Now().UTC().UnixNano())
@@ -30,17 +30,16 @@ func Test_generateGames(t *testing.T) {
 		fmt.Println()
 
 	}
-
 }
 */
 /*
 func Test_generateGarbageRows(t *testing.T) {
 	size := 10
-	for j := 1; j <= 20; j++ {
+	for j := 1; j <= 26; j++ {
 		i := 1
 		rand.Seed(time.Now().UTC().UnixNano())
-		fmt.Print("var gr", j, " =[300]int{", rand.Intn(size))
-		for i < 300 {
+		fmt.Print("var gr", j, " =[60]int{", rand.Intn(size))
+		for i < 60 {
 			fmt.Print(",", rand.Intn(size))
 			i++
 		}
@@ -49,7 +48,6 @@ func Test_generateGarbageRows(t *testing.T) {
 	}
 }
 */
-
 func Benchmark_moves(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		game := Game{Strategy: strategy}
@@ -154,7 +152,7 @@ func Benchmark_investigate(banch *testing.B) {
 	}
 }
 
-func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string, garbage *[300]int, visual bool) {
+func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
@@ -226,89 +224,12 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr19, false)
 	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr20, false)
 
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr2, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr3, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr4, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr5, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr6, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr7, false)
-	/*go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr8, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr9, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr10, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr11, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr12, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr13, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr14, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr15, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr16, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr17, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr18, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr19, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr20, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr1, false)
-
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr3, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr4, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr5, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr6, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr7, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr8, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr9, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr10, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr11, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr12, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr13, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr14, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr15, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr16, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr17, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr18, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr19, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr20, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr1, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr2, false)
-
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr4, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr5, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr6, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr7, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr8, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr9, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr10, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr11, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr12, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr13, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr14, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr15, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr16, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr17, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr18, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr19, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr20, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr1, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr2, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr3, false)
-
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr5, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr6, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr7, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr8, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr9, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr10, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr11, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr12, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr13, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr14, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr15, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr16, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr17, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr18, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr19, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr20, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr1, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr2, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr3, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr4, false)*/
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g21, &gr21, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g22, &gr22, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g23, &gr23, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g24, &gr24, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g25, &gr25, false)
+	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g26, &gr26, false)
 
 	scores := make([]int, buff)
 	rounds := make([]int, buff)
@@ -363,7 +284,7 @@ func addSolidLines(g *Game) {
 	}
 }
 
-func addGarbageLines(g *Game, garbage *[300]int) {
+func addGarbageLines(g *Game, garbage *[60]int) {
 	r := g.Round % 4
 	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
