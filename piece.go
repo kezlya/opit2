@@ -16,15 +16,14 @@ type Piece struct {
 }
 
 type Score struct {
-	Burn    int
-	Step    int
-	BHoles  int
-	FHoles  int
-	CHoles  int
-	HighY   int
-	Total   int
-	NScore  int
-	Pivotal bool
+	Burn   int
+	Step   int
+	BHoles int
+	FHoles int
+	CHoles int
+	HighY  int
+	Total  int
+	NScore int
 }
 
 type Cell struct {
@@ -796,15 +795,14 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles - points*st.Burn
 
-	//if empty <= 2 && p.Score.Burn > 0 {
-	//	p.Score.Pivotal = true
-	//}
+	if empty <= 15 && p.Score.Burn > 0 {
+		p.Score.Total = p.Score.Total - 4
+	}
 
 	if p.isSingleTSpin() || p.isDoubleTSpin() {
-		p.Score.Pivotal = true
+		p.Score.Total = p.Score.Total - 6
+	} else if combo > 3 && p.Score.Burn > 0 {
 		p.Score.Total = p.Score.Total - 4
-	} else if combo > 4 && p.Score.Burn > 0 {
-		p.Score.Pivotal = true
 	}
 
 	//p.lowerNextScore()
