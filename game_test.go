@@ -161,7 +161,7 @@ func Test_560b136035ec1d3214e473b8_74(t *testing.T) {
 	game.MyPlayer.Combo = 0
 	game.MyPlayer.Empty = 1
 	expectedField := Field{{true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, false, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	expectedScore := Score{Burn: 2, BHoles: -1, FHoles: 0, CHoles: 1, HighY: 17, Step: 3}
+	expectedScore := Score{Burn: 2, BHoles: -1, FHoles: 0, CHoles: 3, HighY: 17, Step: 3}
 
 	pos := game.calculateMoves()
 

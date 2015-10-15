@@ -740,10 +740,10 @@ func (p *Piece) setStep(pp Picks) {
 func (p *Piece) setCHoles(hBlocked []Cell) {
 	var effective []Cell
 	lowEffectiveY := 0
-	if len(hBlocked) > 3 {
+	if len(hBlocked) > 5 {
 		CellOrderedBy(MAXY).Sort(hBlocked)
-		effective = hBlocked[:3]
-		lowEffectiveY = effective[2].Y
+		effective = hBlocked[:5]
+		lowEffectiveY = effective[4].Y
 	} else {
 		effective = hBlocked
 	}
@@ -760,29 +760,29 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
+	/*
+		for _, h := range effective {
+			stucking := 0
+			if h.X == ps[0] {
+				stucking++
+			}
+			if h.X == ps[1] {
+				stucking++
+			}
+			if h.X == ps[2] {
+				stucking++
 
-	/*for _, h := range effective {
-		stucking := 0
-		if h.X == ps[0] {
-			stucking++
-		}
-		if h.X == ps[1] {
-			stucking++
-		}
-		if h.X == ps[2] {
-			stucking++
+			}
+			if h.X == ps[3] {
+				stucking++
+			}
 
-		}
-		if h.X == ps[3] {
-			stucking++
-		}
+			if stucking > 0 {
+				deep := h.Y - lowEffectiveY + 1
 
-		if stucking > 0 {
-			deep := h.Y - lowEffectiveY + 1
-
-			p.Score.CHoles += deep + stucking
+				p.Score.CHoles += deep + stucking
+			}
 		}
-	}
 	*/
 }
 
@@ -799,10 +799,16 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.Total = p.Score.Total - 4
 	}
 
-	if p.isSingleTSpin() || p.isDoubleTSpin() {
+	if p.isSingleTSpin() {
 		p.Score.Total = p.Score.Total - 6
-	} else if combo > 3 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 4
+	}
+
+	if p.isDoubleTSpin() {
+		p.Score.Total = p.Score.Total - 10
+	}
+
+	if combo > 3 && p.Score.Burn > 0 {
+		p.Score.Total = p.Score.Total - 10
 	}
 
 	//p.lowerNextScore()
