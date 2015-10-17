@@ -121,6 +121,9 @@ func (g *Game) calculateMoves() *Piece {
 	if g.MyPlayer.Empty < 6 {
 		st.Step = g.Strategy.Step + 3
 	}
+	if g.MyPlayer.Empty < 4 {
+		st.HighY = g.Strategy.HighY + (5 - g.MyPlayer.Empty)
+	}
 
 	trim := 0
 	//trim 1 doesn't work
