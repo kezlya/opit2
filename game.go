@@ -125,6 +125,11 @@ func (g *Game) calculateMoves() *Piece {
 		st.HighY = g.Strategy.HighY + (5 - g.MyPlayer.Empty)
 	}
 
+	spikeSum := g.MyPlayer.Field.Picks().SumStep()
+	if spikeSum > 7 {
+		st.Step = spikeSum - 7
+	}
+
 	trim := 0
 	//trim 1 doesn't work
 	/*if g.MyPlayer.Empty > 15 {

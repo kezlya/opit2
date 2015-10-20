@@ -41,3 +41,18 @@ func (p Picks) IsTowers() bool {
 	}
 	return counter >= 2
 }
+
+func (p Picks) SumStep() int {
+	sum := 0
+	for i, v := range p {
+		if i > 0 {
+			diff := v - p[i-1]
+			if diff > 0 {
+				sum = sum + diff
+			} else {
+				sum = sum - diff
+			}
+		}
+	}
+	return sum
+}
