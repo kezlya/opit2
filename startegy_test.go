@@ -285,14 +285,14 @@ func addSolidLines(g *Game) {
 }
 
 func addGarbageLines(g *Game, garbage *[60]int) {
-	r := g.Round % 4
+	r := g.Round % 5
 	if r == 0 && g.Round != 0 {
 		size := g.MyPlayer.Field.Width()
 		row := make([]bool, size)
 		for i := range row {
 			row[i] = true
 		}
-		row[garbage[g.Round/4]] = false
+		row[garbage[g.Round/5]] = false
 		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
 	}
 }
