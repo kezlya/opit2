@@ -813,7 +813,7 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 
 	delta := p.FieldAfter.Picks().SumStep()
 	if delta > 17 {
-		p.Score.Total = p.Score.Total + 2
+		p.Score.Total = p.Score.Total + 7
 	}
 
 	//p.lowerNextScore()
