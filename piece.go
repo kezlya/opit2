@@ -804,7 +804,7 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 	}
 
 	if p.isDoubleTSpin() {
-		p.Score.Total = p.Score.Total - 12
+		p.Score.Total = p.Score.Total - 10
 	}
 
 	if combo > 3 && p.Score.Burn > 0 {
@@ -812,8 +812,8 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 	}
 
 	delta := p.FieldAfter.Picks().SumStep()
-	if delta > 19 {
-		p.Score.Total = p.Score.Total - 2
+	if delta > 17 {
+		p.Score.Total = p.Score.Total + 2
 	}
 
 	//p.lowerNextScore()
