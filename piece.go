@@ -823,13 +823,13 @@ func (p *Piece) getPoints(combo int) int {
 	burn := 0
 	switch p.Score.Burn {
 	case 1:
-		burn = 1
+		burn = 0
 	case 2:
-		burn = 3
+		burn = 1
 	case 3:
-		burn = 6
+		burn = 5
 	case 4:
-		burn = 12
+		burn = 10
 	}
 
 	if p.isSingleTSpin() {
