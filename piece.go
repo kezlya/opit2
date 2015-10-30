@@ -793,9 +793,11 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.HighY*st.HighY +
 		p.Score.Step*st.Step +
 		p.Score.NScore +
-		p.Score.CHoles*st.CHoles - points*st.Burn
+		p.Score.CHoles*st.CHoles -
+		p.Score.Burn*st.Burn -
+		points
 
-	if empty <= 15 && p.Score.Burn > 0 {
+	/*if empty <= 15 && p.Score.Burn > 0 {
 		p.Score.Total = p.Score.Total - 4
 	}
 
@@ -815,7 +817,7 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 	if delta > 17 {
 		p.Score.Total = p.Score.Total + 7
 	}
-
+	*/
 	//p.lowerNextScore()
 }
 

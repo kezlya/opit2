@@ -118,12 +118,12 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	st := g.Strategy
-	if g.MyPlayer.Empty < 5 {
+	/*if g.MyPlayer.Empty < 5 {
 		st.Step = g.Strategy.Step + 3
 	}
 	if g.MyPlayer.Empty < 3 {
 		st.HighY = g.Strategy.HighY + (5 - g.MyPlayer.Empty)
-	}
+	}*/
 
 	trim := 0
 	//trim 1 doesn't work
