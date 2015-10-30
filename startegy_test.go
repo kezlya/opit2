@@ -21,8 +21,8 @@ func Test_generateGames(t *testing.T) {
 
 		i := 1
 		rand.Seed(time.Now().UTC().UnixNano())
-		fmt.Print("var g", j, " =[300]string{\"", pieces[rand.Intn(len(pieces))], "\"")
-		for i < 300 {
+		fmt.Print("var g", j, " =[400]string{\"", pieces[rand.Intn(len(pieces))], "\"")
+		for i < 400 {
 			fmt.Print(",\"", pieces[rand.Intn(len(pieces))], "\"")
 			i++
 		}
@@ -152,7 +152,7 @@ func Benchmark_investigate(banch *testing.B) {
 	}
 }
 
-func playGame(ch_round chan int, ch_score chan int, g *Game, input *[300]string, garbage *[60]int, visual bool) {
+func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
