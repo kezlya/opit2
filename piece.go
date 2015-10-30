@@ -825,19 +825,19 @@ func (p *Piece) getPoints(combo int) int {
 	case 1:
 		burn = 0
 	case 2:
-		burn = 1
+		burn = 3
 	case 3:
-		burn = 5
+		burn = 6
 	case 4:
 		burn = 10
 	}
 
 	if p.isSingleTSpin() {
-		burn = 6
+		burn = 5
 	}
 
 	if p.isDoubleTSpin() {
-		burn = 12
+		burn = 10
 	}
 
 	if p.Score.Burn > 0 && combo > 1 {
@@ -845,7 +845,7 @@ func (p *Piece) getPoints(combo int) int {
 	}
 
 	if p.isPerfectClear() {
-		burn = 24
+		burn = 18
 	}
 	return burn
 }
