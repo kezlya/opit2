@@ -293,6 +293,7 @@ func addGarbageLines(g *Game, garbage *[60]int) {
 			row[i] = true
 		}
 		row[garbage[g.Round/10]] = false
+		row[garbage[len(garbage)-g.Round/10]] = false
 		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
 	}
 }
