@@ -101,13 +101,24 @@ func Benchmark_many(b *testing.B) {
 		fmt.Println("Score:", score, "Round", round)
 	}
 }
-
+*/
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		playGame(&Game{Strategy: strategy}, g4, gr4, true)
+		buff := 1
+		ch_round := make(chan int, buff)
+		ch_score := make(chan int, buff)
+		playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g7, &gr7, true)
+		scores := make([]int, buff)
+		rounds := make([]int, buff)
+		for k := 0; k < buff; k++ {
+			scores[k] = <-ch_score
+			rounds[k] = <-ch_round
+		}
+
+		fmt.Println("scores:", scores)
+		fmt.Println("rounds:", rounds)
 	}
 }
-*/
 
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
