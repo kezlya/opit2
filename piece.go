@@ -797,26 +797,26 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.Burn*st.Burn -
 		points
 
-	/*if empty <= 15 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 4
+	/*if empty <= 5 && p.Score.Burn > 0 {
+		p.Score.Total = p.Score.Total - 9
 	}
 
-	if p.isSingleTSpin() {
-		p.Score.Total = p.Score.Total - 6
-	}
+		if p.isSingleTSpin() {
+			p.Score.Total = p.Score.Total - 6
+		}
 
-	if p.isDoubleTSpin() {
-		p.Score.Total = p.Score.Total - 10
-	}
+		if p.isDoubleTSpin() {
+			p.Score.Total = p.Score.Total - 10
+		}
 
-	if combo > 3 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 10
-	}
+		if combo > 3 && p.Score.Burn > 0 {
+			p.Score.Total = p.Score.Total - 10
+		}
 
-	delta := p.FieldAfter.Picks().SumStep()
-	if delta > 17 {
-		p.Score.Total = p.Score.Total + 7
-	}
+		delta := p.FieldAfter.Picks().SumStep()
+		if delta > 17 {
+			p.Score.Total = p.Score.Total + 7
+		}
 	*/
 	//p.lowerNextScore()
 }
