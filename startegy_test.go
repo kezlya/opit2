@@ -267,7 +267,7 @@ func assignPieces(g *Game, piece string) {
 
 func applyPoints(g *Game, p *Piece) {
 	if g.Round > 1 {
-		points := p.getPoints(g.MyPlayer.Combo)
+		points := p.getPoints()
 		if points > 0 {
 			g.MyPlayer.Combo++
 		} else {

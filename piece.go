@@ -787,7 +787,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 }
 
 func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
-	points := p.getPoints(combo)
+	points := p.getPoints()
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
@@ -798,7 +798,7 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		points*2
 
 	if empty < 5 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 9
+		p.Score.Total = p.Score.Total - 15
 	}
 
 	if p.isSingleTSpin() && empty > 4 {
@@ -818,10 +818,15 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 			p.Score.Total = p.Score.Total + 7
 		}
 	*/
+
+	if empty == 0 {
+		p.Score.Total = p.Score.Total + 100
+		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
+	}
 	//p.lowerNextScore()
 }
 
-func (p *Piece) getPoints(combo int) int {
+func (p *Piece) getPoints() int {
 	burn := 0
 	switch p.Score.Burn {
 	case 1:
@@ -840,10 +845,6 @@ func (p *Piece) getPoints(combo int) int {
 
 	if p.isDoubleTSpin() {
 		burn = 10
-	}
-
-	if p.Score.Burn > 0 && combo > 1 {
-		burn = burn + combo - 1
 	}
 
 	if p.isPerfectClear() {
