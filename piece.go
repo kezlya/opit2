@@ -795,7 +795,7 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
 		p.Score.Burn*st.Burn -
-		points
+		points*2
 
 	if empty < 5 && p.Score.Burn > 0 {
 		p.Score.Total = p.Score.Total - 9
