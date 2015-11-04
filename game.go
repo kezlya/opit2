@@ -117,36 +117,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Piece {
-	st := g.Strategy
-	/*if g.MyPlayer.Empty < 5 {
-		st.Step = g.Strategy.Step + 2
-	}*/
-	/*if g.MyPlayer.Empty < 5 {
-		st.Burn = g.Strategy.Burn + 3
-	}*/
-	/*if g.MyPlayer.Empty < 3 {
-		st.HighY = g.Strategy.HighY + (5 - g.MyPlayer.Empty)
-	}*/
-
-	trim := 0
-	//trim 1 doesn't work
-	/*if g.MyPlayer.Empty > 11 {
-		trim = 1
-		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 2 {
-			trim = 0
-		}
-		if g.CurrentPiece.Name == "L" &&
-			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-3]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]) > 0 &&
-			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
-			trim = 0
-		}
-	}*/
-
-	/*	if g.MyPlayer.Empty > 10 && g.MyPlayer.Combo < 3 {
-		trim = 3
-
-	}*/
-
+	trim := g.trimStrategy()
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
 	countBh := len(hBlocked)
@@ -192,7 +163,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(st, ncombo, g.MyPlayer.Empty)
+			nPositions[j].setTotalScore(g.Strategy, ncombo, g.MyPlayer.Empty)
 		}
 
 		if len(nPositions) > 0 {
@@ -201,7 +172,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000 //maybe remove current piece
 		}
-		positions[i].setTotalScore(st, g.MyPlayer.Combo, g.MyPlayer.Empty)
+		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Combo, g.MyPlayer.Empty)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 
@@ -216,4 +187,21 @@ func (g *Game) calculateMoves() *Piece {
 		return &positions[0]
 	}
 	return nil
+}
+
+func (g *Game) trimStrategy() int {
+	trim := 0
+	//trim 1 doesn't work
+	/*if g.MyPlayer.Empty > 11 {
+		trim = 1
+		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 2 {
+			trim = 0
+		}
+		if g.CurrentPiece.Name == "L" &&
+			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-3]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]) > 0 &&
+			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
+			trim = 0
+		}
+	}*/
+	return trim
 }
