@@ -146,6 +146,7 @@ func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
 	pos := game.calculateMoves()
 	pos.FieldAfter.Burn()
 
+	//PrintVisual(field)
 	checkResults(t, expectedField, pos.FieldAfter)
 	checkScores(t, expectedScore, pos.Score)
 }

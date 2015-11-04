@@ -182,6 +182,7 @@ func (g *Game) calculateMoves() *Piece {
 		/*for _, tempP := range positions {
 			fmt.Printf("%+v\n", tempP.Score)
 			fmt.Println(tempP.CurrentX, tempP.Name, tempP.Rotation)
+			fmt.Println("")
 		}*/
 
 		return &positions[0]
