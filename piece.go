@@ -787,6 +787,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 }
 
 func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
+
 	points := p.getPoints()
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +

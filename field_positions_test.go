@@ -16,7 +16,7 @@ func Test_availablePositions_I(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -38,7 +38,7 @@ func Test_availablePositions_J(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -60,7 +60,7 @@ func Test_availablePositions_L(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -82,7 +82,7 @@ func Test_availablePositions_O(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -104,7 +104,7 @@ func Test_availablePositions_S(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -126,7 +126,7 @@ func Test_availablePositions_T(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -148,7 +148,7 @@ func Test_availablePositions_Z(t *testing.T) {
 
 	resultVp := testField.ValidPosition(piece, tfPicks, 0)
 	_, hFixable := testField.FindHoles(testField.Picks())
-	resultFh, _ := testField.FixHoles(piece, hFixable, tfPicks.Max())
+	resultFh := testField.FixHoles(piece, hFixable, tfPicks.Max())
 
 	if len(resultVp) != expectVp {
 		t.Fail()
