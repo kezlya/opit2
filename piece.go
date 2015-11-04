@@ -823,14 +823,11 @@ func (p *Piece) setTotalScore(st Strategy, combo, empty int) {
 		p.Score.Total = p.Score.Total + 100
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
-	//p.lowerNextScore()
 }
 
 func (p *Piece) getPoints() int {
 	burn := 0
 	switch p.Score.Burn {
-	case 1:
-		burn = 0
 	case 2:
 		burn = 3
 	case 3:
@@ -906,12 +903,4 @@ func (p *Piece) isPerfectClear() bool {
 		}
 	}
 	return true
-}
-
-func (p *Piece) lowerNextScore() {
-	nK := p.Score.NScore / 10
-	if nK < 0 {
-		nK = 0 - nK
-	}
-	p.Score.Total = p.Score.Total - nK
 }
