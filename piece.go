@@ -788,26 +788,35 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 
 func (p *Piece) setTotalScore(st Strategy, empty int) {
 
+	kY := st.HighY
+	kS := st.Step
+	kC := st.CHoles
+	kB := st.Burn
+
+	if empty < 5 {
+		kS = kS + 3
+	}
+
+	if empty < 5 {
+		kB = kB + 3
+	}
+
 	points := p.getPoints()
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
-		p.Score.HighY*st.HighY +
-		p.Score.Step*st.Step +
+		p.Score.HighY*kY +
+		p.Score.Step*kS +
 		p.Score.NScore +
-		p.Score.CHoles*st.CHoles -
-		p.Score.Burn*st.Burn -
+		p.Score.CHoles*kC -
+		p.Score.Burn*kB -
 		points*4
 
-	if empty < 5 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 15
-	}
-
 	if p.isSingleTSpin() && empty > 4 {
-		p.Score.Total = p.Score.Total - 6
+		p.Score.Total = p.Score.Total - 10
 	}
 
 	if p.isDoubleTSpin() && empty > 4 {
-		p.Score.Total = p.Score.Total - 10
+		p.Score.Total = p.Score.Total - 20
 	}
 	/*
 		if combo > 3 && p.Score.Burn > 0 {
