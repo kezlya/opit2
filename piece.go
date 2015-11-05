@@ -842,6 +842,10 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		p.Score.Total = p.Score.Total + 10
 		//fmt.Println("====")
 	}
+
+	if holes > 10 && p.Score.Burn > 0 {
+		p.Score.Total = p.Score.Total - 4
+	}
 }
 
 func (p *Piece) getPoints() int {
