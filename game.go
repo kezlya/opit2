@@ -165,7 +165,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(g.Strategy, nEmpty)
+			nPositions[j].setTotalScore(g.Strategy, nEmpty, ncountBh)
 		}
 
 		if len(nPositions) > 0 {
@@ -174,7 +174,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000
 		}
-		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Empty)
+		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Empty, countBh)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 

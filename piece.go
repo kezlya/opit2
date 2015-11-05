@@ -786,7 +786,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 	*/
 }
 
-func (p *Piece) setTotalScore(st Strategy, empty int) {
+func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 
 	kY := st.HighY
 	kS := st.Step
@@ -796,11 +796,11 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 	kBH := st.BHoles
 	kFH := st.FHoles
 
-	if empty > 9 {
-		//kBH = kBH + 3
+	/*if empty > 9 {
+		kBH = kBH + 3
 		kY = 0
 
-	}
+	}*/
 
 	if empty < 5 {
 		kS = kS + 3
@@ -838,8 +838,9 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
-	if empty > 10 && p.Score.BHoles == 0 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total + 100
+	if empty > 7 && holes == 0 && p.Score.Burn == 1 {
+		p.Score.Total = p.Score.Total + 10
+		//fmt.Println("====")
 	}
 }
 

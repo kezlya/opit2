@@ -170,6 +170,25 @@ func Test_560b136035ec1d3214e473b8_74(t *testing.T) {
 	checkScores(t, expectedScore, pos.Score)
 }
 
+func Test_563bc1271c687b25e61aa846_116(t *testing.T) {
+	/*game := Game{Strategy: strategy}
+	field := Field{{true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, false, true, true, true, true, true, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	game.MyPlayer = &Player{Field: field, Picks: field.Picks()}
+	game.CurrentPiece = Piece{Name: "T", Rotation: 0}
+	game.CurrentPiece.InitSpace(Cell{3, field.Height()})
+	game.NextPiece = Piece{Name: "O", Rotation: 0}
+	game.NextPiece.InitSpace(Cell{3, field.Height()})
+	game.MyPlayer.Combo = 0
+	game.MyPlayer.Empty = 9
+	expectedField := Field{{true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, false, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	expectedScore := Score{Burn: 2, BHoles: -1, FHoles: 0, CHoles: 3, HighY: 17, Step: 3}
+
+	pos := game.calculateMoves()
+
+	checkResults(t, expectedField, pos.FieldAfter)
+	checkScores(t, expectedScore, pos.Score)*/
+}
+
 func Test_01(t *testing.T) {
 	game := Game{Strategy: strategy}
 	field := Field{{true, true, true, true, true, true, true, true, false, true}, {true, true, false, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, false, true, true}, {false, true, true, true, true, true, true, false, true, false}, {false, true, false, true, true, true, false, false, false, false}, {false, false, false, false, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
