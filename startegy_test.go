@@ -93,15 +93,6 @@ func Benchmark_fixholes(b *testing.B) {
 	}
 }
 
-/*
-func Benchmark_many(b *testing.B) {
-	fmt.Println()
-	for n := 0; n < b.N; n++ {
-		round, score := playGame(&Game{Strategy: strategy}, g4, gr4, false)
-		fmt.Println("Score:", score, "Round", round)
-	}
-}
-*/
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		buff := 1
@@ -180,8 +171,14 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
 		g.MyPlayer.Field = position.FieldAfter
-		addSolidLines(g)
-		addGarbageLines(g, garbage)
+		if addSolidLines(g) {
+			keepGoing = false
+			break
+		}
+		if addGarbageLines(g, garbage) {
+			keepGoing = false
+			break
+		}
 		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
 		g.MyPlayer.Empty = g.MyPlayer.Field.Height() - g.MyPlayer.Picks.Max()
 		assignPieces(g, input[i])
@@ -189,8 +186,8 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 
 		if visual {
 			//fmt.Println("D", position.Damage, "S", position.Score)
-			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
-			fmt.Printf("%+v %+v\n", position.Score, position.Name)
+			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo, "empty:", g.MyPlayer.Empty)
+			fmt.Printf("%+v\n", position.Score)
 			PrintVisual(g.MyPlayer.Field)
 			time.Sleep(1000000000)
 		}
@@ -277,36 +274,37 @@ func applyPoints(g *Game, p *Piece) {
 	}
 }
 
-func isRoof(g *Game) bool {
-	for _, col := range g.MyPlayer.Field[g.MyPlayer.Field.Height()-1] {
-		if col {
-			//fmt.Println("roof", g.MyPlayer.Field.Height())
-			return true
-		}
-	}
-	return false
-}
-
-func addSolidLines(g *Game) {
+func addSolidLines(g *Game) bool {
+	stop := false
 	r := g.Round % 20
 	if r == 0 && g.Round != 0 {
+		if g.MyPlayer.Empty == 0 {
+			stop = true
+		}
 		g.MyPlayer.Field = g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1]
 		g.Height = g.Height - 1
 	}
+	return stop
 }
 
-func addGarbageLines(g *Game, garbage *[60]int) {
-	r := g.Round % 10
+func addGarbageLines(g *Game, garbage *[60]int) bool {
+	stop := false
+	speed := 7
+	r := g.Round % speed
 	if r == 0 && g.Round != 0 {
+		if g.MyPlayer.Empty == 0 {
+			stop = true
+		}
 		size := g.MyPlayer.Field.Width()
 		row := make([]bool, size)
 		for i := range row {
 			row[i] = true
 		}
-		row[garbage[g.Round/10]] = false
-		row[garbage[len(garbage)-g.Round/10]] = false
+		row[garbage[g.Round/speed]] = false
+		row[garbage[len(garbage)-g.Round/speed]] = false
 		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
 	}
+	return stop
 }
 
 func save(fileName string, record []string) {
