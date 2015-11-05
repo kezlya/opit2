@@ -157,20 +157,21 @@ func (g *Game) calculateMoves() *Piece {
 				np.FieldAfter.Burn()
 			}
 			npp := np.FieldAfter.Picks()
+			nEmpty := np.FieldAfter.Height() - npp.Max()
 			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles(npp)
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
 			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(g.Strategy, ncombo, g.MyPlayer.Empty)
+			nPositions[j].setTotalScore(g.Strategy, ncombo, nEmpty)
 		}
 
 		if len(nPositions) > 0 {
 			OrderedBy(SCORE).Sort(nPositions)
 			positions[i].Score.NScore = nPositions[0].Score.Total
 		} else {
-			positions[i].Score.NScore = 10000000000000 //maybe remove current piece
+			positions[i].Score.NScore = 10000000000000
 		}
 		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Combo, g.MyPlayer.Empty)
 		//fmt.Printf("%+v\n", p.sco)
