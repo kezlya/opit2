@@ -114,11 +114,11 @@ func Benchmark_one(b *testing.B) {
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 2; b++ {
-			for bh := 9; bh <= 11; bh++ {
+			for bh := 10; bh <= 12; bh++ {
 				for fh := 8; fh <= 10; fh++ {
-					for ch := 1; ch <= 3; ch++ {
-						for hy := 1; hy <= 3; hy++ {
-							for s := 1; s <= 3; s++ {
+					for ch := 2; ch <= 3; ch++ {
+						for hy := 2; hy <= 3; hy++ {
+							for s := 2; s <= 3; s++ {
 								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: ch, HighY: hy, Step: s}
 								fmt.Println()
 								fmt.Println("================================")

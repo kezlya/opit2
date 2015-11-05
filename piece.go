@@ -793,6 +793,15 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 	kC := st.CHoles
 	kB := st.Burn
 
+	kBH := st.BHoles
+	kFH := st.FHoles
+
+	if empty > 9 {
+		//kBH = kBH + 3
+		kY = 0
+
+	}
+
 	if empty < 5 {
 		kS = kS + 3
 	}
@@ -802,8 +811,8 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 	}
 
 	points := p.getPoints()
-	p.Score.Total = p.Score.BHoles*st.BHoles +
-		p.Score.FHoles*st.FHoles +
+	p.Score.Total = p.Score.BHoles*kBH +
+		p.Score.FHoles*kFH +
 		p.Score.HighY*kY +
 		p.Score.Step*kS +
 		p.Score.NScore +
@@ -819,19 +828,18 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 		p.Score.Total = p.Score.Total - 20
 	}
 	/*
-		if combo > 3 && p.Score.Burn > 0 {
-			p.Score.Total = p.Score.Total - 10
-		}
-
 		delta := p.FieldAfter.Picks().SumStep()
 		if delta > 17 {
 			p.Score.Total = p.Score.Total + 7
 		}
 	*/
-
 	if empty == 0 {
 		p.Score.Total = p.Score.Total + 100
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
+	}
+
+	if empty > 10 && p.Score.BHoles == 0 && p.Score.Burn > 0 {
+		p.Score.Total = p.Score.Total + 100
 	}
 }
 
