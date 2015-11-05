@@ -149,10 +149,6 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
-			ncombo := 0
-			if p.Score.Burn > 0 {
-				ncombo = g.MyPlayer.Combo + 1
-			}
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()
 			}
@@ -164,7 +160,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(g.Strategy, ncombo, nEmpty)
+			nPositions[j].setTotalScore(g.Strategy, nEmpty)
 		}
 
 		if len(nPositions) > 0 {
@@ -173,7 +169,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000
 		}
-		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Combo, g.MyPlayer.Empty)
+		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Empty)
 		//fmt.Printf("%+v\n", p.sco)
 	}
 
