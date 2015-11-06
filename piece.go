@@ -828,6 +828,11 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
+	if empty == 1 {
+		p.Score.Total = p.Score.Total + 5
+		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
+	}
+
 	if empty > 10 && holes < 5 && p.Score.Burn == 1 {
 		p.Score.Total = p.Score.Total + 10
 		//fmt.Println("====")
