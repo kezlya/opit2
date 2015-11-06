@@ -796,18 +796,8 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 	kBH := st.BHoles
 	kFH := st.FHoles
 
-	/*if empty > 9 {
-		kBH = kBH + 3
-		kY = 0
-
-	}*/
-
 	if empty < 5 {
-		kS = kS + 3
-	}
-
-	if empty < 5 {
-		kB = kB + 3
+		kS = kS + 1
 	}
 
 	points := p.getPoints()
