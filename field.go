@@ -559,20 +559,20 @@ func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
 		tmp := make(map[int]bool)
 		for k, _ := range queue {
 			nkey = currentFiled.Search("left", k, bag)
-			if nkey > 0 {
+			if nkey >= 0 {
 				tmp[nkey] = false
 			}
 			nkey = currentFiled.Search("right", k, bag)
-			if nkey > 0 {
+			if nkey >= 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
 				nkey = currentFiled.Search("turnleft", k, bag)
-				if nkey > 0 {
+				if nkey >= 0 {
 					tmp[nkey] = false
 				}
 				nkey = currentFiled.Search("turnright", k, bag)
-				if nkey > 0 {
+				if nkey >= 0 {
 					tmp[nkey] = false
 				}
 			}
@@ -605,7 +605,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
 			(p.Name == "T" && p.Rotation != 2) {
 			tempBag.Options[k] = p
 			nkey = f.Search("down", k, tempBag)
-			if nkey == 0 {
+			if nkey == -1 {
 				delete(bag.Options, k)
 				continue
 			}
@@ -650,24 +650,26 @@ func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
 		tmp := make(map[int]bool)
 		for k, _ := range queue {
 			nkey = f.Search("down", k, bag)
-			if nkey > 0 {
+			if nkey >= 0 {
 				tmp[nkey] = false
 			}
 			nkey = f.Search("left", k, bag)
-			if nkey > 0 {
+			if nkey >= 0 {
 				tmp[nkey] = false
 			}
 			nkey = f.Search("right", k, bag)
+			// move to the right woulf never generate 0 key
+			// 0 key is left bottom conner
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
 				nkey = f.Search("turnleft", k, bag)
-				if nkey > 0 {
+				if nkey >= 0 {
 					tmp[nkey] = false
 				}
 				nkey = f.Search("turnright", k, bag)
-				if nkey > 0 {
+				if nkey >= 0 {
 					tmp[nkey] = false
 				}
 			}
@@ -677,7 +679,9 @@ func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
 	found := false
 	invalid := false
 	maxY := f.Height()
+
 	for k, p := range bag.Options {
+		//fmt.Println(k)
 		if p == nil {
 			delete(bag.Options, k)
 			continue
@@ -739,9 +743,9 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[nextKey].Moves = nMoves
-				return 0
+				return -1
 			}
-			return 0
+			return -1
 		}
 		np := bag.Options[key].Left()
 		if f.IsValid(&np.Space) {
@@ -750,17 +754,16 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 			return np.Key
 		}
 		bag.Options[np.Key] = nil
-		return 0
-
+		return -1
 	case "right":
 		nextKey := key + 100
 		el, ok = bag.Options[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[nextKey].Moves = nMoves
-				return 0
+				return -1
 			}
-			return 0
+			return -1
 		}
 		np := bag.Options[key].Right()
 		if f.IsValid(&np.Space) {
@@ -769,34 +772,36 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 			return np.Key
 		}
 		bag.Options[np.Key] = nil
-		return 0
+		return -1
 	case "down":
+
 		nextKey := key - 1
 		el, ok = bag.Options[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[nextKey].Moves = nMoves
-				return 0
+				return -1
 			}
-			return 0
+			return -1
 		}
 		np := bag.Options[key].Down()
+
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
 			bag.Options[np.Key] = &np
 			return np.Key
 		}
 		bag.Options[np.Key] = nil
-		return 0
+		return -1
 	case "turnleft":
 		np := bag.Options[key].Turnleft()
 		el, ok = bag.Options[np.Key]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[np.Key].Moves = nMoves
-				return 0
+				return -1
 			}
-			return 0
+			return -1
 		}
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
@@ -804,16 +809,16 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 			return np.Key
 		}
 		bag.Options[np.Key] = nil
-		return 0
+		return -1
 	case "turnright":
 		np := bag.Options[key].Turnright()
 		el, ok = bag.Options[np.Key]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
 				bag.Options[np.Key].Moves = nMoves
-				return 0
+				return -1
 			}
-			return 0
+			return -1
 		}
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
@@ -821,9 +826,9 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 			return np.Key
 		}
 		bag.Options[np.Key] = nil
-		return 0
+		return -1
 	}
-	return 0
+	return -1
 }
 
 func (f Field) Copy() Field {

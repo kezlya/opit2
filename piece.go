@@ -675,6 +675,8 @@ func (p *Piece) Turnleft() Piece {
 func (p *Piece) setKey() {
 	if p.CurrentX >= 0 && p.CurrentY >= 0 {
 		p.Key = p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
+	} else {
+		p.Key = -1
 	}
 }
 
