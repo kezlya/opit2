@@ -562,7 +562,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
 				tmp[nkey] = false
 			}
 			nkey = currentFiled.Search("right", k, bag)
-			if nkey >= 0 {
+			if nkey > 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
@@ -738,7 +738,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 	switch dir {
 	case "left":
 		nextKey := key - 100
-		if nextKey < 0 {
+		if nextKey%10000/100 < 0 {
 			return -1
 		}
 		el, ok = bag.Options[nextKey]
@@ -779,8 +779,10 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		bag.Options[np.Key] = nil
 		return -1
 	case "down":
-
 		nextKey := key - 1
+		if nextKey%100 < 0 {
+			return -1
+		}
 		el, ok = bag.Options[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
@@ -790,7 +792,6 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 			return -1
 		}
 		np := bag.Options[key].Down()
-
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
 			bag.Options[np.Key] = &np
