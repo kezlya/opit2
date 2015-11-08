@@ -549,7 +549,6 @@ func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
 	queue := make(map[int]bool)
 	queue[piece.Key] = true
 	nkey := 0
-
 	currentFiled := f
 	if trim > 0 {
 		currentFiled = f.Trim(trim)
@@ -739,6 +738,9 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 	switch dir {
 	case "left":
 		nextKey := key - 100
+		if nextKey < 0 {
+			return -1
+		}
 		el, ok = bag.Options[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
@@ -757,6 +759,9 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		return -1
 	case "right":
 		nextKey := key + 100
+		if nextKey%10000/100 > f.Width() {
+			return -1
+		}
 		el, ok = bag.Options[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
