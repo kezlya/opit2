@@ -685,7 +685,8 @@ func (p *Piece) setBurn() {
 }
 
 func (p *Piece) setHighY() {
-	switch p.Name {
+	p.Score.HighY = p.CurrentY
+	/*switch p.Name {
 	case "I":
 		switch p.Rotation {
 		case 0, 2:
@@ -702,7 +703,7 @@ func (p *Piece) setHighY() {
 		}
 	case "O":
 		p.Score.HighY = p.CurrentY + 1
-	}
+	}*/
 }
 
 func (p *Piece) setStep(pp Picks) {
@@ -808,6 +809,7 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		p.Score.HighY*kY +
 		p.Score.Step*kS +
 		p.Score.NScore +
+		//(p.FieldAfter.Height() - empty) +
 		p.Score.CHoles*kC -
 		p.Score.Burn*kB -
 		points*4
