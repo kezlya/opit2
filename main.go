@@ -18,17 +18,8 @@ var strategy = Strategy{
 
 func main() {
 
-	//trim 1 tested doesn't really work
-
-	//find datatype in golang like dictionary (map) but keys only
-
-	//refactor init for Field
-
-	// to make it faster try to discard hiscore positions and position with big damage
-	// damage >3 discard
-
-	//new statistic showed that this is the best strategy after new inprovements
-	//4	14	5	1	2	3	110	73	188	139	107	203
+	// need to impliment skip
+	// need to force double T-spin
 
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
 	consolereader := bufio.NewReader(os.Stdin)
