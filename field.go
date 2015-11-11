@@ -846,3 +846,50 @@ func (f Field) Copy() Field {
 	}
 	return a
 }
+
+func (f Field) isPlaseForDoubleTspin() int {
+	cell := &Cell{}
+	for y, row := range f {
+		cell = nil
+		for x, col := range row {
+			if !col {
+				if cell == nil {
+					cell = &Cell{X: x, Y: y}
+				} else {
+					cell = nil
+					break
+				}
+			}
+		}
+		if cell != nil {
+			if cell.X > 0 && cell.X < f.Width()-1 && cell.Y < 19 {
+				if !f[y+1][cell.X-1] && !f[y+1][cell.X] && !f[y+1][cell.X+1] {
+					valid := true
+					left := cell.X - 2
+					for left >= 0 {
+						if !f[y+1][left] {
+							valid = false
+						}
+						left--
+					}
+					right := cell.X + 2
+					for right < f.Width() {
+						if !f[y+1][right] {
+							valid = false
+						}
+						right++
+					}
+
+					if valid {
+						if f[y+2][cell.X-1] && !f[y+2][cell.X] && !f[y+2][cell.X+1] {
+							return cell.X
+						}
+						if !f[y+2][cell.X-1] && !f[y+2][cell.X] && f[y+2][cell.X+1] {
+							return cell.X - 1
+						}
+					}
+				}
+			}
+		}
+	}
+}

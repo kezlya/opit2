@@ -100,7 +100,7 @@ func Benchmark_one(b *testing.B) {
 		buff := 1
 		ch_round := make(chan int, buff)
 		ch_score := make(chan int, buff)
-		playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g7, &gr7, true)
+		playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g10, &gr7, true)
 		scores := make([]int, buff)
 		rounds := make([]int, buff)
 		for k := 0; k < buff; k++ {
