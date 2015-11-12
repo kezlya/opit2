@@ -543,6 +543,7 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 }
 
 func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
+	//keepOpen := g.MyPlayer.Field.isPlaseForDoubleTspin()
 	validPieces := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
@@ -892,4 +893,5 @@ func (f Field) isPlaseForDoubleTspin() int {
 			}
 		}
 	}
+	return -1
 }
