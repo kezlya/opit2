@@ -21,6 +21,8 @@ func main() {
 	// need to impliment skip
 	// need to force double T-spin
 
+	// still in the process how to inforce double T-spin position
+
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
