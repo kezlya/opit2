@@ -20,6 +20,7 @@ func main() {
 
 	// need to impliment skip
 	// need to force double T-spin
+	// still thinking of better strategy
 
 	// still in the process how to inforce double T-spin position
 
