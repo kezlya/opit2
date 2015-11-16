@@ -21,7 +21,7 @@ func main() {
 	// need to impliment skip
 	// need to force double T-spin
 	// still thinking of better strategy
-
+	// looks like I'm number 15 :)
 	// still in the process how to inforce double T-spin position
 
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
