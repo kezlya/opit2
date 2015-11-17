@@ -687,13 +687,13 @@ func (p *Piece) setBurn() {
 }
 
 func (p *Piece) setDSR(before, after int) {
-	if before >= 0 {
+	if before < 0 && after >= 0 {
 		p.Score.IsDSR = true
 	} else {
 		p.Score.IsDSR = false
 	}
 
-	if after < 0 {
+	if before >= 0 && after < 0 {
 		p.Score.BreakDSR = true
 	} else {
 		p.Score.BreakDSR = false
@@ -832,10 +832,12 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 
 	if p.Score.IsDSR && empty > 10 {
 		p.Score.Total = p.Score.Total - 10
+		//fmt.Println(p.Name, " is dsr")
 	}
 
 	if p.Score.BreakDSR && p.Name != "T" && empty > 10 {
 		p.Score.Total = p.Score.Total + 10
+		//fmt.Println(p.Name, " break :(")
 	}
 
 	if p.isSingleTSpin() && empty > 4 {
