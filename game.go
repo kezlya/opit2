@@ -118,6 +118,8 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	trim := g.trimStrategy()
+	dsr_x := g.MyPlayer.Field.isPlaseForDoubleTspin()
+
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
 	countBh := len(hBlocked)
@@ -132,8 +134,9 @@ func (g *Game) calculateMoves() *Piece {
 			p.FieldAfter.Burn()
 		}
 		pp := p.FieldAfter.Picks()
-		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp, trim)
 
+		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp, trim)
+		ndsr_x := p.FieldAfter.isPlaseForDoubleTspin()
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
 		ncountBh := len(nhBlocked)
 		ncountFh := len(nhFixable)
@@ -145,6 +148,7 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].Score.BHoles = ncountBh - countBh
 		positions[i].Score.FHoles = ncountFh - countFh
 		positions[i].setHighY()
+		positions[i].setDSR(dsr_x)
 		positions[i].setStep(g.MyPlayer.Picks)
 		positions[i].setCHoles(nhBlocked)
 
@@ -163,6 +167,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
 			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
+			nPositions[j].setDSR(ndsr_x)
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
 			nPositions[j].setTotalScore(g.Strategy, nEmpty, ncountBh)
