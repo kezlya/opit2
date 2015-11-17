@@ -687,8 +687,17 @@ func (p *Piece) setBurn() {
 }
 
 func (p *Piece) setDSR(before, after int) {
-	//TODO: check if x and next x cross piece space
-	//p.Score.DSReady = x
+	if before >= 0 {
+		p.Score.IsDSR = true
+	} else {
+		p.Score.IsDSR = false
+	}
+
+	if after < 0 {
+		p.Score.BreakDSR = true
+	} else {
+		p.Score.BreakDSR = false
+	}
 }
 
 func (p *Piece) setHighY() {
