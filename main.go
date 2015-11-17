@@ -19,9 +19,7 @@ var strategy = Strategy{
 func main() {
 
 	// need to impliment skip
-	// need to force double T-spin
-	// still thinking of better strategy
-	// looks like I'm number 15 :)
+	// Need to refactor 7 level deep if statment in DSR
 	// still in the process how to inforce double T-spin position
 
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
