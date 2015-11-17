@@ -863,7 +863,7 @@ func (f Field) IsDSR() int {
 		}
 		if cell != nil {
 			if cell.X > 0 && cell.X < f.Width()-1 && cell.Y < 19 {
-				if !f[y+1][cell.X-1] && !f[y+1][cell.X] && !f[y+1][cell.X+1] {
+				if (y+1) < f.Height() && !f[y+1][cell.X-1] && !f[y+1][cell.X] && !f[y+1][cell.X+1] {
 					valid := true
 					left := cell.X - 2
 					for left >= 0 {
