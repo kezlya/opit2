@@ -847,7 +847,7 @@ func (f Field) Copy() Field {
 	return a
 }
 
-func (f Field) isPlaseForDoubleTspin() int {
+func (f Field) IsDSR() int {
 	cell := &Cell{}
 	for y, row := range f {
 		cell = nil

@@ -16,15 +16,16 @@ type Piece struct {
 }
 
 type Score struct {
-	Burn    int
-	Step    int
-	BHoles  int
-	FHoles  int
-	CHoles  int
-	HighY   int
-	Total   int
-	DSReady int
-	NScore  int
+	Burn     int
+	Step     int
+	BHoles   int
+	FHoles   int
+	CHoles   int
+	HighY    int
+	Total    int
+	NScore   int
+	IsDSR    bool
+	BreakDSR bool
 }
 
 type Cell struct {
@@ -685,9 +686,9 @@ func (p *Piece) setBurn() {
 	p.Score.Burn = p.FieldAfter.WillBurn()
 }
 
-func (p *Piece) setDSR(x int) {
+func (p *Piece) setDSR(before, after int) {
 	//TODO: check if x and next x cross piece space
-	p.Score.DSReady = x
+	//p.Score.DSReady = x
 }
 
 func (p *Piece) setHighY() {
