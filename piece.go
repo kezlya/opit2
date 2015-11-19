@@ -831,7 +831,7 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		points*4
 
 	if p.Score.IsDSR && empty > 10 {
-		p.Score.Total = p.Score.Total - 100
+		p.Score.Total = p.Score.Total - 50
 		//fmt.Println(p.Name, " is dsr")
 	}
 
