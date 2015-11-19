@@ -848,49 +848,57 @@ func (f Field) Copy() Field {
 }
 
 func (f Field) IsDSR() int {
-	cell := &Cell{}
 	for y, row := range f {
-		cell = nil
-		for x, col := range row {
+		x := -1
+		isOneHole := false
+		for i, col := range row {
 			if !col {
-				if cell == nil {
-					cell = &Cell{X: x, Y: y}
+				if x < 0 {
+					x = i
+					isOneHole = true
 				} else {
-					cell = nil
-					break
+					isOneHole = false
 				}
 			}
 		}
-		if cell != nil {
-			if cell.X > 0 && cell.X < f.Width()-1 && cell.Y < 19 {
-				if (y+1) < f.Height() && !f[y+1][cell.X-1] && !f[y+1][cell.X] && !f[y+1][cell.X+1] {
-					valid := true
-					left := cell.X - 2
-					for left >= 0 {
-						if !f[y+1][left] {
-							valid = false
-						}
-						left--
-					}
-					right := cell.X + 2
-					for right < f.Width() {
-						if !f[y+1][right] {
-							valid = false
-						}
-						right++
-					}
+		if isOneHole && f.IsTshapeHole(&Cell{X: x, Y: y}) {
+			valid := true
+			left := x - 2
+			for left >= 0 {
+				if !f[y+1][left] {
+					valid = false
+				}
+				left--
+			}
+			right := x + 2
+			for right < f.Width() {
+				if !f[y+1][right] {
+					valid = false
+				}
+				right++
+			}
 
-					if valid {
-						if f[y+2][cell.X-1] && !f[y+2][cell.X] && !f[y+2][cell.X+1] {
-							return cell.X
-						}
-						if !f[y+2][cell.X-1] && !f[y+2][cell.X] && f[y+2][cell.X+1] {
-							return cell.X - 1
-						}
-					}
+			if valid {
+				if f[y+2][x-1] && !f[y+2][x] && !f[y+2][x+1] {
+					return x
+				}
+				if !f[y+2][x-1] && !f[y+2][x] && f[y+2][x+1] {
+					return x - 1
 				}
 			}
 		}
 	}
 	return -1
+}
+
+func (f Field) IsTshapeHole(h *Cell) bool {
+	if h.X > 0 &&
+		h.X < f.Width()-1 &&
+		h.Y < f.Height()-1 &&
+		!f[h.Y+1][h.X-1] &&
+		!f[h.Y+1][h.X] &&
+		!f[h.Y+1][h.X+1] {
+		return true
+	}
+	return false
 }
