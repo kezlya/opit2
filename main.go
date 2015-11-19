@@ -19,8 +19,6 @@ var strategy = Strategy{
 func main() {
 
 	// need to impliment skip
-	// Need to refactor 7 level deep if statment in DSR
-	// still in the process how to inforce double T-spin position
 
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
 	consolereader := bufio.NewReader(os.Stdin)
