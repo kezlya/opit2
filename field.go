@@ -894,7 +894,7 @@ func (f Field) IsDSR() int {
 func (f Field) IsTshapeHole(h *Cell) bool {
 	if h.X > 0 &&
 		h.X < f.Width()-1 &&
-		h.Y < f.Height()-1 &&
+		h.Y < f.Height()-2 &&
 		!f[h.Y+1][h.X-1] &&
 		!f[h.Y+1][h.X] &&
 		!f[h.Y+1][h.X+1] {

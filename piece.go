@@ -831,12 +831,12 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		points*4
 
 	if p.Score.IsDSR && empty > 10 {
-		p.Score.Total = p.Score.Total - 10
+		p.Score.Total = p.Score.Total - 100
 		//fmt.Println(p.Name, " is dsr")
 	}
 
 	if p.Score.BreakDSR && p.Name != "T" && empty > 10 {
-		p.Score.Total = p.Score.Total + 10
+		p.Score.Total = p.Score.Total + 100
 		//fmt.Println(p.Name, " break :(")
 	}
 
