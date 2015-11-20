@@ -830,7 +830,7 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		p.Score.Burn*kB -
 		points*4
 
-	if p.Score.IsDSR && empty > 10 {
+	/*if p.Score.IsDSR && empty > 10 {
 		p.Score.Total = p.Score.Total - 50
 		//fmt.Println(p.Name, " is dsr")
 	}
@@ -838,7 +838,7 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 	if p.Score.BreakDSR && p.Name != "T" && empty > 10 {
 		p.Score.Total = p.Score.Total + 100
 		//fmt.Println(p.Name, " break :(")
-	}
+	}*/
 
 	if p.isSingleTSpin() && empty > 4 {
 		p.Score.Total = p.Score.Total - 10

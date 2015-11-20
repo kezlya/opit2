@@ -118,7 +118,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 
 func (g *Game) calculateMoves() *Piece {
 	trim := g.trimStrategy()
-	dsr_x := g.MyPlayer.Field.IsDSR()
+	//dsr_x := g.MyPlayer.Field.IsDSR()
 
 	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)
 	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
@@ -136,7 +136,7 @@ func (g *Game) calculateMoves() *Piece {
 		pp := p.FieldAfter.Picks()
 
 		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp, trim)
-		ndsr_x := p.FieldAfter.IsDSR()
+		//ndsr_x := p.FieldAfter.IsDSR()
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
 		ncountBh := len(nhBlocked)
 		ncountFh := len(nhFixable)
@@ -148,7 +148,7 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].Score.BHoles = ncountBh - countBh
 		positions[i].Score.FHoles = ncountFh - countFh
 		positions[i].setHighY()
-		positions[i].setDSR(dsr_x, ndsr_x)
+		//positions[i].setDSR(dsr_x, ndsr_x)
 		positions[i].setStep(g.MyPlayer.Picks)
 		positions[i].setCHoles(nhBlocked)
 
@@ -164,12 +164,12 @@ func (g *Game) calculateMoves() *Piece {
 			nEmpty := np.FieldAfter.Height() - npp.Max()
 
 			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles(npp)
-			nndsr_x := np.FieldAfter.IsDSR()
+			//nndsr_x := np.FieldAfter.IsDSR()
 
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
 			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
-			nPositions[j].setDSR(ndsr_x, nndsr_x)
+			//nPositions[j].setDSR(ndsr_x, nndsr_x)
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
 			nPositions[j].setTotalScore(g.Strategy, nEmpty, ncountBh)
