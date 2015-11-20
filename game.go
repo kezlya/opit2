@@ -130,6 +130,10 @@ func (g *Game) calculateMoves() *Piece {
 	}
 
 	for i, p := range positions {
+		if !p.isDSRfriendly(g.MyPlayer.Field.Height(), g.MyPlayer.Empty) {
+			continue
+		}
+
 		if p.Score.Burn > 0 {
 			p.FieldAfter.Burn()
 		}
@@ -153,6 +157,10 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
+			if !np.isDSRfriendly(p.FieldAfter.Height(), p.FieldAfter.Height()-pp.Max()) {
+				continue
+			}
+
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()
 			}

@@ -952,3 +952,26 @@ func (p *Piece) isPerfectClear() bool {
 	}
 	return true
 }
+
+func (p *Piece) isDSRfriendly(hight, empty int) bool {
+	if empty > 5 || p.Name != "T" {
+		for y := 0; y < hight-empty; y++ {
+			if y%2 == 0 {
+				//one hole
+				for _, cell := range p.Space {
+					if cell.Y == y && cell.X == 4 {
+						return false
+					}
+				}
+			} else {
+				// 3 holes
+				for _, cell := range p.Space {
+					if cell.Y == y && (cell.X == 3 || cell.X == 4 || cell.X == 5) {
+						return false
+					}
+				}
+			}
+		}
+	}
+	return true
+}
