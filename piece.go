@@ -1,6 +1,6 @@
 package main
 
-//import "fmt"
+import "fmt"
 
 type Piece struct {
 	Key        int
@@ -954,6 +954,7 @@ func (p *Piece) isPerfectClear() bool {
 }
 
 func (p *Piece) isDSRfriendly(hight, empty int) bool {
+	fmt.Println(p.Space)
 	if empty > 5 || p.Name != "T" {
 		for y := 0; y < hight-empty; y++ {
 			if y%2 == 0 {
