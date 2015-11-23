@@ -960,6 +960,7 @@ func (p *Piece) isDSRfriendly(hight, empty int) bool {
 			if y%2 == 0 {
 
 				// 3 holes
+				fmt.Println(p.Space)
 				for _, cell := range p.Space {
 					if cell.Y == y && (cell.X == 3 || cell.X == 4 || cell.X == 5) {
 						return false
@@ -967,6 +968,8 @@ func (p *Piece) isDSRfriendly(hight, empty int) bool {
 				}
 			} else {
 				//one hole
+				fmt.Println(p.Space)
+
 				for _, cell := range p.Space {
 					if cell.Y == y && cell.X == 4 {
 						return false
