@@ -120,19 +120,26 @@ func (g *Game) calculateMoves() *Piece {
 	trim := g.trimStrategy()
 	//dsr_x := g.MyPlayer.Field.IsDSR()
 
-	positions := g.MyPlayer.Field.ValidPosition(g.CurrentPiece, g.MyPlayer.Picks, trim)
-	hBlocked, hFixable := g.MyPlayer.Field.FindHoles(g.MyPlayer.Picks)
+	tempField := g.MyPlayer.Field.Copy()
+	if g.CurrentPiece.Name != "T" {
+		tempField.ApplyMatrix()
+	}
+	tempFieldPicks := tempField.Picks()
+
+	positions := tempField.ValidPosition(g.CurrentPiece, tempFieldPicks, trim)
+	hBlocked, hFixable := tempField.FindHoles(tempFieldPicks)
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
 	if len(hFixable) > 0 {
-		fixes := g.MyPlayer.Field.FixHoles(g.CurrentPiece, hFixable, g.MyPlayer.Picks.Max())
+		fixes := tempField.FixHoles(g.CurrentPiece, hFixable, tempFieldPicks.Max())
 		positions = append(positions, fixes...)
 	}
 
 	for i, p := range positions {
-		if !p.isDSRfriendly(g.MyPlayer.Field.Height(), g.MyPlayer.Empty) {
+		/*if !p.isDSRfriendly(g.MyPlayer.Field.Height(), g.MyPlayer.Empty) {
+			fmt.Println(p.Name, p.Space, "skiped")
 			continue
-		}
+		}*/
 
 		if p.Score.Burn > 0 {
 			p.FieldAfter.Burn()
@@ -157,9 +164,9 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
-			if !np.isDSRfriendly(p.FieldAfter.Height(), p.FieldAfter.Height()-pp.Max()) {
+			/*if !np.isDSRfriendly(p.FieldAfter.Height(), p.FieldAfter.Height()-pp.Max()) {
 				continue
-			}
+			}*/
 
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()

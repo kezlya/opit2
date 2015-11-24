@@ -1,6 +1,6 @@
 package main
 
-import "fmt"
+//import "fmt"
 
 type Piece struct {
 	Key        int
@@ -954,28 +954,23 @@ func (p *Piece) isPerfectClear() bool {
 }
 
 func (p *Piece) isDSRfriendly(hight, empty int) bool {
-	fmt.Println(p.Space)
+	//fmt.Println(p.Space)
 	if empty > 5 || p.Name != "T" {
 		for y := 0; y < hight-empty; y++ {
 			if y%2 == 0 {
-
-				// 3 holes
-				fmt.Println(p.Space)
-				for _, cell := range p.Space {
-					if cell.Y == y && (cell.X == 3 || cell.X == 4 || cell.X == 5) {
-						return false
-					}
-				}
-			} else {
 				//one hole
-				fmt.Println(p.Space)
-
 				for _, cell := range p.Space {
 					if cell.Y == y && cell.X == 4 {
 						return false
 					}
 				}
-
+			} else {
+				// 3 holes
+				for _, cell := range p.Space {
+					if cell.Y == y && (cell.X == 3 || cell.X == 4 || cell.X == 5) {
+						return false
+					}
+				}
 			}
 		}
 	}

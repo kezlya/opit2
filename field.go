@@ -902,3 +902,18 @@ func (f Field) IsTshapeHole(h *Cell) bool {
 	}
 	return false
 }
+
+func (f Field) ApplyMatrix() {
+	upto := f.Picks().Max()
+	for i := 0; i < upto; i++ {
+		if i%2 == 0 {
+			//one hole
+			f[i][4] = true
+		} else {
+			// 3 holes
+			f[i][3] = true
+			f[i][4] = true
+			f[i][5] = true
+		}
+	}
+}
