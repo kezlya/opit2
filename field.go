@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"strings"
 )
 
@@ -611,6 +611,7 @@ func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
 		}
 		fieldAfter, y := f.After(p, picks)
 		if fieldAfter == nil {
+			fmt.Println("fieldAfter == nil ++++++++++++++++++++++++++++++++++++")
 			delete(bag.Options, k)
 			continue
 		}

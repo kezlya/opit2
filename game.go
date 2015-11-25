@@ -121,9 +121,9 @@ func (g *Game) calculateMoves() *Piece {
 	//dsr_x := g.MyPlayer.Field.IsDSR()
 
 	tempField := g.MyPlayer.Field.Copy()
-	if g.CurrentPiece.Name != "T" {
+	/*if g.CurrentPiece.Name != "T" {
 		tempField.ApplyMatrix()
-	}
+	}*/
 	tempFieldPicks := tempField.Picks()
 
 	positions := tempField.ValidPosition(g.CurrentPiece, tempFieldPicks, trim)
