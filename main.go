@@ -19,6 +19,8 @@ var strategy = Strategy{
 func main() {
 
 	// need to impliment skip
+	// need to depricate f.After
+	// need to impliment proper Valid check on space
 
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
 	consolereader := bufio.NewReader(os.Stdin)
