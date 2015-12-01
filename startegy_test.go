@@ -56,7 +56,7 @@ func Benchmark_picks(b *testing.B) {
 
 func Benchmark_findHoles(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		_, _ = testHolesField.FindHoles(testHolesField.Picks())
+		_, _ = testHolesField.FindHoles()
 	}
 }
 

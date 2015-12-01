@@ -124,7 +124,7 @@ func (g *Game) calculateMoves() *Piece {
 	mfp := mf.Picks()
 
 	positions := mf.ValidPosition(g.CurrentPiece, mfp, trim)
-	hBlocked, hFixable := mf.FindHoles(mfp)
+	hBlocked, hFixable := mf.FindHoles()
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
 	if len(hFixable) > 0 {
@@ -145,7 +145,7 @@ func (g *Game) calculateMoves() *Piece {
 
 		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp, trim)
 		//ndsr_x := p.FieldAfter.IsDSR()
-		nhBlocked, nhFixable := p.FieldAfter.FindHoles(pp)
+		nhBlocked, nhFixable := p.FieldAfter.FindHoles()
 		ncountBh := len(nhBlocked)
 		ncountFh := len(nhFixable)
 		if len(nhFixable) > 0 {
@@ -175,7 +175,7 @@ func (g *Game) calculateMoves() *Piece {
 			npp := np.FieldAfter.Picks()
 			nEmpty := np.FieldAfter.Height() - npp.Max()
 
-			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles(npp)
+			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles()
 			//nndsr_x := np.FieldAfter.IsDSR()
 
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh

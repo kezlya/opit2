@@ -177,7 +177,7 @@ func Test_FindHoles(t *testing.T) {
 	}
 	expectedHoles := append(expectedBlocked, expectedFixable...)
 
-	blocked, fixable := arrange.FindHoles(arrange.Picks())
+	blocked, fixable := arrange.FindHoles()
 	holes := append(blocked, fixable...)
 
 	if len(blocked) != len(expectedBlocked) {

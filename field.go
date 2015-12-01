@@ -103,7 +103,8 @@ func (f Field) Burn() {
 	}
 }
 
-func (f Field) FindHoles(picks Picks) ([]Cell, []Cell) {
+func (f Field) FindHoles() ([]Cell, []Cell) {
+	picks := f.Picks()
 	blocked := make([]Cell, 0)
 	fixable := make([]Cell, 0)
 	for i, pick := range picks {
