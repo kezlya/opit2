@@ -105,6 +105,7 @@ func (f Field) Burn() {
 
 func (f Field) FindHoles() ([]Cell, []Cell) {
 	picks := f.Picks()
+	w := f.Width()
 	blocked := make([]Cell, 0)
 	fixable := make([]Cell, 0)
 	for i, pick := range picks {
@@ -112,7 +113,7 @@ func (f Field) FindHoles() ([]Cell, []Cell) {
 			if !f[j][i] {
 				hole := Cell{X: i, Y: j}
 				if (i-2 > -1 && !f[j][i-1] && !f[j][i-2] && !f[j+1][i-1] && !f[j+1][i-2]) ||
-					(i+2 < f.Width() && !f[j][i+1] && !f[j][i+2] && !f[j+1][i+1] && !f[j+1][i+2]) {
+					(i+2 < w && !f[j][i+1] && !f[j][i+2] && !f[j+1][i+1] && !f[j+1][i+2]) {
 					fixable = append(fixable, hole)
 				} else {
 					blocked = append(blocked, hole)
