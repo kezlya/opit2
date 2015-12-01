@@ -117,13 +117,12 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Piece {
-	trim := g.trimStrategy()
 	//dsr_x := g.MyPlayer.Field.IsDSR()
 
 	mf := g.MyPlayer.Field
 	mfp := mf.Picks()
 
-	positions := mf.ValidPosition(g.CurrentPiece, mfp, trim)
+	positions := mf.ValidPosition(g.CurrentPiece)
 	hBlocked, hFixable := mf.FindHoles()
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
@@ -143,7 +142,7 @@ func (g *Game) calculateMoves() *Piece {
 		}
 		pp := p.FieldAfter.Picks()
 
-		nPositions := p.FieldAfter.ValidPosition(g.NextPiece, pp, trim)
+		nPositions := p.FieldAfter.ValidPosition(g.NextPiece)
 		//ndsr_x := p.FieldAfter.IsDSR()
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles()
 		ncountBh := len(nhBlocked)

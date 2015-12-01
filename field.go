@@ -56,17 +56,6 @@ func (f Field) Picks() Picks {
 	return result
 }
 
-func (f Field) Trim(trim int) Field {
-	var trimed = make([][]bool, len(f))
-	newSize := len(f[0]) - trim
-	for rowIndex, row := range f {
-		colums := make([]bool, newSize)
-		copy(colums, row[:])
-		trimed[rowIndex] = colums
-	}
-	return trimed
-}
-
 func (f Field) WillBurn() int {
 	burn := 0
 	for _, row := range f {
@@ -544,35 +533,32 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 	return true
 }
 
-func (f Field) ValidPosition(piece Piece, picks Picks, trim int) []Piece {
+func (f Field) ValidPosition(piece Piece) []Piece {
+	picks := f.Picks()
 	validPieces := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
 	queue := make(map[int]bool)
 	queue[piece.Key] = true
 	nkey := 0
-	currentFiled := f
-	if trim > 0 {
-		currentFiled = f.Trim(trim)
-	}
 
 	for len(queue) > 0 {
 		tmp := make(map[int]bool)
 		for k, _ := range queue {
-			nkey = currentFiled.Search("left", k, bag)
+			nkey = f.Search("left", k, bag)
 			if nkey >= 0 {
 				tmp[nkey] = false
 			}
-			nkey = currentFiled.Search("right", k, bag)
+			nkey = f.Search("right", k, bag)
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
-				nkey = currentFiled.Search("turnleft", k, bag)
+				nkey = f.Search("turnleft", k, bag)
 				if nkey >= 0 {
 					tmp[nkey] = false
 				}
-				nkey = currentFiled.Search("turnright", k, bag)
+				nkey = f.Search("turnright", k, bag)
 				if nkey >= 0 {
 					tmp[nkey] = false
 				}
