@@ -120,18 +120,15 @@ func (g *Game) calculateMoves() *Piece {
 	trim := g.trimStrategy()
 	//dsr_x := g.MyPlayer.Field.IsDSR()
 
-	tempField := g.MyPlayer.Field.Copy()
-	/*if g.CurrentPiece.Name != "T" {
-		tempField.ApplyMatrix()
-	}*/
-	tempFieldPicks := tempField.Picks()
+	mf := g.MyPlayer.Field
+	mfp := mf.Picks()
 
-	positions := tempField.ValidPosition(g.CurrentPiece, tempFieldPicks, trim)
-	hBlocked, hFixable := tempField.FindHoles(tempFieldPicks)
+	positions := mf.ValidPosition(g.CurrentPiece, mfp, trim)
+	hBlocked, hFixable := mf.FindHoles(mfp)
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
 	if len(hFixable) > 0 {
-		fixes := tempField.FixHoles(g.CurrentPiece, hFixable, tempFieldPicks.Max())
+		fixes := mf.FixHoles(g.CurrentPiece, hFixable, mfp.Max())
 		positions = append(positions, fixes...)
 	}
 
