@@ -117,17 +117,13 @@ func (g *Game) asignUpdates(who, action, value string) {
 }
 
 func (g *Game) calculateMoves() *Piece {
-	//dsr_x := g.MyPlayer.Field.IsDSR()
-
 	mf := g.MyPlayer.Field
-	mfp := mf.Picks()
-
 	positions := mf.ValidPosition(g.CurrentPiece)
 	hBlocked, hFixable := mf.FindHoles()
 	countBh := len(hBlocked)
 	countFh := len(hFixable)
 	if len(hFixable) > 0 {
-		fixes := mf.FixHoles(g.CurrentPiece, hFixable, mfp.Max())
+		fixes := mf.FixHoles(g.CurrentPiece, hFixable)
 		positions = append(positions, fixes...)
 	}
 
@@ -148,7 +144,7 @@ func (g *Game) calculateMoves() *Piece {
 		ncountBh := len(nhBlocked)
 		ncountFh := len(nhFixable)
 		if len(nhFixable) > 0 {
-			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable, pp.Max())
+			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable)
 			nPositions = append(nPositions, nfixes...)
 		}
 
@@ -160,9 +156,6 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
-			/*if !np.isDSRfriendly(p.FieldAfter.Height(), p.FieldAfter.Height()-pp.Max()) {
-				continue
-			}*/
 
 			if np.Score.Burn > 0 {
 				np.FieldAfter.Burn()

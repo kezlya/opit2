@@ -276,8 +276,8 @@ func Test_FixHoles_T(t *testing.T) {
 	hole_bad1 := Cell{X: 2, Y: 6}
 	hole_bad2 := Cell{X: 8, Y: 11}
 
-	good_positions := arangePathField.FixHoles(piece, []Cell{hole0, hole1, hole2, hole3}, arangePathField.Picks().Max())
-	bad_positions := arangePathField.FixHoles(piece, []Cell{hole_bad1, hole_bad2}, arangePathField.Picks().Max())
+	good_positions := arangePathField.FixHoles(piece, []Cell{hole0, hole1, hole2, hole3})
+	bad_positions := arangePathField.FixHoles(piece, []Cell{hole_bad1, hole_bad2})
 
 	if len(good_positions) != 12 {
 		for _, pos := range good_positions {
@@ -304,7 +304,7 @@ func Test_FixHoles_Z(t *testing.T) {
 	piece.InitSpace(Cell{X: 3, Y: 19})
 	hole := Cell{X: 2, Y: 0}
 
-	good_positions := arangePathField.FixHoles(piece, []Cell{hole}, arangePathField.Picks().Max())
+	good_positions := arangePathField.FixHoles(piece, []Cell{hole})
 
 	if len(good_positions) != 1 {
 		for _, pos := range good_positions {
@@ -322,7 +322,7 @@ func Test_FixHoles_J(t *testing.T) {
 	piece.InitSpace(Cell{X: 3, Y: 19})
 	hole := Cell{X: 3, Y: 0}
 
-	good_positions := arangePathField.FixHoles(piece, []Cell{hole}, arangePathField.Picks().Max())
+	good_positions := arangePathField.FixHoles(piece, []Cell{hole})
 
 	if len(good_positions) != 1 {
 		for _, pos := range good_positions {

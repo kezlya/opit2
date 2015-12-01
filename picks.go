@@ -29,19 +29,6 @@ func (p Picks) IsRight(x, n int) bool {
 	return false
 }
 
-func (p Picks) IsTowers() bool {
-	counter := 0
-	for i, pick := range p {
-		if i > 0 {
-			diff := p[i-1] - pick
-			if diff > 3 || diff < -3 {
-				counter++
-			}
-		}
-	}
-	return counter >= 2
-}
-
 func (p Picks) SumStep() int {
 	sum := 0
 	for i, v := range p {

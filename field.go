@@ -7,9 +7,42 @@ import (
 
 type Field [][]bool
 
+type Field2 struct {
+	Width  int
+	Height int
+	Empty  int
+	Grid   [][]bool
+	Picks  Picks
+}
+
 type Bag struct {
 	Options map[int]*Piece
 	Total   int
+}
+
+func FieldFromString(raw string) Field2 {
+	rows := strings.Split(raw, ";")
+	f := Field2{}
+	f.Height = len(rows)
+	grid := make([][]bool, f.Height)
+	for rowIndex, row := range rows {
+		y := f.Height - rowIndex
+		cells := strings.Split(row, ",")
+		if f.Width == 0 {
+			f.Width = len(cells)
+		}
+		var colums = make([]bool, f.Width)
+		for columIndex, value := range cells {
+			if value == "2" {
+				colums[columIndex] = true
+			}
+		}
+		grid[y-1] = colums
+	}
+	f.Grid = grid
+	f.Picks = f.picks()
+	
+	return f
 }
 
 func (f *Field) init(raw string) Field {
@@ -42,6 +75,18 @@ func (f Field) IsFit(pick, up int) bool {
 		return true
 	}
 	return false
+}
+
+func (f Field2) picks() Picks {
+	picks := make([]int, f.Width)
+	for i, row := range f.Grid {
+		for j, col := range row {
+			if col && i+1 > picks[j] {
+				picks[j] = i + 1
+			}
+		}
+	}
+	return picks
 }
 
 func (f Field) Picks() Picks {
@@ -614,13 +659,13 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 	return validPieces
 }
 
-func (f Field) FixHoles(piece Piece, holes []Cell, drop int) []Piece {
+func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 	fixes := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	queue := make(map[int]bool)
 	nkey := 0
 
-	drop = drop + 1
+	drop := f.Picks().Max() + 1
 	if piece.CurrentY > drop {
 		countD := piece.CurrentY - drop
 		fp := piece.DropTo(drop)
