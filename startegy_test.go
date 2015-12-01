@@ -48,6 +48,18 @@ func Test_generateGarbageRows(t *testing.T) {
 	}
 }
 */
+func Benchmark_picks(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		_ = testHolesField.Picks()
+	}
+}
+
+func Benchmark_findHoles(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		_, _ = testHolesField.FindHoles(testHolesField.Picks())
+	}
+}
+
 func Benchmark_moves(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		game := Game{Strategy: strategy}
