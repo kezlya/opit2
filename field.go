@@ -155,7 +155,8 @@ func (f Field) FindHoles() ([]Cell, []Cell) {
 	return blocked, fixable
 }
 
-func (f Field) After(piece *Piece, picks Picks) (Field, int) {
+func (f Field) After(piece *Piece) (*Field, int) {
+	picks := f.Picks
 	x := piece.CurrentX
 	y := 0
 	r := piece.Rotation
@@ -542,10 +543,13 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			}
 		}
 	}
-	return a, y
+	if valid {
+		return &a, y
+	}
+	return nil, 0
 }
 
-func (f Field) AfterHole(space map[string]Cell) Field {
+func (f Field) AfterHole(space map[string]Cell) *Field {
 	if len(space) != 4 {
 		return nil
 	}
@@ -557,15 +561,15 @@ func (f Field) AfterHole(space map[string]Cell) Field {
 			a.Grid[cell.Y][cell.X] = true
 		}
 	}
-	return a
+	return &a
 }
 
 func (f Field) IsValid(cells *map[string]Cell) bool {
 	for _, c := range *cells {
-		if c.X < 0 || c.X >= f.Width() || c.Y < 0 {
+		if c.X < 0 || c.X >= f.Width || c.Y < 0 {
 			return false
 		}
-		if c.Y < f.Height() && f[c.Y][c.X] {
+		if c.Y < f.Height && f.Grid[c.Y][c.X] {
 			return false
 		}
 	}
@@ -573,7 +577,6 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 }
 
 func (f Field) ValidPosition(piece Piece) []Piece {
-	picks := f.Picks()
 	validPieces := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	bag.Options[piece.Key] = &piece
@@ -636,7 +639,7 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 				continue
 			}
 		}
-		fieldAfter, y := f.After(p, picks)
+		fieldAfter, y := f.After(p)
 		if fieldAfter == nil {
 			delete(bag.Options, k)
 			continue
@@ -658,19 +661,10 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 	queue := make(map[int]bool)
 	nkey := 0
 
-	drop := f.Picks().Max() + 1
-	if piece.CurrentY > drop {
-		countD := piece.CurrentY - drop
-		fp := piece.DropTo(drop)
-		for i := 0; i < countD; i++ {
-			fp.Moves += ",down"
-		}
-		bag.Options[fp.Key] = &fp
-		queue[fp.Key] = true
-	} else {
-		bag.Options[piece.Key] = &piece
-		queue[piece.Key] = true
-	}
+	drop := f.Height - f.Empty - piece.CurrentY - 1
+	fp := piece.Drop(drop)
+	bag.Options[fp.Key] = fp
+	queue[fp.Key] = true
 
 	for len(queue) > 0 {
 		tmp := make(map[int]bool)
@@ -704,7 +698,7 @@ func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
 	}
 	found := false
 	invalid := false
-	maxY := f.Height()
+	maxY := f.Height
 
 	for k, p := range bag.Options {
 		//fmt.Println(k)
@@ -786,7 +780,7 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		return -1
 	case "right":
 		nextKey := key + 100
-		if nextKey%10000/100 > f.Width() {
+		if nextKey%10000/100 > f.Width {
 			return -1
 		}
 		el, ok = bag.Options[nextKey]
@@ -866,8 +860,8 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 
 func (f Field) Copy() Field {
 	w := f.Width
-	a := Field{Grid: make([][]bool, f.Height())}
-	for i, row := range f {
+	a := Field{Grid: make([][]bool, f.Height)}
+	for i, row := range f.Grid {
 		a.Grid[i] = make([]bool, w)
 		copy(a.Grid[i], row[:])
 	}

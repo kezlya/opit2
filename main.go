@@ -32,8 +32,8 @@ func main() {
 			game.asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			//time, _ := strconv.Atoi(parts[2])
-			game.CurrentPiece.InitSpace(Cell{X: game.X, Y: game.MyPlayer.Field.Height() + game.Y})
-			game.NextPiece.InitSpace(Cell{X: 3, Y: game.MyPlayer.Field.Height() + game.Y})
+			game.CurrentPiece.InitSpace(Cell{X: game.X, Y: game.MyPlayer.Field.Height + game.Y})
+			game.NextPiece.InitSpace(Cell{X: 3, Y: game.MyPlayer.Field.Height + game.Y})
 			if game.Round == 1 {
 				fmt.Println("drop")
 			} else {

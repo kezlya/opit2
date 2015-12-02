@@ -9,7 +9,7 @@ type Piece struct {
 	CurrentY   int
 	Rotation   int
 	Space      map[string]Cell
-	FieldAfter Field
+	FieldAfter *Field
 	Moves      string
 	Score      Score
 	IsHole     bool
@@ -117,6 +117,22 @@ func (p *Piece) DropTo(y int) Piece {
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - drop, Space: res}
 	np.setKey()
 	return np
+}
+
+func (p *Piece) Drop(n int) *Piece {
+	if n <= 0 {
+		return p
+	}
+	res := make(map[string]Cell, 4)
+	for i, v := range p.Space {
+		res[i] = Cell{X: v.X, Y: v.Y - n}
+	}
+	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - n, Space: res}
+	np.setKey()
+	for i := 0; i < n; i++ {
+		np.Moves += ",down"
+	}
+	return &np
 }
 
 func (p *Piece) Turnright() Piece {
@@ -747,7 +763,7 @@ func (p *Piece) setStep(pp Picks) {
 		}
 	}
 
-	if maxX < p.FieldAfter.Width()-1 {
+	if maxX < p.FieldAfter.Width-1 {
 		x := maxX + 1
 		pick := pp[x] - 1
 		if rightY > pick {
@@ -914,7 +930,7 @@ func (p *Piece) isSingleTSpin() bool {
 	if p.Space["m1"].Y-1 < 0 {
 		return false
 	}
-	if p.FieldAfter[p.Space["m1"].Y][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.Space["m1"].Y][p.Space["m1"].X] || p.FieldAfter.Grid[p.Space["m3"].Y][p.Space["m3"].X] {
 		return true
 	}
 	return false
@@ -936,14 +952,14 @@ func (p *Piece) isDoubleTSpin() bool {
 	if p.Space["m1"].Y-2 < 0 {
 		return false
 	}
-	if p.FieldAfter[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-1][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter.Grid[p.Space["m3"].Y-1][p.Space["m3"].X] {
 		return true
 	}
 	return false
 }
 
 func (p *Piece) isPerfectClear() bool {
-	for _, row := range p.FieldAfter {
+	for _, row := range p.FieldAfter.Grid {
 		for _, col := range row {
 			if col {
 				return false
