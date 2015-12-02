@@ -23,8 +23,6 @@ type Game struct {
 type Player struct {
 	Name   string
 	Field  Field
-	Picks  Picks
-	Empty  int
 	Points int
 	Combo  int
 }
@@ -101,13 +99,7 @@ func (g *Game) asignUpdates(who, action, value string) {
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
 			for i, p := range g.Players {
 				if p.Name == who {
-					var pf Field
-					pf = pf.init(cleanSource)
-					pfp := pf.Picks()
-
-					g.Players[i].Field = pf
-					g.Players[i].Picks = pfp
-					g.Players[i].Empty = pf.Height() - pfp.Max()
+					g.Players[i].Field = FieldFromString(cleanSource)
 					break
 				}
 			}

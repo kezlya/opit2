@@ -4,13 +4,58 @@ import (
 	"strings"
 )
 
-type Field [][]bool
+//type Field [][]bool
+
+type Field struct {
+	Width  int
+	Height int
+	Empty  int
+	Grid   [][]bool
+	Picks  Picks
+}
+
+func FieldFromString(raw string) Field {
+	rows := strings.Split(raw, ";")
+	f := Field{Height: len(rows)}
+	grid := make([][]bool, f.Height)
+	for rowIndex, row := range rows {
+		y := f.Height - rowIndex
+		cells := strings.Split(row, ",")
+		if f.Width == 0 {
+			f.Width = len(cells)
+		}
+		var colums = make([]bool, f.Width)
+		for columIndex, value := range cells {
+			if value == "2" {
+				colums[columIndex] = true
+			}
+		}
+		grid[y-1] = colums
+	}
+	f.Grid = grid
+	f.Picks = f.picks()
+
+	return f
+}
+
+func (f Field) picks() Picks {
+	picks := make([]int, f.Width)
+	for i, row := range f.Grid {
+		for j, col := range row {
+			if col && i+1 > picks[j] {
+				picks[j] = i + 1
+			}
+		}
+	}
+	return picks
+}
 
 type Bag struct {
 	Options map[int]*Piece
 	Total   int
 }
 
+/*
 func (f *Field) init(raw string) Field {
 	rows := strings.Split(raw, ";")
 	height := len(rows)
@@ -31,19 +76,12 @@ func (f *Field) init(raw string) Field {
 	}
 	return field
 }
+*/
+//func (f Field) Width() int { return len(f[0]) }
 
-func (f Field) Width() int { return len(f[0]) }
+//func (f Field) Height() int { return len(f) }
 
-func (f Field) Height() int { return len(f) }
-
-func (f Field) IsFit(pick, up int) bool {
-	if pick+up <= f.Height() {
-		return true
-	}
-	return false
-}
-
-func (f Field) Picks() Picks {
+/*func (f Field) Picks() Picks {
 	result := make([]int, f.Width())
 	for i, row := range f {
 		for j, col := range row {
@@ -53,11 +91,18 @@ func (f Field) Picks() Picks {
 		}
 	}
 	return result
+}*/
+
+func (f Field) IsFit(pick, up int) bool {
+	if pick+up <= f.Height {
+		return true
+	}
+	return false
 }
 
 func (f Field) WillBurn() int {
 	burn := 0
-	for _, row := range f {
+	for _, row := range f.Grid {
 		check := true
 		for _, col := range row {
 			if !col {
@@ -73,10 +118,10 @@ func (f Field) WillBurn() int {
 }
 
 func (f Field) Burn() {
-	totalRows := f.Height()
+	totalRows := f.Height
 	for i := 0; i < totalRows; i++ {
 		check := true
-		for _, col := range f[i] {
+		for _, col := range f.Grid[i] {
 			if !col {
 				check = false
 				break
@@ -84,7 +129,7 @@ func (f Field) Burn() {
 		}
 		if check { //delete line
 			//fmt.Println(len(f), i)
-			f = append(f[:i], f[i+1:]...)
+			f.Grid = append(f.Grid[:i], f.Grid[i+1:]...)
 			totalRows--
 			i--
 		}
@@ -92,16 +137,14 @@ func (f Field) Burn() {
 }
 
 func (f Field) FindHoles() ([]Cell, []Cell) {
-	picks := f.Picks()
-	w := f.Width()
 	blocked := make([]Cell, 0)
 	fixable := make([]Cell, 0)
-	for i, pick := range picks {
+	for i, pick := range f.Picks {
 		for j := 0; j < pick; j++ {
-			if !f[j][i] {
+			if !f.Grid[j][i] {
 				hole := Cell{X: i, Y: j}
-				if (i-2 > -1 && !f[j][i-1] && !f[j][i-2] && !f[j+1][i-1] && !f[j+1][i-2]) ||
-					(i+2 < w && !f[j][i+1] && !f[j][i+2] && !f[j+1][i+1] && !f[j+1][i+2]) {
+				if (i-2 > -1 && !f.Grid[j][i-1] && !f.Grid[j][i-2] && !f.Grid[j+1][i-1] && !f.Grid[j+1][i-2]) ||
+					(i+2 < f.Width && !f.Grid[j][i+1] && !f.Grid[j][i+2] && !f.Grid[j+1][i+1] && !f.Grid[j+1][i+2]) {
 					fixable = append(fixable, hole)
 				} else {
 					blocked = append(blocked, hole)
@@ -126,10 +169,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			if picks.IsRight(x, 3) {
 				pick := picks.MaxR(x, 3)
 				if f.IsFit(pick, 1) {
-					a[pick][x] = true
-					a[pick][x+1] = true
-					a[pick][x+2] = true
-					a[pick][x+3] = true
+					a.Grid[pick][x] = true
+					a.Grid[pick][x+1] = true
+					a.Grid[pick][x+2] = true
+					a.Grid[pick][x+3] = true
 					y = pick
 					valid = true
 				}
@@ -137,10 +180,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 		case 1, 3:
 			pick := picks[x]
 			if f.IsFit(pick, 4) {
-				a[pick][x] = true
-				a[pick+1][x] = true
-				a[pick+2][x] = true
-				a[pick+3][x] = true
+				a.Grid[pick][x] = true
+				a.Grid[pick+1][x] = true
+				a.Grid[pick+2][x] = true
+				a.Grid[pick+3][x] = true
 				y = pick
 				valid = true
 			}
@@ -151,10 +194,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
 				if f.IsFit(pick, 2) {
-					a[pick][x] = true
-					a[pick+1][x] = true
-					a[pick][x+1] = true
-					a[pick][x+2] = true
+					a.Grid[pick][x] = true
+					a.Grid[pick+1][x] = true
+					a.Grid[pick][x+1] = true
+					a.Grid[pick][x+2] = true
 					y = pick
 					valid = true
 				}
@@ -165,19 +208,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l2 := picks[x+1]
 				if l2 >= l+2 {
 					if f.IsFit(l2, 1) {
-						a[l2][x] = true
-						a[l2][x+1] = true
-						a[l2-1][x] = true
-						a[l2-2][x] = true
+						a.Grid[l2][x] = true
+						a.Grid[l2][x+1] = true
+						a.Grid[l2-1][x] = true
+						a.Grid[l2-2][x] = true
 						y = l2 - 2
 						valid = true
 					}
 				} else {
 					if f.IsFit(l, 3) {
-						a[l][x] = true
-						a[l+1][x] = true
-						a[l+2][x] = true
-						a[l+2][x+1] = true
+						a.Grid[l][x] = true
+						a.Grid[l+1][x] = true
+						a.Grid[l+2][x] = true
+						a.Grid[l+2][x+1] = true
 						y = l
 						valid = true
 					}
@@ -189,19 +232,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l3 := picks[x+2]
 				if pick == l3 {
 					if f.IsFit(l3, 2) {
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick+1][x+2] = true
-						a[pick][x+2] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick+1][x+2] = true
+						a.Grid[pick][x+2] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick][x+2] = true
-						a[pick-1][x+2] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick][x+2] = true
+						a.Grid[pick-1][x+2] = true
 						y = pick - 1
 						valid = true
 					}
@@ -211,10 +254,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			if picks.IsRight(x, 1) {
 				pick := picks.MaxR(x, 1)
 				if f.IsFit(pick, 3) {
-					a[pick][x] = true
-					a[pick][x+1] = true
-					a[pick+1][x+1] = true
-					a[pick+2][x+1] = true
+					a.Grid[pick][x] = true
+					a.Grid[pick][x+1] = true
+					a.Grid[pick+1][x+1] = true
+					a.Grid[pick+2][x+1] = true
 					y = pick
 					valid = true
 				}
@@ -226,10 +269,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
 				if f.IsFit(pick, 2) {
-					a[pick][x] = true
-					a[pick][x+1] = true
-					a[pick][x+2] = true
-					a[pick+1][x+2] = true
+					a.Grid[pick][x] = true
+					a.Grid[pick][x+1] = true
+					a.Grid[pick][x+2] = true
+					a.Grid[pick+1][x+2] = true
 					y = pick
 					valid = true
 				}
@@ -238,10 +281,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			if picks.IsRight(x, 1) {
 				pick := picks.MaxR(x, 1)
 				if f.IsFit(pick, 3) {
-					a[pick][x] = true
-					a[pick+1][x] = true
-					a[pick+2][x] = true
-					a[pick][x+1] = true
+					a.Grid[pick][x] = true
+					a.Grid[pick+1][x] = true
+					a.Grid[pick+2][x] = true
+					a.Grid[pick][x+1] = true
 					y = pick
 					valid = true
 				}
@@ -252,19 +295,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l := picks[x]
 				if pick == l {
 					if f.IsFit(l, 2) {
-						a[pick][x] = true
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick+1][x+2] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick+1][x+2] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
-						a[pick-1][x] = true
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick][x+2] = true
+						a.Grid[pick-1][x] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick][x+2] = true
 						y = pick - 1
 						valid = true
 					}
@@ -276,19 +319,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l2 := picks[x+1]
 				if l >= l2+2 {
 					if f.IsFit(l, 1) {
-						a[l][x] = true
-						a[l][x+1] = true
-						a[l-1][x+1] = true
-						a[l-2][x+1] = true
+						a.Grid[l][x] = true
+						a.Grid[l][x+1] = true
+						a.Grid[l-1][x+1] = true
+						a.Grid[l-2][x+1] = true
 						y = l - 2
 						valid = true
 					}
 				} else {
 					if f.IsFit(l2, 3) {
-						a[l2+2][x] = true
-						a[l2][x+1] = true
-						a[l2+1][x+1] = true
-						a[l2+2][x+1] = true
+						a.Grid[l2+2][x] = true
+						a.Grid[l2][x+1] = true
+						a.Grid[l2+1][x+1] = true
+						a.Grid[l2+2][x+1] = true
 						y = l2
 						valid = true
 					}
@@ -299,10 +342,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 		if picks.IsRight(x, 1) {
 			pick := picks.MaxR(x, 1)
 			if f.IsFit(pick, 2) {
-				a[pick][x] = true
-				a[pick+1][x] = true
-				a[pick][x+1] = true
-				a[pick+1][x+1] = true
+				a.Grid[pick][x] = true
+				a.Grid[pick+1][x] = true
+				a.Grid[pick][x+1] = true
+				a.Grid[pick+1][x+1] = true
 				y = pick
 				valid = true
 			}
@@ -316,19 +359,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l1 := picks[x+1]
 				if pick == l || pick == l1 {
 					if f.IsFit(pick, 2) {
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick+1][x+1] = true
-						a[pick+1][x+2] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick+1][x+2] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
-						a[pick-1][x] = true
-						a[pick-1][x+1] = true
-						a[pick][x+1] = true
-						a[pick][x+2] = true
+						a.Grid[pick-1][x] = true
+						a.Grid[pick-1][x+1] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick][x+2] = true
 						y = pick - 1
 						valid = true
 					}
@@ -340,19 +383,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l2 := picks[x+1]
 				if pick == l2 {
 					if f.IsFit(pick, 3) {
-						a[pick+2][x] = true
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick][x+1] = true
+						a.Grid[pick+2][x] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick][x+1] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
-						a[pick+1][x] = true
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick-1][x+1] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick-1][x+1] = true
 						y = pick - 1
 						valid = true
 					}
@@ -365,10 +408,10 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			if picks.IsRight(x, 2) {
 				pick := picks.MaxR(x, 2)
 				if f.IsFit(pick, 2) {
-					a[pick][x] = true
-					a[pick][x+1] = true
-					a[pick+1][x+1] = true
-					a[pick][x+2] = true
+					a.Grid[pick][x] = true
+					a.Grid[pick][x+1] = true
+					a.Grid[pick+1][x+1] = true
+					a.Grid[pick][x+2] = true
 					y = pick
 					valid = true
 				}
@@ -379,19 +422,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l := picks[x]
 				if pick == l {
 					if f.IsFit(pick, 3) {
-						a[pick][x] = true
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick+2][x] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick+2][x] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
-						a[pick-1][x] = true
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick+1][x] = true
+						a.Grid[pick-1][x] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick+1][x] = true
 						y = pick - 1
 						valid = true
 					}
@@ -403,19 +446,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				c := picks[x+1]
 				if pick == c {
 					if f.IsFit(pick, 2) {
-						a[pick+1][x] = true
-						a[pick][x+1] = true
-						a[pick+1][x+1] = true
-						a[pick+1][x+2] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick+1][x+2] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick-1][x+1] = true
-						a[pick][x+2] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick-1][x+1] = true
+						a.Grid[pick][x+2] = true
 						y = pick - 1
 						valid = true
 					}
@@ -427,19 +470,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l2 := picks[x+1]
 				if pick == l2 {
 					if f.IsFit(pick, 3) {
-						a[pick+2][x+1] = true
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick][x+1] = true
+						a.Grid[pick+2][x+1] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick][x+1] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
-						a[pick+1][x+1] = true
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick-1][x+1] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick-1][x+1] = true
 						y = pick - 1
 						valid = true
 					}
@@ -455,19 +498,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l2 := picks[x+2]
 				if pick == l1 || pick == l2 {
 					if f.IsFit(pick, 2) {
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick][x+1] = true
-						a[pick][x+2] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick][x+2] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 1) {
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick-1][x+1] = true
-						a[pick-1][x+2] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick-1][x+1] = true
+						a.Grid[pick-1][x+2] = true
 						y = pick - 1
 						valid = true
 					}
@@ -479,19 +522,19 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 				l := picks[x]
 				if pick == l {
 					if f.IsFit(pick, 3) {
-						a[pick][x] = true
-						a[pick+1][x] = true
-						a[pick+1][x+1] = true
-						a[pick+2][x+1] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick+1][x] = true
+						a.Grid[pick+1][x+1] = true
+						a.Grid[pick+2][x+1] = true
 						y = pick
 						valid = true
 					}
 				} else {
 					if f.IsFit(pick, 2) {
-						a[pick-1][x] = true
-						a[pick][x] = true
-						a[pick][x+1] = true
-						a[pick+1][x+1] = true
+						a.Grid[pick-1][x] = true
+						a.Grid[pick][x] = true
+						a.Grid[pick][x+1] = true
+						a.Grid[pick+1][x+1] = true
 						y = pick - 1
 						valid = true
 					}
@@ -499,10 +542,7 @@ func (f Field) After(piece *Piece, picks Picks) (Field, int) {
 			}
 		}
 	}
-	if valid {
-		return a, y
-	}
-	return nil, y
+	return a, y
 }
 
 func (f Field) AfterHole(space map[string]Cell) Field {
@@ -511,10 +551,10 @@ func (f Field) AfterHole(space map[string]Cell) Field {
 	}
 	a := f.Copy()
 	for _, cell := range space {
-		if a[cell.Y][cell.X] {
+		if a.Grid[cell.Y][cell.X] {
 			return nil
 		} else {
-			a[cell.Y][cell.X] = true
+			a.Grid[cell.Y][cell.X] = true
 		}
 	}
 	return a
@@ -825,11 +865,11 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 }
 
 func (f Field) Copy() Field {
-	w := f.Width()
-	a := make([][]bool, f.Height())
+	w := f.Width
+	a := Field{Grid: make([][]bool, f.Height())}
 	for i, row := range f {
-		a[i] = make([]bool, w)
-		copy(a[i], row[:])
+		a.Grid[i] = make([]bool, w)
+		copy(a.Grid[i], row[:])
 	}
 	return a
 }

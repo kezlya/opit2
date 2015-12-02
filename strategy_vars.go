@@ -1,7 +1,53 @@
 package main
 
-var testHolesField = Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-var initialField = Field{{false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+var testHolesField = Field{
+	Grid: [][]bool{
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, true, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	},
+}
+var initialField = Field{
+	Grid: [][]bool{
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	},
+}
 var pieces = []string{"I", "J", "L", "O", "S", "T", "Z"}
 
 var g1 = [400]string{"L", "J", "J", "Z", "O", "S", "O", "I", "J", "T", "T", "J", "S", "O", "O", "Z", "S", "S", "T", "O", "O", "T", "J", "L", "O", "S", "S", "S", "T", "I", "O", "Z", "L", "I", "J", "L", "L", "Z", "I", "T", "J", "I", "T", "L", "J", "S", "T", "J", "Z", "J", "O", "I", "T", "O", "Z", "L", "L", "I", "J", "L", "O", "T", "S", "O", "O", "L", "T", "I", "S", "Z", "T", "I", "S", "O", "T", "I", "O", "T", "J", "O", "J", "J", "O", "S", "S", "L", "J", "T", "S", "L", "S", "S", "J", "T", "S", "Z", "J", "T", "J", "O", "L", "O", "O", "T", "S", "J", "O", "I", "I", "S", "Z", "J", "O", "T", "T", "I", "L", "S", "S", "L", "T", "J", "Z", "S", "J", "S", "T", "Z", "T", "L", "O", "T", "I", "Z", "I", "S", "O", "L", "J", "T", "I", "T", "J", "J", "O", "Z", "J", "S", "O", "J", "T", "J", "Z", "T", "Z", "T", "I", "S", "T", "L", "S", "I", "J", "L", "J", "O", "O", "I", "I", "Z", "Z", "J", "J", "L", "O", "L", "O", "T", "T", "Z", "J", "S", "O", "S", "Z", "I", "J", "O", "O", "S", "T", "I", "L", "Z", "S", "J", "J", "I", "T", "S", "L", "Z", "Z", "J", "T", "Z", "T", "L", "Z", "O", "L", "S", "O", "I", "L", "J", "T", "I", "S", "S", "S", "Z", "J", "L", "Z", "Z", "O", "J", "Z", "I", "J", "O", "L", "T", "I", "S", "O", "S", "O", "I", "L", "L", "S", "T", "Z", "T", "S", "T", "S", "J", "I", "S", "I", "T", "J", "O", "J", "O", "T", "J", "J", "J", "J", "S", "I", "O", "I", "O", "I", "S", "Z", "Z", "S", "O", "J", "T", "T", "T", "Z", "S", "S", "J", "O", "L", "L", "I", "T", "S", "J", "L", "I", "T", "Z", "Z", "T", "J", "I", "O", "T", "I", "S", "S", "T", "O", "S", "L", "Z", "S", "T", "S", "J", "T", "J", "S", "Z", "O", "S", "L", "T", "L", "J", "Z", "J", "I", "T", "I", "O", "O", "O", "J", "Z", "J", "O", "O", "T", "T", "S", "T", "L", "J", "I", "J", "J", "I", "S", "O", "O", "I", "Z", "T", "S", "L", "Z", "O", "T", "S", "L", "J", "L", "T", "S", "T", "I", "Z", "I", "L", "J", "T", "S", "L", "S", "L", "T", "O", "T", "O", "I", "Z", "S", "J", "Z", "T", "O", "T", "Z", "L", "J", "L", "I", "O", "J", "L", "T", "O", "I", "O", "L", "O", "J", "S"}

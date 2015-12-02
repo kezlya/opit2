@@ -17,6 +17,9 @@ var strategy = Strategy{
 }
 
 func main() {
+
+	//TODO: make sure code is fit into 80 specificly field test
+
 	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
