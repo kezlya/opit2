@@ -6,42 +6,9 @@ import (
 
 type Field [][]bool
 
-type Field2 struct {
-	Width  int
-	Height int
-	Empty  int
-	Grid   [][]bool
-	Picks  Picks
-}
-
 type Bag struct {
 	Options map[int]*Piece
 	Total   int
-}
-
-func FieldFromString(raw string) Field2 {
-	rows := strings.Split(raw, ";")
-	f := Field2{}
-	f.Height = len(rows)
-	grid := make([][]bool, f.Height)
-	for rowIndex, row := range rows {
-		y := f.Height - rowIndex
-		cells := strings.Split(row, ",")
-		if f.Width == 0 {
-			f.Width = len(cells)
-		}
-		var colums = make([]bool, f.Width)
-		for columIndex, value := range cells {
-			if value == "2" {
-				colums[columIndex] = true
-			}
-		}
-		grid[y-1] = colums
-	}
-	f.Grid = grid
-	f.Picks = f.picks()
-
-	return f
 }
 
 func (f *Field) init(raw string) Field {
@@ -74,18 +41,6 @@ func (f Field) IsFit(pick, up int) bool {
 		return true
 	}
 	return false
-}
-
-func (f Field2) picks() Picks {
-	picks := make([]int, f.Width)
-	for i, row := range f.Grid {
-		for j, col := range row {
-			if col && i+1 > picks[j] {
-				picks[j] = i + 1
-			}
-		}
-	}
-	return picks
 }
 
 func (f Field) Picks() Picks {
@@ -877,75 +832,4 @@ func (f Field) Copy() Field {
 		copy(a[i], row[:])
 	}
 	return a
-}
-
-func (f Field) IsDSR() int {
-	for y, row := range f {
-		x := -1
-		isOneHole := false
-		for i, col := range row {
-			if !col {
-				if x < 0 {
-					x = i
-					isOneHole = true
-				} else {
-					isOneHole = false
-				}
-			}
-		}
-		if isOneHole && f.IsTshapeHole(&Cell{X: x, Y: y}) {
-			valid := true
-			left := x - 2
-			for left >= 0 {
-				if !f[y+1][left] {
-					valid = false
-				}
-				left--
-			}
-			right := x + 2
-			for right < f.Width() {
-				if !f[y+1][right] {
-					valid = false
-				}
-				right++
-			}
-
-			if valid {
-				if f[y+2][x-1] && !f[y+2][x] && !f[y+2][x+1] {
-					return x
-				}
-				if !f[y+2][x-1] && !f[y+2][x] && f[y+2][x+1] {
-					return x - 1
-				}
-			}
-		}
-	}
-	return -1
-}
-
-func (f Field) IsTshapeHole(h *Cell) bool {
-	if h.X > 0 &&
-		h.X < f.Width()-1 &&
-		h.Y < f.Height()-2 &&
-		!f[h.Y+1][h.X-1] &&
-		!f[h.Y+1][h.X] &&
-		!f[h.Y+1][h.X+1] {
-		return true
-	}
-	return false
-}
-
-func (f Field) ApplyMatrix() {
-	upto := f.Picks().Max()
-	for i := 0; i < upto; i++ {
-		if i%2 == 0 {
-			//one hole
-			f[i][4] = true
-		} else {
-			// 3 holes
-			f[i][3] = true
-			f[i][4] = true
-			f[i][5] = true
-		}
-	}
 }
