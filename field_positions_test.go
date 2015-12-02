@@ -29,7 +29,7 @@ var testField = Field{
 		{false, false, false, false, false, false, false, false, false, false},
 	},
 }
-var tfPicks = testField.Picks()
+var tfPicks = testField.Picks
 
 func Test_availablePositions_I(t *testing.T) {
 	piece := Piece{Name: "I"}

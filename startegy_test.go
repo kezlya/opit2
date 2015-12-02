@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"encoding/csv"
 	"fmt"
@@ -14,7 +15,7 @@ import (
 	"testing"
 	"time"
 )
-
+*/
 /*
 func Test_generateGames(t *testing.T) {
 	for j := 1; j <= 26; j++ {
@@ -48,7 +49,7 @@ func Test_generateGarbageRows(t *testing.T) {
 	}
 }
 */
-
+/*
 func Benchmark_moves(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		game := Game{Strategy: strategy}
@@ -406,3 +407,4 @@ func (s *Strategy) name() string {
 		" y" + strconv.Itoa(s.HighY) +
 		" s" + strconv.Itoa(s.Step)
 }
+*/

@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"testing"
 )
@@ -28,7 +29,8 @@ var fBench = Field{
 		{false, false, false, false, false, false, false, false, false, false},
 	},
 }
-
+*/
+/*
 func Benchmark_Picks(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		fBench.Picks()
@@ -40,3 +42,4 @@ func Benchmark_FindHoles(b *testing.B) {
 		fBench.FindHoles()
 	}
 }
+*/
