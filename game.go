@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"fmt"
 	"strconv"
 	"strings"
 )
@@ -201,25 +200,4 @@ func (g *Game) calculateMoves() *Piece {
 		return &positions[0]
 	}
 	return nil
-}
-
-func (g *Game) trimStrategy() int {
-	trim := 0
-	//trim 1 doesn't work
-	/*if g.MyPlayer.Empty > 9 && g.Round < 100 {
-		trim = 1
-		if g.CurrentPiece.Name == "I" && (g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 2 {
-			trim = 0
-		}
-		if g.CurrentPiece.Name == "L" &&
-			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-3]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]) > 0 &&
-			(g.MyPlayer.Picks[len(g.MyPlayer.Picks)-2]-g.MyPlayer.Picks[len(g.MyPlayer.Picks)-1]) > 1 {
-			trim = 0
-		}
-	}*/
-	/*if g.MyPlayer.Empty > 9 && g.Round < 50 {
-		trim = 3
-	}*/
-
-	return trim
 }
