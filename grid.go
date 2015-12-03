@@ -44,42 +44,18 @@ func (g Grid) ToField() Field {
 		Height: len(g),
 		Width:  len(g[0]),
 		Grid:   g,
-		Picks:  g.picks(),
 	}
+
+	field.Picks = make([]int, field.Width)
+	for i, row := range g {
+		for j, col := range row {
+			if col && i+1 > field.Picks[j] {
+				field.Picks[j] = i + 1
+			}
+		}
+	}
+
 	field.MaxY = field.Picks.Max()
 	field.Empty = field.Height - field.MaxY
 	return field
-}
-
-func (g Grid) picks() Picks {
-	if g == nil || len(g) == 0 || len(g[0]) == 0 {
-		log.Fatalln("can't create Picks from malformed Grid")
-	}
-
-	picks := make([]int, len(g[0]))
-	for i, row := range g {
-		for j, col := range row {
-			if col && i+1 > picks[j] {
-				picks[j] = i + 1
-			}
-		}
-	}
-	return picks
-}
-
-func (a Grid) isEqual(b Grid) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := 0; i < len(a); i++ {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-		for j := 0; j < len(a); j++ {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-	return true
 }

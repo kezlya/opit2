@@ -7,46 +7,6 @@ import (
 	"testing"
 )
 
-func PrintVisual(f Field) {
-	fmt.Println()
-	for i := range f.Grid {
-		fmt.Print(f.Height-i, "	")
-		for _, c := range f.Grid[f.Height-i] {
-			if c {
-				fmt.Print("⬛ ")
-			} else {
-				fmt.Print("⬜ ")
-			}
-		}
-		fmt.Println()
-	}
-	fmt.Println("	 0 1 2 3 4 5 6 7 8 9")
-}
-
-func PrintVisuals(a, b Field) {
-	fmt.Println()
-	for i := range a.Grid {
-		fmt.Print(a.Height-i, "	")
-		for _, c := range a.Grid[a.Height-i] {
-			if c {
-				fmt.Print("⬛ ")
-			} else {
-				fmt.Print("⬜ ")
-			}
-		}
-		fmt.Print("   ")
-		for _, c := range b.Grid[b.Height-i] {
-			if c {
-				fmt.Print("⬛ ")
-			} else {
-				fmt.Print("⬜ ")
-			}
-		}
-		fmt.Println()
-	}
-	fmt.Println("	 0 1 2 3 4 5 6 7 8 9    0 1 2 3 4 5 6 7 8 9")
-}
-
 func Test_Copy(t *testing.T) {
 	//arrange
 	a := Field{
@@ -83,19 +43,6 @@ func Test_Copy(t *testing.T) {
 	}
 }
 
-
-/*
-func PrintPositions(p Piece, st Strategy) {
-	if validPiece.Name == "L" {
-		fmt.Print(validPiece.Rotation, validPiece.CurrentX, "  ")
-		fmt.Print(p.Score, "=", p.Damage, "*", st.DamageK, "-",
-			p.Burn, "*", st.BurnK, "+",
-			p.Step, "*", st.StepK, "+",
-			p.HighY, "*", st.PostyK, "+",
-			p.Hole)
-		fmt.Println()
-	}
-}*/
 func FieldIsEqual(a, b Field) bool {
 	if a.Height != b.Height {
 		return false
@@ -123,37 +70,6 @@ func PicksIsEqual(a, b Picks) bool {
 		}
 	}
 	return true
-}
-
-//TODO do proper check
-func Test_FieldFromString(t *testing.T) {
-	//raw := "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;" + "3,3,3,3,3,3,3,3,3,3;" + "3,3,3,3,3,3,3,3,3,3"
-	//cleanSource := strings.Replace(raw, ";3,3,3,3,3,3,3,3,3,3", "", 10)
-	/*expectedGrid := Field{
-		Grid: [][]bool{
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-		},
-	}*/
-
-	//f := FieldFromString(cleanSource)
-
-	//checkResults(t, expected, field)
 }
 
 func Test_IsBurn(t *testing.T) {
