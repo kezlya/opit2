@@ -1,4 +1,4 @@
-# T.E.T.R.I.S simulator
+# T.E.T.R.I.S  AI
 
 This is an experemental project for practicing algorithms writing in Go. Testing performance and eventially impliment machine learning. The idea is to write a "bot" that playing t.e.t.r.i.s by communicating with simple simulation framework.
 
