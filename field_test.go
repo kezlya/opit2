@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	//"strings"
 	"reflect"
 	"testing"
 )
@@ -41,18 +40,6 @@ func Test_Copy(t *testing.T) {
 		fmt.Println("Picks of the Field was not copied")
 		fmt.Println("Picks pointers", ap, "and", bp, "should be different")
 	}
-}
-
-func PicksIsEqual(a, b Picks) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
 }
 
 func Test_IsBurn(t *testing.T) {

@@ -123,7 +123,6 @@ func (g *Game) calculateMoves() *Piece {
 		if p.Score.Burn > 0 {
 			p.FieldAfter.Burn()
 		}
-		pp := p.FieldAfter.Picks
 
 		nPositions := p.FieldAfter.ValidPosition(g.NextPiece)
 		nhBlocked, nhFixable := p.FieldAfter.FindHoles()
@@ -137,7 +136,7 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].Score.BHoles = ncountBh - countBh
 		positions[i].Score.FHoles = ncountFh - countFh
 		positions[i].setHighY()
-		positions[i].setStep(g.MyPlayer.Field.Picks)
+		positions[i].setStep()
 		positions[i].setCHoles(nhBlocked)
 
 		for j, np := range nPositions {
@@ -153,7 +152,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
 			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
-			nPositions[j].setStep(pp)
+			nPositions[j].setStep()
 			nPositions[j].setCHoles(nnhBlocked)
 			nPositions[j].setTotalScore(g.Strategy, np.FieldAfter.Empty, ncountBh)
 		}

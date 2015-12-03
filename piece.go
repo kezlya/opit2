@@ -738,7 +738,8 @@ func (p *Piece) setHighY() {
 	}*/
 }
 
-func (p *Piece) setStep(pp Picks) {
+func (p *Piece) setStep() {
+	pp := p.FieldAfter.Picks
 	maxX, leftY, rightY := 0, 0, 0
 
 	for _, c := range p.Space {
