@@ -34,6 +34,8 @@ func (f Field) Copy() Field {
 	copy(newPicks, f.Picks[:])
 	newField.Picks = newPicks
 
+	//TODO if Holes property exist need to copy them as value type
+
 	return newField
 }
 
@@ -42,6 +44,7 @@ type Bag struct {
 	Total   int
 }
 
+//TODO kill this when ".After" removed
 func (f Field) IsFit(pick, up int) bool {
 	if pick+up <= f.Height {
 		return true

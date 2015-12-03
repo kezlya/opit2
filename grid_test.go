@@ -107,3 +107,68 @@ func Test_ToField(t *testing.T) {
 		fmt.Println("Bad CountFH", field.CountFH)
 	}
 }
+
+func Test_findHoles(t *testing.T) {
+	//arrange
+	grid := Grid{
+		{true, true, true, true, true, false, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, false, true, true, true, true, false, true, true, true},
+		{true, true, true, false, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{false, false, true, true, false, true, false, false, false, false},
+		{false, true, true, true, false, true, true, true, true, false},
+		{false, true, true, false, false, false, false, false, false, false},
+		{false, false, true, true, false, false, false, false, false, false},
+		{false, false, false, true, false, false, false, false, false, false},
+		{false, false, true, true, false, false, false, false, false, false},
+		{false, false, true, true, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	field := grid.ToField()
+	expectedBlocked := []Cell{
+		Cell{X: 1, Y: 6},
+		Cell{X: 1, Y: 9},
+		Cell{X: 2, Y: 1},
+		Cell{X: 3, Y: 7},
+		Cell{X: 4, Y: 4},
+		Cell{X: 5, Y: 0},
+		Cell{X: 6, Y: 6},
+		Cell{X: 7, Y: 2},
+		Cell{X: 8, Y: 3},
+		Cell{X: 6, Y: 9},
+		Cell{X: 7, Y: 9},
+		Cell{X: 8, Y: 9},
+	}
+	expectedFixable := []Cell{
+		Cell{X: 2, Y: 13},
+		Cell{X: 3, Y: 11},
+	}
+	expectedHoles := append(expectedBlocked, expectedFixable...)
+
+	//act
+	blocked, fixable := grid.findHoles(field.Picks)
+	holes := append(blocked, fixable...)
+
+	//assert
+	for _, h := range holes {
+		found := false
+		for _, eh := range expectedHoles {
+			if eh.X == h.X && eh.Y == h.Y {
+				found = true
+			}
+		}
+		if !found {
+			fmt.Println("not found")
+			fmt.Println("x:", h.X, " y:", h.Y)
+			t.Fail()
+		}
+	}
+}
