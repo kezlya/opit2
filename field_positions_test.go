@@ -38,8 +38,7 @@ func Test_availablePositions_I(t *testing.T) {
 	expectedFh := 0
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -60,8 +59,7 @@ func Test_availablePositions_J(t *testing.T) {
 	expectedFh := 3
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -82,8 +80,7 @@ func Test_availablePositions_L(t *testing.T) {
 	expectedFh := 2
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -104,8 +101,7 @@ func Test_availablePositions_O(t *testing.T) {
 	expectedFh := 1
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -126,8 +122,7 @@ func Test_availablePositions_S(t *testing.T) {
 	expectedFh := 3
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -148,8 +143,7 @@ func Test_availablePositions_T(t *testing.T) {
 	expectedFh := 4
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()
@@ -170,8 +164,7 @@ func Test_availablePositions_Z(t *testing.T) {
 	expectedFh := 1
 
 	resultVp := testField.ValidPosition(piece)
-	_, hFixable := testField.FindHoles()
-	resultFh := testField.FixHoles(piece, hFixable)
+	resultFh := testField.FixHoles(piece)
 
 	if len(resultVp) != expectVp {
 		t.Fail()

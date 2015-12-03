@@ -773,7 +773,8 @@ func (p *Piece) setStep() {
 	}
 }
 
-func (p *Piece) setCHoles(hBlocked []Cell) {
+func (p *Piece) setCHoles() {
+	hBlocked := p.FieldAfter.HolesBlocked
 	var effective []Cell
 	lowEffectiveY := 0
 	if len(hBlocked) > 5 {
@@ -822,7 +823,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 	*/
 }
 
-func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
+func (p *Piece) setTotalScore(st Strategy, empty int) {
 
 	kY := st.HighY
 	kS := st.Step
@@ -880,14 +881,16 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
-	if empty > 10 && holes < 5 && p.Score.Burn == 1 {
-		p.Score.Total = p.Score.Total + 10
-		//fmt.Println("====")
-	}
+	/*
+			if empty > 10 && holes < 5 && p.Score.Burn == 1 {
+				p.Score.Total = p.Score.Total + 10
+				//fmt.Println("====")
+			}
 
-	if holes > 10 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 4
-	}
+		if holes > 10 && p.Score.Burn > 0 {
+			p.Score.Total = p.Score.Total - 4
+		}
+	*/
 }
 
 func (p *Piece) getPoints() int {

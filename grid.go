@@ -40,26 +40,50 @@ func (g Grid) ToField() Field {
 		log.Fatalln("can't create Field from malformed Grid")
 	}
 
-	field := Field{
+	f := Field{
 		Height: len(g),
 		Width:  len(g[0]),
 		Grid:   g,
 	}
-	field.Picks = make([]int, field.Width)
+	f.Picks = make([]int, f.Width)
 	for i, row := range g {
 		for j, col := range row {
 			if !col {
 				continue
 			}
 			y := i + 1
-			if y > field.Picks[j] {
-				field.Picks[j] = y
+			if y > f.Picks[j] {
+				f.Picks[j] = y
 			}
-			if y > field.MaxPick {
-				field.MaxPick = y
+			if y > f.MaxPick {
+				f.MaxPick = y
 			}
 		}
 	}
-	field.Empty = field.Height - field.MaxPick
-	return field
+	f.Empty = f.Height - f.MaxPick
+	f.HolesBlocked, f.HolesFixable = g.findHoles(f.Picks)
+	f.CountBH = len(f.HolesBlocked)
+	f.CountFH = len(f.HolesFixable)
+	return f
+}
+
+//TODO return only count of holes
+func (g Grid) findHoles(picks Picks) ([]Cell, []Cell) {
+	w := len(g[0])
+	blocked := make([]Cell, 0)
+	fixable := make([]Cell, 0)
+	for i, pick := range picks {
+		for j := 0; j < pick; j++ {
+			if !g[j][i] {
+				hole := Cell{X: i, Y: j}
+				if (i-2 > -1 && !g[j][i-1] && !g[j][i-2] && !g[j+1][i-1] && !g[j+1][i-2]) ||
+					(i+2 < w && !g[j][i+1] && !g[j][i+2] && !g[j+1][i+1] && !g[j+1][i+2]) {
+					fixable = append(fixable, hole)
+				} else {
+					blocked = append(blocked, hole)
+				}
+			}
+		}
+	}
+	return blocked, fixable
 }

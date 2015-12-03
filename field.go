@@ -9,8 +9,15 @@ type Field struct {
 	Height  int
 	Empty   int
 	MaxPick int
-	Grid    Grid
-	Picks   Picks
+	CountBH int
+	CountFH int
+
+	Grid  Grid
+	Picks Picks
+
+	//TODO kill this after refactoring FixHoles
+	HolesBlocked []Cell
+	HolesFixable []Cell
 }
 
 func (f Field) Copy() Field {
@@ -76,25 +83,6 @@ func (f Field) Burn() {
 			i--
 		}
 	}
-}
-
-func (f Field) FindHoles() ([]Cell, []Cell) {
-	blocked := make([]Cell, 0)
-	fixable := make([]Cell, 0)
-	for i, pick := range f.Picks {
-		for j := 0; j < pick; j++ {
-			if !f.Grid[j][i] {
-				hole := Cell{X: i, Y: j}
-				if (i-2 > -1 && !f.Grid[j][i-1] && !f.Grid[j][i-2] && !f.Grid[j+1][i-1] && !f.Grid[j+1][i-2]) ||
-					(i+2 < f.Width && !f.Grid[j][i+1] && !f.Grid[j][i+2] && !f.Grid[j+1][i+1] && !f.Grid[j+1][i+2]) {
-					fixable = append(fixable, hole)
-				} else {
-					blocked = append(blocked, hole)
-				}
-			}
-		}
-	}
-	return blocked, fixable
 }
 
 func (f Field) After(piece *Piece) (*Field, int) {
@@ -597,7 +585,8 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 	return validPieces
 }
 
-func (f Field) FixHoles(piece Piece, holes []Cell) []Piece {
+func (f Field) FixHoles(piece Piece) []Piece {
+	holes := f.HolesFixable
 	fixes := make([]Piece, 0)
 	bag := &Bag{Options: make(map[int]*Piece)}
 	queue := make(map[int]bool)
