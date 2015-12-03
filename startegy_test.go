@@ -1,21 +1,20 @@
 package main
 
-/*
 import (
-	"encoding/csv"
+	//"encoding/csv"
 	"fmt"
-	"github.com/agonopol/gosplat"
-	"github.com/skratchdot/open-golang/open"
-	"io/ioutil"
-	"math/rand"
-	"os"
-	"sort"
-	"strconv"
-	"strings"
+	//"github.com/agonopol/gosplat"
+	//"github.com/skratchdot/open-golang/open"
+	//"io/ioutil"
+	//"math/rand"
+	//"os"
+	//"sort"
+	//"strconv"
+	//"strings"
 	"testing"
 	"time"
 )
-*/
+
 /*
 func Test_generateGames(t *testing.T) {
 	for j := 1; j <= 26; j++ {
@@ -96,7 +95,7 @@ func Benchmark_fixholes(b *testing.B) {
 		testHolesField.FixHoles(piece, []Cell{hole})
 	}
 }
-
+*/
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		buff := 1
@@ -115,6 +114,7 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 
+/*
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 2; b++ {
@@ -157,16 +157,15 @@ func Benchmark_investigate(banch *testing.B) {
 		fmt.Println("done")
 	}
 }
-
+*/
 func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.Round = 0
 	g.MyPlayer.Points = 0
-	g.MyPlayer.Field = initialField
-	g.MyPlayer.Picks = initialField.Picks()
+	g.MyPlayer.Field = EmptyGrig10x20.ToField()
 	position := &Piece{}
-	position.FieldAfter = initialField
+	position.FieldAfter = &g.MyPlayer.Field
 	assignPieces(g, input[0])
 	keepGoing := true
 
@@ -174,7 +173,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 	for keepGoing {
 		applyPoints(g, position)
 		position.FieldAfter.Burn()
-		g.MyPlayer.Field = position.FieldAfter
+		g.MyPlayer.Field = *position.FieldAfter
 		if addSolidLines(g) {
 			keepGoing = false
 			break
@@ -183,26 +182,24 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			keepGoing = false
 			break
 		}
-		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
-		g.MyPlayer.Empty = g.MyPlayer.Field.Height() - g.MyPlayer.Picks.Max()
 		assignPieces(g, input[i])
 		g.Round++
 
 		if visual {
 			//fmt.Println("D", position.Damage, "S", position.Score)
-			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo, "empty:", g.MyPlayer.Empty)
+			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
 			fmt.Printf("%+v\n", position.Score)
-			PrintVisual(g.MyPlayer.Field)
+			g.MyPlayer.Field.Grid.visual()
 			time.Sleep(1000000000)
 		}
 
 		position = g.calculateMoves()
 
 		if position == nil ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][3] ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][4] ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][5] ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][6] {
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][3] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][4] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][5] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][6] {
 			keepGoing = false
 		}
 		i++
@@ -211,6 +208,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 	ch_score <- g.MyPlayer.Points
 }
 
+/*
 func playGames(st Strategy) (*[]int, *[]int) {
 	buff := 26
 	ch_round := make(chan int, buff)
@@ -255,6 +253,7 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	fmt.Println("rounds:", rounds)
 	return &scores, &rounds
 }
+*/
 
 func assignPieces(g *Game, piece string) {
 	g.CurrentPiece = g.NextPiece
@@ -263,7 +262,7 @@ func assignPieces(g *Game, piece string) {
 		x = 4
 	}
 	g.NextPiece = Piece{Name: piece, Rotation: 0}
-	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height() - 1})
+	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height - 1})
 }
 
 func applyPoints(g *Game, p *Piece) {
@@ -282,10 +281,10 @@ func addSolidLines(g *Game) bool {
 	stop := false
 	r := g.Round % 20
 	if r == 0 && g.Round != 0 {
-		if g.MyPlayer.Empty == 0 {
+		if g.MyPlayer.Field.Empty == 0 {
 			stop = true
 		}
-		g.MyPlayer.Field = g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1]
+		g.MyPlayer.Field.Grid = g.MyPlayer.Field.Grid[:g.MyPlayer.Field.Height-1]
 		g.Height = g.Height - 1
 	}
 	return stop
@@ -296,21 +295,22 @@ func addGarbageLines(g *Game, garbage *[60]int) bool {
 	speed := 7
 	r := g.Round % speed
 	if r == 0 && g.Round != 0 {
-		if g.MyPlayer.Empty == 0 {
+		if g.MyPlayer.Field.Empty == 0 {
 			stop = true
 		}
-		size := g.MyPlayer.Field.Width()
+		size := g.MyPlayer.Field.Width
 		row := make([]bool, size)
 		for i := range row {
 			row[i] = true
 		}
 		row[garbage[g.Round/speed]] = false
 		row[garbage[len(garbage)-g.Round/speed]] = false
-		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
+		g.MyPlayer.Field.Grid = append([][]bool{row}, [][]bool(g.MyPlayer.Field.Grid[:g.MyPlayer.Field.Height-1])...)
 	}
 	return stop
 }
 
+/*
 func save(fileName string, record []string) {
 	csvfile, err := os.OpenFile("output/"+fileName+".csv", os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
