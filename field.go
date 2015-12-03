@@ -11,6 +11,7 @@ type Field struct {
 	MaxPick int
 	CountBH int
 	CountFH int
+	Burned  int
 
 	Grid  Grid
 	Picks Picks
@@ -50,42 +51,6 @@ func (f Field) IsFit(pick, up int) bool {
 		return true
 	}
 	return false
-}
-
-func (f Field) WillBurn() int {
-	burn := 0
-	for _, row := range f.Grid {
-		check := true
-		for _, col := range row {
-			if !col {
-				check = false
-				break
-			}
-		}
-		if check {
-			burn++
-		}
-	}
-	return burn
-}
-
-func (f Field) Burn() {
-	totalRows := f.Height
-	for i := 0; i < totalRows; i++ {
-		check := true
-		for _, col := range f.Grid[i] {
-			if !col {
-				check = false
-				break
-			}
-		}
-		if check { //delete line
-			//fmt.Println(len(f), i)
-			f.Grid = append(f.Grid[:i], f.Grid[i+1:]...)
-			totalRows--
-			i--
-		}
-	}
 }
 
 func (f Field) After(piece *Piece) (*Field, int) {
@@ -477,6 +442,7 @@ func (f Field) After(piece *Piece) (*Field, int) {
 		}
 	}
 	if valid {
+		a.Burned = a.Grid.Burn()
 		return &a, y
 	}
 	return nil, 0
@@ -494,6 +460,7 @@ func (f Field) AfterHole(space map[string]Cell) *Field {
 			a.Grid[cell.Y][cell.X] = true
 		}
 	}
+	a.Burned = a.Grid.Burn()
 	return &a
 }
 
@@ -579,7 +546,6 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 		}
 		np := p.DropTo(y)
 		np.FieldAfter = fieldAfter
-		np.setBurn()
 		np.Moves = strings.TrimPrefix(p.Moves, ",")
 		np.IsHole = false
 		validPieces = append(validPieces, np)
@@ -673,7 +639,6 @@ func (f Field) FixHoles(piece Piece) []Piece {
 			}
 			if found && !invalid {
 				p.FieldAfter = f.AfterHole(p.Space)
-				p.setBurn()
 				p.Moves = strings.TrimPrefix(p.Moves, ",")
 				p.IsHole = true
 				fixes = append(fixes, *p)

@@ -698,10 +698,6 @@ func (p *Piece) setKey() {
 	}
 }
 
-func (p *Piece) setBurn() {
-	p.Score.Burn = p.FieldAfter.WillBurn()
-}
-
 func (p *Piece) setDSR(before, after int) {
 	if before < 0 && after >= 0 {
 		p.Score.IsDSR = true
@@ -824,6 +820,8 @@ func (p *Piece) setCHoles() {
 }
 
 func (p *Piece) setTotalScore(st Strategy, empty int) {
+
+	p.Score.Burn = p.FieldAfter.Burned
 
 	kY := st.HighY
 	kS := st.Step

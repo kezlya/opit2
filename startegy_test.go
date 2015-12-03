@@ -172,7 +172,6 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 	i := 0
 	for keepGoing {
 		applyPoints(g, position)
-		position.FieldAfter.Burn()
 		g.MyPlayer.Field = *position.FieldAfter
 		if addSolidLines(g) {
 			keepGoing = false

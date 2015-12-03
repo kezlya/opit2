@@ -117,10 +117,6 @@ func (g *Game) calculateMoves() *Piece {
 	}
 
 	for i, p := range positions {
-		if p.Score.Burn > 0 {
-			p.FieldAfter.Burn()
-		}
-
 		nPositions := p.FieldAfter.ValidPosition(g.NextPiece)
 		if p.FieldAfter.CountFH > 0 {
 			nfixes := p.FieldAfter.FixHoles(g.NextPiece)
@@ -134,10 +130,6 @@ func (g *Game) calculateMoves() *Piece {
 		positions[i].setCHoles()
 
 		for j, np := range nPositions {
-
-			if np.Score.Burn > 0 {
-				np.FieldAfter.Burn()
-			}
 			if ((g.Round + 1) % 20) == 0 {
 				np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
 			}

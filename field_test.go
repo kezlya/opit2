@@ -42,40 +42,6 @@ func Test_Copy(t *testing.T) {
 	}
 }
 
-func Test_IsBurn(t *testing.T) {
-	arange := Field{
-		Grid: [][]bool{
-			{true, false, true, true, true, true, true, true, true, true},
-			{true, true, false, true, true, false, true, true, true, true},
-			{true, true, true, true, true, true, true, true, true, true},
-			{true, true, true, true, true, true, true, false, true, true},
-			{true, true, true, true, true, true, true, true, true, true},
-			{true, true, true, true, false, true, true, false, true, true},
-			{true, true, true, true, true, true, true, true, true, true},
-			{true, true, true, true, false, true, true, true, true, true},
-			{true, true, true, true, true, true, true, true, true, true},
-			{true, true, true, true, true, true, true, true, true, true},
-			{true, true, false, true, true, true, true, true, true, true},
-			{true, true, true, true, true, false, true, true, true, true},
-			{false, true, true, true, true, true, true, true, true, true},
-			{false, true, true, true, true, true, true, true, false, true},
-			{false, false, true, false, false, false, true, false, false, false},
-			{false, false, true, false, false, false, true, false, false, false},
-			{false, false, true, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-			{false, false, false, false, false, false, false, false, false, false},
-		},
-	}
-	expect := 5
-
-	result := arange.WillBurn()
-	if expect != result {
-		t.Fail()
-		fmt.Println(expect, "!=", result)
-	}
-}
-
 /*
 func Test_Burn(t *testing.T) {
 	arange := Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}

@@ -13,7 +13,7 @@ func (a Grid) isEqual(b Grid) bool {
 		if len(a[i]) != len(b[i]) {
 			return false
 		}
-		for j := 0; j < len(a); j++ {
+		for j := 0; j < len(a[i]); j++ {
 			if a[i][j] != b[i][j] {
 				return false
 			}
@@ -170,5 +170,64 @@ func Test_findHoles(t *testing.T) {
 			fmt.Println("x:", h.X, " y:", h.Y)
 			t.Fail()
 		}
+	}
+}
+
+func Test_Burn(t *testing.T) {
+	//arrange
+	grid := Grid{
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, false, true, true, false, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, true, true, true, false, true, true, true, true},
+		{false, true, true, true, true, true, true, true, true, true},
+		{false, true, true, true, true, true, true, true, false, true},
+		{false, false, true, false, false, false, true, false, false, false},
+		{false, false, true, false, false, false, true, false, false, false},
+		{false, false, true, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	expectedGrid := Grid{
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, false, true, true, false, true, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, false, true, true, false, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, true, true, true, false, true, true, true, true},
+		{false, true, true, true, true, true, true, true, true, true},
+		{false, true, true, true, true, true, true, true, false, true},
+		{false, false, true, false, false, false, true, false, false, false},
+		{false, false, true, false, false, false, true, false, false, false},
+		{false, false, true, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+
+	//ast
+	result := grid.Burn()
+
+	//assert
+	if !grid.isEqual(expectedGrid) || result != 5 {
+		t.Fail()
+		fmt.Println("Bad Burn", result)
+		grid.visual()
+		expectedGrid.visual()
 	}
 }

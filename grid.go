@@ -87,3 +87,22 @@ func (g Grid) findHoles(picks Picks) ([]Cell, []Cell) {
 	}
 	return blocked, fixable
 }
+
+func (g Grid) Burn() int {
+	burned := 0
+	for i := 0; i < len(g); i++ {
+		check := true
+		for _, col := range g[i] {
+			if !col {
+				check = false
+				break
+			}
+		}
+		if check {
+			g = append(g[:i], g[i+1:]...)
+			burned++
+			i--
+		}
+	}
+	return burned
+}
