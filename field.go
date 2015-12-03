@@ -4,13 +4,14 @@ import (
 	"strings"
 )
 
-//type Field [][]bool
+type Grid [][]bool
 
 type Field struct {
 	Width  int
 	Height int
 	Empty  int
-	Grid   [][]bool
+	MaxY   int
+	Grid   Grid
 	Picks  Picks
 }
 
@@ -34,8 +35,26 @@ func FieldFromString(raw string) Field {
 	}
 	f.Grid = grid
 	f.Picks = f.picks()
-
+	f.MaxY = f.Picks.Max()
+	f.Empty = f.Height - f.MaxY
 	return f
+}
+
+func (f Field) Copy() Field {
+	newField := f
+
+	newGrid := make([][]bool, f.Height)
+	for i, row := range f.Grid {
+		newGrid[i] = make([]bool, f.Width)
+		copy(newGrid[i], row[:])
+	}
+	newField.Grid = newGrid
+
+	newPicks := make([]int, len(f.Picks))
+	copy(newPicks, f.Picks[:])
+	newField.Picks = newPicks
+
+	return newField
 }
 
 func (f Field) picks() Picks {
@@ -54,44 +73,6 @@ type Bag struct {
 	Options map[int]*Piece
 	Total   int
 }
-
-/*
-func (f *Field) init(raw string) Field {
-	rows := strings.Split(raw, ";")
-	height := len(rows)
-	var field Field
-	field = make([][]bool, height)
-	for rowIndex, row := range rows {
-		y := height - rowIndex
-		cells := strings.Split(row, ",")
-		var colums = make([]bool, len(cells))
-		for columIndex, value := range cells {
-			if value == "2" {
-				colums[columIndex] = true
-			} else {
-				colums[columIndex] = false
-			}
-		}
-		field[y-1] = colums
-	}
-	return field
-}
-*/
-//func (f Field) Width() int { return len(f[0]) }
-
-//func (f Field) Height() int { return len(f) }
-
-/*func (f Field) Picks() Picks {
-	result := make([]int, f.Width())
-	for i, row := range f {
-		for j, col := range row {
-			if i+1 > result[j] && col == true {
-				result[j] = i + 1
-			}
-		}
-	}
-	return result
-}*/
 
 func (f Field) IsFit(pick, up int) bool {
 	if pick+up <= f.Height {
@@ -856,14 +837,4 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		return -1
 	}
 	return -1
-}
-
-func (f Field) Copy() Field {
-	w := f.Width
-	a := Field{Grid: make([][]bool, f.Height)}
-	for i, row := range f.Grid {
-		a.Grid[i] = make([]bool, w)
-		copy(a.Grid[i], row[:])
-	}
-	return a
 }

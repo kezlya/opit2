@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	//"strings"
+	"reflect"
 	"testing"
 )
 
@@ -46,6 +47,42 @@ func PrintVisuals(a, b Field) {
 	fmt.Println("	 0 1 2 3 4 5 6 7 8 9    0 1 2 3 4 5 6 7 8 9")
 }
 
+func Test_Copy(t *testing.T) {
+	//arrange
+	a := Field{
+		Width:  2,
+		Height: 2,
+		Empty:  1,
+		MaxY:   1,
+		Grid:   [][]bool{{false, true}, {false, false}},
+		Picks:  []int{0, 1},
+	}
+
+	//act
+	b := a.Copy()
+	a.Width = 1
+
+	//assert
+	if b.Width != 2 || b.Height != 2 || b.Empty != 1 || b.MaxY != 1 {
+		t.Fail()
+		fmt.Println("Properties of the Field was not copied")
+	}
+	ag := reflect.ValueOf(a.Grid).Pointer()
+	bg := reflect.ValueOf(b.Grid).Pointer()
+	if !a.Grid.isEqual(b.Grid) || ag == bg {
+		t.Fail()
+		fmt.Println("Grid of the Field was not copied")
+		fmt.Println("Grid pointers", ag, "and", bg, "should be different")
+	}
+	ap := reflect.ValueOf(a.Picks).Pointer()
+	bp := reflect.ValueOf(b.Picks).Pointer()
+	if !a.Picks.isEqual(b.Picks) || ap == bp {
+		t.Fail()
+		fmt.Println("Picks of the Field was not copied")
+		fmt.Println("Picks pointers", ap, "and", bp, "should be different")
+	}
+}
+
 /*
 func PrintPositions(p Piece, st Strategy) {
 	if validPiece.Name == "L" {
@@ -58,6 +95,35 @@ func PrintPositions(p Piece, st Strategy) {
 		fmt.Println()
 	}
 }*/
+
+func (a Grid) isEqual(b Grid) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := 0; i < len(a); i++ {
+		if len(a[i]) != len(b[i]) {
+			return false
+		}
+		for j := 0; j < len(a); j++ {
+			if a[i][j] != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func (a Picks) isEqual(b Picks) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
 
 func FieldIsEqual(a, b Field) bool {
 	if a.Height != b.Height {
