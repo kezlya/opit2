@@ -5,12 +5,12 @@ import (
 )
 
 type Field struct {
-	Width  int
-	Height int
-	Empty  int
-	MaxY   int
-	Grid   Grid
-	Picks  Picks
+	Width   int
+	Height  int
+	Empty   int
+	MaxPick int
+	Grid    Grid
+	Picks   Picks
 }
 
 func (f Field) Copy() Field {

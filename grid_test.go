@@ -63,3 +63,39 @@ func Test_GridFromString(t *testing.T) {
 		expectedGrid.visual()
 	}
 }
+
+func Test_ToField(t *testing.T) {
+	//arrange
+	expectedPicks := []int{0, 2, 0, 1, 0, 1, 0, 1, 0, 1}
+	grid := Grid{
+		{false, true, false, true, false, true, false, true, false, true},
+		{false, true, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+
+	//act
+	field := grid.ToField()
+
+	//assert
+	if field.Width != 10 {
+		t.Fail()
+		fmt.Println("Bad Width", field.Width)
+	}
+	if field.Height != 4 {
+		t.Fail()
+		fmt.Println("Bad Height", field.Height)
+	}
+	if field.Empty != 2 {
+		t.Fail()
+		fmt.Println("Bad Empty", field.Empty)
+	}
+	if field.MaxPick != 2 {
+		t.Fail()
+		fmt.Println("Bad MaxY", field.MaxPick)
+	}
+	if !field.Picks.isEqual(expectedPicks) {
+		t.Fail()
+		fmt.Println("Bad Picks", field.Picks)
+	}
+}

@@ -149,15 +149,13 @@ func (g *Game) calculateMoves() *Piece {
 				np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
 			}
 
-			npp := np.FieldAfter.Picks
-			nEmpty := np.FieldAfter.Height - npp.Max()
 			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles()
 			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
 			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
 			nPositions[j].setHighY()
 			nPositions[j].setStep(pp)
 			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(g.Strategy, nEmpty, ncountBh)
+			nPositions[j].setTotalScore(g.Strategy, np.FieldAfter.Empty, ncountBh)
 		}
 
 		if len(nPositions) > 0 {

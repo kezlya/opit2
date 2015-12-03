@@ -45,17 +45,21 @@ func (g Grid) ToField() Field {
 		Width:  len(g[0]),
 		Grid:   g,
 	}
-
 	field.Picks = make([]int, field.Width)
 	for i, row := range g {
 		for j, col := range row {
-			if col && i+1 > field.Picks[j] {
-				field.Picks[j] = i + 1
+			if !col {
+				continue
+			}
+			y := i + 1
+			if y > field.Picks[j] {
+				field.Picks[j] = y
+			}
+			if y > field.MaxPick {
+				field.MaxPick = y
 			}
 		}
 	}
-
-	field.MaxY = field.Picks.Max()
-	field.Empty = field.Height - field.MaxY
+	field.Empty = field.Height - field.MaxPick
 	return field
 }

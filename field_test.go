@@ -10,12 +10,12 @@ import (
 func Test_Copy(t *testing.T) {
 	//arrange
 	a := Field{
-		Width:  2,
-		Height: 2,
-		Empty:  1,
-		MaxY:   1,
-		Grid:   [][]bool{{false, true}, {false, false}},
-		Picks:  []int{0, 1},
+		Width:   2,
+		Height:  2,
+		Empty:   1,
+		MaxPick: 1,
+		Grid:    [][]bool{{false, true}, {false, false}},
+		Picks:   []int{0, 1},
 	}
 
 	//act
@@ -23,7 +23,7 @@ func Test_Copy(t *testing.T) {
 	a.Width = 1
 
 	//assert
-	if b.Width != 2 || b.Height != 2 || b.Empty != 1 || b.MaxY != 1 {
+	if b.Width != 2 || b.Height != 2 || b.Empty != 1 || b.MaxPick != 1 {
 		t.Fail()
 		fmt.Println("Properties of the Field was not copied")
 	}
@@ -41,23 +41,6 @@ func Test_Copy(t *testing.T) {
 		fmt.Println("Picks of the Field was not copied")
 		fmt.Println("Picks pointers", ap, "and", bp, "should be different")
 	}
-}
-
-func FieldIsEqual(a, b Field) bool {
-	if a.Height != b.Height {
-		return false
-	}
-	for i := range a.Grid {
-		if len(a.Grid[i]) != len(b.Grid[i]) {
-			return false
-		}
-		for j := range a.Grid[i] {
-			if a.Grid[i][j] != b.Grid[i][j] {
-				return false
-			}
-		}
-	}
-	return true
 }
 
 func PicksIsEqual(a, b Picks) bool {

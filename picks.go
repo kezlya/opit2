@@ -2,16 +2,7 @@ package main
 
 type Picks []int
 
-func (p Picks) Max() int {
-	result := 0
-	for _, pick := range p {
-		if result < pick {
-			result = pick
-		}
-	}
-	return result
-}
-
+//TODO kill this when ".After" removed
 func (p Picks) MaxR(x, n int) int {
 	pick := p[x]
 	for i := 1; i <= n; i++ {
@@ -22,24 +13,10 @@ func (p Picks) MaxR(x, n int) int {
 	return pick
 }
 
+//TODO kill this when ".After" removed
 func (p Picks) IsRight(x, n int) bool {
 	if x+n < len(p) {
 		return true
 	}
 	return false
-}
-
-func (p Picks) SumStep() int {
-	sum := 0
-	for i, v := range p {
-		if i > 0 {
-			diff := v - p[i-1]
-			if diff > 0 {
-				sum = sum + diff
-			} else {
-				sum = sum - diff
-			}
-		}
-	}
-	return sum
 }
