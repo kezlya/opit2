@@ -108,6 +108,7 @@ func Test_ToField(t *testing.T) {
 	}
 }
 
+//TODO depricate eventially
 func Test_findHoles(t *testing.T) {
 	//arrange
 	grid := Grid{

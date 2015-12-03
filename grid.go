@@ -67,6 +67,7 @@ func (g Grid) ToField() Field {
 	return f
 }
 
+//TODO depricate eventially move to the loop of ToField method
 //TODO return only count of holes
 func (g Grid) findHoles(picks Picks) ([]Cell, []Cell) {
 	w := len(g[0])
@@ -88,6 +89,7 @@ func (g Grid) findHoles(picks Picks) ([]Cell, []Cell) {
 	return blocked, fixable
 }
 
+//TODO depricate eventially move to the loop of ToField method
 func (g Grid) Burn() int {
 	burned := 0
 	for i := 0; i < len(g); i++ {

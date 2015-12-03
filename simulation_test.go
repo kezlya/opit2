@@ -3,13 +3,13 @@ package main
 import (
 	//"encoding/csv"
 	"fmt"
-	//"github.com/agonopol/gosplat"
-	//"github.com/skratchdot/open-golang/open"
-	//"io/ioutil"
+	"github.com/agonopol/gosplat"
+	"github.com/skratchdot/open-golang/open"
+	"io/ioutil"
 	//"math/rand"
-	//"os"
-	//"sort"
-	//"strconv"
+	"os"
+	"sort"
+	"strconv"
 	//"strings"
 	"testing"
 	"time"
@@ -101,7 +101,7 @@ func Benchmark_one(b *testing.B) {
 		buff := 1
 		ch_round := make(chan int, buff)
 		ch_score := make(chan int, buff)
-		playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g10, &gr7, true)
+		go playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g10, &gr7, true)
 		scores := make([]int, buff)
 		rounds := make([]int, buff)
 		for k := 0; k < buff; k++ {
@@ -111,6 +111,20 @@ func Benchmark_one(b *testing.B) {
 
 		fmt.Println("scores:", scores)
 		fmt.Println("rounds:", rounds)
+	}
+}
+
+func Benchmark_many(banch *testing.B) {
+	for n := 0; n < banch.N; n++ {
+		// strategy taking from main file current Strategy for the bot
+		strategyName := strategy.name()
+		fmt.Println()
+		fmt.Println("================================")
+		fmt.Println(strategyName)
+
+		scores, rounds := playGames(strategy)
+		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
+		fmt.Println("done")
 	}
 }
 
@@ -143,20 +157,7 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-func Benchmark_investigate(banch *testing.B) {
-	for n := 0; n < banch.N; n++ {
-		// strategy taking from main file current Strategy for the bot
-		strategyName := strategy.name()
-		fmt.Println()
-		fmt.Println("================================")
-		fmt.Println(strategyName)
 
-		scores, rounds := playGames(strategy)
-		//Linechart(scores, scores, rounds, rounds, strategyName)
-		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
-		fmt.Println("done")
-	}
-}
 */
 func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
@@ -169,10 +170,18 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 	assignPieces(g, input[0])
 	keepGoing := true
 
+	fmt.Printf("%+v\n", g)
+
 	i := 0
 	for keepGoing {
 		applyPoints(g, position)
 		g.MyPlayer.Field = *position.FieldAfter
+		
+		
+		fmt.Printf("%+v\n", g.MyPlayer.Field)
+		
+		
+		
 		if addSolidLines(g) {
 			keepGoing = false
 			break
@@ -207,7 +216,6 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 	ch_score <- g.MyPlayer.Points
 }
 
-/*
 func playGames(st Strategy) (*[]int, *[]int) {
 	buff := 26
 	ch_round := make(chan int, buff)
@@ -252,7 +260,6 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	fmt.Println("rounds:", rounds)
 	return &scores, &rounds
 }
-*/
 
 func assignPieces(g *Game, piece string) {
 	g.CurrentPiece = g.NextPiece
@@ -338,7 +345,7 @@ func statistic(a []int) (int, int, int) {
 	avr := total/len(a) - 2
 	return avr, a[1], a[len(a)-2]
 }
-
+*/
 func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	cScores := gosplat.NewChart()
 	cRounds := gosplat.NewChart()
@@ -381,6 +388,7 @@ func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	fmt.Println(name)
 }
 
+/*
 func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool {
 	counterS := 0
 	counterR := 0
@@ -398,6 +406,9 @@ func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool
 	return (counterS > half || counterR > half)
 }
 
+
+*/
+
 func (s *Strategy) name() string {
 	return "b" + strconv.Itoa(s.Burn) +
 		" bh" + strconv.Itoa(s.BHoles) +
@@ -406,4 +417,3 @@ func (s *Strategy) name() string {
 		" y" + strconv.Itoa(s.HighY) +
 		" s" + strconv.Itoa(s.Step)
 }
-*/
