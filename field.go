@@ -22,7 +22,7 @@ func FieldFromString(raw string) Field {
 	for rowIndex, row := range rows {
 		y := f.Height - rowIndex
 		cells := strings.Split(row, ",")
-		if f.Width == 0 {
+		if f.Width == 0 && len(cells) > 0 {
 			f.Width = len(cells)
 		}
 		var colums = make([]bool, f.Width)
@@ -57,6 +57,7 @@ func (f Field) Copy() Field {
 	return newField
 }
 
+//TODO get rid of this method
 func (f Field) picks() Picks {
 	picks := make([]int, f.Width)
 	for i, row := range f.Grid {

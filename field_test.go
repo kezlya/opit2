@@ -83,6 +83,7 @@ func Test_Copy(t *testing.T) {
 	}
 }
 
+
 /*
 func PrintPositions(p Piece, st Strategy) {
 	if validPiece.Name == "L" {
@@ -95,36 +96,6 @@ func PrintPositions(p Piece, st Strategy) {
 		fmt.Println()
 	}
 }*/
-
-func (a Grid) isEqual(b Grid) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := 0; i < len(a); i++ {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-		for j := 0; j < len(a); j++ {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func (a Picks) isEqual(b Picks) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := 0; i < len(a); i++ {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
-
 func FieldIsEqual(a, b Field) bool {
 	if a.Height != b.Height {
 		return false

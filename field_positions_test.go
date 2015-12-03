@@ -5,30 +5,30 @@ import (
 	"testing"
 )
 
-var testField = Field{
-	Grid: [][]bool{
-		{true, false, true, true, true, true, true, true, true, true},
-		{true, true, false, true, true, false, true, true, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, true, true, true, false, true, true, false, true, true},
-		{false, true, true, true, true, true, true, true, true, true},
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, false, false, false, false, true, true, true, true},
-		{true, true, true, false, false, false, true, true, true, true},
-		{false, true, true, false, false, true, true, true, true, true},
-		{false, true, true, false, false, false, true, true, false, true},
-		{false, false, true, false, false, false, true, false, false, false},
-		{false, false, true, false, false, false, true, false, false, false},
-		{false, false, true, false, false, false, true, false, false, false},
-		{false, false, true, false, false, false, true, false, false, false},
-		{false, false, true, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	},
+var testGrid = Grid{
+	{true, false, true, true, true, true, true, true, true, true},
+	{true, true, false, true, true, false, true, true, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, false, true, true, false, true, true},
+	{false, true, true, true, true, true, true, true, true, true},
+	{true, true, true, true, false, true, true, true, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, false, false, false, false, true, true, true, true},
+	{true, true, true, false, false, false, true, true, true, true},
+	{false, true, true, false, false, true, true, true, true, true},
+	{false, true, true, false, false, false, true, true, false, true},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, false, false, false, false},
+	{false, false, false, false, false, false, false, false, false, false},
 }
+var testField = testGrid.toField()
+
 var tfPicks = testField.Picks
 
 func Test_availablePositions_I(t *testing.T) {
