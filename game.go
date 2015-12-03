@@ -99,7 +99,8 @@ func (g *Game) asignUpdates(who, action, value string) {
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
 			for i, p := range g.Players {
 				if p.Name == who {
-					g.Players[i].Field = FieldFromString(cleanSource)
+					grid := GridFromString(cleanSource)
+					g.Players[i].Field = grid.ToField()
 					break
 				}
 			}

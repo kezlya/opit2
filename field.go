@@ -4,8 +4,6 @@ import (
 	"strings"
 )
 
-type Grid [][]bool
-
 type Field struct {
 	Width  int
 	Height int
@@ -13,31 +11,6 @@ type Field struct {
 	MaxY   int
 	Grid   Grid
 	Picks  Picks
-}
-
-func FieldFromString(raw string) Field {
-	rows := strings.Split(raw, ";")
-	f := Field{Height: len(rows)}
-	grid := make([][]bool, f.Height)
-	for rowIndex, row := range rows {
-		y := f.Height - rowIndex
-		cells := strings.Split(row, ",")
-		if f.Width == 0 && len(cells) > 0 {
-			f.Width = len(cells)
-		}
-		var colums = make([]bool, f.Width)
-		for columIndex, value := range cells {
-			if value == "2" {
-				colums[columIndex] = true
-			}
-		}
-		grid[y-1] = colums
-	}
-	f.Grid = grid
-	f.Picks = f.picks()
-	f.MaxY = f.Picks.Max()
-	f.Empty = f.Height - f.MaxY
-	return f
 }
 
 func (f Field) Copy() Field {
@@ -55,19 +28,6 @@ func (f Field) Copy() Field {
 	newField.Picks = newPicks
 
 	return newField
-}
-
-//TODO get rid of this method
-func (f Field) picks() Picks {
-	picks := make([]int, f.Width)
-	for i, row := range f.Grid {
-		for j, col := range row {
-			if col && i+1 > picks[j] {
-				picks[j] = i + 1
-			}
-		}
-	}
-	return picks
 }
 
 type Bag struct {

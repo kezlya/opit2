@@ -27,7 +27,7 @@ var testGrid = Grid{
 	{false, false, true, false, false, false, false, false, false, false},
 	{false, false, false, false, false, false, false, false, false, false},
 }
-var testField = testGrid.toField()
+var testField = testGrid.ToField()
 
 var tfPicks = testField.Picks
 
