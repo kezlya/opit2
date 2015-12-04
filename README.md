@@ -15,7 +15,17 @@ Visual representation in a terminal of the "bot" playing preset game. Applying d
 ##### Play many games
 Visual representation in default browser (a graph) of "bot" playing many preset games using current strategy
 
-	go test -run=XXX -bench=one
+	go test -run=XXX -bench=many
+
+##### Generate random games
+Generating an array of Pieces in random order. That can be used for preset game 
+
+	go test -run=XXX -bench=generateGames
+
+##### Generate random garbage rows
+Generating an array of random numbers. That can be used to generate garbage rows 
+
+	go test -run=XXX -bench=generateGarbageRows
 
 ### Testing
 Usual Go testing. Just execute this command:
