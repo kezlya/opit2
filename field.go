@@ -41,21 +41,23 @@ func (f Field) Copy() Field {
 }
 
 func (f Field) FindPositions(piece Piece) []Piece {
+	positions := make([]Piece, 0)
+
 	drop := piece.CurrentY - f.MaxPick - 2
 	if drop > 0 {
 		piece = piece.Drop(drop)
 	}
 
-	fixes := make([]Piece, 0)
-	bag := &Bag{Options: make(map[int]*Piece)}
+	bag := make(map[int]*Piece)
 	queue := make(map[int]bool)
 	nkey := 0
 
-	bag.Options[piece.Key] = &piece
+	bag[piece.Key] = &piece
 	queue[piece.Key] = true
 
 	for len(queue) > 0 {
 		tmp := make(map[int]bool)
+		//TODO impliment multithreading after bench it
 		for k, _ := range queue {
 			nkey = f.Search("down", k, bag)
 			if nkey >= 0 {
@@ -88,27 +90,27 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	//invalid := false
 	//maxY := f.Height
 
-	for k, p := range bag.Options {
+	for k, p := range bag {
 		//fmt.Println(k)
 		if p == nil {
-			delete(bag.Options, k)
+			delete(bag, k)
 			continue
 		}
-		el, ok := bag.Options[k-1]
+		el, ok := bag[k-1]
 		if ok && el != nil {
-			delete(bag.Options, k)
+			delete(bag, k)
 			continue
 		}
 		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
 			(p.Rotation == 3 || p.Rotation == 2) {
-			el, ok := bag.Options[k-20000]
+			el, ok := bag[k-20000]
 			if ok && el != nil {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
-			el, ok = bag.Options[k-20000-1]
+			el, ok = bag[k-20000-1]
 			if ok && el != nil {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
 		}
@@ -132,17 +134,12 @@ func (f Field) FindPositions(piece Piece) []Piece {
 					p.FieldAfter = f.AfterHole(p.Space)
 					p.Moves = strings.TrimPrefix(p.Moves, ",")
 					p.IsHole = true
-					fixes = append(fixes, *p)
+					positions = append(positions, *p)
 					break
 				}
 			}*/
 	}
-	return fixes
-}
-
-type Bag struct {
-	Options map[int]*Piece
-	Total   int
+	return positions
 }
 
 //TODO kill this when ".After" removed
@@ -578,8 +575,8 @@ func (f Field) IsValid(cells *map[string]Cell) bool {
 
 func (f Field) ValidPosition(piece Piece) []Piece {
 	validPieces := make([]Piece, 0)
-	bag := &Bag{Options: make(map[int]*Piece)}
-	bag.Options[piece.Key] = &piece
+	bag := make(map[int]*Piece)
+	bag[piece.Key] = &piece
 	queue := make(map[int]bool)
 	queue[piece.Key] = true
 	nkey := 0
@@ -609,22 +606,22 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 		queue = tmp
 	}
 
-	tempBag := &Bag{Options: make(map[int]*Piece)}
-	for k, p := range bag.Options {
+	tempBag := make(map[int]*Piece)
+	for k, p := range bag {
 		if p == nil {
-			delete(bag.Options, k)
+			delete(bag, k)
 			continue
 		}
 		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
 			(p.Rotation == 3 || p.Rotation == 2) {
-			_, ok := bag.Options[k-20000]
+			_, ok := bag[k-20000]
 			if ok {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
-			_, ok = bag.Options[k-20000+1]
+			_, ok = bag[k-20000+1]
 			if ok {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
 		}
@@ -632,16 +629,16 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 			(p.Name == "L" && p.Rotation != 2) ||
 			(p.Name == "J" && p.Rotation != 2) ||
 			(p.Name == "T" && p.Rotation != 2) {
-			tempBag.Options[k] = p
+			tempBag[k] = p
 			nkey = f.Search("down", k, tempBag)
 			if nkey == -1 {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
 		}
 		fieldAfter, y := f.After(p)
 		if fieldAfter == nil {
-			delete(bag.Options, k)
+			delete(bag, k)
 			continue
 		}
 		np := p.DropTo(y)
@@ -657,13 +654,13 @@ func (f Field) ValidPosition(piece Piece) []Piece {
 func (f Field) FixHoles(piece Piece) []Piece {
 	holes := f.HolesFixable
 	fixes := make([]Piece, 0)
-	bag := &Bag{Options: make(map[int]*Piece)}
+	bag := make(map[int]*Piece)
 	queue := make(map[int]bool)
 	nkey := 0
 
 	drop := f.Height - f.Empty - piece.CurrentY - 1
 	fp := piece.Drop(drop)
-	bag.Options[fp.Key] = &fp
+	bag[fp.Key] = &fp
 	queue[fp.Key] = true
 
 	for len(queue) > 0 {
@@ -700,27 +697,27 @@ func (f Field) FixHoles(piece Piece) []Piece {
 	invalid := false
 	maxY := f.Height
 
-	for k, p := range bag.Options {
+	for k, p := range bag {
 		//fmt.Println(k)
 		if p == nil {
-			delete(bag.Options, k)
+			delete(bag, k)
 			continue
 		}
-		el, ok := bag.Options[k-1]
+		el, ok := bag[k-1]
 		if ok && el != nil {
-			delete(bag.Options, k)
+			delete(bag, k)
 			continue
 		}
 		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
 			(p.Rotation == 3 || p.Rotation == 2) {
-			el, ok := bag.Options[k-20000]
+			el, ok := bag[k-20000]
 			if ok && el != nil {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
-			el, ok = bag.Options[k-20000-1]
+			el, ok = bag[k-20000-1]
 			if ok && el != nil {
-				delete(bag.Options, k)
+				delete(bag, k)
 				continue
 			}
 		}
@@ -749,11 +746,10 @@ func (f Field) FixHoles(piece Piece) []Piece {
 	return fixes
 }
 
-func (f Field) Search(dir string, key int, bag *Bag) int {
-	bag.Total++
+func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 	var ok bool
 	var el *Piece = nil
-	nMoves := bag.Options[key].Moves + "," + dir
+	nMoves := bag[key].Moves + "," + dir
 
 	switch dir {
 	case "left":
@@ -761,97 +757,97 @@ func (f Field) Search(dir string, key int, bag *Bag) int {
 		if nextKey%10000/100 < 0 {
 			return -1
 		}
-		el, ok = bag.Options[nextKey]
+		el, ok = bag[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
-				bag.Options[nextKey].Moves = nMoves
+				bag[nextKey].Moves = nMoves
 				return -1
 			}
 			return -1
 		}
-		np := bag.Options[key].Left()
+		np := bag[key].Left()
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
-			bag.Options[np.Key] = &np
+			bag[np.Key] = &np
 			return np.Key
 		}
-		bag.Options[np.Key] = nil
+		bag[np.Key] = nil
 		return -1
 	case "right":
 		nextKey := key + 100
 		if nextKey%10000/100 > f.Width {
 			return -1
 		}
-		el, ok = bag.Options[nextKey]
+		el, ok = bag[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
-				bag.Options[nextKey].Moves = nMoves
+				bag[nextKey].Moves = nMoves
 				return -1
 			}
 			return -1
 		}
-		np := bag.Options[key].Right()
+		np := bag[key].Right()
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
-			bag.Options[np.Key] = &np
+			bag[np.Key] = &np
 			return np.Key
 		}
-		bag.Options[np.Key] = nil
+		bag[np.Key] = nil
 		return -1
 	case "down":
 		nextKey := key - 1
 		if nextKey%100 < 0 {
 			return -1
 		}
-		el, ok = bag.Options[nextKey]
+		el, ok = bag[nextKey]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
-				bag.Options[nextKey].Moves = nMoves
+				bag[nextKey].Moves = nMoves
 				return -1
 			}
 			return -1
 		}
-		np := bag.Options[key].Down()
+		np := bag[key].Down()
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
-			bag.Options[np.Key] = &np
+			bag[np.Key] = &np
 			return np.Key
 		}
-		bag.Options[np.Key] = nil
+		bag[np.Key] = nil
 		return -1
 	case "turnleft":
-		np := bag.Options[key].Turnleft()
-		el, ok = bag.Options[np.Key]
+		np := bag[key].Turnleft()
+		el, ok = bag[np.Key]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
-				bag.Options[np.Key].Moves = nMoves
+				bag[np.Key].Moves = nMoves
 				return -1
 			}
 			return -1
 		}
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
-			bag.Options[np.Key] = &np
+			bag[np.Key] = &np
 			return np.Key
 		}
-		bag.Options[np.Key] = nil
+		bag[np.Key] = nil
 		return -1
 	case "turnright":
-		np := bag.Options[key].Turnright()
-		el, ok = bag.Options[np.Key]
+		np := bag[key].Turnright()
+		el, ok = bag[np.Key]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
-				bag.Options[np.Key].Moves = nMoves
+				bag[np.Key].Moves = nMoves
 				return -1
 			}
 			return -1
 		}
 		if f.IsValid(&np.Space) {
 			np.Moves = nMoves
-			bag.Options[np.Key] = &np
+			bag[np.Key] = &np
 			return np.Key
 		}
-		bag.Options[np.Key] = nil
+		bag[np.Key] = nil
 		return -1
 	}
 	return -1
