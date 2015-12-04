@@ -39,3 +39,8 @@ Benchmark tests implimented for core functions. That helps to track improvements
 Current result is: 2000	    763736 ns/op
 
 	go test -run=XXX -bench=FindPositions
+
+##### CalculateMoves
+Current result is: 30	  39049702 ns/op  Must always be bellow 500ms
+
+	go test -run=XXX -bench=CalculateMoves
