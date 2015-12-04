@@ -1,5 +1,9 @@
 package main
 
+import (
+	"log"
+)
+
 //import "fmt"
 
 type Piece struct {
@@ -33,49 +37,50 @@ type Cell struct {
 	Y int
 }
 
-func (p *Piece) InitSpace(start Cell) {
-	space := make(map[string]Cell, 4)
-	switch p.Name {
+func InitPiece(name string, x, y int) Piece {
+	piece := Piece{Name: name, CurrentX: x, CurrentY: y}
+	piece.Space = make(map[string]Cell, 4)
+	switch name {
 	case "I":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["m4"] = Cell{X: start.X + 3, Y: start.Y}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["m4"] = Cell{X: x + 3, Y: y}
 	case "J":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["t1"] = Cell{X: x, Y: y + 1}
 	case "L":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["t3"] = Cell{X: start.X + 2, Y: start.Y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["t3"] = Cell{X: x + 2, Y: y + 1}
 	case "O":
-		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		piece.Space["t1"] = Cell{X: x, Y: y + 1}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 	case "S":
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
-		space["t3"] = Cell{X: start.X + 2, Y: start.Y + 1}
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
+		piece.Space["t3"] = Cell{X: x + 2, Y: y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 	case "T":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
 	case "Z":
-		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+		piece.Space["t1"] = Cell{X: x, Y: y + 1}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+	default:
+		log.Fatalln(name, "piece is not supported")
 	}
-	p.Space = space
-	p.CurrentX = start.X
-	p.CurrentY = start.Y
-	p.setKey()
+	piece.setKey()
+	return piece
 }
 
 func (p *Piece) Left() Piece {

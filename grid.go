@@ -7,7 +7,7 @@ import (
 
 type Grid [][]bool
 
-func GridFromString(raw string) Grid {
+func InitGrid(raw string) Grid {
 	if raw == "" {
 		log.Fatalln("can't create Grid from empty string")
 	}

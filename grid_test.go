@@ -39,7 +39,7 @@ func (g Grid) visual() {
 	fmt.Println("	 0 1 2 3 4 5 6 7 8 9")
 }
 
-func Test_GridFromString(t *testing.T) {
+func Test_InitGrid(t *testing.T) {
 	//arrange
 	raw := "0,0,0,1,1,1,0,0,0,0;" +
 		"0,0,0,0,0,0,0,0,0,0;" +
@@ -53,7 +53,7 @@ func Test_GridFromString(t *testing.T) {
 	}
 
 	//act
-	grid := GridFromString(raw)
+	grid := InitGrid(raw)
 
 	//assert
 	if !grid.isEqual(expectedGrid) {

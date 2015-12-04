@@ -6,18 +6,23 @@ import (
 )
 
 type Game struct {
-	X            int
-	Y            int
-	Timebank     int
-	TimePerMove  int
-	Width        int
-	Height       int
-	Round        int
-	Players      []Player
-	MyPlayer     *Player
-	CurrentPiece Piece
-	NextPiece    Piece
-	Strategy     Strategy
+	X           int
+	Y           int
+	Timebank    int
+	TimePerMove int
+	Width       int
+	Height      int
+	Round       int
+
+	CurrentPieceName string
+	NextPieceName    string
+	CurrentPiece     Piece
+	NextPiece        Piece
+
+	Players  []Player
+	MyPlayer *Player
+
+	Strategy Strategy
 }
 
 type Player struct {
@@ -69,11 +74,9 @@ func (g *Game) asignUpdates(who, action, value string) {
 		case "round":
 			g.Round, _ = strconv.Atoi(value)
 		case "this_piece_type":
-			g.CurrentPiece.Name = value
-			g.CurrentPiece.Rotation = 0
+			g.CurrentPieceName = value
 		case "next_piece_type":
-			g.NextPiece.Name = value
-			g.NextPiece.Rotation = 0
+			g.NextPieceName = value
 		case "this_piece_position":
 			cor := strings.Split(value, ",")
 			g.X, _ = strconv.Atoi(cor[0])
@@ -99,13 +102,19 @@ func (g *Game) asignUpdates(who, action, value string) {
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
 			for i, p := range g.Players {
 				if p.Name == who {
-					grid := GridFromString(cleanSource)
+					grid := InitGrid(cleanSource)
 					g.Players[i].Field = grid.ToField()
 					break
 				}
 			}
 		}
 	}
+}
+
+func (g *Game) initPieces() {
+	realY := g.MyPlayer.Field.Height + g.Y
+	g.CurrentPiece = InitPiece(g.CurrentPieceName, g.X, realY)
+	g.NextPiece = InitPiece(g.NextPieceName, g.X, realY)
 }
 
 func (g *Game) calculateMoves() *Piece {

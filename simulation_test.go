@@ -162,26 +162,40 @@ func Benchmark_strategy(banch *testing.B) {
 func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
-	g.Round = 0
-	g.MyPlayer.Points = 0
-	g.MyPlayer.Field = EmptyGrig10x20.ToField()
-	position := &Piece{}
-	position.FieldAfter = &g.MyPlayer.Field
-	assignPieces(g, input[0])
+	g.asignSettings("field_width", "10")
+	g.asignSettings("field_height", "20")
+	field := EmptyGrig10x20.ToField()
+	position := &Piece{FieldAfter: &field}
+	round := 1
 	keepGoing := true
-
-	fmt.Printf("%+v\n", g)
-
-	i := 0
 	for keepGoing {
-		applyPoints(g, position)
+		// setup new round
+		g.asignUpdates("game", "round", strconv.Itoa(round))
+		g.asignUpdates("game", "this_piece_type", input[round-1])
+		g.asignUpdates("game", "next_piece_type", input[round])
+		g.asignUpdates("game", "this_piece_position", "3,-1")
 		g.MyPlayer.Field = *position.FieldAfter
-		
-		
-		fmt.Printf("%+v\n", g.MyPlayer.Field)
-		
-		
-		
+		g.initPieces()
+
+		// play round
+		position = g.calculateMoves()
+		applyPoints(g, position)
+		if visual {
+			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
+			fmt.Printf("%+v\n", position.Score)
+			position.FieldAfter.Grid.visual()
+			time.Sleep(1000000000)
+		}
+
+		// check if the game is over
+		if position == nil ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][3] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][4] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][5] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][6] {
+			keepGoing = false
+			break
+		}
 		if addSolidLines(g) {
 			keepGoing = false
 			break
@@ -190,27 +204,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			keepGoing = false
 			break
 		}
-		assignPieces(g, input[i])
-		g.Round++
-
-		if visual {
-			//fmt.Println("D", position.Damage, "S", position.Score)
-			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
-			fmt.Printf("%+v\n", position.Score)
-			g.MyPlayer.Field.Grid.visual()
-			time.Sleep(1000000000)
-		}
-
-		position = g.calculateMoves()
-
-		if position == nil ||
-			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][3] ||
-			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][4] ||
-			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][5] ||
-			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][6] {
-			keepGoing = false
-		}
-		i++
+		round++
 	}
 	ch_round <- g.Round
 	ch_score <- g.MyPlayer.Points
@@ -259,16 +253,6 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	fmt.Println("scores:", scores)
 	fmt.Println("rounds:", rounds)
 	return &scores, &rounds
-}
-
-func assignPieces(g *Game, piece string) {
-	g.CurrentPiece = g.NextPiece
-	x := 3
-	if piece == "O" {
-		x = 4
-	}
-	g.NextPiece = Piece{Name: piece, Rotation: 0}
-	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height - 1})
 }
 
 func applyPoints(g *Game, p *Piece) {
