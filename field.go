@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"strings"
 )
 
@@ -91,8 +92,8 @@ func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
 		queue = tmp
 	}
 	bagLen := len(bag)
+
 	for k, p := range bag {
-		//fmt.Println(k)
 		if p == nil {
 			continue
 		}
@@ -110,6 +111,7 @@ func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
 				p.FieldAfter = f.AfterHole(p.Space)
 				p.Moves = strings.TrimPrefix(p.Moves, ",")
 				positions = append(positions, *p)
+				//fmt.Println("   ", p.Key)
 			}
 		}
 	}

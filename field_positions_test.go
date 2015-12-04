@@ -32,12 +32,12 @@ var testField = testGrid.ToField()
 func assertPositions(t *testing.T, positions []Piece, expectedCount int) {
 	if len(positions) != expectedCount {
 		t.Fail()
-		fmt.Println("Count of positions is wrong:", len(positions))
-		testField.Grid.visual()
-		/*for _, p := range positions {
-			p.FieldAfter.Grid.visual()
-			fmt.Println(p.Key)
-		}*/
+		fmt.Println(len(positions), "positions found, should be", expectedCount)
+		//testField.Grid.visual()
+		//for _, p := range positions {
+		//p.FieldAfter.Grid.visual()
+		//fmt.Println(p.Key)
+		//}
 	}
 }
 
@@ -46,7 +46,9 @@ func Test_FindPositions_I(t *testing.T) {
 	piece := InitPiece("I", 3, 19)
 
 	//act
-	positions, _, _ := testField.FindPositions(piece)
+	positions, countSearchCalls, bagLen := testField.FindPositions(piece)
+	fmt.Println("countSearchCalls", countSearchCalls)
+	fmt.Println("bagLen", bagLen)
 
 	//assert
 	assertPositions(t, positions, 15)
