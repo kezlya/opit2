@@ -6,6 +6,31 @@ import (
 	"testing"
 )
 
+var testGrid = Grid{
+	{true, false, true, true, true, true, true, true, true, true},
+	{true, true, false, true, true, false, true, true, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, false, true, true, false, true, true},
+	{false, true, true, true, true, true, true, true, true, true},
+	{true, true, true, true, false, true, true, true, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, false, false, false, false, true, true, true, true},
+	{true, true, true, false, false, false, true, true, true, true},
+	{false, true, true, false, false, true, true, true, true, true},
+	{false, true, true, false, false, false, true, true, false, true},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, false, false, false, false},
+	{false, false, false, false, false, false, false, false, false, false},
+}
+var testField = testGrid.ToField()
+
+//TODO refactor(not all properties in the test) or kill it
 func Test_Copy(t *testing.T) {
 	//arrange
 	a := Field{
@@ -42,7 +67,73 @@ func Test_Copy(t *testing.T) {
 	}
 }
 
-func Test_FindPositions(t *testing.T) {
+func Test_FindPositions_I(t *testing.T) {
+	//arrange
+	piece := InitPiece("I", 3, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 15)
+}
+
+func Test_FindPositions_J(t *testing.T) {
+	//arrange
+	piece := InitPiece("J", 3, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 27)
+}
+
+func Test_FindPositions_L(t *testing.T) {
+	//arrange
+	piece := InitPiece("L", 3, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 25)
+}
+
+func Test_FindPositions_O(t *testing.T) {
+	//arrange
+	piece := InitPiece("O", 4, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 8)
+}
+
+func Test_FindPositions_S(t *testing.T) {
+	//arrange
+	piece := InitPiece("S", 3, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 15)
+}
+
+func Test_FindPositions_T(t *testing.T) {
+	//arrange
+	piece := InitPiece("T", 3, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 28)
+}
+
+func Test_FindPositions_T2(t *testing.T) {
 	//arrange
 	grid := Grid{
 		{true, false, true, true, true, true, true, true, true, true},
@@ -70,40 +161,24 @@ func Test_FindPositions(t *testing.T) {
 	piece := InitPiece("T", 3, 19)
 
 	//act
-	positions, countSearchCalls, bagLen := field.FindPositions(piece)
+	positions := field.FindPositions(piece)
 
 	//assert
-	if len(positions) != 39 {
-		t.Fail()
-		fmt.Println("Count of positions is wrong:", len(positions))
-		grid.visual()
-		for _, p := range positions {
-			p.FieldAfter.Grid.visual()
-			fmt.Println(p.Key)
-		}
-	}
-	if countSearchCalls != 575 || bagLen != 231 {
-		fmt.Println("countSearchCalls", countSearchCalls)
-		fmt.Println("bagLen", bagLen)
-		t.Fail()
-	}
+	assertPositions(t, positions, 39)
+}
+
+func Test_FindPositions_Z(t *testing.T) {
+	//arrange
+	piece := InitPiece("Z", 3, 19)
+
+	//act
+	positions := testField.FindPositions(piece)
+
+	//assert
+	assertPositions(t, positions, 13)
 }
 
 /*
-func Test_Burn(t *testing.T) {
-	arange := Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	expect := Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, false, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, true, true, false, true, true, false, true, true}, {false, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, true, true, true, true, true, true, true, false, true}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, true, false, false, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-
-	arange.Burn()
-
-	if !FieldIsEqual(arange, expect) {
-		t.Fail()
-		y := len(expect) - 1
-		for i := range expect {
-			fmt.Println(expect[y-i], arange[y-i])
-		}
-	}
-}
 
 func Test_Picks(t *testing.T) {
 	arrange := Field{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {false, true, true, true, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, false, true}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
@@ -243,3 +318,15 @@ func Test_ValidatePosition_T(t *testing.T) {
 	}
 }
 */
+
+func assertPositions(t *testing.T, positions []Piece, expectedCount int) {
+	if len(positions) != expectedCount {
+		t.Fail()
+		fmt.Println(len(positions), "positions found, should be", expectedCount)
+		//testField.Grid.visual()
+		//for _, p := range positions {
+		//p.FieldAfter.Grid.visual()
+		//fmt.Println(p.Key)
+		//}
+	}
+}

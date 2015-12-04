@@ -41,9 +41,9 @@ func (f Field) Copy() Field {
 	return newField
 }
 
-func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
+func (f Field) FindPositions(piece Piece) []Piece {
 	positions := make([]Piece, 0)
-	countSearchCalls := 0
+	//countSearchCalls := 0
 
 	drop := piece.CurrentY - f.MaxPick - 2
 	if drop > 0 {
@@ -61,28 +61,28 @@ func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
 		tmp := make(map[int]bool)
 		//TODO impliment multithreading after bench it
 		for k, _ := range queue {
-			countSearchCalls++
+			//countSearchCalls++
 			nkey = f.Search("down", k, bag)
 			if nkey >= 0 {
 				tmp[nkey] = false
 			}
-			countSearchCalls++
+			//countSearchCalls++
 			nkey = f.Search("left", k, bag)
 			if nkey >= 0 {
 				tmp[nkey] = false
 			}
-			countSearchCalls++
+			//countSearchCalls++
 			nkey = f.Search("right", k, bag)
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
-				countSearchCalls++
+				//countSearchCalls++
 				nkey = f.Search("turnleft", k, bag)
 				if nkey >= 0 {
 					tmp[nkey] = false
 				}
-				countSearchCalls++
+				//countSearchCalls++
 				nkey = f.Search("turnright", k, bag)
 				if nkey >= 0 {
 					tmp[nkey] = false
@@ -91,8 +91,8 @@ func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
 		}
 		queue = tmp
 	}
-	bagLen := len(bag)
-
+	//fmt.Println("countSearchCalls", countSearchCalls)
+	//fmt.Println("bagLen", len(bag))
 	for k, p := range bag {
 		if p == nil {
 			continue
@@ -115,7 +115,7 @@ func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
 			}
 		}
 	}
-	return positions, countSearchCalls, bagLen
+	return positions
 }
 
 //TODO kill this when ".After" removed
