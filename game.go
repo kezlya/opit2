@@ -119,29 +119,21 @@ func (g *Game) initPieces() {
 
 func (g *Game) calculateMoves() *Piece {
 	mf := g.MyPlayer.Field
-	positions := mf.ValidPosition(g.CurrentPiece)
-	if mf.CountFH > 0 {
-		fixes := mf.FixHoles(g.CurrentPiece)
-		positions = append(positions, fixes...)
-	}
-
+	positions := mf.FindPositions(g.CurrentPiece)
 	for i, p := range positions {
-		nPositions := p.FieldAfter.ValidPosition(g.NextPiece)
-		if p.FieldAfter.CountFH > 0 {
-			nfixes := p.FieldAfter.FixHoles(g.NextPiece)
-			nPositions = append(nPositions, nfixes...)
-		}
-
 		positions[i].Score.BHoles = p.FieldAfter.CountBH - mf.CountBH
 		positions[i].Score.FHoles = p.FieldAfter.CountFH - mf.CountFH
 		positions[i].setHighY()
 		positions[i].setStep()
 		positions[i].setCHoles()
 
+		nPositions := p.FieldAfter.FindPositions(g.NextPiece)
 		for j, np := range nPositions {
-			if ((g.Round + 1) % 20) == 0 {
-				np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
-			}
+			//if ((g.Round + 1) % 20) == 0 {
+			//	np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
+			//}
+
+			//np.FieldAfter.Grid.visual()
 
 			nPositions[j].Score.BHoles = np.FieldAfter.CountBH - p.FieldAfter.CountBH
 			nPositions[j].Score.FHoles = np.FieldAfter.CountFH - p.FieldAfter.CountFH

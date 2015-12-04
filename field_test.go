@@ -252,81 +252,20 @@ func Test_IsValid(t *testing.T) {
 	}
 }
 
-
-
-func Test_FixHoles_Z(t *testing.T) {
-	var arangePathField = Field{{false, false, false, false, true, true, true, true, true, true}, {false, false, true, true, true, true, true, true, true, true}, {false, false, false, false, false, false, false, false, true, true}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	piece := Piece{Name: "Z", Rotation: 0}
-	piece.InitSpace(Cell{X: 3, Y: 19})
-	hole := Cell{X: 2, Y: 0}
-
-	good_positions := arangePathField.FixHoles(piece, []Cell{hole})
-
-	if len(good_positions) != 1 {
-		for _, pos := range good_positions {
-			fmt.Println("good positions failed")
-			fmt.Println(pos.Moves)
-			PrintVisual(arangePathField)
-		}
-		t.Fail()
-	}
-}
-
-func Test_FixHoles_J(t *testing.T) {
-	var arangePathField = Field{{false, false, false, false, true, true, false, false, false, false}, {false, false, false, true, true, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	piece := Piece{Name: "J", Rotation: 0}
-	piece.InitSpace(Cell{X: 3, Y: 19})
-	hole := Cell{X: 3, Y: 0}
-
-	good_positions := arangePathField.FixHoles(piece, []Cell{hole})
-
-	if len(good_positions) != 1 {
-		for _, pos := range good_positions {
-			fmt.Println("good positions failed")
-			fmt.Println(pos.Moves)
-			PrintVisual(arangePathField)
-		}
-		t.Fail()
-	}
-}
-
-func Test_ValidatePosition_I(t *testing.T) {
-	var arangeField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	piece := Piece{Name: "I", Rotation: 0}
-	piece.InitSpace(Cell{X: 3, Y: 19})
-
-	validPieces := arangeField.ValidPosition(piece)
-
-	if len(validPieces) != 13 {
-		PrintVisual(arangeField)
-		fmt.Println("should be 13 but returned", len(validPieces))
-		t.Fail()
-	}
-}
-
-func Test_ValidatePosition_T(t *testing.T) {
-	var arangeField = Field{{true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, false, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, false, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, true, false, false, false, true, false, false}, {false, false, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, true, false}, {false, false, true, true, false, false, false, false, true, false}, {false, false, true, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	piece := Piece{Name: "T", Rotation: 0}
-	piece.InitSpace(Cell{X: 3, Y: 19})
-
-	validPieces := arangeField.ValidPosition(piece)
-
-	if len(validPieces) != 23 {
-		PrintVisual(arangeField)
-		fmt.Println("should be 23 but returned", len(validPieces))
-		t.Fail()
-	}
-}
 */
 
 func assertPositions(t *testing.T, positions []Piece, expectedCount int) {
 	if len(positions) != expectedCount {
 		t.Fail()
 		fmt.Println(len(positions), "positions found, should be", expectedCount)
-		//testField.Grid.visual()
-		//for _, p := range positions {
+	}
+	//testField.Grid.visual()
+	for _, p := range positions {
+		if p.FieldAfter == nil {
+			t.Fail()
+			fmt.Println("FieldAfter is nil", p)
+		}
 		//p.FieldAfter.Grid.visual()
 		//fmt.Println(p.Key)
-		//}
 	}
 }
