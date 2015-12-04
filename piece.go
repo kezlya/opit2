@@ -996,3 +996,9 @@ func (p *Piece) isDSRfriendly(hight, empty int) bool {
 	}
 	return true
 }
+
+func (p *Piece) shorterPath(newMoves string) {
+	if p != nil && len(newMoves) < len(p.Moves) {
+		p.Moves = newMoves
+	}
+}

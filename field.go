@@ -736,10 +736,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		}
 		el, ok = bag[nextKey]
 		if ok {
-			if el != nil && len(nMoves) < len(el.Moves) {
-				bag[nextKey].Moves = nMoves
-				return -1
-			}
+			el.shorterPath(nMoves)
 			return -1
 		}
 		np = bag[key].Left()
@@ -750,10 +747,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		}
 		el, ok = bag[nextKey]
 		if ok {
-			if el != nil && len(nMoves) < len(el.Moves) {
-				bag[nextKey].Moves = nMoves
-				return -1
-			}
+			el.shorterPath(nMoves)
 			return -1
 		}
 		np = bag[key].Right()
@@ -764,10 +758,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		}
 		el, ok = bag[nextKey]
 		if ok {
-			if el != nil && len(nMoves) < len(el.Moves) {
-				bag[nextKey].Moves = nMoves
-				return -1
-			}
+			el.shorterPath(nMoves)
 			return -1
 		}
 		np = bag[key].Down()
@@ -775,23 +766,18 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		np = bag[key].Turnleft()
 		el, ok = bag[np.Key]
 		if ok {
-			if el != nil && len(nMoves) < len(el.Moves) {
-				bag[np.Key].Moves = nMoves
-				return -1
-			}
+			el.shorterPath(nMoves)
 			return -1
 		}
 	case "turnright":
 		np = bag[key].Turnright()
 		el, ok = bag[np.Key]
 		if ok {
-			if el != nil && len(nMoves) < len(el.Moves) {
-				bag[np.Key].Moves = nMoves
-				return -1
-			}
+			el.shorterPath(nMoves)
 			return -1
 		}
 	}
+
 	if f.IsValid(&np.Space) {
 		np.Moves = nMoves
 		bag[np.Key] = &np
