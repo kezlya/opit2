@@ -727,6 +727,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 	var el *Piece = nil
 	nMoves := bag[key].Moves + "," + dir
 
+	var np Piece
 	switch dir {
 	case "left":
 		nextKey := key - 100
@@ -741,14 +742,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			}
 			return -1
 		}
-		np := bag[key].Left()
-		if f.IsValid(&np.Space) {
-			np.Moves = nMoves
-			bag[np.Key] = &np
-			return np.Key
-		}
-		bag[np.Key] = nil
-		return -1
+		np = bag[key].Left()
 	case "right":
 		nextKey := key + 100
 		if nextKey%10000/100 > f.Width {
@@ -762,14 +756,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			}
 			return -1
 		}
-		np := bag[key].Right()
-		if f.IsValid(&np.Space) {
-			np.Moves = nMoves
-			bag[np.Key] = &np
-			return np.Key
-		}
-		bag[np.Key] = nil
-		return -1
+		np = bag[key].Right()
 	case "down":
 		nextKey := key - 1
 		if nextKey%100 < 0 {
@@ -783,16 +770,9 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			}
 			return -1
 		}
-		np := bag[key].Down()
-		if f.IsValid(&np.Space) {
-			np.Moves = nMoves
-			bag[np.Key] = &np
-			return np.Key
-		}
-		bag[np.Key] = nil
-		return -1
+		np = bag[key].Down()
 	case "turnleft":
-		np := bag[key].Turnleft()
+		np = bag[key].Turnleft()
 		el, ok = bag[np.Key]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
@@ -801,15 +781,8 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			}
 			return -1
 		}
-		if f.IsValid(&np.Space) {
-			np.Moves = nMoves
-			bag[np.Key] = &np
-			return np.Key
-		}
-		bag[np.Key] = nil
-		return -1
 	case "turnright":
-		np := bag[key].Turnright()
+		np = bag[key].Turnright()
 		el, ok = bag[np.Key]
 		if ok {
 			if el != nil && len(nMoves) < len(el.Moves) {
@@ -818,13 +791,12 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			}
 			return -1
 		}
-		if f.IsValid(&np.Space) {
-			np.Moves = nMoves
-			bag[np.Key] = &np
-			return np.Key
-		}
-		bag[np.Key] = nil
-		return -1
 	}
+	if f.IsValid(&np.Space) {
+		np.Moves = nMoves
+		bag[np.Key] = &np
+		return np.Key
+	}
+	bag[np.Key] = nil
 	return -1
 }
