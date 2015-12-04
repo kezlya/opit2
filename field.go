@@ -40,8 +40,9 @@ func (f Field) Copy() Field {
 	return newField
 }
 
-func (f Field) FindPositions(piece Piece) []Piece {
+func (f Field) FindPositions(piece Piece) ([]Piece, int, int) {
 	positions := make([]Piece, 0)
+	countSearchCalls := 0
 
 	drop := piece.CurrentY - f.MaxPick - 2
 	if drop > 0 {
@@ -59,25 +60,28 @@ func (f Field) FindPositions(piece Piece) []Piece {
 		tmp := make(map[int]bool)
 		//TODO impliment multithreading after bench it
 		for k, _ := range queue {
+			countSearchCalls++
 			nkey = f.Search("down", k, bag)
 			if nkey >= 0 {
 				tmp[nkey] = false
 			}
+			countSearchCalls++
 			nkey = f.Search("left", k, bag)
 			if nkey >= 0 {
 				tmp[nkey] = false
 			}
+			countSearchCalls++
 			nkey = f.Search("right", k, bag)
-			// move to the right woulf never generate 0 key
-			// 0 key is left bottom conner
 			if nkey > 0 {
 				tmp[nkey] = false
 			}
 			if piece.Name != "O" {
+				countSearchCalls++
 				nkey = f.Search("turnleft", k, bag)
 				if nkey >= 0 {
 					tmp[nkey] = false
 				}
+				countSearchCalls++
 				nkey = f.Search("turnright", k, bag)
 				if nkey >= 0 {
 					tmp[nkey] = false
@@ -86,60 +90,30 @@ func (f Field) FindPositions(piece Piece) []Piece {
 		}
 		queue = tmp
 	}
-	//found := false
-	//invalid := false
-	//maxY := f.Height
-
+	bagLen := len(bag)
 	for k, p := range bag {
 		//fmt.Println(k)
 		if p == nil {
-			delete(bag, k)
 			continue
 		}
 		el, ok := bag[k-1]
-		if ok && el != nil {
-			delete(bag, k)
-			continue
-		}
-		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
-			(p.Rotation == 3 || p.Rotation == 2) {
-			el, ok := bag[k-20000]
-			if ok && el != nil {
-				delete(bag, k)
-				continue
-			}
-			el, ok = bag[k-20000-1]
-			if ok && el != nil {
-				delete(bag, k)
-				continue
-			}
-		}
-
-		//found = false
-		//invalid = false
-
-		// this is used to be for holes only now need to check all
-		/*
-			for _, hole := range holes {
-				for _, cell := range p.Space {
-					if cell.Y >= maxY {
-						invalid = true
-						break
-					}
-					if cell.X == hole.X && cell.Y == hole.Y {
-						found = true
-					}
-				}
-				if found && !invalid {
-					p.FieldAfter = f.AfterHole(p.Space)
-					p.Moves = strings.TrimPrefix(p.Moves, ",")
-					p.IsHole = true
-					positions = append(positions, *p)
+		if ok && el == nil {
+			//check if piece position is over the top
+			invalid := false
+			for _, cell := range p.Space {
+				if cell.Y >= f.Height {
+					invalid = true
 					break
 				}
-			}*/
+			}
+			if !invalid {
+				p.FieldAfter = f.AfterHole(p.Space)
+				p.Moves = strings.TrimPrefix(p.Moves, ",")
+				positions = append(positions, *p)
+			}
+		}
 	}
-	return positions
+	return positions, countSearchCalls, bagLen
 }
 
 //TODO kill this when ".After" removed

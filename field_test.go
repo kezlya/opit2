@@ -46,15 +46,15 @@ func Test_FindPositions(t *testing.T) {
 	//arrange
 	grid := Grid{
 		{true, false, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
 		{true, true, true, true, true, false, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
+		{true, true, true, true, true, true, true, true, false, true},
 		{true, true, true, true, true, true, true, false, true, true},
 		{true, true, false, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
 		{false, true, true, true, false, true, true, true, true, false},
 		{false, true, true, false, false, false, false, true, false, false},
 		{false, false, true, true, false, false, false, false, false, false},
@@ -70,12 +70,21 @@ func Test_FindPositions(t *testing.T) {
 	piece := InitPiece("T", 3, 19)
 
 	//act
-	positions := field.FindPositions(piece)
+	positions, countSearchCalls, bagLen := field.FindPositions(piece)
 
 	//assert
-	if len(positions) != 12 {
+	if len(positions) != 39 {
 		fmt.Println("Count of positions is wrong:", len(positions))
 		grid.visual()
+		t.Fail()
+		for _, p := range positions {
+			p.FieldAfter.Grid.visual()
+			fmt.Println(p.Key)
+		}
+	}
+	if countSearchCalls != 575 || bagLen != 231 {
+		fmt.Println("countSearchCalls", countSearchCalls)
+		fmt.Println("bagLen", bagLen)
 		t.Fail()
 	}
 }
