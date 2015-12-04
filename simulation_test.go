@@ -179,7 +179,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 
 		// play round
 		position = g.calculateMoves()
-		applyPoints(g, position)
+		g.MyPlayer.Points += position.getPoints()
 		if visual {
 			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
 			fmt.Printf("%+v\n", position.Score)
@@ -188,6 +188,10 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		}
 
 		// check if the game is over
+		//if g.MyPlayer.Field.Empty == 0 {
+		//	stop = true
+		//}
+
 		if position == nil ||
 			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][3] ||
 			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][4] ||
@@ -196,7 +200,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			keepGoing = false
 			break
 		}
-		if addSolidLines(g) {
+		if addSolidLines(g, position) {
 			keepGoing = false
 			break
 		}
@@ -255,27 +259,16 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	return &scores, &rounds
 }
 
-func applyPoints(g *Game, p *Piece) {
-	if g.Round > 1 {
-		points := p.getPoints()
-		if points > 0 {
-			g.MyPlayer.Combo++
-		} else {
-			g.MyPlayer.Combo = 0
-		}
-		g.MyPlayer.Points += points
-	}
-}
-
-func addSolidLines(g *Game) bool {
+func addSolidLines(g *Game, p *Piece) bool {
 	stop := false
 	r := g.Round % 20
 	if r == 0 && g.Round != 0 {
 		if g.MyPlayer.Field.Empty == 0 {
 			stop = true
 		}
-		g.MyPlayer.Field.Grid = g.MyPlayer.Field.Grid[:g.MyPlayer.Field.Height-1]
-		g.Height = g.Height - 1
+		newGrid := p.FieldAfter.Grid[:p.FieldAfter.Height-1]
+		newField := newGrid.ToField()
+		p.FieldAfter = &newField
 	}
 	return stop
 }
