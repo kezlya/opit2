@@ -188,10 +188,6 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		}
 
 		// check if the game is over
-		//if g.MyPlayer.Field.Empty == 0 {
-		//	stop = true
-		//}
-
 		if position == nil ||
 			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][3] ||
 			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][4] ||
@@ -204,7 +200,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			keepGoing = false
 			break
 		}
-		if addGarbageLines(g, garbage) {
+		if addGarbageLines(g, position, garbage) {
 			keepGoing = false
 			break
 		}
@@ -260,37 +256,37 @@ func playGames(st Strategy) (*[]int, *[]int) {
 }
 
 func addSolidLines(g *Game, p *Piece) bool {
-	stop := false
 	r := g.Round % 20
 	if r == 0 && g.Round != 0 {
 		if g.MyPlayer.Field.Empty == 0 {
-			stop = true
+			return true
 		}
 		newGrid := p.FieldAfter.Grid[:p.FieldAfter.Height-1]
 		newField := newGrid.ToField()
 		p.FieldAfter = &newField
 	}
-	return stop
+	return false
 }
 
-func addGarbageLines(g *Game, garbage *[60]int) bool {
-	stop := false
+func addGarbageLines(g *Game, p *Piece, garbage *[60]int) bool {
 	speed := 7
 	r := g.Round % speed
 	if r == 0 && g.Round != 0 {
 		if g.MyPlayer.Field.Empty == 0 {
-			stop = true
+			return true
 		}
-		size := g.MyPlayer.Field.Width
+		size := g.Width
 		row := make([]bool, size)
 		for i := range row {
 			row[i] = true
 		}
 		row[garbage[g.Round/speed]] = false
 		row[garbage[len(garbage)-g.Round/speed]] = false
-		g.MyPlayer.Field.Grid = append([][]bool{row}, [][]bool(g.MyPlayer.Field.Grid[:g.MyPlayer.Field.Height-1])...)
+		newGrid := Grid(append([][]bool{row}, [][]bool(p.FieldAfter.Grid[:p.FieldAfter.Height-1])...))
+		newField := newGrid.ToField()
+		p.FieldAfter = &newField
 	}
-	return stop
+	return false
 }
 
 /*
