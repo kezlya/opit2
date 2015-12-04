@@ -74,9 +74,9 @@ func Test_FindPositions(t *testing.T) {
 
 	//assert
 	if len(positions) != 39 {
+		t.Fail()
 		fmt.Println("Count of positions is wrong:", len(positions))
 		grid.visual()
-		t.Fail()
 		for _, p := range positions {
 			p.FieldAfter.Grid.visual()
 			fmt.Println(p.Key)
