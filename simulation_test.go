@@ -181,6 +181,10 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		position = g.calculateMoves()
 		g.MyPlayer.Points += position.getPoints()
 		if visual {
+			fmt.Println()
+			fmt.Println("===============================================================")
+			fmt.Println()
+			g.MyPlayer.Field.Grid.visual()
 			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
 			fmt.Printf("%+v\n", position.Score)
 			position.FieldAfter.Grid.visual()
