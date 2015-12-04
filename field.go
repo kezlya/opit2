@@ -725,9 +725,9 @@ func (f Field) FixHoles(piece Piece) []Piece {
 func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 	var ok bool
 	var el *Piece = nil
+	var np Piece
 	nMoves := bag[key].Moves + "," + dir
 
-	var np Piece
 	switch dir {
 	case "left":
 		nextKey := key - 100
@@ -780,6 +780,15 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 
 	if f.IsValid(&np.Space) {
 		np.Moves = nMoves
+		//TODO refactor this do not Call search on this keys
+		// I S Z 0==2 and 1 == 3
+		if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
+			_, ok1 := bag[np.Key-20000]
+			_, ok2 := bag[np.Key+20000]
+			if ok1 || ok2 {
+				return -1
+			}
+		}
 		bag[np.Key] = &np
 		return np.Key
 	}
