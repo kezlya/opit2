@@ -42,12 +42,12 @@ func Test_availablePositions_I(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }
 
@@ -62,12 +62,12 @@ func Test_availablePositions_J(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }
 
@@ -82,12 +82,12 @@ func Test_availablePositions_L(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }
 
@@ -102,12 +102,12 @@ func Test_availablePositions_O(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }
 
@@ -122,12 +122,12 @@ func Test_availablePositions_S(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }
 
@@ -142,12 +142,12 @@ func Test_availablePositions_T(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }
 
@@ -162,11 +162,11 @@ func Test_availablePositions_Z(t *testing.T) {
 	if len(resultVp) != expectVp {
 		t.Fail()
 		fmt.Println(expectVp, "!=", len(resultVp))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 	if len(resultFh) != expectedFh {
 		t.Fail()
 		fmt.Println(expectedFh, "!=", len(resultFh))
-		PrintVisual(testField)
+		testField.Grid.visual()
 	}
 }

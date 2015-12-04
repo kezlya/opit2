@@ -124,10 +124,7 @@ func (p *Piece) DropTo(y int) Piece {
 	return np
 }
 
-func (p *Piece) Drop(n int) *Piece {
-	if n <= 0 {
-		return p
-	}
+func (p *Piece) Drop(n int) Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - n}
@@ -137,7 +134,7 @@ func (p *Piece) Drop(n int) *Piece {
 	for i := 0; i < n; i++ {
 		np.Moves += ",down"
 	}
-	return &np
+	return np
 }
 
 func (p *Piece) Turnright() Piece {

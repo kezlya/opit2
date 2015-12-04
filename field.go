@@ -40,6 +40,106 @@ func (f Field) Copy() Field {
 	return newField
 }
 
+func (f Field) FindPositions(piece Piece) []Piece {
+	drop := piece.CurrentY - f.MaxPick - 2
+	if drop > 0 {
+		piece = piece.Drop(drop)
+	}
+
+	fixes := make([]Piece, 0)
+	bag := &Bag{Options: make(map[int]*Piece)}
+	queue := make(map[int]bool)
+	nkey := 0
+
+	bag.Options[piece.Key] = &piece
+	queue[piece.Key] = true
+
+	for len(queue) > 0 {
+		tmp := make(map[int]bool)
+		for k, _ := range queue {
+			nkey = f.Search("down", k, bag)
+			if nkey >= 0 {
+				tmp[nkey] = false
+			}
+			nkey = f.Search("left", k, bag)
+			if nkey >= 0 {
+				tmp[nkey] = false
+			}
+			nkey = f.Search("right", k, bag)
+			// move to the right woulf never generate 0 key
+			// 0 key is left bottom conner
+			if nkey > 0 {
+				tmp[nkey] = false
+			}
+			if piece.Name != "O" {
+				nkey = f.Search("turnleft", k, bag)
+				if nkey >= 0 {
+					tmp[nkey] = false
+				}
+				nkey = f.Search("turnright", k, bag)
+				if nkey >= 0 {
+					tmp[nkey] = false
+				}
+			}
+		}
+		queue = tmp
+	}
+	//found := false
+	//invalid := false
+	//maxY := f.Height
+
+	for k, p := range bag.Options {
+		//fmt.Println(k)
+		if p == nil {
+			delete(bag.Options, k)
+			continue
+		}
+		el, ok := bag.Options[k-1]
+		if ok && el != nil {
+			delete(bag.Options, k)
+			continue
+		}
+		if (p.Name == "I" || p.Name == "Z" || p.Name == "S") &&
+			(p.Rotation == 3 || p.Rotation == 2) {
+			el, ok := bag.Options[k-20000]
+			if ok && el != nil {
+				delete(bag.Options, k)
+				continue
+			}
+			el, ok = bag.Options[k-20000-1]
+			if ok && el != nil {
+				delete(bag.Options, k)
+				continue
+			}
+		}
+
+		//found = false
+		//invalid = false
+
+		// this is used to be for holes only now need to check all
+		/*
+			for _, hole := range holes {
+				for _, cell := range p.Space {
+					if cell.Y >= maxY {
+						invalid = true
+						break
+					}
+					if cell.X == hole.X && cell.Y == hole.Y {
+						found = true
+					}
+				}
+				if found && !invalid {
+					p.FieldAfter = f.AfterHole(p.Space)
+					p.Moves = strings.TrimPrefix(p.Moves, ",")
+					p.IsHole = true
+					fixes = append(fixes, *p)
+					break
+				}
+			}*/
+	}
+	return fixes
+}
+
 type Bag struct {
 	Options map[int]*Piece
 	Total   int
@@ -563,7 +663,7 @@ func (f Field) FixHoles(piece Piece) []Piece {
 
 	drop := f.Height - f.Empty - piece.CurrentY - 1
 	fp := piece.Drop(drop)
-	bag.Options[fp.Key] = fp
+	bag.Options[fp.Key] = &fp
 	queue[fp.Key] = true
 
 	for len(queue) > 0 {
