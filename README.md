@@ -31,3 +31,11 @@ Generating an array of random numbers. That can be used to generate garbage rows
 Usual Go testing. Just execute this command:
 
 	go test
+
+### Benchmark
+Benchmark tests implimented for core functions. That helps to track improvements in optimization of algorithms and strategies.
+
+##### FindPositions
+Current result is: 2000	    763736 ns/op
+
+	go test -run=XXX -bench=FindPositions
