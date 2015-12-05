@@ -113,17 +113,6 @@ func (p *Piece) Down() Piece {
 	return np
 }
 
-func (p *Piece) DropTo(y int) Piece {
-	drop := p.CurrentY - y
-	res := make(map[string]Cell, 4)
-	for i, v := range p.Space {
-		res[i] = Cell{X: v.X, Y: v.Y - drop}
-	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - drop, Space: res}
-	np.setKey()
-	return np
-}
-
 func (p *Piece) Drop(n int) Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {

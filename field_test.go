@@ -178,6 +178,25 @@ func Test_FindPositions_Z(t *testing.T) {
 	assertPositions(t, positions, 13)
 }
 
+func Test_After(t *testing.T) {
+	//arrange
+	/*var arangeT = testField
+	space := make(map[string]Cell, 4)
+	space["m1"] = Cell{X: 0, Y: 13}
+	space["m2"] = Cell{X: 1, Y: 13}
+	space["m3"] = Cell{X: 2, Y: 13}
+	space["t2"] = Cell{X: 1, Y: 14}
+	piece := Piece{Name: "T", Space: space}
+
+	//act
+
+	expected := Field{{true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, true, true, true, true}, {false, true, true, true, false, true, true, true, true, false}, {false, true, true, false, false, false, false, true, false, false}, {false, false, true, true, false, false, false, true, false, false}, {true, true, true, true, false, false, false, true, false, false}, {false, true, true, true, false, false, true, true, true, false}, {false, false, true, true, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	result := arangeT.AfterHole(piece.Space)
+
+	//assert
+	checkResults(t, expected, result)*/
+}
+
 /*
 
 func Test_Picks(t *testing.T) {

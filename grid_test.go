@@ -222,7 +222,7 @@ func Test_Burn(t *testing.T) {
 	}
 
 	//ast
-	result := grid.Burn()
+	result := grid.burn()
 
 	//assert
 	if !grid.isEqual(expectedGrid) || result != 5 {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"log"
 	"strings"
 )
@@ -90,7 +91,7 @@ func (g Grid) findHoles(picks Picks) ([]Cell, []Cell) {
 }
 
 //TODO depricate eventially move to the loop of ToField method
-func (g Grid) Burn() int {
+func (g Grid) burn() int {
 	burned := 0
 	for i := 0; i < len(g); i++ {
 		check := true
@@ -107,4 +108,31 @@ func (g Grid) Burn() int {
 		}
 	}
 	return burned
+}
+
+func (g Grid) isCollision(cells *map[string]Cell, checkTop bool) bool {
+	h := len(g)
+	if h <= 0 {
+		return true
+	}
+	w := len(g[0])
+	if w <= 0 {
+		return true
+	}
+	for _, c := range *cells {
+		if c.X < 0 || c.X >= w || c.Y < 0 {
+			return true
+		}
+		if c.Y >= h {
+			if checkTop {
+				return true
+			} else {
+				continue
+			}
+		}
+		if g[c.Y][c.X] {
+			return true
+		}
+	}
+	return false
 }

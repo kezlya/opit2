@@ -94,431 +94,16 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	//fmt.Println("countSearchCalls", countSearchCalls)
 	//fmt.Println("bagLen", len(bag))
 	for k, p := range bag {
-		if p == nil {
-			continue
-		}
-		el, ok := bag[k-1]
-		if ok && el == nil {
-			//check if piece position is over the top
-			invalid := false
-			for _, cell := range p.Space {
-				if cell.Y >= f.Height {
-					invalid = true
-					break
-				}
-			}
-			if !invalid {
+		_, ok := bag[k-1]
+		if !ok {
+			if !f.Grid.isCollision(&p.Space, true) {
 				p.FieldAfter = f.AfterHole(p.Space)
 				p.Moves = strings.TrimPrefix(p.Moves, ",")
 				positions = append(positions, *p)
-				//fmt.Println("   ", p.Key)
 			}
 		}
 	}
 	return positions
-}
-
-//TODO kill this when ".After" removed
-func (f Field) IsFit(pick, up int) bool {
-	if pick+up <= f.Height {
-		return true
-	}
-	return false
-}
-
-func (f Field) After(piece *Piece) (*Field, int) {
-	picks := f.Picks
-	x := piece.CurrentX
-	y := 0
-	r := piece.Rotation
-	valid := false
-	a := f.Copy()
-
-	switch piece.Name {
-	case "I":
-		switch r {
-		case 0, 2:
-			if picks.IsRight(x, 3) {
-				pick := picks.MaxR(x, 3)
-				if f.IsFit(pick, 1) {
-					a.Grid[pick][x] = true
-					a.Grid[pick][x+1] = true
-					a.Grid[pick][x+2] = true
-					a.Grid[pick][x+3] = true
-					y = pick
-					valid = true
-				}
-			}
-		case 1, 3:
-			pick := picks[x]
-			if f.IsFit(pick, 4) {
-				a.Grid[pick][x] = true
-				a.Grid[pick+1][x] = true
-				a.Grid[pick+2][x] = true
-				a.Grid[pick+3][x] = true
-				y = pick
-				valid = true
-			}
-		}
-	case "J":
-		switch r {
-		case 0:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				if f.IsFit(pick, 2) {
-					a.Grid[pick][x] = true
-					a.Grid[pick+1][x] = true
-					a.Grid[pick][x+1] = true
-					a.Grid[pick][x+2] = true
-					y = pick
-					valid = true
-				}
-			}
-		case 1:
-			if picks.IsRight(x, 1) {
-				l := picks[x]
-				l2 := picks[x+1]
-				if l2 >= l+2 {
-					if f.IsFit(l2, 1) {
-						a.Grid[l2][x] = true
-						a.Grid[l2][x+1] = true
-						a.Grid[l2-1][x] = true
-						a.Grid[l2-2][x] = true
-						y = l2 - 2
-						valid = true
-					}
-				} else {
-					if f.IsFit(l, 3) {
-						a.Grid[l][x] = true
-						a.Grid[l+1][x] = true
-						a.Grid[l+2][x] = true
-						a.Grid[l+2][x+1] = true
-						y = l
-						valid = true
-					}
-				}
-			}
-		case 2:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				l3 := picks[x+2]
-				if pick == l3 {
-					if f.IsFit(l3, 2) {
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick+1][x+2] = true
-						a.Grid[pick][x+2] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 1) {
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick][x+2] = true
-						a.Grid[pick-1][x+2] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		case 3:
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				if f.IsFit(pick, 3) {
-					a.Grid[pick][x] = true
-					a.Grid[pick][x+1] = true
-					a.Grid[pick+1][x+1] = true
-					a.Grid[pick+2][x+1] = true
-					y = pick
-					valid = true
-				}
-			}
-		}
-	case "L":
-		switch r {
-		case 0:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				if f.IsFit(pick, 2) {
-					a.Grid[pick][x] = true
-					a.Grid[pick][x+1] = true
-					a.Grid[pick][x+2] = true
-					a.Grid[pick+1][x+2] = true
-					y = pick
-					valid = true
-				}
-			}
-		case 1:
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				if f.IsFit(pick, 3) {
-					a.Grid[pick][x] = true
-					a.Grid[pick+1][x] = true
-					a.Grid[pick+2][x] = true
-					a.Grid[pick][x+1] = true
-					y = pick
-					valid = true
-				}
-			}
-		case 2:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				l := picks[x]
-				if pick == l {
-					if f.IsFit(l, 2) {
-						a.Grid[pick][x] = true
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick+1][x+2] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 1) {
-						a.Grid[pick-1][x] = true
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick][x+2] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		case 3:
-			if picks.IsRight(x, 1) {
-				l := picks[x]
-				l2 := picks[x+1]
-				if l >= l2+2 {
-					if f.IsFit(l, 1) {
-						a.Grid[l][x] = true
-						a.Grid[l][x+1] = true
-						a.Grid[l-1][x+1] = true
-						a.Grid[l-2][x+1] = true
-						y = l - 2
-						valid = true
-					}
-				} else {
-					if f.IsFit(l2, 3) {
-						a.Grid[l2+2][x] = true
-						a.Grid[l2][x+1] = true
-						a.Grid[l2+1][x+1] = true
-						a.Grid[l2+2][x+1] = true
-						y = l2
-						valid = true
-					}
-				}
-			}
-		}
-	case "O":
-		if picks.IsRight(x, 1) {
-			pick := picks.MaxR(x, 1)
-			if f.IsFit(pick, 2) {
-				a.Grid[pick][x] = true
-				a.Grid[pick+1][x] = true
-				a.Grid[pick][x+1] = true
-				a.Grid[pick+1][x+1] = true
-				y = pick
-				valid = true
-			}
-		}
-	case "S":
-		switch r {
-		case 0, 2:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				l := picks[x]
-				l1 := picks[x+1]
-				if pick == l || pick == l1 {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick+1][x+2] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 1) {
-						a.Grid[pick-1][x] = true
-						a.Grid[pick-1][x+1] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick][x+2] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		case 1, 3:
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				l2 := picks[x+1]
-				if pick == l2 {
-					if f.IsFit(pick, 3) {
-						a.Grid[pick+2][x] = true
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick][x+1] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick+1][x] = true
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick-1][x+1] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		}
-	case "T":
-		switch r {
-		case 0:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				if f.IsFit(pick, 2) {
-					a.Grid[pick][x] = true
-					a.Grid[pick][x+1] = true
-					a.Grid[pick+1][x+1] = true
-					a.Grid[pick][x+2] = true
-					y = pick
-					valid = true
-				}
-			}
-		case 1:
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				l := picks[x]
-				if pick == l {
-					if f.IsFit(pick, 3) {
-						a.Grid[pick][x] = true
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick+2][x] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick-1][x] = true
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick+1][x] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		case 2:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				c := picks[x+1]
-				if pick == c {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick+1][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick+1][x+2] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 1) {
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick-1][x+1] = true
-						a.Grid[pick][x+2] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		case 3:
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				l2 := picks[x+1]
-				if pick == l2 {
-					if f.IsFit(pick, 3) {
-						a.Grid[pick+2][x+1] = true
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick][x+1] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick-1][x+1] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		}
-	case "Z":
-		switch r {
-		case 0, 2:
-			if picks.IsRight(x, 2) {
-				pick := picks.MaxR(x, 2)
-				l1 := picks[x+1]
-				l2 := picks[x+2]
-				if pick == l1 || pick == l2 {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick][x+2] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 1) {
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick-1][x+1] = true
-						a.Grid[pick-1][x+2] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		case 1, 3:
-			if picks.IsRight(x, 1) {
-				pick := picks.MaxR(x, 1)
-				l := picks[x]
-				if pick == l {
-					if f.IsFit(pick, 3) {
-						a.Grid[pick][x] = true
-						a.Grid[pick+1][x] = true
-						a.Grid[pick+1][x+1] = true
-						a.Grid[pick+2][x+1] = true
-						y = pick
-						valid = true
-					}
-				} else {
-					if f.IsFit(pick, 2) {
-						a.Grid[pick-1][x] = true
-						a.Grid[pick][x] = true
-						a.Grid[pick][x+1] = true
-						a.Grid[pick+1][x+1] = true
-						y = pick - 1
-						valid = true
-					}
-				}
-			}
-		}
-	}
-	if valid {
-		a.Burned = a.Grid.Burn()
-		return &a, y
-	}
-	return nil, 0
 }
 
 func (f Field) AfterHole(space map[string]Cell) *Field {
@@ -533,25 +118,13 @@ func (f Field) AfterHole(space map[string]Cell) *Field {
 			a.Grid[cell.Y][cell.X] = true
 		}
 	}
-	a.Burned = a.Grid.Burn()
+	a.Burned = a.Grid.burn()
 	return &a
-}
-
-func (f Field) IsValid(cells *map[string]Cell) bool {
-	for _, c := range *cells {
-		if c.X < 0 || c.X >= f.Width || c.Y < 0 {
-			return false
-		}
-		if c.Y < f.Height && f.Grid[c.Y][c.X] {
-			return false
-		}
-	}
-	return true
 }
 
 func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 	var ok bool
-	var el *Piece = nil
+	var el *Piece
 	var np Piece
 	nMoves := bag[key].Moves + "," + dir
 
@@ -604,21 +177,21 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			return -1
 		}
 	}
-
-	if f.IsValid(&np.Space) {
-		np.Moves = nMoves
-		//TODO refactor this do not Call search on this keys
-		// I S Z 0==2 and 1 == 3
-		if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
-			_, ok1 := bag[np.Key-20000]
-			_, ok2 := bag[np.Key+20000]
-			if ok1 || ok2 {
-				return -1
-			}
-		}
-		bag[np.Key] = &np
-		return np.Key
+	if f.Grid.isCollision(&np.Space, false) {
+		return -1
 	}
-	bag[np.Key] = nil
-	return -1
+
+	//TODO refactor this do not Call search on this keys
+	// I S Z 0==2 and 1 == 3
+	if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
+		_, ok1 := bag[np.Key-20000]
+		_, ok2 := bag[np.Key+20000]
+		if ok1 || ok2 {
+			return -1
+		}
+	}
+
+	np.Moves = nMoves
+	bag[np.Key] = &np
+	return np.Key
 }
