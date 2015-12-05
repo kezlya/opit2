@@ -1,16 +1,16 @@
 package main
 
 import (
-	"encoding/csv"
+	//"encoding/csv"
 	"fmt"
 	"github.com/agonopol/gosplat"
 	"github.com/skratchdot/open-golang/open"
 	"io/ioutil"
-	"math/rand"
+	//"math/rand"
 	"os"
 	"sort"
 	"strconv"
-	"strings"
+	//"strings"
 	"testing"
 	"time"
 )
@@ -48,7 +48,7 @@ func Test_generateGarbageRows(t *testing.T) {
 	}
 }
 */
-
+/*
 func Benchmark_moves(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		game := Game{Strategy: strategy}
@@ -95,13 +95,13 @@ func Benchmark_fixholes(b *testing.B) {
 		testHolesField.FixHoles(piece, []Cell{hole})
 	}
 }
-
+*/
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		buff := 1
 		ch_round := make(chan int, buff)
 		ch_score := make(chan int, buff)
-		playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g10, &gr7, true)
+		go playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g10, &gr7, true)
 		scores := make([]int, buff)
 		rounds := make([]int, buff)
 		for k := 0; k < buff; k++ {
@@ -114,6 +114,21 @@ func Benchmark_one(b *testing.B) {
 	}
 }
 
+func Benchmark_many(banch *testing.B) {
+	for n := 0; n < banch.N; n++ {
+		// strategy taking from main file current Strategy for the bot
+		strategyName := strategy.name()
+		fmt.Println()
+		fmt.Println("================================")
+		fmt.Println(strategyName)
+
+		scores, rounds := playGames(strategy)
+		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
+		fmt.Println("done")
+	}
+}
+
+/*
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 2; b++ {
@@ -142,69 +157,58 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-func Benchmark_investigate(banch *testing.B) {
-	for n := 0; n < banch.N; n++ {
-		// strategy taking from main file current Strategy for the bot
-		strategyName := strategy.name()
-		fmt.Println()
-		fmt.Println("================================")
-		fmt.Println(strategyName)
 
-		scores, rounds := playGames(strategy)
-		//Linechart(scores, scores, rounds, rounds, strategyName)
-		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
-		fmt.Println("done")
-	}
-}
-
+*/
 func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
-	g.Round = 0
-	g.MyPlayer.Points = 0
-	g.MyPlayer.Field = initialField
-	g.MyPlayer.Picks = initialField.Picks()
-	position := &Piece{}
-	position.FieldAfter = initialField
-	assignPieces(g, input[0])
+	g.asignSettings("field_width", "10")
+	g.asignSettings("field_height", "20")
+	field := EmptyGrig10x20.ToField()
+	position := &Piece{FieldAfter: &field}
+	round := 1
 	keepGoing := true
-
-	i := 0
 	for keepGoing {
-		applyPoints(g, position)
-		position.FieldAfter.Burn()
-		g.MyPlayer.Field = position.FieldAfter
-		if addSolidLines(g) {
-			keepGoing = false
-			break
-		}
-		if addGarbageLines(g, garbage) {
-			keepGoing = false
-			break
-		}
-		g.MyPlayer.Picks = g.MyPlayer.Field.Picks()
-		g.MyPlayer.Empty = g.MyPlayer.Field.Height() - g.MyPlayer.Picks.Max()
-		assignPieces(g, input[i])
-		g.Round++
+		// setup new round
+		g.asignUpdates("game", "round", strconv.Itoa(round))
+		g.asignUpdates("game", "this_piece_type", input[round-1])
+		g.asignUpdates("game", "next_piece_type", input[round])
+		g.asignUpdates("game", "this_piece_position", "3,-1")
+		g.MyPlayer.Field = *position.FieldAfter
+		g.initPieces()
 
+		// play round
+		position = g.calculateMoves()
+		g.MyPlayer.Points += position.getPoints()
 		if visual {
-			//fmt.Println("D", position.Damage, "S", position.Score)
-			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo, "empty:", g.MyPlayer.Empty)
+			fmt.Println()
+			fmt.Println("===============================================================")
+			fmt.Println()
+			g.MyPlayer.Field.Grid.visual()
+			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
 			fmt.Printf("%+v\n", position.Score)
-			PrintVisual(g.MyPlayer.Field)
+			position.FieldAfter.Grid.visual()
 			time.Sleep(1000000000)
 		}
 
-		position = g.calculateMoves()
-
+		// check if the game is over
 		if position == nil ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][3] ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][4] ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][5] ||
-			g.MyPlayer.Field[g.MyPlayer.Field.Height()-1][6] {
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][3] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][4] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][5] ||
+			g.MyPlayer.Field.Grid[g.MyPlayer.Field.Height-1][6] {
 			keepGoing = false
+			break
 		}
-		i++
+		if addSolidLines(g, position) {
+			keepGoing = false
+			break
+		}
+		if addGarbageLines(g, position, garbage) {
+			keepGoing = false
+			break
+		}
+		round++
 	}
 	ch_round <- g.Round
 	ch_score <- g.MyPlayer.Points
@@ -255,61 +259,41 @@ func playGames(st Strategy) (*[]int, *[]int) {
 	return &scores, &rounds
 }
 
-func assignPieces(g *Game, piece string) {
-	g.CurrentPiece = g.NextPiece
-	x := 3
-	if piece == "O" {
-		x = 4
-	}
-	g.NextPiece = Piece{Name: piece, Rotation: 0}
-	g.NextPiece.InitSpace(Cell{x, g.MyPlayer.Field.Height() - 1})
-}
-
-func applyPoints(g *Game, p *Piece) {
-	if g.Round > 1 {
-		points := p.getPoints()
-		if points > 0 {
-			g.MyPlayer.Combo++
-		} else {
-			g.MyPlayer.Combo = 0
-		}
-		g.MyPlayer.Points += points
-	}
-}
-
-func addSolidLines(g *Game) bool {
-	stop := false
+func addSolidLines(g *Game, p *Piece) bool {
 	r := g.Round % 20
 	if r == 0 && g.Round != 0 {
-		if g.MyPlayer.Empty == 0 {
-			stop = true
+		if g.MyPlayer.Field.Empty == 0 {
+			return true
 		}
-		g.MyPlayer.Field = g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1]
-		g.Height = g.Height - 1
+		newGrid := p.FieldAfter.Grid[:p.FieldAfter.Height-1]
+		newField := newGrid.ToField()
+		p.FieldAfter = &newField
 	}
-	return stop
+	return false
 }
 
-func addGarbageLines(g *Game, garbage *[60]int) bool {
-	stop := false
+func addGarbageLines(g *Game, p *Piece, garbage *[60]int) bool {
 	speed := 7
 	r := g.Round % speed
 	if r == 0 && g.Round != 0 {
-		if g.MyPlayer.Empty == 0 {
-			stop = true
+		if g.MyPlayer.Field.Empty == 0 {
+			return true
 		}
-		size := g.MyPlayer.Field.Width()
+		size := g.Width
 		row := make([]bool, size)
 		for i := range row {
 			row[i] = true
 		}
 		row[garbage[g.Round/speed]] = false
 		row[garbage[len(garbage)-g.Round/speed]] = false
-		g.MyPlayer.Field = append([][]bool{row}, [][]bool(g.MyPlayer.Field[:g.MyPlayer.Field.Height()-1])...)
+		newGrid := Grid(append([][]bool{row}, [][]bool(p.FieldAfter.Grid[:p.FieldAfter.Height-1])...))
+		newField := newGrid.ToField()
+		p.FieldAfter = &newField
 	}
-	return stop
+	return false
 }
 
+/*
 func save(fileName string, record []string) {
 	csvfile, err := os.OpenFile("output/"+fileName+".csv", os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
@@ -338,7 +322,7 @@ func statistic(a []int) (int, int, int) {
 	avr := total/len(a) - 2
 	return avr, a[1], a[len(a)-2]
 }
-
+*/
 func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	cScores := gosplat.NewChart()
 	cRounds := gosplat.NewChart()
@@ -381,6 +365,7 @@ func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	fmt.Println(name)
 }
 
+/*
 func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool {
 	counterS := 0
 	counterR := 0
@@ -397,6 +382,9 @@ func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool
 	fmt.Println("Better Rounds:", counterR)
 	return (counterS > half || counterR > half)
 }
+
+
+*/
 
 func (s *Strategy) name() string {
 	return "b" + strconv.Itoa(s.Burn) +

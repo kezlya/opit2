@@ -17,7 +17,7 @@ var strategy = Strategy{
 }
 
 func main() {
-	game := Game{Strategy: strategy, CurrentPiece: Piece{}, NextPiece: Piece{}}
+	game := Game{Strategy: strategy}
 	consolereader := bufio.NewReader(os.Stdin)
 	for {
 		input, _ := consolereader.ReadString('\n')
@@ -29,17 +29,12 @@ func main() {
 			game.asignUpdates(parts[1], parts[2], parts[3])
 		case "action":
 			//time, _ := strconv.Atoi(parts[2])
-			game.CurrentPiece.InitSpace(Cell{X: game.X, Y: game.MyPlayer.Field.Height() + game.Y})
-			game.NextPiece.InitSpace(Cell{X: 3, Y: game.MyPlayer.Field.Height() + game.Y})
-			if game.Round == 1 {
+			game.initPieces()
+			pos := game.calculateMoves()
+			if pos.Moves == "" {
 				fmt.Println("drop")
 			} else {
-				pos := game.calculateMoves()
-				if pos.Moves == "" {
-					fmt.Println("drop")
-				} else {
-					fmt.Println(pos.Moves + ",drop")
-				}
+				fmt.Println(pos.Moves + ",drop")
 			}
 		}
 	}

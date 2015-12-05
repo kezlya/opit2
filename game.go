@@ -6,25 +6,28 @@ import (
 )
 
 type Game struct {
-	X            int
-	Y            int
-	Timebank     int
-	TimePerMove  int
-	Width        int
-	Height       int
-	Round        int
-	Players      []Player
-	MyPlayer     *Player
-	CurrentPiece Piece
-	NextPiece    Piece
-	Strategy     Strategy
+	X           int
+	Y           int
+	Timebank    int
+	TimePerMove int
+	Width       int
+	Height      int
+	Round       int
+
+	CurrentPieceName string
+	NextPieceName    string
+	CurrentPiece     Piece
+	NextPiece        Piece
+
+	Players  []Player
+	MyPlayer *Player
+
+	Strategy Strategy
 }
 
 type Player struct {
 	Name   string
 	Field  Field
-	Picks  Picks
-	Empty  int
 	Points int
 	Combo  int
 }
@@ -71,11 +74,9 @@ func (g *Game) asignUpdates(who, action, value string) {
 		case "round":
 			g.Round, _ = strconv.Atoi(value)
 		case "this_piece_type":
-			g.CurrentPiece.Name = value
-			g.CurrentPiece.Rotation = 0
+			g.CurrentPieceName = value
 		case "next_piece_type":
-			g.NextPiece.Name = value
-			g.NextPiece.Rotation = 0
+			g.NextPieceName = value
 		case "this_piece_position":
 			cor := strings.Split(value, ",")
 			g.X, _ = strconv.Atoi(cor[0])
@@ -101,13 +102,8 @@ func (g *Game) asignUpdates(who, action, value string) {
 			cleanSource := strings.Replace(value, ";3,3,3,3,3,3,3,3,3,3", "", g.Height)
 			for i, p := range g.Players {
 				if p.Name == who {
-					var pf Field
-					pf = pf.init(cleanSource)
-					pfp := pf.Picks()
-
-					g.Players[i].Field = pf
-					g.Players[i].Picks = pfp
-					g.Players[i].Empty = pf.Height() - pfp.Max()
+					grid := InitGrid(cleanSource)
+					g.Players[i].Field = grid.ToField()
 					break
 				}
 			}
@@ -115,56 +111,34 @@ func (g *Game) asignUpdates(who, action, value string) {
 	}
 }
 
+func (g *Game) initPieces() {
+	realY := g.MyPlayer.Field.Height + g.Y
+	g.CurrentPiece = InitPiece(g.CurrentPieceName, g.X, realY)
+	g.NextPiece = InitPiece(g.NextPieceName, g.X, realY)
+}
+
 func (g *Game) calculateMoves() *Piece {
 	mf := g.MyPlayer.Field
-	positions := mf.ValidPosition(g.CurrentPiece)
-	hBlocked, hFixable := mf.FindHoles()
-	countBh := len(hBlocked)
-	countFh := len(hFixable)
-	if len(hFixable) > 0 {
-		fixes := mf.FixHoles(g.CurrentPiece, hFixable)
-		positions = append(positions, fixes...)
-	}
-
+	positions := mf.FindPositions(g.CurrentPiece)
 	for i, p := range positions {
-		if p.Score.Burn > 0 {
-			p.FieldAfter.Burn()
-		}
-		pp := p.FieldAfter.Picks()
-
-		nPositions := p.FieldAfter.ValidPosition(g.NextPiece)
-		nhBlocked, nhFixable := p.FieldAfter.FindHoles()
-		ncountBh := len(nhBlocked)
-		ncountFh := len(nhFixable)
-		if len(nhFixable) > 0 {
-			nfixes := p.FieldAfter.FixHoles(g.NextPiece, nhFixable)
-			nPositions = append(nPositions, nfixes...)
-		}
-
-		positions[i].Score.BHoles = ncountBh - countBh
-		positions[i].Score.FHoles = ncountFh - countFh
+		positions[i].Score.BHoles = p.FieldAfter.CountBH - mf.CountBH
+		positions[i].Score.FHoles = p.FieldAfter.CountFH - mf.CountFH
 		positions[i].setHighY()
-		positions[i].setStep(g.MyPlayer.Picks)
-		positions[i].setCHoles(nhBlocked)
+		positions[i].setStep()
+		positions[i].setCHoles()
 
+		nPositions := p.FieldAfter.FindPositions(g.NextPiece)
 		for j, np := range nPositions {
+			//if ((g.Round + 1) % 20) == 0 {
+			//	np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
+			//}
 
-			if np.Score.Burn > 0 {
-				np.FieldAfter.Burn()
-			}
-			if ((g.Round + 1) % 20) == 0 {
-				np.FieldAfter = np.FieldAfter[:np.FieldAfter.Height()-1]
-			}
-
-			npp := np.FieldAfter.Picks()
-			nEmpty := np.FieldAfter.Height() - npp.Max()
-			nnhBlocked, nnhFixable := np.FieldAfter.FindHoles()
-			nPositions[j].Score.BHoles = len(nnhBlocked) - ncountBh
-			nPositions[j].Score.FHoles = len(nnhFixable) - ncountFh
+			nPositions[j].Score.BHoles = np.FieldAfter.CountBH - p.FieldAfter.CountBH
+			nPositions[j].Score.FHoles = np.FieldAfter.CountFH - p.FieldAfter.CountFH
 			nPositions[j].setHighY()
-			nPositions[j].setStep(pp)
-			nPositions[j].setCHoles(nnhBlocked)
-			nPositions[j].setTotalScore(g.Strategy, nEmpty, ncountBh)
+			nPositions[j].setStep()
+			nPositions[j].setCHoles()
+			nPositions[j].setTotalScore(g.Strategy, np.FieldAfter.Empty)
 		}
 
 		if len(nPositions) > 0 {
@@ -173,7 +147,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000
 		}
-		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Empty, countBh)
+		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Field.Empty)
 	}
 
 	if len(positions) > 0 {

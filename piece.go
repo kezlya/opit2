@@ -1,5 +1,9 @@
 package main
 
+import (
+	"log"
+)
+
 //import "fmt"
 
 type Piece struct {
@@ -9,7 +13,7 @@ type Piece struct {
 	CurrentY   int
 	Rotation   int
 	Space      map[string]Cell
-	FieldAfter Field
+	FieldAfter *Field
 	Moves      string
 	Score      Score
 	IsHole     bool
@@ -33,49 +37,50 @@ type Cell struct {
 	Y int
 }
 
-func (p *Piece) InitSpace(start Cell) {
-	space := make(map[string]Cell, 4)
-	switch p.Name {
+func InitPiece(name string, x, y int) Piece {
+	piece := Piece{Name: name, CurrentX: x, CurrentY: y}
+	piece.Space = make(map[string]Cell, 4)
+	switch name {
 	case "I":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["m4"] = Cell{X: start.X + 3, Y: start.Y}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["m4"] = Cell{X: x + 3, Y: y}
 	case "J":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["t1"] = Cell{X: x, Y: y + 1}
 	case "L":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["t3"] = Cell{X: start.X + 2, Y: start.Y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["t3"] = Cell{X: x + 2, Y: y + 1}
 	case "O":
-		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		piece.Space["t1"] = Cell{X: x, Y: y + 1}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 	case "S":
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
-		space["t3"] = Cell{X: start.X + 2, Y: start.Y + 1}
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
+		piece.Space["t3"] = Cell{X: x + 2, Y: y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 	case "T":
-		space["m1"] = Cell{X: start.X, Y: start.Y}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
+		piece.Space["m1"] = Cell{X: x, Y: y}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
 	case "Z":
-		space["t1"] = Cell{X: start.X, Y: start.Y + 1}
-		space["t2"] = Cell{X: start.X + 1, Y: start.Y + 1}
-		space["m2"] = Cell{X: start.X + 1, Y: start.Y}
-		space["m3"] = Cell{X: start.X + 2, Y: start.Y}
+		piece.Space["t1"] = Cell{X: x, Y: y + 1}
+		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
+		piece.Space["m2"] = Cell{X: x + 1, Y: y}
+		piece.Space["m3"] = Cell{X: x + 2, Y: y}
+	default:
+		log.Fatalln(name, "piece is not supported")
 	}
-	p.Space = space
-	p.CurrentX = start.X
-	p.CurrentY = start.Y
-	p.setKey()
+	piece.setKey()
+	return piece
 }
 
 func (p *Piece) Left() Piece {
@@ -108,14 +113,16 @@ func (p *Piece) Down() Piece {
 	return np
 }
 
-func (p *Piece) DropTo(y int) Piece {
-	drop := p.CurrentY - y
+func (p *Piece) Drop(n int) Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
-		res[i] = Cell{X: v.X, Y: v.Y - drop}
+		res[i] = Cell{X: v.X, Y: v.Y - n}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - drop, Space: res}
+	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - n, Space: res}
 	np.setKey()
+	for i := 0; i < n; i++ {
+		np.Moves += ",down"
+	}
 	return np
 }
 
@@ -682,10 +689,6 @@ func (p *Piece) setKey() {
 	}
 }
 
-func (p *Piece) setBurn() {
-	p.Score.Burn = p.FieldAfter.WillBurn()
-}
-
 func (p *Piece) setDSR(before, after int) {
 	if before < 0 && after >= 0 {
 		p.Score.IsDSR = true
@@ -722,7 +725,8 @@ func (p *Piece) setHighY() {
 	}*/
 }
 
-func (p *Piece) setStep(pp Picks) {
+func (p *Piece) setStep() {
+	pp := p.FieldAfter.Picks
 	maxX, leftY, rightY := 0, 0, 0
 
 	for _, c := range p.Space {
@@ -747,7 +751,7 @@ func (p *Piece) setStep(pp Picks) {
 		}
 	}
 
-	if maxX < p.FieldAfter.Width()-1 {
+	if maxX < p.FieldAfter.Width-1 {
 		x := maxX + 1
 		pick := pp[x] - 1
 		if rightY > pick {
@@ -756,7 +760,8 @@ func (p *Piece) setStep(pp Picks) {
 	}
 }
 
-func (p *Piece) setCHoles(hBlocked []Cell) {
+func (p *Piece) setCHoles() {
+	/*countBlocked := p.FieldAfter.HolesBlocked
 	var effective []Cell
 	lowEffectiveY := 0
 	if len(hBlocked) > 5 {
@@ -779,6 +784,7 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
+	*/
 	/*
 		for _, h := range effective {
 			stucking := 0
@@ -805,7 +811,9 @@ func (p *Piece) setCHoles(hBlocked []Cell) {
 	*/
 }
 
-func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
+func (p *Piece) setTotalScore(st Strategy, empty int) {
+
+	p.Score.Burn = p.FieldAfter.Burned
 
 	kY := st.HighY
 	kS := st.Step
@@ -863,14 +871,16 @@ func (p *Piece) setTotalScore(st Strategy, empty, holes int) {
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
-	if empty > 10 && holes < 5 && p.Score.Burn == 1 {
-		p.Score.Total = p.Score.Total + 10
-		//fmt.Println("====")
-	}
+	/*
+			if empty > 10 && holes < 5 && p.Score.Burn == 1 {
+				p.Score.Total = p.Score.Total + 10
+				//fmt.Println("====")
+			}
 
-	if holes > 10 && p.Score.Burn > 0 {
-		p.Score.Total = p.Score.Total - 4
-	}
+		if holes > 10 && p.Score.Burn > 0 {
+			p.Score.Total = p.Score.Total - 4
+		}
+	*/
 }
 
 func (p *Piece) getPoints() int {
@@ -914,7 +924,7 @@ func (p *Piece) isSingleTSpin() bool {
 	if p.Space["m1"].Y-1 < 0 {
 		return false
 	}
-	if p.FieldAfter[p.Space["m1"].Y][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.Space["m1"].Y][p.Space["m1"].X] || p.FieldAfter.Grid[p.Space["m3"].Y][p.Space["m3"].X] {
 		return true
 	}
 	return false
@@ -936,14 +946,14 @@ func (p *Piece) isDoubleTSpin() bool {
 	if p.Space["m1"].Y-2 < 0 {
 		return false
 	}
-	if p.FieldAfter[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter[p.Space["m3"].Y-1][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter.Grid[p.Space["m3"].Y-1][p.Space["m3"].X] {
 		return true
 	}
 	return false
 }
 
 func (p *Piece) isPerfectClear() bool {
-	for _, row := range p.FieldAfter {
+	for _, row := range p.FieldAfter.Grid {
 		for _, col := range row {
 			if col {
 				return false
@@ -975,4 +985,10 @@ func (p *Piece) isDSRfriendly(hight, empty int) bool {
 		}
 	}
 	return true
+}
+
+func (p *Piece) shorterPath(newMoves string) {
+	if p != nil && len(newMoves) < len(p.Moves) {
+		p.Moves = newMoves
+	}
 }
