@@ -87,47 +87,7 @@ func (g Grid) ApplyPiece(cells map[string]Cell) Grid {
 	return newGrid
 }
 
-//TODO depricate eventially move to the loop of ToField method
-func (g Grid) findHoles(picks Picks) (int, int) {
-	w := len(g[0])
-	blocked := 0
-	fixable := 0
-	for i, pick := range picks {
-		for j := 0; j < pick; j++ {
-			if !g[j][i] {
-				if (i-2 > -1 && !g[j][i-1] && !g[j][i-2] && !g[j+1][i-1] && !g[j+1][i-2]) ||
-					(i+2 < w && !g[j][i+1] && !g[j][i+2] && !g[j+1][i+1] && !g[j+1][i+2]) {
-					fixable++
-				} else {
-					blocked++
-				}
-			}
-		}
-	}
-	return blocked, fixable
-}
-
-//TODO depricate eventially move to the loop of ToField method
-func (g Grid) burn() int {
-	burned := 0
-	for i := 0; i < len(g); i++ {
-		check := true
-		for _, col := range g[i] {
-			if !col {
-				check = false
-				break
-			}
-		}
-		if check {
-			g = append(g[:i], g[i+1:]...)
-			burned++
-			i--
-		}
-	}
-	return burned
-}
-
-func (g Grid) isCollision(cells map[string]Cell, checkTop bool) bool {
+func (g Grid) IsCollision(cells map[string]Cell, checkTop bool) bool {
 	h := len(g)
 	if h <= 0 {
 		return true
@@ -152,4 +112,43 @@ func (g Grid) isCollision(cells map[string]Cell, checkTop bool) bool {
 		}
 	}
 	return false
+}
+
+func (g Grid) findHoles(picks []int) (int, int) {
+	w := len(g[0])
+	blocked := 0
+	fixable := 0
+	for i, pick := range picks {
+		for j := 0; j < pick; j++ {
+			if !g[j][i] {
+				if (i-2 > -1 && !g[j][i-1] && !g[j][i-2] && !g[j+1][i-1] && !g[j+1][i-2]) ||
+					(i+2 < w && !g[j][i+1] && !g[j][i+2] && !g[j+1][i+1] && !g[j+1][i+2]) {
+					fixable++
+				} else {
+					blocked++
+				}
+			}
+		}
+	}
+	return blocked, fixable
+}
+
+//TODO need to depricate eventially move to the loop of ToField method
+func (g Grid) burn() int {
+	burned := 0
+	for i := 0; i < len(g); i++ {
+		check := true
+		for _, col := range g[i] {
+			if !col {
+				check = false
+				break
+			}
+		}
+		if check {
+			g = append(g[:i], g[i+1:]...)
+			burned++
+			i--
+		}
+	}
+	return burned
 }
