@@ -16,29 +16,6 @@ type Field struct {
 
 	Grid  Grid
 	Picks Picks
-
-	//TODO kill this after refactoring FixHoles
-	HolesBlocked []Cell
-	HolesFixable []Cell
-}
-
-func (f Field) Copy() Field {
-	newField := f
-
-	newGrid := make([][]bool, f.Height)
-	for i, row := range f.Grid {
-		newGrid[i] = make([]bool, f.Width)
-		copy(newGrid[i], row[:])
-	}
-	newField.Grid = newGrid
-
-	newPicks := make([]int, len(f.Picks))
-	copy(newPicks, f.Picks[:])
-	newField.Picks = newPicks
-
-	//TODO if Holes property exist need to copy them as value type
-
-	return newField
 }
 
 func (f Field) FindPositions(piece Piece) []Piece {
@@ -95,31 +72,15 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	//fmt.Println("bagLen", len(bag))
 	for k, p := range bag {
 		_, ok := bag[k-1]
-		if !ok {
-			if !f.Grid.isCollision(&p.Space, true) {
-				p.FieldAfter = f.AfterHole(p.Space)
-				p.Moves = strings.TrimPrefix(p.Moves, ",")
-				positions = append(positions, *p)
-			}
+		if !ok && !f.Grid.isCollision(p.Space, true) {
+			newGrid := f.Grid.ApplyPiece(p.Space)
+			newField := newGrid.ToField()
+			p.FieldAfter = &newField
+			p.Moves = strings.TrimPrefix(p.Moves, ",")
+			positions = append(positions, *p)
 		}
 	}
 	return positions
-}
-
-func (f Field) AfterHole(space map[string]Cell) *Field {
-	if len(space) != 4 {
-		return nil
-	}
-	newGrid := f.Grid.Copy()
-	for _, cell := range space {
-		if newGrid[cell.Y][cell.X] {
-			return nil
-		} else {
-			newGrid[cell.Y][cell.X] = true
-		}
-	}
-	newField := newGrid.ToField()
-	return &newField
 }
 
 func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
@@ -186,7 +147,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		}
 	}
 
-	if f.Grid.isCollision(&np.Space, false) {
+	if f.Grid.isCollision(np.Space, false) {
 		return -1
 	}
 

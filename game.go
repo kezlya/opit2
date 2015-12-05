@@ -133,8 +133,6 @@ func (g *Game) calculateMoves() *Piece {
 			//	np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
 			//}
 
-			//np.FieldAfter.Grid.visual()
-
 			nPositions[j].Score.BHoles = np.FieldAfter.CountBH - p.FieldAfter.CountBH
 			nPositions[j].Score.FHoles = np.FieldAfter.CountFH - p.FieldAfter.CountFH
 			nPositions[j].setHighY()

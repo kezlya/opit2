@@ -79,6 +79,14 @@ func (g Grid) Copy() Grid {
 	return newGrid
 }
 
+func (g Grid) ApplyPiece(cells map[string]Cell) Grid {
+	newGrid := g.Copy()
+	for _, cell := range cells {
+		newGrid[cell.Y][cell.X] = true
+	}
+	return newGrid
+}
+
 //TODO depricate eventially move to the loop of ToField method
 func (g Grid) findHoles(picks Picks) (int, int) {
 	w := len(g[0])
@@ -119,7 +127,7 @@ func (g Grid) burn() int {
 	return burned
 }
 
-func (g Grid) isCollision(cells *map[string]Cell, checkTop bool) bool {
+func (g Grid) isCollision(cells map[string]Cell, checkTop bool) bool {
 	h := len(g)
 	if h <= 0 {
 		return true
@@ -128,7 +136,7 @@ func (g Grid) isCollision(cells *map[string]Cell, checkTop bool) bool {
 	if w <= 0 {
 		return true
 	}
-	for _, c := range *cells {
+	for _, c := range cells {
 		if c.X < 0 || c.X >= w || c.Y < 0 {
 			return true
 		}

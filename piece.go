@@ -761,7 +761,7 @@ func (p *Piece) setStep() {
 }
 
 func (p *Piece) setCHoles() {
-	hBlocked := p.FieldAfter.HolesBlocked
+	/*countBlocked := p.FieldAfter.HolesBlocked
 	var effective []Cell
 	lowEffectiveY := 0
 	if len(hBlocked) > 5 {
@@ -784,6 +784,7 @@ func (p *Piece) setCHoles() {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
+	*/
 	/*
 		for _, h := range effective {
 			stucking := 0
