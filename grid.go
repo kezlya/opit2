@@ -62,27 +62,23 @@ func (g Grid) ToField() Field {
 		}
 	}
 	f.Empty = f.Height - f.MaxPick
-	f.HolesBlocked, f.HolesFixable = g.findHoles(f.Picks)
-	f.CountBH = len(f.HolesBlocked)
-	f.CountFH = len(f.HolesFixable)
+	f.CountBH, f.CountFH = g.findHoles(f.Picks)
 	return f
 }
 
 //TODO depricate eventially move to the loop of ToField method
-//TODO return only count of holes
-func (g Grid) findHoles(picks Picks) ([]Cell, []Cell) {
+func (g Grid) findHoles(picks Picks) (int, int) {
 	w := len(g[0])
-	blocked := make([]Cell, 0)
-	fixable := make([]Cell, 0)
+	blocked := 0
+	fixable := 0
 	for i, pick := range picks {
 		for j := 0; j < pick; j++ {
 			if !g[j][i] {
-				hole := Cell{X: i, Y: j}
 				if (i-2 > -1 && !g[j][i-1] && !g[j][i-2] && !g[j+1][i-1] && !g[j+1][i-2]) ||
 					(i+2 < w && !g[j][i+1] && !g[j][i+2] && !g[j+1][i+1] && !g[j+1][i+2]) {
-					fixable = append(fixable, hole)
+					fixable++
 				} else {
-					blocked = append(blocked, hole)
+					blocked++
 				}
 			}
 		}

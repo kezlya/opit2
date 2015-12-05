@@ -177,18 +177,17 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 			return -1
 		}
 	}
-	if f.Grid.isCollision(&np.Space, false) {
-		return -1
-	}
 
-	//TODO refactor this do not Call search on this keys
-	// I S Z 0==2 and 1 == 3
 	if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
 		_, ok1 := bag[np.Key-20000]
 		_, ok2 := bag[np.Key+20000]
 		if ok1 || ok2 {
 			return -1
 		}
+	}
+
+	if f.Grid.isCollision(&np.Space, false) {
+		return -1
 	}
 
 	np.Moves = nMoves
