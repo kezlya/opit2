@@ -15,7 +15,7 @@ type Field struct {
 	Burned  int
 
 	Grid  Grid
-	Picks Picks
+	Picks []int
 }
 
 func (f Field) FindPositions(piece Piece) []Piece {
@@ -72,7 +72,7 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	//fmt.Println("bagLen", len(bag))
 	for k, p := range bag {
 		_, ok := bag[k-1]
-		if !ok && !f.Grid.isCollision(p.Space, true) {
+		if !ok && !f.Grid.IsCollision(p.Space, true) {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
@@ -147,7 +147,7 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		}
 	}
 
-	if f.Grid.isCollision(np.Space, false) {
+	if f.Grid.IsCollision(np.Space, false) {
 		return -1
 	}
 
