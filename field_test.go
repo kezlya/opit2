@@ -2,70 +2,10 @@ package main
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 )
 
-var testGrid = Grid{
-	{true, false, true, true, true, true, true, true, true, true},
-	{true, true, false, true, true, false, true, true, true, true},
-	{true, true, true, true, true, true, true, false, true, true},
-	{true, true, true, true, true, true, true, false, true, true},
-	{true, true, true, true, true, true, true, true, true, false},
-	{true, true, true, true, false, true, true, false, true, true},
-	{false, true, true, true, true, true, true, true, true, true},
-	{true, true, true, true, false, true, true, true, true, true},
-	{true, true, true, true, true, true, true, true, true, false},
-	{true, true, true, true, true, true, true, false, true, true},
-	{true, true, false, false, false, false, true, true, true, true},
-	{true, true, true, false, false, false, true, true, true, true},
-	{false, true, true, false, false, true, true, true, true, true},
-	{false, true, true, false, false, false, true, true, false, true},
-	{false, false, true, false, false, false, true, false, false, false},
-	{false, false, true, false, false, false, true, false, false, false},
-	{false, false, true, false, false, false, true, false, false, false},
-	{false, false, true, false, false, false, true, false, false, false},
-	{false, false, true, false, false, false, false, false, false, false},
-	{false, false, false, false, false, false, false, false, false, false},
-}
 var testField = testGrid.ToField()
-
-//TODO refactor(not all properties in the test) or kill it
-func Test_Copy(t *testing.T) {
-	//arrange
-	a := Field{
-		Width:   2,
-		Height:  2,
-		Empty:   1,
-		MaxPick: 1,
-		Grid:    [][]bool{{false, true}, {false, false}},
-		Picks:   []int{0, 1},
-	}
-
-	//act
-	b := a.Copy()
-	a.Width = 1
-
-	//assert
-	if b.Width != 2 || b.Height != 2 || b.Empty != 1 || b.MaxPick != 1 {
-		t.Fail()
-		fmt.Println("Properties of the Field was not copied")
-	}
-	ag := reflect.ValueOf(a.Grid).Pointer()
-	bg := reflect.ValueOf(b.Grid).Pointer()
-	if !a.Grid.isEqual(b.Grid) || ag == bg {
-		t.Fail()
-		fmt.Println("Grid of the Field was not copied")
-		fmt.Println("Grid pointers", ag, "and", bg, "should be different")
-	}
-	ap := reflect.ValueOf(a.Picks).Pointer()
-	bp := reflect.ValueOf(b.Picks).Pointer()
-	if !a.Picks.isEqual(b.Picks) || ap == bp {
-		t.Fail()
-		fmt.Println("Picks of the Field was not copied")
-		fmt.Println("Picks pointers", ap, "and", bp, "should be different")
-	}
-}
 
 func Test_FindPositions_I(t *testing.T) {
 	//arrange

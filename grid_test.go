@@ -2,8 +2,32 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
+
+var testGrid = Grid{
+	{true, false, true, true, true, true, true, true, true, true},
+	{true, true, false, true, true, false, true, true, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, false, true, true, false, true, true},
+	{false, true, true, true, true, true, true, true, true, true},
+	{true, true, true, true, false, true, true, true, true, true},
+	{true, true, true, true, true, true, true, true, true, false},
+	{true, true, true, true, true, true, true, false, true, true},
+	{true, true, false, false, false, false, true, true, true, true},
+	{true, true, true, false, false, false, true, true, true, true},
+	{false, true, true, false, false, true, true, true, true, true},
+	{false, true, true, false, false, false, true, true, false, true},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, true, false, false, false},
+	{false, false, true, false, false, false, false, false, false, false},
+	{false, false, false, false, false, false, false, false, false, false},
+}
 
 func (a Grid) isEqual(b Grid) bool {
 	if len(a) != len(b) {
@@ -61,6 +85,22 @@ func Test_InitGrid(t *testing.T) {
 		fmt.Println("Something went wrong while conversion")
 		grid.visual()
 		expectedGrid.visual()
+	}
+}
+
+func Test_Copy(t *testing.T) {
+	//arrange
+
+	//act
+	newGrid := testGrid.Copy()
+
+	//assert
+	tg := reflect.ValueOf(testGrid).Pointer()
+	ng := reflect.ValueOf(newGrid).Pointer()
+	if !testGrid.isEqual(newGrid) || tg == ng {
+		t.Fail()
+		fmt.Println("Grid was not copied")
+		fmt.Println("Grid pointers", tg, "and", ng, "should be different")
 	}
 }
 

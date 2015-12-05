@@ -110,16 +110,16 @@ func (f Field) AfterHole(space map[string]Cell) *Field {
 	if len(space) != 4 {
 		return nil
 	}
-	a := f.Copy()
+	newGrid := f.Grid.Copy()
 	for _, cell := range space {
-		if a.Grid[cell.Y][cell.X] {
+		if newGrid[cell.Y][cell.X] {
 			return nil
 		} else {
-			a.Grid[cell.Y][cell.X] = true
+			newGrid[cell.Y][cell.X] = true
 		}
 	}
-	a.Burned = a.Grid.burn()
-	return &a
+	newField := newGrid.ToField()
+	return &newField
 }
 
 func (f Field) Search(dir string, key int, bag map[int]*Piece) int {

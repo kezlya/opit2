@@ -45,6 +45,7 @@ func (g Grid) ToField() Field {
 		Height: len(g),
 		Width:  len(g[0]),
 		Grid:   g,
+		Burned: g.burn(),
 	}
 	f.Picks = make([]int, f.Width)
 	for i, row := range g {
@@ -64,6 +65,18 @@ func (g Grid) ToField() Field {
 	f.Empty = f.Height - f.MaxPick
 	f.CountBH, f.CountFH = g.findHoles(f.Picks)
 	return f
+}
+
+func (g Grid) Copy() Grid {
+	if g == nil || len(g) == 0 || len(g[0]) == 0 {
+		log.Fatalln("can't create Field from malformed Grid")
+	}
+	newGrid := make([][]bool, len(g))
+	for i, row := range g {
+		newGrid[i] = make([]bool, len(g[0]))
+		copy(newGrid[i], row[:])
+	}
+	return newGrid
 }
 
 //TODO depricate eventially move to the loop of ToField method
