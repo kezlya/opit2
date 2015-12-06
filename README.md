@@ -44,3 +44,7 @@ Current result is: 2000	    763736 ns/op
 Current result is: 30	  39049702 ns/op  Must always be bellow 500ms
 
 	go test -run=XXX -bench=CalculateMoves
+
+### TODOs
+##### Pieces to constants
+##### Moves to constants
