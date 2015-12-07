@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"strings"
 )
 
@@ -20,56 +20,59 @@ type Field struct {
 
 func (f Field) FindPositions(piece Piece) []Piece {
 	positions := make([]Piece, 0)
-	//countSearchCalls := 0
-
 	drop := piece.CurrentY - f.MaxPick - 2
 	if drop > 0 {
 		piece = piece.Drop(drop)
 	}
 
 	bag := make(map[int]*Piece)
-	queue := make(map[int]bool)
-	nkey := 0
+	//queue := make(map[int]bool)
+	//newKey := 0
 
 	bag[piece.Key] = &piece
-	queue[piece.Key] = true
+	//queue[piece.Key] = true
 
-	for len(queue) > 0 {
-		tmp := make(map[int]bool)
-		//TODO impliment multithreading after bench it
-		for k, _ := range queue {
-			//countSearchCalls++
-			nkey = f.Search("down", k, bag)
-			if nkey >= 0 {
-				tmp[nkey] = false
-			}
-			//countSearchCalls++
-			nkey = f.Search("left", k, bag)
-			if nkey >= 0 {
-				tmp[nkey] = false
-			}
-			//countSearchCalls++
-			nkey = f.Search("right", k, bag)
-			if nkey > 0 {
-				tmp[nkey] = false
-			}
-			if piece.Name != "O" {
-				//countSearchCalls++
-				nkey = f.Search("turnleft", k, bag)
-				if nkey >= 0 {
-					tmp[nkey] = false
-				}
-				//countSearchCalls++
-				nkey = f.Search("turnright", k, bag)
-				if nkey >= 0 {
-					tmp[nkey] = false
-				}
-			}
+	/*buff := 5
+	if piece.Name == "O" {
+		buff = 3
+	}*/
+
+	ch := make(chan int)
+	ch <- piece.Key
+	for k := range ch {
+		go f.Search(ch, bag, k, "down")
+		go f.Search(ch, bag, k, "left")
+		go f.Search(ch, bag, k, "right")
+		if piece.Name != "O" {
+			go f.Search(ch, bag, k, "turnleft")
+			go f.Search(ch, bag, k, "turnright")
 		}
-		queue = tmp
 	}
+	/*
+		for len(queue) > 0 {
+			tmp := make(map[int]bool)
+			for k, _ := range queue {
+				go f.Search(ch, "down", k, bag)
+				go f.Search(ch, "left", k, bag)
+				go f.Search(ch, "right", k, bag)
+				if piece.Name != "O" {
+					go f.Search(ch, "turnleft", k, bag)
+					go f.Search(ch, "turnright", k, bag)
+				}
+				for i := 0; i < buff; i++ {
+					newKey = <-ch
+					if newKey >= 0 {
+						tmp[newKey] = false
+					}
+				}
+			}
+			fmt.Println("=========", len(tmp), "=========")
+			queue = tmp
+		}*/
 	//fmt.Println("countSearchCalls", countSearchCalls)
-	//fmt.Println("bagLen", len(bag))
+	fmt.Println("bagLen", len(bag))
+	fmt.Println("bagLen", len(bag))
+
 	for k, p := range bag {
 		_, ok := bag[k-1]
 		if !ok && !f.Grid.IsCollision(p.Space, true) {
@@ -83,7 +86,7 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	return positions
 }
 
-func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
+func (f Field) Search(keys chan int, bag map[int]*Piece, key int, dir string) {
 	var ok bool
 	var el *Piece
 	var np Piece
@@ -93,34 +96,34 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 	case "left":
 		nextKey := key - 100
 		if nextKey%10000/100 < 0 {
-			return -1
+			keys <- -1
 		}
 		el, ok = bag[nextKey]
 		if ok {
 			el.shorterPath(nMoves)
-			return -1
+			keys <- -1
 		}
 		np = bag[key].Left()
 	case "right":
 		nextKey := key + 100
 		if nextKey%10000/100 > f.Width {
-			return -1
+			keys <- -1
 		}
 		el, ok = bag[nextKey]
 		if ok {
 			el.shorterPath(nMoves)
-			return -1
+			keys <- -1
 		}
 		np = bag[key].Right()
 	case "down":
 		nextKey := key - 1
 		if nextKey%100 < 0 {
-			return -1
+			keys <- -1
 		}
 		el, ok = bag[nextKey]
 		if ok {
 			el.shorterPath(nMoves)
-			return -1
+			keys <- -1
 		}
 		np = bag[key].Down()
 	case "turnleft":
@@ -128,14 +131,14 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		el, ok = bag[np.Key]
 		if ok {
 			el.shorterPath(nMoves)
-			return -1
+			keys <- -1
 		}
 	case "turnright":
 		np = bag[key].Turnright()
 		el, ok = bag[np.Key]
 		if ok {
 			el.shorterPath(nMoves)
-			return -1
+			keys <- -1
 		}
 	}
 
@@ -143,15 +146,15 @@ func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
 		_, ok1 := bag[np.Key-20000]
 		_, ok2 := bag[np.Key+20000]
 		if ok1 || ok2 {
-			return -1
+			keys <- -1
 		}
 	}
 
 	if f.Grid.IsCollision(np.Space, false) {
-		return -1
+		keys <- -1
 	}
 
 	np.Moves = nMoves
 	bag[np.Key] = &np
-	return np.Key
+	keys <- np.Key
 }
