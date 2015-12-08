@@ -2,7 +2,6 @@ package main
 
 type Stack struct {
 	top        *Element
-	size       int
 	collection map[int]*Piece
 }
 
@@ -18,23 +17,17 @@ func InitStack() *Stack {
 	return &stack
 }
 
-func (s *Stack) Len() int {
-	return s.size
-}
-
 func (s *Stack) Push(piece *Piece) {
 	if !s.Exist(piece.Key) {
 		s.top = &Element{piece.Key, s.top}
 		s.collection[piece.Key] = piece
-		s.size++
 	}
 }
 
 func (s *Stack) Pop() *Piece {
-	if s.size > 0 {
+	if s.top != nil {
 		key := s.top.key
 		s.top = s.top.next
-		s.size--
 		return s.Peek(key)
 	}
 	return nil
