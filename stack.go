@@ -7,12 +7,15 @@ type Stack struct {
 }
 
 type Element struct {
-	value int
-	next  *Element
+	key  int
+	next *Element
 }
 
-func (s *Stack) Init() {
-	s.collection = make(map[int]*Piece)
+func InitStack() *Stack {
+	stack := Stack{
+		collection: make(map[int]*Piece),
+	}
+	return &stack
 }
 
 // Return the stack's length
@@ -31,14 +34,14 @@ func (s *Stack) Push(piece *Piece) {
 
 // Remove the top element from the stack and return it's value
 // If the stack is empty, return nil
-func (s *Stack) Pop() int {
+func (s *Stack) Pop() *Piece {
 	if s.size > 0 {
-		value := s.top.value
+		key := s.top.key
 		s.top = s.top.next
 		s.size--
-		return value
+		return s.Peek(key)
 	}
-	return -1
+	return nil
 }
 
 func (s *Stack) Exist(key int) bool {

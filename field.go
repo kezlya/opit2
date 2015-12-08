@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	//"strings"
+//"fmt"
+//"strings"
 )
 
 type Field struct {
@@ -25,56 +25,19 @@ func (f Field) FindPositions(piece Piece) []Piece {
 		piece = piece.Drop(drop)
 	}
 
-	//bag := make(map[int]*Piece)
-	//queue := make(map[int]bool)
-	//newKey := 0
-
-	//bag[piece.Key] = &piece
-	//queue[piece.Key] = true
-
-	/*buff := 5
-	if piece.Name == "O" {
-		buff = 3
-	}*/
-
-	stack := new(Stack)
-	stack.Init()
-
+	stack := InitStack()
 	stack.Push(&piece)
 	//fmt.Println("stack collection", stack.collection)
 	for stack.Len() > 0 {
-		k := stack.Pop()
-		f.Search(stack, k, "down")
-		f.Search(stack, k, "left")
-		f.Search(stack, k, "right")
+		p := stack.Pop()
+		f.Search(stack, p, "down")
+		f.Search(stack, p, "left")
+		f.Search(stack, p, "right")
 		if piece.Name != "O" {
-			f.Search(stack, k, "turnleft")
-			f.Search(stack, k, "turnright")
+			f.Search(stack, p, "turnleft")
+			f.Search(stack, p, "turnright")
 		}
 	}
-	/*
-		for len(queue) > 0 {
-			tmp := make(map[int]bool)
-			for k, _ := range queue {
-				go f.Search(ch, "down", k, bag)
-				go f.Search(ch, "left", k, bag)
-				go f.Search(ch, "right", k, bag)
-				if piece.Name != "O" {
-					go f.Search(ch, "turnleft", k, bag)
-					go f.Search(ch, "turnright", k, bag)
-				}
-				for i := 0; i < buff; i++ {
-					newKey = <-ch
-					if newKey >= 0 {
-						tmp[newKey] = false
-					}
-				}
-			}
-			fmt.Println("=========", len(tmp), "=========")
-			queue = tmp
-		}*/
-	//fmt.Println("countSearchCalls", countSearchCalls)
-	fmt.Println("stack collection", len(stack.collection))
 
 	bag := stack.collection
 	for k, p := range bag {
@@ -90,21 +53,12 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	return positions
 }
 
-func (f Field) Search(stack *Stack, key int, dir string) {
-	//fmt.Println(key)
-	//var ok bool
-	//var el *Piece
-
-	//fmt.Println(bag[key])
-	//nMoves := stack.collection[key].Moves + "," + dir
-	var current = stack.Peek(key)
-	if current == nil {
-		return
-	}
+func (f Field) Search(stack *Stack, p *Piece, dir string) {
+	//p.Moves + "," + dir
 	var np Piece
 	switch dir {
 	case "left":
-		nextKey := key - 100
+		nextKey := p.Key - 100
 		if nextKey%10000/100 < 0 {
 			return
 		}
@@ -112,9 +66,9 @@ func (f Field) Search(stack *Stack, key int, dir string) {
 			//el.shorterPath(nMoves)
 			return
 		}
-		np = current.Left()
+		np = p.Left()
 	case "right":
-		nextKey := key + 100
+		nextKey := p.Key + 100
 		if nextKey%10000/100 > f.Width {
 			return
 		}
@@ -122,9 +76,9 @@ func (f Field) Search(stack *Stack, key int, dir string) {
 			//el.shorterPath(nMoves)
 			return
 		}
-		np = current.Right()
+		np = p.Right()
 	case "down":
-		nextKey := key - 1
+		nextKey := p.Key - 1
 		if nextKey%100 < 0 {
 			return
 		}
@@ -132,15 +86,15 @@ func (f Field) Search(stack *Stack, key int, dir string) {
 			//el.shorterPath(nMoves)
 			return
 		}
-		np = current.Down()
+		np = p.Down()
 	case "turnleft":
-		np = current.Turnleft()
+		np = p.Turnleft()
 		if stack.Exist(np.Key) {
 			//el.shorterPath(nMoves)
 			return
 		}
 	case "turnright":
-		np = current.Turnright()
+		np = p.Turnright()
 		if stack.Exist(np.Key) {
 			//el.shorterPath(nMoves)
 			return
