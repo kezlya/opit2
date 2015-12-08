@@ -19,60 +19,28 @@ type Field struct {
 }
 
 func (f Field) FindPositions(piece Piece) []Piece {
+	p := &piece
 	positions := make([]Piece, 0)
-	//countSearchCalls := 0
-
-	drop := piece.CurrentY - f.MaxPick - 2
+	drop := p.CurrentY - f.MaxPick - 2
 	if drop > 0 {
-		piece = piece.Drop(drop)
+		p = p.Drop(drop)
 	}
 
-	bag := make(map[int]*Piece)
-	queue := make(map[int]bool)
-	nkey := 0
-
-	bag[piece.Key] = &piece
-	queue[piece.Key] = true
-
-	for len(queue) > 0 {
-		tmp := make(map[int]bool)
-		//TODO impliment multithreading after bench it
-		for k, _ := range queue {
-			//countSearchCalls++
-			nkey = f.Search("down", k, bag)
-			if nkey >= 0 {
-				tmp[nkey] = false
-			}
-			//countSearchCalls++
-			nkey = f.Search("left", k, bag)
-			if nkey >= 0 {
-				tmp[nkey] = false
-			}
-			//countSearchCalls++
-			nkey = f.Search("right", k, bag)
-			if nkey > 0 {
-				tmp[nkey] = false
-			}
-			if piece.Name != "O" {
-				//countSearchCalls++
-				nkey = f.Search("turnleft", k, bag)
-				if nkey >= 0 {
-					tmp[nkey] = false
-				}
-				//countSearchCalls++
-				nkey = f.Search("turnright", k, bag)
-				if nkey >= 0 {
-					tmp[nkey] = false
-				}
-			}
+	stack := InitStack()
+	stack.Push(p)
+	for p != nil {
+		f.Search(stack, p, "down")
+		f.Search(stack, p, "left")
+		f.Search(stack, p, "right")
+		if p.Name != "O" {
+			f.Search(stack, p, "turnleft")
+			f.Search(stack, p, "turnright")
 		}
-		queue = tmp
+		p = stack.Pop()
 	}
-	//fmt.Println("countSearchCalls", countSearchCalls)
-	//fmt.Println("bagLen", len(bag))
-	for k, p := range bag {
-		_, ok := bag[k-1]
-		if !ok && !f.Grid.IsCollision(p.Space, true) {
+
+	for _, p := range stack.collection {
+		if p.IsDown(stack) && !f.Grid.IsCollision(p.Space, true) {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
@@ -83,75 +51,61 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	return positions
 }
 
-func (f Field) Search(dir string, key int, bag map[int]*Piece) int {
-	var ok bool
-	var el *Piece
-	var np Piece
-	nMoves := bag[key].Moves + "," + dir
-
+func (f Field) Search(stack *Stack, p *Piece, dir string) {
+	nmCount := p.MovesCount + 1
+	var ex, np *Piece
 	switch dir {
 	case "left":
-		nextKey := key - 100
+		nextKey := p.Key - 100
 		if nextKey%10000/100 < 0 {
-			return -1
+			return
 		}
-		el, ok = bag[nextKey]
-		if ok {
-			el.shorterPath(nMoves)
-			return -1
+		ex = stack.Peek(nextKey)
+		if ex != nil {
+			ex.shorterPath(nmCount, dir)
+			return
 		}
-		np = bag[key].Left()
+		np = p.Left()
 	case "right":
-		nextKey := key + 100
+		nextKey := p.Key + 100
 		if nextKey%10000/100 > f.Width {
-			return -1
+			return
 		}
-		el, ok = bag[nextKey]
-		if ok {
-			el.shorterPath(nMoves)
-			return -1
+		ex = stack.Peek(nextKey)
+		if ex != nil {
+			ex.shorterPath(nmCount, dir)
+			return
 		}
-		np = bag[key].Right()
+		np = p.Right()
 	case "down":
-		nextKey := key - 1
+		nextKey := p.Key - 1
 		if nextKey%100 < 0 {
-			return -1
+			return
 		}
-		el, ok = bag[nextKey]
-		if ok {
-			el.shorterPath(nMoves)
-			return -1
+		ex = stack.Peek(nextKey)
+		if ex != nil {
+			ex.shorterPath(nmCount, dir)
+			return
 		}
-		np = bag[key].Down()
+		np = p.Down()
 	case "turnleft":
-		np = bag[key].Turnleft()
-		el, ok = bag[np.Key]
-		if ok {
-			el.shorterPath(nMoves)
-			return -1
+		np = p.Turnleft()
+		ex = stack.Peek(np.Key)
+		if ex != nil {
+			ex.shorterPath(nmCount, dir)
+			return
 		}
 	case "turnright":
-		np = bag[key].Turnright()
-		el, ok = bag[np.Key]
-		if ok {
-			el.shorterPath(nMoves)
-			return -1
-		}
-	}
-
-	if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
-		_, ok1 := bag[np.Key-20000]
-		_, ok2 := bag[np.Key+20000]
-		if ok1 || ok2 {
-			return -1
+		np = p.Turnright()
+		ex = stack.Peek(np.Key)
+		if ex != nil {
+			ex.shorterPath(nmCount, dir)
+			return
 		}
 	}
 
 	if f.Grid.IsCollision(np.Space, false) {
-		return -1
+		return
 	}
-
-	np.Moves = nMoves
-	bag[np.Key] = &np
-	return np.Key
+	stack.Push(np)
 }

@@ -12,9 +12,10 @@ type Piece struct {
 	CurrentX   int
 	CurrentY   int
 	Rotation   int
+	MovesCount int
+	Moves      string
 	Space      map[string]Cell
 	FieldAfter *Field
-	Moves      string
 	Score      Score
 	IsHole     bool
 }
@@ -83,37 +84,37 @@ func InitPiece(name string, x, y int) Piece {
 	return piece
 }
 
-func (p *Piece) Left() Piece {
+func (p *Piece) Left() *Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, CurrentY: p.CurrentY, Space: res}
 	np.setKey()
-	return np
+	return &np
 }
 
-func (p *Piece) Right() Piece {
+func (p *Piece) Right() *Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, CurrentY: p.CurrentY, Space: res}
 	np.setKey()
-	return np
+	return &np
 }
 
-func (p *Piece) Down() Piece {
+func (p *Piece) Down() *Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
 	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - 1, Space: res}
 	np.setKey()
-	return np
+	return &np
 }
 
-func (p *Piece) Drop(n int) Piece {
+func (p *Piece) Drop(n int) *Piece {
 	res := make(map[string]Cell, 4)
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - n}
@@ -123,10 +124,10 @@ func (p *Piece) Drop(n int) Piece {
 	for i := 0; i < n; i++ {
 		np.Moves += ",down"
 	}
-	return np
+	return &np
 }
 
-func (p *Piece) Turnright() Piece {
+func (p *Piece) Turnright() *Piece {
 	np := Piece{Name: p.Name}
 
 	np.Rotation = p.Rotation + 1
@@ -400,10 +401,10 @@ func (p *Piece) Turnright() Piece {
 	}
 	np.Space = sp
 	np.setKey()
-	return np
+	return &np
 }
 
-func (p *Piece) Turnleft() Piece {
+func (p *Piece) Turnleft() *Piece {
 	np := Piece{Name: p.Name}
 
 	np.Rotation = p.Rotation - 1
@@ -678,7 +679,19 @@ func (p *Piece) Turnleft() Piece {
 	}
 	np.Space = sp
 	np.setKey()
-	return np
+	return &np
+}
+
+func (p *Piece) IsDown(stack *Stack) bool {
+	if p.Name == "I" || p.Name == "S" || p.Name == "Z" {
+		if stack.Exist(p.Key - 20000) {
+			return false
+		}
+	}
+	if stack.Exist(p.Key - 1) {
+		return false
+	}
+	return true
 }
 
 func (p *Piece) setKey() {
@@ -987,8 +1000,8 @@ func (p *Piece) isDSRfriendly(hight, empty int) bool {
 	return true
 }
 
-func (p *Piece) shorterPath(newMoves string) {
-	if p != nil && len(newMoves) < len(p.Moves) {
-		p.Moves = newMoves
+func (p *Piece) shorterPath(nCount int, dir string) {
+	if nCount < p.MovesCount {
+		p.Moves = p.Moves + "," + dir
 	}
 }
