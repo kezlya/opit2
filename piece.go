@@ -681,6 +681,18 @@ func (p *Piece) Turnleft() Piece {
 	return np
 }
 
+func (p *Piece) IsDown(stack *Stack) bool {
+	if p.Name == "I" || p.Name == "S" || p.Name == "Z" {
+		if stack.Exist(p.Key - 20000) {
+			return false
+		}
+	}
+	if stack.Exist(p.Key - 1) {
+		return false
+	}
+	return true
+}
+
 func (p *Piece) setKey() {
 	if p.CurrentX >= 0 && p.CurrentY >= 0 {
 		p.Key = p.Rotation*10000 + p.CurrentX*100 + p.CurrentY

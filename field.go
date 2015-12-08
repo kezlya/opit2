@@ -40,9 +40,10 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	}
 
 	bag := stack.collection
-	for k, p := range bag {
-		_, ok := bag[k-1]
-		if !ok && !f.Grid.IsCollision(p.Space, true) {
+	//fmt.Println(bag)
+	for _, p := range bag {
+		if p.IsDown(stack) && !f.Grid.IsCollision(p.Space, true) {
+			//fmt.Println(k)
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
@@ -57,6 +58,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 	nMoves := p.Moves + "," + dir
 	var np Piece
 	var ex *Piece
+
 	switch dir {
 	case "left":
 		nextKey := p.Key - 100
@@ -103,12 +105,6 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		ex = stack.Peek(np.Key)
 		if ex != nil {
 			ex.shorterPath(nMoves)
-			return
-		}
-	}
-
-	if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
-		if stack.exist(np.Key-20000) || stack.exist(np.Key+20000) {
 			return
 		}
 	}
