@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	//"strings"
 )
 
 type Field struct {
@@ -25,11 +25,11 @@ func (f Field) FindPositions(piece Piece) []Piece {
 		piece = piece.Drop(drop)
 	}
 
-	bag := make(map[int]*Piece)
+	//bag := make(map[int]*Piece)
 	//queue := make(map[int]bool)
 	//newKey := 0
 
-	bag[piece.Key] = &piece
+	//bag[piece.Key] = &piece
 	//queue[piece.Key] = true
 
 	/*buff := 5
@@ -37,15 +37,19 @@ func (f Field) FindPositions(piece Piece) []Piece {
 		buff = 3
 	}*/
 
-	ch := make(chan int)
-	ch <- piece.Key
-	for k := range ch {
-		go f.Search(ch, bag, k, "down")
-		go f.Search(ch, bag, k, "left")
-		go f.Search(ch, bag, k, "right")
+	stack := new(Stack)
+	stack.Init()
+
+	stack.Push(&piece)
+	//fmt.Println("stack collection", stack.collection)
+	for stack.Len() > 0 {
+		k := stack.Pop()
+		f.Search(stack, k, "down")
+		f.Search(stack, k, "left")
+		f.Search(stack, k, "right")
 		if piece.Name != "O" {
-			go f.Search(ch, bag, k, "turnleft")
-			go f.Search(ch, bag, k, "turnright")
+			f.Search(stack, k, "turnleft")
+			f.Search(stack, k, "turnright")
 		}
 	}
 	/*
@@ -70,91 +74,91 @@ func (f Field) FindPositions(piece Piece) []Piece {
 			queue = tmp
 		}*/
 	//fmt.Println("countSearchCalls", countSearchCalls)
-	fmt.Println("bagLen", len(bag))
-	fmt.Println("bagLen", len(bag))
+	fmt.Println("stack collection", len(stack.collection))
 
+	bag := stack.collection
 	for k, p := range bag {
 		_, ok := bag[k-1]
 		if !ok && !f.Grid.IsCollision(p.Space, true) {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
-			p.Moves = strings.TrimPrefix(p.Moves, ",")
+			//p.Moves = strings.TrimPrefix(p.Moves, ",")
 			positions = append(positions, *p)
 		}
 	}
 	return positions
 }
 
-func (f Field) Search(keys chan int, bag map[int]*Piece, key int, dir string) {
-	var ok bool
-	var el *Piece
-	var np Piece
-	nMoves := bag[key].Moves + "," + dir
+func (f Field) Search(stack *Stack, key int, dir string) {
+	//fmt.Println(key)
+	//var ok bool
+	//var el *Piece
 
+	//fmt.Println(bag[key])
+	//nMoves := stack.collection[key].Moves + "," + dir
+	var current = stack.Peek(key)
+	if current == nil {
+		return
+	}
+	var np Piece
 	switch dir {
 	case "left":
 		nextKey := key - 100
 		if nextKey%10000/100 < 0 {
-			keys <- -1
+			return
 		}
-		el, ok = bag[nextKey]
-		if ok {
-			el.shorterPath(nMoves)
-			keys <- -1
+		if stack.Exist(nextKey) {
+			//el.shorterPath(nMoves)
+			return
 		}
-		np = bag[key].Left()
+		np = current.Left()
 	case "right":
 		nextKey := key + 100
 		if nextKey%10000/100 > f.Width {
-			keys <- -1
+			return
 		}
-		el, ok = bag[nextKey]
-		if ok {
-			el.shorterPath(nMoves)
-			keys <- -1
+		if stack.Exist(nextKey) {
+			//el.shorterPath(nMoves)
+			return
 		}
-		np = bag[key].Right()
+		np = current.Right()
 	case "down":
 		nextKey := key - 1
 		if nextKey%100 < 0 {
-			keys <- -1
+			return
 		}
-		el, ok = bag[nextKey]
-		if ok {
-			el.shorterPath(nMoves)
-			keys <- -1
+		if stack.Exist(nextKey) {
+			//el.shorterPath(nMoves)
+			return
 		}
-		np = bag[key].Down()
+		np = current.Down()
 	case "turnleft":
-		np = bag[key].Turnleft()
-		el, ok = bag[np.Key]
-		if ok {
-			el.shorterPath(nMoves)
-			keys <- -1
+		np = current.Turnleft()
+		if stack.Exist(np.Key) {
+			//el.shorterPath(nMoves)
+			return
 		}
 	case "turnright":
-		np = bag[key].Turnright()
-		el, ok = bag[np.Key]
-		if ok {
-			el.shorterPath(nMoves)
-			keys <- -1
+		np = current.Turnright()
+		if stack.Exist(np.Key) {
+			//el.shorterPath(nMoves)
+			return
 		}
 	}
 
 	if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
-		_, ok1 := bag[np.Key-20000]
-		_, ok2 := bag[np.Key+20000]
-		if ok1 || ok2 {
-			keys <- -1
+		if stack.Exist(np.Key-20000) || stack.Exist(np.Key+20000) {
+			return
 		}
 	}
 
 	if f.Grid.IsCollision(np.Space, false) {
-		keys <- -1
+		return
 	}
 
-	np.Moves = nMoves
-	bag[np.Key] = &np
-	keys <- np.Key
+	//np.Moves = nMoves
+	//bag[np.Key] = &np
+	//fmt.Println(np)
+	stack.Push(&np)
 }
