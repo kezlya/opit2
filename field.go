@@ -1,8 +1,8 @@
 package main
 
 import (
-//"fmt"
-//"strings"
+	//"fmt"
+	"strings"
 )
 
 type Field struct {
@@ -46,7 +46,7 @@ func (f Field) FindPositions(piece Piece) []Piece {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
-			//p.Moves = strings.TrimPrefix(p.Moves, ",")
+			p.Moves = strings.TrimPrefix(p.Moves, ",")
 			positions = append(positions, *p)
 		}
 	}
@@ -54,16 +54,18 @@ func (f Field) FindPositions(piece Piece) []Piece {
 }
 
 func (f Field) Search(stack *Stack, p *Piece, dir string) {
-	//p.Moves + "," + dir
+	nMoves := p.Moves + "," + dir
 	var np Piece
+	var ex *Piece
 	switch dir {
 	case "left":
 		nextKey := p.Key - 100
 		if nextKey%10000/100 < 0 {
 			return
 		}
-		if stack.Exist(nextKey) {
-			//el.shorterPath(nMoves)
+		ex = stack.Peek(nextKey)
+		if ex != nil {
+			ex.shorterPath(nMoves)
 			return
 		}
 		np = p.Left()
@@ -72,8 +74,9 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		if nextKey%10000/100 > f.Width {
 			return
 		}
-		if stack.Exist(nextKey) {
-			//el.shorterPath(nMoves)
+		ex = stack.Peek(nextKey)
+		if ex != nil {
+			ex.shorterPath(nMoves)
 			return
 		}
 		np = p.Right()
@@ -82,27 +85,30 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		if nextKey%100 < 0 {
 			return
 		}
-		if stack.Exist(nextKey) {
-			//el.shorterPath(nMoves)
+		ex = stack.Peek(nextKey)
+		if ex != nil {
+			ex.shorterPath(nMoves)
 			return
 		}
 		np = p.Down()
 	case "turnleft":
 		np = p.Turnleft()
-		if stack.Exist(np.Key) {
-			//el.shorterPath(nMoves)
+		ex = stack.Peek(np.Key)
+		if ex != nil {
+			ex.shorterPath(nMoves)
 			return
 		}
 	case "turnright":
 		np = p.Turnright()
-		if stack.Exist(np.Key) {
-			//el.shorterPath(nMoves)
+		ex = stack.Peek(np.Key)
+		if ex != nil {
+			ex.shorterPath(nMoves)
 			return
 		}
 	}
 
 	if np.Name == "I" || np.Name == "S" || np.Name == "Z" {
-		if stack.Exist(np.Key-20000) || stack.Exist(np.Key+20000) {
+		if stack.exist(np.Key-20000) || stack.exist(np.Key+20000) {
 			return
 		}
 	}
@@ -111,8 +117,5 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		return
 	}
 
-	//np.Moves = nMoves
-	//bag[np.Key] = &np
-	//fmt.Println(np)
 	stack.Push(&np)
 }

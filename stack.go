@@ -25,7 +25,7 @@ func (s *Stack) Len() int {
 
 // Push a new element onto the stack
 func (s *Stack) Push(piece *Piece) {
-	if !s.Exist(piece.Key) {
+	if !s.exist(piece.Key) {
 		s.top = &Element{piece.Key, s.top}
 		s.collection[piece.Key] = piece
 		s.size++
@@ -44,7 +44,7 @@ func (s *Stack) Pop() *Piece {
 	return nil
 }
 
-func (s *Stack) Exist(key int) bool {
+func (s *Stack) exist(key int) bool {
 	_, exist := s.collection[key]
 	return exist
 }
