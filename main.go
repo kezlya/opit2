@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const I, J, L, O, S, T, Z = "I", "J", "L", "O", "S", "T", "Z"
+
 var strategy = Strategy{
 	Burn:   2,
 	BHoles: 12,
