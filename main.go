@@ -8,6 +8,7 @@ import (
 )
 
 const I, J, L, O, S, T, Z = "I", "J", "L", "O", "S", "T", "Z"
+const down, left, right, turnleft, turnright, drop = "down", "left", "right", "turnleft", "turnright", "drop"
 
 var strategy = Strategy{
 	Burn:   2,
@@ -34,9 +35,9 @@ func main() {
 			game.initPieces()
 			pos := game.calculateMoves()
 			if pos.Moves == "" {
-				fmt.Println("drop")
+				fmt.Println(drop)
 			} else {
-				fmt.Println(pos.Moves + ",drop")
+				fmt.Println(pos.Moves + "," + drop)
 			}
 		}
 	}

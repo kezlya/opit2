@@ -29,12 +29,12 @@ func (f Field) FindPositions(piece Piece) []Piece {
 	stack := InitStack()
 	stack.Push(p)
 	for p != nil {
-		f.Search(stack, p, "down")
-		f.Search(stack, p, "left")
-		f.Search(stack, p, "right")
-		if p.Name != "O" {
-			f.Search(stack, p, "turnleft")
-			f.Search(stack, p, "turnright")
+		f.Search(stack, p, down)
+		f.Search(stack, p, left)
+		f.Search(stack, p, right)
+		if p.Name != O {
+			f.Search(stack, p, turnleft)
+			f.Search(stack, p, turnright)
 		}
 		p = stack.Pop()
 	}
@@ -55,7 +55,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 	nmCount := p.MovesCount + 1
 	var ex, np *Piece
 	switch dir {
-	case "left":
+	case left:
 		nextKey := p.Key - 100
 		if nextKey%10000/100 < 0 {
 			return
@@ -66,7 +66,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 			return
 		}
 		np = p.Left()
-	case "right":
+	case right:
 		nextKey := p.Key + 100
 		if nextKey%10000/100 > f.Width {
 			return
@@ -77,7 +77,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 			return
 		}
 		np = p.Right()
-	case "down":
+	case down:
 		nextKey := p.Key - 1
 		if nextKey%100 < 0 {
 			return
@@ -88,14 +88,14 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 			return
 		}
 		np = p.Down()
-	case "turnleft":
+	case turnleft:
 		np = p.Turnleft()
 		ex = stack.Peek(np.Key)
 		if ex != nil {
 			ex.shorterPath(nmCount, dir)
 			return
 		}
-	case "turnright":
+	case turnright:
 		np = p.Turnright()
 		ex = stack.Peek(np.Key)
 		if ex != nil {

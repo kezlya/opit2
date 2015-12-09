@@ -42,37 +42,37 @@ func InitPiece(name string, x, y int) Piece {
 	piece := Piece{Name: name, CurrentX: x, CurrentY: y}
 	piece.Space = make(map[string]Cell, 4)
 	switch name {
-	case "I":
+	case I:
 		piece.Space["m1"] = Cell{X: x, Y: y}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 		piece.Space["m3"] = Cell{X: x + 2, Y: y}
 		piece.Space["m4"] = Cell{X: x + 3, Y: y}
-	case "J":
+	case J:
 		piece.Space["m1"] = Cell{X: x, Y: y}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 		piece.Space["m3"] = Cell{X: x + 2, Y: y}
 		piece.Space["t1"] = Cell{X: x, Y: y + 1}
-	case "L":
+	case L:
 		piece.Space["m1"] = Cell{X: x, Y: y}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 		piece.Space["m3"] = Cell{X: x + 2, Y: y}
 		piece.Space["t3"] = Cell{X: x + 2, Y: y + 1}
-	case "O":
+	case O:
 		piece.Space["t1"] = Cell{X: x, Y: y + 1}
 		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
 		piece.Space["m1"] = Cell{X: x, Y: y}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
-	case "S":
+	case S:
 		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
 		piece.Space["t3"] = Cell{X: x + 2, Y: y + 1}
 		piece.Space["m1"] = Cell{X: x, Y: y}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
-	case "T":
+	case T:
 		piece.Space["m1"] = Cell{X: x, Y: y}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
 		piece.Space["m3"] = Cell{X: x + 2, Y: y}
 		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
-	case "Z":
+	case Z:
 		piece.Space["t1"] = Cell{X: x, Y: y + 1}
 		piece.Space["t2"] = Cell{X: x + 1, Y: y + 1}
 		piece.Space["m2"] = Cell{X: x + 1, Y: y}
@@ -140,7 +140,7 @@ func (p *Piece) Turnright() *Piece {
 		sp[i] = v
 	}
 	switch p.Name {
-	case "I":
+	case I:
 		switch p.Rotation {
 		case 0:
 			t3 := Cell{X: sp["m1"].X + 2, Y: sp["m1"].Y + 1}
@@ -191,7 +191,7 @@ func (p *Piece) Turnright() *Piece {
 			np.CurrentX = m1.X
 			np.CurrentY = m1.Y
 		}
-	case "J":
+	case J:
 		switch p.Rotation {
 		case 0:
 			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
@@ -242,7 +242,7 @@ func (p *Piece) Turnright() *Piece {
 			np.CurrentX = m1.X
 			np.CurrentY = m1.Y
 		}
-	case "L":
+	case L:
 		switch p.Rotation {
 		case 0:
 			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
@@ -293,7 +293,7 @@ func (p *Piece) Turnright() *Piece {
 			np.CurrentX = m1.X
 			np.CurrentY = m1.Y
 		}
-	case "T":
+	case T:
 		switch p.Rotation {
 		case 0:
 			b2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y - 1}
@@ -320,7 +320,7 @@ func (p *Piece) Turnright() *Piece {
 			np.CurrentX = p.CurrentX
 			np.CurrentY = m3.Y
 		}
-	case "S":
+	case S:
 		switch p.Rotation {
 		case 0:
 			b3 := Cell{X: sp["m1"].X + 2, Y: sp["m1"].Y - 1}
@@ -359,7 +359,7 @@ func (p *Piece) Turnright() *Piece {
 			np.CurrentX = sp["m1"].X
 			np.CurrentY = sp["m1"].Y
 		}
-	case "Z":
+	case Z:
 		switch p.Rotation {
 		case 0:
 			b2 := Cell{X: sp["t1"].X + 1, Y: sp["t1"].Y - 2}
@@ -418,7 +418,7 @@ func (p *Piece) Turnleft() *Piece {
 	}
 
 	switch p.Name {
-	case "I":
+	case I:
 		switch p.Rotation {
 		case 0:
 			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
@@ -469,7 +469,7 @@ func (p *Piece) Turnleft() *Piece {
 			np.CurrentX = b1.X
 			np.CurrentY = b1.Y
 		}
-	case "J":
+	case J:
 		switch p.Rotation {
 		case 0:
 			b1 := Cell{X: sp["t1"].X, Y: sp["t1"].Y - 2}
@@ -520,7 +520,7 @@ func (p *Piece) Turnleft() *Piece {
 			np.CurrentX = m1.X
 			np.CurrentY = b3.Y
 		}
-	case "L":
+	case L:
 		switch p.Rotation {
 		case 0:
 			t2 := Cell{X: sp["m1"].X + 1, Y: sp["m1"].Y + 1}
@@ -571,7 +571,7 @@ func (p *Piece) Turnleft() *Piece {
 			np.CurrentX = b1.X
 			np.CurrentY = b1.Y
 		}
-	case "T":
+	case T:
 		switch p.Rotation {
 		case 0:
 			b2 := Cell{X: sp["m3"].X - 1, Y: sp["m3"].Y - 1}
@@ -598,7 +598,7 @@ func (p *Piece) Turnleft() *Piece {
 			np.CurrentX = p.CurrentX
 			np.CurrentY = p.CurrentY
 		}
-	case "S":
+	case S:
 		switch p.Rotation {
 		case 0:
 			t1 := Cell{X: sp["t2"].X - 1, Y: sp["t2"].Y}
@@ -637,7 +637,7 @@ func (p *Piece) Turnleft() *Piece {
 			np.CurrentX = b1.X
 			np.CurrentY = b1.Y
 		}
-	case "Z":
+	case Z:
 		switch p.Rotation {
 		case 0:
 			b1 := Cell{X: sp["m3"].X - 2, Y: sp["m3"].Y - 1}
@@ -683,7 +683,7 @@ func (p *Piece) Turnleft() *Piece {
 }
 
 func (p *Piece) IsDown(stack *Stack) bool {
-	if p.Name == "I" || p.Name == "S" || p.Name == "Z" {
+	if p.Name == I || p.Name == S || p.Name == Z {
 		if stack.Exist(p.Key - 20000) {
 			return false
 		}
@@ -719,21 +719,21 @@ func (p *Piece) setDSR(before, after int) {
 func (p *Piece) setHighY() {
 	p.Score.HighY = p.CurrentY
 	/*switch p.Name {
-	case "I":
+	case I:
 		switch p.Rotation {
 		case 0, 2:
 			p.Score.HighY = p.CurrentY
 		case 1, 3:
 			p.Score.HighY = p.CurrentY + 3
 		}
-	case "J", "L", "S", "T", "Z":
+	case J, L, S, T, Z:
 		switch p.Rotation {
 		case 0, 2:
 			p.Score.HighY = p.CurrentY + 1
 		case 1, 3:
 			p.Score.HighY = p.CurrentY + 2
 		}
-	case "O":
+	case O:
 		p.Score.HighY = p.CurrentY + 1
 	}*/
 }
@@ -856,7 +856,7 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 		//fmt.Println(p.Name, " is dsr")
 	}
 
-	if p.Score.BreakDSR && p.Name != "T" && empty > 10 {
+	if p.Score.BreakDSR && p.Name != T && empty > 10 {
 		p.Score.Total = p.Score.Total + 100
 		//fmt.Println(p.Name, " break :(")
 	}*/
@@ -922,7 +922,7 @@ func (p *Piece) getPoints() int {
 }
 
 func (p *Piece) isSingleTSpin() bool {
-	if p.Name != "T" {
+	if p.Name != T {
 		return false
 	}
 	if !p.IsHole {
@@ -944,7 +944,7 @@ func (p *Piece) isSingleTSpin() bool {
 }
 
 func (p *Piece) isDoubleTSpin() bool {
-	if p.Name != "T" {
+	if p.Name != T {
 		return false
 	}
 	if !p.IsHole {
@@ -978,7 +978,7 @@ func (p *Piece) isPerfectClear() bool {
 
 func (p *Piece) isDSRfriendly(hight, empty int) bool {
 	//fmt.Println(p.Space)
-	if empty > 5 || p.Name != "T" {
+	if empty > 5 || p.Name != T {
 		for y := 0; y < hight-empty; y++ {
 			if y%2 == 0 {
 				//one hole

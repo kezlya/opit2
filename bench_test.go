@@ -28,7 +28,7 @@ var benchGrid = Grid{
 }
 var benchField = benchGrid.ToField()
 var benchMyPlayer = Player{Field: benchField}
-var benchTpiece = InitPiece("T", 3, 19)
+var benchTpiece = InitPiece(T, 3, 19)
 var benchGame = Game{
 	Strategy:     strategy,
 	CurrentPiece: benchTpiece,

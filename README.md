@@ -46,5 +46,4 @@ Current result is: 50	  26642202 ns/op  Must always be bellow 500ms
 	go test -run=XXX -bench=CalculateMoves
 
 ### TODOs
-##### Pieces to constants
-##### Moves to constants
+##### Impliment multithreading on the CalculateMoves

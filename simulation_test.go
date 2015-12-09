@@ -89,7 +89,7 @@ func Benchmark_moves(b *testing.B) {
 
 func Benchmark_fixholes(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		piece := Piece{Name: "T", Rotation: 0}
+		piece := Piece{Name: T, Rotation: 0}
 		piece.InitSpace(Cell{X: 3, Y: 19})
 		hole := Cell{X: 5, Y: 0}
 		testHolesField.FixHoles(piece, []Cell{hole})

@@ -9,7 +9,7 @@ var testField = testGrid.ToField()
 
 func Test_FindPositions_I(t *testing.T) {
 	//arrange
-	piece := InitPiece("I", 3, 19)
+	piece := InitPiece(I, 3, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
@@ -20,7 +20,7 @@ func Test_FindPositions_I(t *testing.T) {
 
 func Test_FindPositions_J(t *testing.T) {
 	//arrange
-	piece := InitPiece("J", 3, 19)
+	piece := InitPiece(J, 3, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
@@ -31,7 +31,7 @@ func Test_FindPositions_J(t *testing.T) {
 
 func Test_FindPositions_L(t *testing.T) {
 	//arrange
-	piece := InitPiece("L", 3, 19)
+	piece := InitPiece(L, 3, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
@@ -42,7 +42,7 @@ func Test_FindPositions_L(t *testing.T) {
 
 func Test_FindPositions_O(t *testing.T) {
 	//arrange
-	piece := InitPiece("O", 4, 19)
+	piece := InitPiece(O, 4, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
@@ -53,7 +53,7 @@ func Test_FindPositions_O(t *testing.T) {
 
 func Test_FindPositions_S(t *testing.T) {
 	//arrange
-	piece := InitPiece("S", 3, 19)
+	piece := InitPiece(S, 3, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
@@ -64,7 +64,7 @@ func Test_FindPositions_S(t *testing.T) {
 
 func Test_FindPositions_T(t *testing.T) {
 	//arrange
-	piece := InitPiece("T", 3, 19)
+	piece := InitPiece(T, 3, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
@@ -98,7 +98,7 @@ func Test_FindPositions_T2(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 	}
 	field := grid.ToField()
-	piece := InitPiece("T", 3, 19)
+	piece := InitPiece(T, 3, 19)
 
 	//act
 	positions := field.FindPositions(piece)
@@ -109,7 +109,7 @@ func Test_FindPositions_T2(t *testing.T) {
 
 func Test_FindPositions_Z(t *testing.T) {
 	//arrange
-	piece := InitPiece("Z", 3, 19)
+	piece := InitPiece(Z, 3, 19)
 
 	//act
 	positions := testField.FindPositions(piece)
