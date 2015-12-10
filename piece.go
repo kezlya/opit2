@@ -897,28 +897,31 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 }
 
 func (p *Piece) getPoints() int {
-	burn := 0
+	points := 0
+	if p == nil {
+		return points
+	}
 	switch p.Score.Burn {
 	case 2:
-		burn = 3
+		points = 3
 	case 3:
-		burn = 6
+		points = 6
 	case 4:
-		burn = 10
+		points = 10
 	}
 
 	if p.isSingleTSpin() {
-		burn = 5
+		points = 5
 	}
 
 	if p.isDoubleTSpin() {
-		burn = 10
+		points = 10
 	}
 
 	if p.isPerfectClear() {
-		burn = 18
+		points = 18
 	}
-	return burn
+	return points
 }
 
 func (p *Piece) isSingleTSpin() bool {
