@@ -48,54 +48,7 @@ func Test_generateGarbageRows(t *testing.T) {
 	}
 }
 */
-/*
-func Benchmark_moves(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		game := Game{Strategy: strategy}
-		game.asignSettings("timebank", "10000")
-		game.asignSettings("time_per_move", "500")
-		game.asignSettings("player_names", "player1,player2")
-		game.asignSettings("your_bot", "player1")
-		game.asignSettings("field_width", "10")
-		game.asignSettings("field_height", "20")
 
-		rand.Seed(time.Now().UTC().UnixNano())
-
-		row1 := make([]string, 10, 10)
-		for i := 0; i < 10; i++ {
-			row1[i] = strconv.Itoa(rand.Intn(3))
-		}
-		row2 := make([]string, 10, 10)
-		for i := 0; i < 10; i++ {
-			row2[i] = strconv.Itoa(rand.Intn(3))
-		}
-		row3 := make([]string, 10, 10)
-		for i := 0; i < 10; i++ {
-			row3[i] = strconv.Itoa(rand.Intn(3))
-		}
-
-		game.asignUpdates("game", "round", "4")
-		game.asignUpdates("game", "this_piece_type", pieces[rand.Intn(len(pieces))])
-		game.asignUpdates("game", "next_piece_type", pieces[rand.Intn(len(pieces))])
-		game.asignUpdates("game", "this_piece_position", "3,-1")
-		game.asignUpdates("player1", "field", "0,0,0,1,1,1,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;"+strings.Join(row1, ",")+";"+strings.Join(row2, ",")+";"+strings.Join(row3, ","))
-		game.asignUpdates("player1", "row_points", "0")
-		game.asignUpdates("player1", "combo", "0")
-		game.CurrentPiece.InitSpace(Cell{X: game.X, Y: game.MyPlayer.Field.Height() + game.Y})
-		game.NextPiece.InitSpace(Cell{X: 3, Y: game.MyPlayer.Field.Height() + game.Y})
-		game.calculateMoves()
-	}
-}
-
-func Benchmark_fixholes(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		piece := Piece{Name: T, Rotation: 0}
-		piece.InitSpace(Cell{X: 3, Y: 19})
-		hole := Cell{X: 5, Y: 0}
-		testHolesField.FixHoles(piece, []Cell{hole})
-	}
-}
-*/
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		buff := 1
@@ -128,7 +81,6 @@ func Benchmark_many(banch *testing.B) {
 	}
 }
 
-/*
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
 		for b := 1; b <= 2; b++ {
@@ -157,8 +109,6 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-
-*/
 func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
@@ -365,7 +315,6 @@ func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	fmt.Println(name)
 }
 
-/*
 func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool {
 	counterS := 0
 	counterR := 0
@@ -382,9 +331,6 @@ func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool
 	fmt.Println("Better Rounds:", counterR)
 	return (counterS > half || counterR > half)
 }
-
-
-*/
 
 func (s *Strategy) name() string {
 	return "b" + strconv.Itoa(s.Burn) +
