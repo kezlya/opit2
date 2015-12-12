@@ -53,3 +53,4 @@ Current result is: 50	  26642202 ns/op  Must always be bellow 500ms
 
 ### TODOs
 ##### Impliment multithreading on the CalculateMoves
+##### Fix scoring system Piece.GetPoints() since is broken right now strategy tester doen't work
