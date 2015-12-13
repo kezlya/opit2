@@ -138,7 +138,7 @@ func (g *Game) calculateMoves() *Piece {
 			nPositions[j].setHighY()
 			nPositions[j].setStep()
 			nPositions[j].setCHoles()
-			nPositions[j].setTotalScore(g.Strategy, np.FieldAfter.Empty)
+			nPositions[j].setTotalScore(g.Strategy)
 		}
 
 		if len(nPositions) > 0 {
@@ -147,7 +147,7 @@ func (g *Game) calculateMoves() *Piece {
 		} else {
 			positions[i].Score.NScore = 10000000000000
 		}
-		positions[i].setTotalScore(g.Strategy, g.MyPlayer.Field.Empty)
+		positions[i].setTotalScore(g.Strategy)
 	}
 
 	if len(positions) > 0 {

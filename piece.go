@@ -824,7 +824,7 @@ func (p *Piece) setCHoles() {
 	*/
 }
 
-func (p *Piece) setTotalScore(st Strategy, empty int) {
+func (p *Piece) setTotalScore(st Strategy) {
 
 	p.Score.Burn = p.FieldAfter.Burned
 
@@ -836,7 +836,7 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 	kBH := st.BHoles
 	kFH := st.FHoles
 
-	if empty < 5 {
+	if p.FieldAfter.Empty < 5 {
 		kS = kS + 1
 	}
 
@@ -846,26 +846,25 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 		p.Score.HighY*kY +
 		p.Score.Step*kS +
 		p.Score.NScore +
-		//(p.FieldAfter.Height() - empty) +
 		p.Score.CHoles*kC -
 		p.Score.Burn*kB -
 		points*4
 
-	/*if p.Score.IsDSR && empty > 10 {
+	/*if p.Score.IsDSR && p.FieldAfter.Empty > 10 {
 		p.Score.Total = p.Score.Total - 50
 		//fmt.Println(p.Name, " is dsr")
 	}
 
-	if p.Score.BreakDSR && p.Name != T && empty > 10 {
+	if p.Score.BreakDSR && p.Name != T && p.FieldAfter.Empty > 10 {
 		p.Score.Total = p.Score.Total + 100
 		//fmt.Println(p.Name, " break :(")
 	}*/
 
-	if p.isSingleTSpin() && empty > 4 {
+	if p.isSingleTSpin() && p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - 10
 	}
 
-	if p.isDoubleTSpin() && empty > 4 {
+	if p.isDoubleTSpin() && p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - 20
 	}
 	/*
@@ -874,18 +873,18 @@ func (p *Piece) setTotalScore(st Strategy, empty int) {
 			p.Score.Total = p.Score.Total + 7
 		}
 	*/
-	if empty == 0 {
+	if p.FieldAfter.Empty == 0 {
 		p.Score.Total = p.Score.Total + 100
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
-	if empty == 1 {
+	if p.FieldAfter.Empty == 1 {
 		p.Score.Total = p.Score.Total + 5
 		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
 	/*
-			if empty > 10 && holes < 5 && p.Score.Burn == 1 {
+			if p.FieldAfter.Empty > 10 && holes < 5 && p.Score.Burn == 1 {
 				p.Score.Total = p.Score.Total + 10
 				//fmt.Println("====")
 			}
@@ -979,10 +978,10 @@ func (p *Piece) isPerfectClear() bool {
 	return true
 }
 
-func (p *Piece) isDSRfriendly(hight, empty int) bool {
+func (p *Piece) isDSRfriendly() bool {
 	//fmt.Println(p.Space)
-	if empty > 5 || p.Name != T {
-		for y := 0; y < hight-empty; y++ {
+	if p.FieldAfter.Empty > 5 || p.Name != T {
+		for y := 0; y < p.FieldAfter.Height-p.FieldAfter.Empty; y++ {
 			if y%2 == 0 {
 				//one hole
 				for _, cell := range p.Space {
