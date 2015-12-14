@@ -895,6 +895,15 @@ func (p *Piece) setTotalScore(st Strategy) {
 	*/
 }
 
+func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
+	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
+	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
+	p.setHighY()
+	p.setStep()
+	p.setCHoles()
+	p.setTotalScore(st)
+}
+
 func (p *Piece) getPoints() int {
 	points := 0
 	if p == nil {
