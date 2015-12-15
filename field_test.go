@@ -1,13 +1,12 @@
 package main
 
 import (
-//	"fmt"
-//	"testing"
+	"fmt"
+	"testing"
 )
 
 var testField = testGrid.ToField()
 
-/*
 func Test_FindPositions_I(t *testing.T) {
 	//arrange
 	piece := InitPiece(I, 3, 19)
@@ -119,7 +118,7 @@ func Test_FindPositions_Z(t *testing.T) {
 	assertPositions(t, positions, 13)
 }
 
-func assertPositions(t *testing.T, positions []Piece, expectedCount int) {
+func assertPositions(t *testing.T, positions []*Piece, expectedCount int) {
 	if len(positions) != expectedCount {
 		t.Fail()
 		fmt.Println(len(positions), "positions found, should be", expectedCount)
@@ -134,4 +133,3 @@ func assertPositions(t *testing.T, positions []Piece, expectedCount int) {
 		//fmt.Println(p.Key)
 	}
 }
-*/
