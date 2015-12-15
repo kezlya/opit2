@@ -34,11 +34,10 @@ func main() {
 			//time, _ := strconv.Atoi(parts[2])
 			game.initPieces()
 			pos := game.calculateMoves()
-			if pos.Moves == "" {
-				fmt.Println(drop)
-			} else {
-				fmt.Println(pos.Moves + "," + drop)
+			if pos != nil && pos.Moves != "" {
+				fmt.Print(pos.Moves + ",")
 			}
+			fmt.Print(drop)
 		}
 	}
 }

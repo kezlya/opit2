@@ -119,27 +119,23 @@ func (g *Game) initPieces() {
 }
 
 func (g *Game) calculateMoves() *Piece {
-	mf := g.MyPlayer.Field
+	mf := &g.MyPlayer.Field
 	positions := mf.FindPositions(g.CurrentPiece)
 	for _, p := range positions {
-		nextPositions := p.FieldAfter.FindPositions(g.NextPiece)
+		pf := p.FieldAfter
+		nextPositions := pf.FindPositions(g.NextPiece)
 		for _, np := range nextPositions {
 			g.applySolidLines(np)
-			np.SetScore(g.Strategy, p.FieldAfter.CountBH, p.FieldAfter.CountFH, 0)
+			np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, 0)
 		}
-		newScore := 10000000000000
-		if len(nextPositions) > 0 {
-			OrderedBy(SCORE).Sort(nextPositions)
-			newScore = nextPositions[0].Score.Total
+		nScore := 10000000000000
+		nextBest := getBest(nextPositions)
+		if nextBest != nil {
+			nScore = nextBest.Score.Total
 		}
-		p.SetScore(g.Strategy, mf.CountBH, mf.CountFH, newScore)
+		p.SetScore(g.Strategy, mf.CountBH, mf.CountFH, nScore)
 	}
-
-	if len(positions) > 0 {
-		OrderedBy(SCORE).Sort(positions)
-		return positions[0]
-	}
-	return nil
+	return getBest(positions)
 }
 
 func (g *Game) applySolidLines(p *Piece) {

@@ -17,7 +17,7 @@ func Test_Sort(t *testing.T) {
 	pp := []*Piece{pos4, pos0, pos5, pos2, pos6, pos1, pos3}
 
 	//act
-	OrderedBy(SCORE).Sort(pp)
+	orderedBy(SCORE).Sort(pp)
 
 	//arrange
 	if !(pp[0].Score.Total == 1 &&
