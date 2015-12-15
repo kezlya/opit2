@@ -1,6 +1,7 @@
 package main
 
 import (
+	//	"fmt"
 	"strconv"
 	"strings"
 )
@@ -120,20 +121,23 @@ func (g *Game) initPieces() {
 func (g *Game) calculateMoves() *Piece {
 	mf := g.MyPlayer.Field
 	positions := mf.FindPositions(g.CurrentPiece)
-	for _, p := range positions {
-		nPositions := p.FieldAfter.FindPositions(g.NextPiece)
-		for _, np := range nPositions {
+	for i := range positions {
+		nPositions := positions[i].FieldAfter.FindPositions(g.NextPiece)
+		for j := range nPositions {
 			//if ((g.Round + 1) % 20) == 0 {
 			//	np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
 			//}
-			np.SetScore(g.Strategy, p.FieldAfter.CountBH, p.FieldAfter.CountFH, 0)
+			nPositions[j].SetScore(g.Strategy, positions[i].FieldAfter.CountBH, positions[i].FieldAfter.CountFH, 0)
+
 		}
 		newScore := 10000000000000
 		if len(nPositions) > 0 {
 			OrderedBy(SCORE).Sort(nPositions)
 			newScore = nPositions[0].Score.Total
+			//fmt.Println(newScore)
 		}
-		p.SetScore(g.Strategy, p.FieldAfter.CountBH, p.FieldAfter.CountFH, newScore)
+		positions[i].SetScore(g.Strategy, mf.CountBH, mf.CountFH, newScore)
+		//fmt.Println(p.Score, p.Score.Burn)
 	}
 
 	if len(positions) > 0 {
