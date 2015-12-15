@@ -121,28 +121,31 @@ func (g *Game) initPieces() {
 func (g *Game) calculateMoves() *Piece {
 	mf := g.MyPlayer.Field
 	positions := mf.FindPositions(g.CurrentPiece)
-	for i := range positions {
-		nPositions := positions[i].FieldAfter.FindPositions(g.NextPiece)
-		for j := range nPositions {
-			//if ((g.Round + 1) % 20) == 0 {
-			//	np.FieldAfter.Grid = np.FieldAfter.Grid[:np.FieldAfter.Height-1]
-			//}
-			nPositions[j].SetScore(g.Strategy, positions[i].FieldAfter.CountBH, positions[i].FieldAfter.CountFH, 0)
-
+	for _, p := range positions {
+		nextPositions := p.FieldAfter.FindPositions(g.NextPiece)
+		for _, np := range nextPositions {
+			g.applySolidLines(np)
+			np.SetScore(g.Strategy, p.FieldAfter.CountBH, p.FieldAfter.CountFH, 0)
 		}
 		newScore := 10000000000000
-		if len(nPositions) > 0 {
-			OrderedBy(SCORE).Sort(nPositions)
-			newScore = nPositions[0].Score.Total
-			//fmt.Println(newScore)
+		if len(nextPositions) > 0 {
+			OrderedBy(SCORE).Sort(nextPositions)
+			newScore = nextPositions[0].Score.Total
 		}
-		positions[i].SetScore(g.Strategy, mf.CountBH, mf.CountFH, newScore)
-		//fmt.Println(p.Score, p.Score.Burn)
+		p.SetScore(g.Strategy, mf.CountBH, mf.CountFH, newScore)
 	}
 
 	if len(positions) > 0 {
 		OrderedBy(SCORE).Sort(positions)
-		return &positions[0]
+		return positions[0]
 	}
 	return nil
+}
+
+func (g *Game) applySolidLines(p *Piece) {
+	if ((g.Round + 1) % 20) != 0 {
+		newGrid := p.FieldAfter.Grid[:p.FieldAfter.Height-1]
+		newField := newGrid.ToField()
+		p.FieldAfter = &newField
+	}
 }

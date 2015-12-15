@@ -71,11 +71,11 @@ var SCORE = func(c1, c2 *Piece) bool {
 type lessFunc func(p1, p2 *Piece) bool
 
 type multiSorter struct {
-	positions []Piece
+	positions []*Piece
 	less      []lessFunc
 }
 
-func (ms *multiSorter) Sort(positions []Piece) {
+func (ms *multiSorter) Sort(positions []*Piece) {
 	ms.positions = positions
 	sort.Sort(ms)
 }
@@ -95,7 +95,7 @@ func (ms *multiSorter) Swap(i, j int) {
 }
 
 func (ms *multiSorter) Less(i, j int) bool {
-	p, q := &ms.positions[i], &ms.positions[j]
+	p, q := ms.positions[i], ms.positions[j]
 	var k int
 	for k = 0; k < len(ms.less)-1; k++ {
 		less := ms.less[k]

@@ -18,9 +18,9 @@ type Field struct {
 	Picks []int
 }
 
-func (f Field) FindPositions(piece Piece) []Piece {
+func (f Field) FindPositions(piece Piece) []*Piece {
 	p := &piece
-	positions := make([]Piece, 0)
+	positions := make([]*Piece, 0)
 	drop := p.CurrentY - f.MaxPick - 2
 	if drop > 0 {
 		p = p.Drop(drop)
@@ -45,7 +45,7 @@ func (f Field) FindPositions(piece Piece) []Piece {
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
 			p.Moves = strings.TrimPrefix(p.Moves, ",")
-			positions = append(positions, *p)
+			positions = append(positions, p)
 		}
 	}
 	return positions
