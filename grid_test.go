@@ -29,6 +29,15 @@ var testGrid = Grid{
 	{false, false, false, false, false, false, false, false, false, false},
 }
 
+func (a Grid) assertEqualTo(b Grid, t *testing.T) {
+	if !a.isEqual(b) {
+		t.Fail()
+		fmt.Println("Grids are not aqual")
+		a.visual()
+		b.visual()
+	}
+}
+
 func (a Grid) isEqual(b Grid) bool {
 	if len(a) != len(b) {
 		return false
@@ -80,12 +89,7 @@ func Test_InitGrid(t *testing.T) {
 	grid := InitGrid(raw)
 
 	//assert
-	if !grid.isEqual(expectedGrid) {
-		t.Fail()
-		fmt.Println("Something went wrong while conversion")
-		grid.visual()
-		expectedGrid.visual()
-	}
+	grid.assertEqualTo(expectedGrid, t)
 }
 
 func Test_Copy(t *testing.T) {
@@ -95,9 +99,10 @@ func Test_Copy(t *testing.T) {
 	newGrid := testGrid.Copy()
 
 	//assert
+	testGrid.assertEqualTo(newGrid, t)
 	tg := reflect.ValueOf(testGrid).Pointer()
 	ng := reflect.ValueOf(newGrid).Pointer()
-	if !testGrid.isEqual(newGrid) || tg == ng {
+	if tg == ng {
 		t.Fail()
 		fmt.Println("Grid was not copied")
 		fmt.Println("Grid pointers", tg, "and", ng, "should be different")
@@ -134,10 +139,6 @@ func Test_ToField(t *testing.T) {
 		t.Fail()
 		fmt.Println("Bad MaxY", field.MaxPick)
 	}
-	/*if !field.Picks.isEqual(expectedPicks) {
-		t.Fail()
-		fmt.Println("Bad Picks", field.Picks)
-	}*/
 	if field.CountBH != 1 {
 		t.Fail()
 		fmt.Println("Bad CountBH", field.CountBH)
@@ -199,7 +200,8 @@ func Test_Burn(t *testing.T) {
 	result := grid.burn()
 
 	//assert
-	if !grid.isEqual(expectedGrid) || result != 5 {
+	grid.assertEqualTo(expectedGrid, t)
+	if result != 5 {
 		t.Fail()
 		fmt.Println("Bad Burn", result)
 		grid.visual()

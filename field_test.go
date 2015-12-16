@@ -118,10 +118,10 @@ func Test_FindPositions_Z(t *testing.T) {
 	assertPositions(t, positions, 13)
 }
 
-func assertPositions(t *testing.T, positions []*Piece, expectedCount int) {
-	if len(positions) != expectedCount {
+func assertPositions(t *testing.T, positions []*Piece, exCount int) {
+	if len(positions) != exCount {
 		t.Fail()
-		fmt.Println(len(positions), "positions found, should be", expectedCount)
+		fmt.Println(len(positions), "positions found, should be", exCount)
 	}
 	//testField.Grid.visual()
 	for _, p := range positions {
