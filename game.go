@@ -1,7 +1,7 @@
 package main
 
 import (
-	//	"fmt"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -127,6 +127,7 @@ func (g *Game) calculateMoves() *Piece {
 		for _, np := range nextPositions {
 			g.applySolidLines(np)
 			np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, 0)
+			fmt.Println("convert:", np.FieldAfter.Burned)
 		}
 		nScore := 10000000000000
 		nextBest := getBest(nextPositions)

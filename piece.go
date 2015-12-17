@@ -4,32 +4,36 @@ import (
 	"log"
 )
 
-//import "fmt"
+import "fmt"
 
 type Piece struct {
-	Key        int
 	Name       string
+	Moves      string
+	MovesCount int
+	Key        int
 	CurrentX   int
 	CurrentY   int
 	Rotation   int
-	MovesCount int
-	Moves      string
+	Points     int
+
+	Tspin        bool
+	Tspin2       bool
+	PerfectClear bool
+
 	Space      map[string]Cell
 	FieldAfter *Field
 	Score      Score
 }
 
 type Score struct {
-	Burn     int
-	Step     int
-	BHoles   int
-	FHoles   int
-	CHoles   int
-	HighY    int
-	Total    int
-	NScore   int
-	IsDSR    bool
-	BreakDSR bool
+	Burn   int
+	Step   int
+	BHoles int
+	FHoles int
+	CHoles int
+	HighY  int
+	Total  int
+	NScore int
 }
 
 type Cell struct {
@@ -693,25 +697,17 @@ func (p *Piece) IsDown(stack *Stack) bool {
 	return true
 }
 
+func (p *Piece) shorterPath(nCount int, dir string) {
+	if nCount < p.MovesCount {
+		p.Moves = p.Moves + "," + dir
+	}
+}
+
 func (p *Piece) setKey() {
 	if p.CurrentX >= 0 && p.CurrentY >= 0 {
 		p.Key = p.Rotation*10000 + p.CurrentX*100 + p.CurrentY
 	} else {
 		p.Key = -1
-	}
-}
-
-func (p *Piece) setDSR(before, after int) {
-	if before < 0 && after >= 0 {
-		p.Score.IsDSR = true
-	} else {
-		p.Score.IsDSR = false
-	}
-
-	if before >= 0 && after < 0 {
-		p.Score.BreakDSR = true
-	} else {
-		p.Score.BreakDSR = false
 	}
 }
 
@@ -859,11 +855,11 @@ func (p *Piece) setTotalScore(st Strategy) {
 		//fmt.Println(p.Name, " break :(")
 	}*/
 
-	if p.isSingleTSpin() && p.FieldAfter.Empty > 4 {
+	if p.Tspin && p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - 10
 	}
 
-	if p.isDoubleTSpin() && p.FieldAfter.Empty > 4 {
+	if p.Tspin2 && p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - 20
 	}
 	/*
@@ -898,6 +894,9 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 	p.Score.NScore = nextScore
+	p.Tspin = p.isSingleTSpin()
+	p.Tspin2 = p.isDoubleTSpin()
+	p.PerfectClear = p.isPerfectClear()
 	p.setHighY()
 	p.setStep()
 	p.setCHoles()
@@ -917,31 +916,38 @@ func (p *Piece) getPoints() int {
 	case 4:
 		points = 10
 	}
-
-	if p.isSingleTSpin() {
+	if p.Tspin {
 		points = 5
 	}
-
-	if p.isDoubleTSpin() {
+	if p.Tspin2 {
 		points = 10
 	}
-
-	if p.isPerfectClear() {
+	if p.PerfectClear {
 		points = 18
 	}
 	return points
 }
 
 func (p *Piece) isSingleTSpin() bool {
+
 	if p.Name != T {
 		return false
 	}
+	fmt.Println("burneed:", p.FieldAfter.Burned)
+
 	if p.Rotation != 2 {
 		return false
 	}
-	if p.Score.Burn != 1 {
+	if p.CurrentX == 1 && p.CurrentY == 3 {
+		p.FieldAfter.Grid.visual()
+
+	}
+
+	if p.FieldAfter.Burned != 1 {
 		return false
 	}
+	fmt.Println("single")
+
 	if p.Space["m1"].Y-1 < 0 {
 		return false
 	}
@@ -979,34 +985,4 @@ func (p *Piece) isPerfectClear() bool {
 		}
 	}
 	return true
-}
-
-func (p *Piece) isDSRfriendly() bool {
-	//fmt.Println(p.Space)
-	if p.FieldAfter.Empty > 5 || p.Name != T {
-		for y := 0; y < p.FieldAfter.Height-p.FieldAfter.Empty; y++ {
-			if y%2 == 0 {
-				//one hole
-				for _, cell := range p.Space {
-					if cell.Y == y && cell.X == 4 {
-						return false
-					}
-				}
-			} else {
-				// 3 holes
-				for _, cell := range p.Space {
-					if cell.Y == y && (cell.X == 3 || cell.X == 4 || cell.X == 5) {
-						return false
-					}
-				}
-			}
-		}
-	}
-	return true
-}
-
-func (p *Piece) shorterPath(nCount int, dir string) {
-	if nCount < p.MovesCount {
-		p.Moves = p.Moves + "," + dir
-	}
 }
