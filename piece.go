@@ -17,7 +17,6 @@ type Piece struct {
 	Space      map[string]Cell
 	FieldAfter *Field
 	Score      Score
-	IsHole     bool
 }
 
 type Score struct {
@@ -937,9 +936,6 @@ func (p *Piece) isSingleTSpin() bool {
 	if p.Name != T {
 		return false
 	}
-	if !p.IsHole {
-		return false
-	}
 	if p.Rotation != 2 {
 		return false
 	}
@@ -957,9 +953,6 @@ func (p *Piece) isSingleTSpin() bool {
 
 func (p *Piece) isDoubleTSpin() bool {
 	if p.Name != T {
-		return false
-	}
-	if !p.IsHole {
 		return false
 	}
 	if p.Rotation != 2 {
