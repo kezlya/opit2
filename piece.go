@@ -952,7 +952,7 @@ func (p *Piece) isDoubleTSpin() bool {
 	if p.Rotation != 2 {
 		return false
 	}
-	if p.Score.Burn != 2 {
+	if p.FieldAfter.Burned != 2 {
 		return false
 	}
 	if p.Space["m1"].Y-2 < 0 {

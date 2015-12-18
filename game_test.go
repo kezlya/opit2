@@ -86,74 +86,6 @@ func Test_calculateMoves(t *testing.T) {
 	checkScores(t, expectedScore, result.Score)
 }
 
-func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
-	//arrange
-	game := Game{Strategy: strategy}
-	grid := Grid{
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, true, true, true, true, false, true, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, false, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, true, true, true, true, true, false, true, false, true},
-		{true, true, true, true, true, true, false, true, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{false, true, true, false, true, true, true, true, true, true},
-		{false, true, true, true, true, true, true, true, true, true},
-		{false, true, true, true, true, true, true, true, true, false},
-		{false, true, true, false, false, true, true, true, false, false},
-		{false, true, true, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	}
-	game.MyPlayer = &Player{Field: grid.ToField()}
-	game.asignUpdates("game", "this_piece_type", T)
-	game.asignUpdates("game", "next_piece_type", J)
-	game.initPieces()
-	expectedGrid := Grid{
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, true, true, true, true, false, true, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, false, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, true, true, true, true, true, false, true, false, true},
-		{true, true, true, true, true, true, false, true, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{false, true, true, false, true, true, true, true, true, true},
-		{false, true, true, true, true, true, true, true, true, true},
-		{false, true, true, true, true, true, true, true, true, true},
-		{false, true, true, false, false, true, true, true, true, true},
-		{false, true, true, false, false, false, false, false, false, true},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	}
-	expectedScore := Score{
-		Burn:   0,
-		BHoles: 0,
-		FHoles: 0,
-		CHoles: 0,
-		HighY:  12,
-		Step:   0,
-	}
-
-	//act
-	result := game.calculateMoves()
-
-	//assert
-	result.FieldAfter.Grid.assertEqualTo(expectedGrid, t)
-	checkScores(t, expectedScore, result.Score)
-}
-
 func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
 	//arrange
 	game := Game{Strategy: strategy}
@@ -214,6 +146,142 @@ func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
 		CHoles: 0,
 		HighY:  4,
 		Step:   4,
+	}
+
+	//act
+	result := game.calculateMoves()
+
+	//assert
+	result.FieldAfter.Grid.assertEqualTo(expectedGrid, t)
+	checkScores(t, expectedScore, result.Score)
+}
+
+func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
+	//arrange
+	game := Game{Strategy: strategy}
+	grid := Grid{
+		{true, true, true, false, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, true, true, true, true, false, true, true, true, true},
+		{true, true, true, true, false, false, false, true, true, true},
+		{true, false, true, true, true, false, false, false, true, true},
+		{false, false, true, false, false, false, false, false, true, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	game.MyPlayer = &Player{Field: grid.ToField()}
+	game.asignUpdates("game", "this_piece_type", T)
+	game.asignUpdates("game", "next_piece_type", J)
+	game.initPieces()
+	expectedGrid := Grid{
+		{true, true, true, false, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, false, true, true, true, false, false, false, true, true},
+		{false, false, true, false, false, false, false, false, true, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	expectedScore := Score{
+		Burn:   2,
+		BHoles: -1,
+		FHoles: -1,
+		CHoles: 0,
+		HighY:  7,
+		Step:   0,
+	}
+
+	//act
+	result := game.calculateMoves()
+
+	//assert
+	result.FieldAfter.Grid.assertEqualTo(expectedGrid, t)
+	checkScores(t, expectedScore, result.Score)
+}
+
+func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
+	//arrange
+	game := Game{Strategy: strategy}
+	grid := Grid{
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, true, true, true, true, true, false, true, false, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{false, true, true, false, true, true, true, true, true, true},
+		{false, true, true, true, true, true, true, true, true, true},
+		{false, true, true, true, true, true, true, true, true, false},
+		{false, true, true, false, false, true, true, true, false, false},
+		{false, true, true, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	game.MyPlayer = &Player{Field: grid.ToField()}
+	game.asignUpdates("game", "this_piece_type", T)
+	game.asignUpdates("game", "next_piece_type", J)
+	game.initPieces()
+	expectedGrid := Grid{
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, false, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, true, true, true, true, true, false, true, false, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{false, true, true, false, true, true, true, true, true, true},
+		{false, true, true, true, true, true, true, true, true, true},
+		{false, true, true, true, true, true, true, true, true, true},
+		{false, true, true, false, false, true, true, true, true, true},
+		{false, true, true, false, false, false, false, false, false, true},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	expectedScore := Score{
+		Burn:   0,
+		BHoles: 0,
+		FHoles: 0,
+		CHoles: 0,
+		HighY:  12,
+		Step:   0,
 	}
 
 	//act
@@ -421,74 +489,6 @@ func Test_55ededec1c687b0946a7e6c6_08(t *testing.T) {
 		CHoles: 0,
 		HighY:  0,
 		Step:   4,
-	}
-
-	//act
-	result := game.calculateMoves()
-
-	//assert
-	result.FieldAfter.Grid.assertEqualTo(expectedGrid, t)
-	checkScores(t, expectedScore, result.Score)
-}
-
-func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
-	//arrange
-	game := Game{Strategy: strategy}
-	grid := Grid{
-		{true, true, true, false, true, true, true, true, true, true},
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, false, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, false, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, false, true, true, true},
-		{true, true, true, true, true, false, true, true, true, true},
-		{true, true, true, true, false, false, false, true, true, true},
-		{true, false, true, true, true, false, false, false, true, true},
-		{false, false, true, false, false, false, false, false, true, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	}
-	game.MyPlayer = &Player{Field: grid.ToField()}
-	game.asignUpdates("game", "this_piece_type", T)
-	game.asignUpdates("game", "next_piece_type", J)
-	game.initPieces()
-	expectedGrid := Grid{
-		{true, true, true, false, true, true, true, true, true, true},
-		{true, true, true, true, false, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, false, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, false, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, false, true, true, true},
-		{true, false, true, true, true, false, false, false, true, true},
-		{false, false, true, false, false, false, false, false, true, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	}
-	expectedScore := Score{
-		Burn:   2,
-		BHoles: -1,
-		FHoles: -1,
-		CHoles: 0,
-		HighY:  7,
-		Step:   0,
 	}
 
 	//act
