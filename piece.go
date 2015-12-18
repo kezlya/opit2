@@ -732,6 +732,9 @@ func (p *Piece) setHighY() {
 }
 
 func (p *Piece) setStep() {
+	if p.Tspin || p.Tspin2 || p.PerfectClear {
+		return
+	}
 	pp := p.FieldAfter.Picks
 	maxX, leftY, rightY := 0, 0, 0
 
