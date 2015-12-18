@@ -4,8 +4,6 @@ import (
 	"log"
 )
 
-import "fmt"
-
 type Piece struct {
 	Name       string
 	Moves      string
@@ -929,25 +927,15 @@ func (p *Piece) getPoints() int {
 }
 
 func (p *Piece) isSingleTSpin() bool {
-
 	if p.Name != T {
 		return false
 	}
-	fmt.Println("burneed:", p.FieldAfter.Burned)
-
 	if p.Rotation != 2 {
 		return false
 	}
-	if p.CurrentX == 1 && p.CurrentY == 3 {
-		p.FieldAfter.Grid.visual()
-
-	}
-
 	if p.FieldAfter.Burned != 1 {
 		return false
 	}
-	fmt.Println("single")
-
 	if p.Space["m1"].Y-1 < 0 {
 		return false
 	}

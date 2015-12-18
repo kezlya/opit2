@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"strconv"
 	"strings"
 )
@@ -127,7 +127,6 @@ func (g *Game) calculateMoves() *Piece {
 		for _, np := range nextPositions {
 			g.applySolidLines(np)
 			np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, 0)
-			fmt.Println("convert:", np.FieldAfter.Burned)
 		}
 		nScore := 10000000000000
 		nextBest := getBest(nextPositions)
@@ -140,7 +139,7 @@ func (g *Game) calculateMoves() *Piece {
 }
 
 func (g *Game) applySolidLines(p *Piece) {
-	if ((g.Round + 1) % 20) != 0 {
+	if ((g.Round + 1) % 20) == 0 {
 		newGrid := p.FieldAfter.Grid[:p.FieldAfter.Height-1]
 		newField := newGrid.ToField()
 		p.FieldAfter = &newField
