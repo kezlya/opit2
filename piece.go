@@ -754,7 +754,7 @@ func (p *Piece) setStep() {
 
 	if p.CurrentX > 0 {
 		x := p.CurrentX - 1
-		pick := pp[x] - 1
+		pick := pp[x] - 1 + p.FieldAfter.Burned
 		if leftY > pick {
 			p.Score.Step += leftY - pick
 		}
@@ -762,7 +762,7 @@ func (p *Piece) setStep() {
 
 	if maxX < p.FieldAfter.Width-1 {
 		x := maxX + 1
-		pick := pp[x] - 1
+		pick := pp[x] - 1 + p.FieldAfter.Burned
 		if rightY > pick {
 			p.Score.Step += rightY - pick
 		}
