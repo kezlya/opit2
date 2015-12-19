@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -33,12 +34,19 @@ func Test_applySolidLines(t *testing.T) {
 	}
 	field := grid.ToField()
 	piece := Piece{FieldAfter: &field}
+	before := reflect.ValueOf(piece.FieldAfter).Pointer()
 
 	//act
 	game.applySolidLines(&piece)
 
 	//assert
 	field.Grid.assertNotEqualTo(piece.FieldAfter.Grid, t)
+	after := reflect.ValueOf(piece.FieldAfter).Pointer()
+	if before == after {
+		t.Fail()
+		fmt.Println("After apply solid lines filed pointers",
+			before, "and", after, "should be different")
+	}
 }
 
 func Test_calculateMoves(t *testing.T) {
