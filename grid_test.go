@@ -32,7 +32,16 @@ var testGrid = Grid{
 func (a Grid) assertEqualTo(b Grid, t *testing.T) {
 	if !a.isEqual(b) {
 		t.Fail()
-		fmt.Println("Grids are not aqual")
+		fmt.Println("Grids are not equal")
+		a.visual()
+		b.visual()
+	}
+}
+
+func (a Grid) assertNotEqualTo(b Grid, t *testing.T) {
+	if a.isEqual(b) {
+		t.Fail()
+		fmt.Println("Grids are equal")
 		a.visual()
 		b.visual()
 	}

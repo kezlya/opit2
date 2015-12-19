@@ -53,4 +53,3 @@ Current result is: 50	  26642202 ns/op  Must always be bellow 500ms
 
 ### TODOs
 ##### Impliment multithreading on the CalculateMoves
-##### Need test for applySolidLines compare grids and referenses

@@ -18,6 +18,29 @@ func checkScores(t *testing.T, e, a Score) {
 	}
 }
 
+func Test_applySolidLines(t *testing.T) {
+	//arrange
+	game := Game{
+		Strategy: strategy,
+		Round:    19,
+	}
+	grid := Grid{
+		{false, true},
+		{true, false},
+		{false, false},
+		{false, false},
+		{false, false},
+	}
+	field := grid.ToField()
+	piece := Piece{FieldAfter: &field}
+
+	//act
+	game.applySolidLines(&piece)
+
+	//assert
+	field.Grid.assertNotEqualTo(piece.FieldAfter.Grid, t)
+}
+
 func Test_calculateMoves(t *testing.T) {
 	//arrange
 	game := Game{Strategy: strategy}
