@@ -16,6 +16,7 @@ type Field struct {
 
 	Grid  Grid
 	Picks []int
+	Holes []*Cell
 }
 
 func (f Field) FindPositions(piece Piece) []*Piece {

@@ -63,7 +63,8 @@ func (g Grid) ToField() Field {
 		}
 	}
 	f.Empty = f.Height - f.MaxPick
-	f.CountBH, f.CountFH = g.findHoles(f.Picks)
+	f.Holes, f.CountFH = g.findHoles(f.Picks)
+	f.CountBH = len(f.Holes)
 	return f
 }
 
@@ -114,9 +115,9 @@ func (g Grid) IsCollision(cells map[string]Cell, checkTop bool) bool {
 	return false
 }
 
-func (g Grid) findHoles(picks []int) (int, int) {
+func (g Grid) findHoles(picks []int) ([]*Cell, int) {
 	w := len(g[0])
-	blocked := 0
+	blocked := make([]*Cell, 0)
 	fixable := 0
 	for i, pick := range picks {
 		for j := 0; j < pick; j++ {
@@ -125,7 +126,8 @@ func (g Grid) findHoles(picks []int) (int, int) {
 					(i+2 < w && !g[j][i+1] && !g[j][i+2] && !g[j+1][i+1] && !g[j+1][i+2]) {
 					fixable++
 				} else {
-					blocked++
+					cell := Cell{X: i, Y: j}
+					blocked = append(blocked, &cell)
 				}
 			}
 		}
