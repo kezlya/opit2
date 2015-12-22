@@ -47,9 +47,7 @@ Current result is: 2000	    759091 ns/op
 	go test -run=XXX -bench=FindPositions
 
 ##### CalculateMoves
-Current result is: 50	  26642202 ns/op  Must always be bellow 500ms
+Current result is: 100	  11196738 ns/op  Must always be bellow 500ms
 
 	go test -run=XXX -bench=CalculateMoves
 
-### TODOs
-##### Impliment multithreading on the CalculateMoves
