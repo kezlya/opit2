@@ -33,6 +33,11 @@ type Player struct {
 	Combo  int
 }
 
+type NextScore struct {
+	key   int
+	score int
+}
+
 type Strategy struct {
 	Burn   int
 	Step   int
@@ -121,21 +126,33 @@ func (g *Game) initPieces() {
 func (g *Game) calculateMoves() *Piece {
 	mf := &g.MyPlayer.Field
 	positions := mf.FindPositions(g.CurrentPiece)
+	buff := len(positions)
+	chScores := make(chan NextScore, buff)
+	pMap := map[int]*Piece{}
 	for _, p := range positions {
-		pf := p.FieldAfter
-		nextPositions := pf.FindPositions(g.NextPiece)
-		for _, np := range nextPositions {
-			g.applySolidLines(np)
-			np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, 0)
-		}
-		nScore := 10000000000000
-		nextBest := getBest(nextPositions)
-		if nextBest != nil {
-			nScore = nextBest.Score.Total
-		}
-		p.SetScore(g.Strategy, mf.CountBH, mf.CountFH, nScore)
+		pMap[p.Key] = p
+		go g.nextPieceScore(chScores, p.FieldAfter, p.Key)
 	}
+	for k := 0; k < buff; k++ {
+		ns := <-chScores
+		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH, ns.score)
+	}
+
 	return getBest(positions)
+}
+
+func (g *Game) nextPieceScore(ch_scores chan NextScore, pf *Field, key int) {
+	nextPositions := pf.FindPositions(g.NextPiece)
+	for _, np := range nextPositions {
+		g.applySolidLines(np)
+		np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, 0)
+	}
+	nScore := 10000000000000
+	nextBest := getBest(nextPositions)
+	if nextBest != nil {
+		nScore = nextBest.Score.Total
+	}
+	ch_scores <- NextScore{key: key, score: nScore}
 }
 
 func (g *Game) applySolidLines(p *Piece) {
