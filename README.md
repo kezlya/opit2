@@ -44,7 +44,7 @@ Usual Go testing. Just execute this command:
 Benchmark tests implimented for core functions. That helps to track improvements in optimization of algorithms and strategies.
 
 ##### FindPositions
-Current result is: 2000	    759091 ns/op
+Current result is: 2000	    665474 ns/op
 
 	go test -run=XXX -bench=FindPositions
 

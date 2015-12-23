@@ -42,7 +42,7 @@ func main() {
 			game.initPieces()
 			pos := game.calculateMoves()
 			if pos != nil && pos.Moves != "" {
-				fmt.Println(pos.Moves + "," + drop)
+				fmt.Println(strings.TrimPrefix(pos.Moves, ",") + "," + drop)
 			} else {
 				fmt.Println(drop)
 			}

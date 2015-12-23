@@ -1,8 +1,7 @@
 package main
 
 import (
-	//"fmt"
-	"strings"
+//"fmt"
 )
 
 type Field struct {
@@ -45,7 +44,6 @@ func (f Field) FindPositions(piece Piece) []*Piece {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
-			p.Moves = strings.TrimPrefix(p.Moves, ",")
 			positions = append(positions, p)
 		}
 	}
