@@ -32,7 +32,7 @@ Generating an array of random numbers. That can be used to generate garbage rows
 ##### Play diferent strategies
 In order to find out the best combination of multipliers for the strategy. Play same games with diferent combination of multipliers and compare results.
 
-	go test -run=XXX -bench=strategy
+	go test -run=XXX -bench=strategy -timeout=12h
 
 
 ### Testing

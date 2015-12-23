@@ -29,13 +29,13 @@ func (f Field) FindPositions(piece Piece) []*Piece {
 	stack := InitStack()
 	stack.Push(p)
 	for p != nil {
-		f.Search(stack, p, down)
 		f.Search(stack, p, left)
 		f.Search(stack, p, right)
 		if p.Name != O {
 			f.Search(stack, p, turnleft)
 			f.Search(stack, p, turnright)
 		}
+		f.Search(stack, p, down)
 		p = stack.Pop()
 	}
 
@@ -44,6 +44,7 @@ func (f Field) FindPositions(piece Piece) []*Piece {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
 			p.FieldAfter = &newField
+			//fmt.Println(p.MovesCount, p.Moves)
 			positions = append(positions, p)
 		}
 	}
@@ -52,6 +53,7 @@ func (f Field) FindPositions(piece Piece) []*Piece {
 
 func (f Field) Search(stack *Stack, p *Piece, dir string) {
 	nmCount := p.MovesCount + 1
+	nMoves := p.Moves + "," + dir
 	var ex, np *Piece
 	switch dir {
 	case left:
@@ -61,7 +63,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		}
 		ex = stack.Peek(nextKey)
 		if ex != nil {
-			ex.shorterPath(nmCount, dir)
+			ex.shorterPath(nmCount, nMoves)
 			return
 		}
 		np = p.Left()
@@ -72,7 +74,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		}
 		ex = stack.Peek(nextKey)
 		if ex != nil {
-			ex.shorterPath(nmCount, dir)
+			ex.shorterPath(nmCount, nMoves)
 			return
 		}
 		np = p.Right()
@@ -83,7 +85,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		}
 		ex = stack.Peek(nextKey)
 		if ex != nil {
-			ex.shorterPath(nmCount, dir)
+			ex.shorterPath(nmCount, nMoves)
 			return
 		}
 		np = p.Down()
@@ -91,14 +93,14 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 		np = p.Turnleft()
 		ex = stack.Peek(np.Key)
 		if ex != nil {
-			ex.shorterPath(nmCount, dir)
+			ex.shorterPath(nmCount, nMoves)
 			return
 		}
 	case turnright:
 		np = p.Turnright()
 		ex = stack.Peek(np.Key)
 		if ex != nil {
-			ex.shorterPath(nmCount, dir)
+			ex.shorterPath(nmCount, nMoves)
 			return
 		}
 	}
@@ -106,7 +108,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 	if f.Grid.IsCollision(np.Space, false) {
 		return
 	}
-	np.Moves = p.Moves + "," + dir
+	np.Moves = nMoves
 	np.MovesCount = nmCount
 	stack.Push(np)
 }

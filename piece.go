@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"fmt"
 	"log"
 )
 
@@ -695,9 +696,10 @@ func (p *Piece) IsDown(stack *Stack) bool {
 	return true
 }
 
-func (p *Piece) shorterPath(nCount int, dir string) {
+func (p *Piece) shorterPath(nCount int, nMoves string) {
 	if nCount < p.MovesCount {
-		p.Moves = p.Moves + "," + dir
+		p.Moves = nMoves
+		p.MovesCount = nCount
 	}
 }
 
