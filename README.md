@@ -17,7 +17,7 @@ Visual representation in default browser (a graph) of "bot" playing many preset 
 
 	go test -run=XXX -bench=many
 
-![compare_current_strategy_to_old_data image](assetc/many.png)
+![compare_current_strategy_to_old_data image](assets/many.png)
 
 ##### Generate random games
 Generating an array of Pieces in random order. That can be used for preset game 
