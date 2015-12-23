@@ -106,5 +106,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 	if f.Grid.IsCollision(np.Space, false) {
 		return
 	}
+	np.Moves = p.Moves + "," + dir
+	np.MovesCount = nmCount
 	stack.Push(np)
 }
