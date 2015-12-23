@@ -42,9 +42,10 @@ func main() {
 			game.initPieces()
 			pos := game.calculateMoves()
 			if pos != nil && pos.Moves != "" {
-				fmt.Print(pos.Moves + ",")
+				fmt.Println(pos.Moves + "," + drop)
+			} else {
+				fmt.Println(drop)
 			}
-			fmt.Print(drop)
 		}
 	}
 }
