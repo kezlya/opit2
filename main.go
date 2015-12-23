@@ -19,8 +19,8 @@ const drop = "drop"
 
 var strategy = Strategy{
 	Burn:   1,
-	BHoles: 11,
-	FHoles: 10,
+	BHoles: 12,
+	FHoles: 11,
 	CHoles: 2,
 	HighY:  1,
 	Step:   3,
