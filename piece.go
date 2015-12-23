@@ -6,14 +6,13 @@ import (
 )
 
 type Piece struct {
-	Name       string
-	Moves      string
-	MovesCount int
-	Key        int
-	CurrentX   int
-	CurrentY   int
-	Rotation   int
-	Points     int
+	Name     string
+	Moves    string
+	Key      int
+	CurrentX int
+	CurrentY int
+	Rotation int
+	Points   int
 
 	Tspin        bool
 	Tspin2       bool
@@ -696,10 +695,9 @@ func (p *Piece) IsDown(stack *Stack) bool {
 	return true
 }
 
-func (p *Piece) shorterPath(nCount int, nMoves string) {
-	if nCount < p.MovesCount {
+func (p *Piece) shorterPath(nMoves string) {
+	if len(nMoves) < len(p.Moves) {
 		p.Moves = nMoves
-		p.MovesCount = nCount
 	}
 }
 

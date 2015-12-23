@@ -83,7 +83,7 @@ func Benchmark_many(banch *testing.B) {
 
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
-		for b := 1; b <= 3; b++ {
+		for b := 2; b <= 3; b++ {
 			for bh := 11; bh <= 13; bh++ {
 				for fh := 9; fh <= 11; fh++ {
 					for ch := 1; ch <= 3; ch++ {
