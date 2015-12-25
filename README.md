@@ -53,3 +53,6 @@ Current result is: 100	  13142213 ns/op  Must always be bellow 500ms
 
 	go test -run=XXX -bench=CalculateMoves
 
+
+### TODOs
+##### force keep shape for T-sping
