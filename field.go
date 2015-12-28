@@ -109,3 +109,7 @@ func (f Field) Search(stack *Stack, p *Piece, dir string) {
 	np.Moves = nMoves
 	stack.Push(np)
 }
+
+func (f Field) HideTspace() {
+
+}
