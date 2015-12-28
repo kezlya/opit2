@@ -18,12 +18,12 @@ const turnright = "turnright"
 const drop = "drop"
 
 var strategy = Strategy{
-	Burn:   1,
-	BHoles: 12,
-	FHoles: 12,
-	CHoles: 2,
+	Burn:   2,
+	BHoles: 24,
+	FHoles: 24,
+	CHoles: 4,
 	HighY:  1,
-	Step:   3,
+	Step:   5,
 }
 
 func main() {
