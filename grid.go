@@ -154,3 +154,16 @@ func (g Grid) burn() int {
 	}
 	return burned
 }
+
+func (g Grid) isTshapeSpace(h *Cell) bool {
+	if h.X > 0 &&
+		h.X < len(g[0])-1 &&
+		h.Y < len(g)-2 &&
+		!g[h.Y][h.X] &&
+		!g[h.Y+1][h.X-1] &&
+		!g[h.Y+1][h.X] &&
+		!g[h.Y+1][h.X+1] {
+		return true
+	}
+	return false
+}

@@ -217,3 +217,25 @@ func Test_Burn(t *testing.T) {
 		expectedGrid.visual()
 	}
 }
+
+func Test_isTshapeSpace(t *testing.T) {
+	//arrange
+	hole := &Cell{X: 3, Y: 0}
+	grid := Grid{
+		{false, true, true, false, true, true, true, false, false, false},
+		{false, false, false, false, false, false, true, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+
+	//act
+	result := grid.isTshapeSpace(hole)
+
+	//assert
+	if !result {
+		t.Fail()
+		fmt.Println("Tshap not found")
+		grid.visual()
+	}
+}
