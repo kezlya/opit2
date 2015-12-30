@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -125,6 +125,13 @@ func (g *Game) initPieces() {
 
 func (g *Game) calculateMoves() *Piece {
 	mf := &g.MyPlayer.Field
+	revertOriginal := false
+	if g.CurrentPieceName != T && g.NextPieceName != T {
+		mf.HideTspace()
+		revertOriginal = true
+		fmt.Print("start hiding")
+	}
+
 	positions := mf.FindPositions(g.CurrentPiece)
 	buff := len(positions)
 	chScores := make(chan NextScore, buff)
@@ -138,7 +145,13 @@ func (g *Game) calculateMoves() *Piece {
 		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH, ns.score)
 	}
 
-	return getBest(positions)
+	bestP := getBest(positions)
+	if revertOriginal {
+		ng := g.MyPlayer.Field.Grid.ApplyPiece(bestP.Space)
+		nf := ng.ToField()
+		bestP.FieldAfter = &nf
+	}
+	return bestP
 }
 
 func (g *Game) nextPieceScore(ch_scores chan NextScore, pf *Field, key int) {

@@ -113,8 +113,8 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.asignSettings("field_width", "10")
-	g.asignSettings("field_height", "20")
-	field := EmptyGrig10x20.ToField()
+	g.asignSettings("field_height", "10")
+	field := EmptyGrig10x20[10:].ToField()
 	position := &Piece{FieldAfter: &field}
 	round := 1
 	keepGoing := true
