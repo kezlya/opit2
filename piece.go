@@ -40,7 +40,12 @@ type Cell struct {
 }
 
 func InitPiece(name string, x, y int) Piece {
-	piece := Piece{Name: name, CurrentX: x, CurrentY: y}
+	piece := Piece{
+		Name:     name,
+		CurrentX: x,
+		CurrentY: y,
+		Score:    &Score{},
+	}
 	piece.Space = make(map[string]Cell, 4)
 	switch name {
 	case I:
@@ -90,7 +95,14 @@ func (p *Piece) Left() *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, CurrentY: p.CurrentY, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX - 1,
+		CurrentY: p.CurrentY,
+		Space:    res,
+		Score:    &Score{},
+	}
 	np.setKey()
 	return &np
 }
@@ -100,7 +112,14 @@ func (p *Piece) Right() *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, CurrentY: p.CurrentY, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX + 1,
+		CurrentY: p.CurrentY,
+		Space:    res,
+		Score:    &Score{},
+	}
 	np.setKey()
 	return &np
 }
@@ -110,7 +129,13 @@ func (p *Piece) Down() *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - 1, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX,
+		CurrentY: p.CurrentY - 1,
+		Space:    res,
+		Score:    &Score{}}
 	np.setKey()
 	return &np
 }
@@ -120,7 +145,14 @@ func (p *Piece) Drop(n int) *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - n}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - n, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX,
+		CurrentY: p.CurrentY - n,
+		Space:    res,
+		Score:    &Score{},
+	}
 	np.setKey()
 	for i := 0; i < n; i++ {
 		np.Moves += ",down"
@@ -129,9 +161,12 @@ func (p *Piece) Drop(n int) *Piece {
 }
 
 func (p *Piece) Turnright() *Piece {
-	np := Piece{Name: p.Name}
+	np := Piece{
+		Name:     p.Name,
+		Score:    &Score{},
+		Rotation: p.Rotation + 1,
+	}
 
-	np.Rotation = p.Rotation + 1
 	if np.Rotation > 3 {
 		np.Rotation = 0
 	}
@@ -406,9 +441,12 @@ func (p *Piece) Turnright() *Piece {
 }
 
 func (p *Piece) Turnleft() *Piece {
-	np := Piece{Name: p.Name}
+	np := Piece{
+		Name:     p.Name,
+		Score:    &Score{},
+		Rotation: p.Rotation - 1,
+	}
 
-	np.Rotation = p.Rotation - 1
 	if np.Rotation < 0 {
 		np.Rotation = 3
 	}
@@ -891,9 +929,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 }
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
-	if p.Score == nil {
-		return
-	}
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 	p.Score.NScore = nextScore
