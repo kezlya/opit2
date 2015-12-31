@@ -7,6 +7,10 @@ import (
 //http://golang.org/pkg/sort/#example_Interface
 
 var SCORE = func(c1, c2 *Piece) bool {
+	//TODO need to refactor this
+	if c1.Score == nil || c2.Score == nil {
+		return false
+	}
 
 	if c1.Score.Total != c2.Score.Total {
 		return c1.Score.Total < c2.Score.Total

@@ -149,7 +149,7 @@ func (g *Game) nextPieceScore(ch_scores chan NextScore, pf *Field, key int) {
 	}
 	nScore := 10000000000000
 	nextBest := getBest(nextPositions)
-	if nextBest != nil {
+	if nextBest != nil && nextBest.Score != nil {
 		nScore = nextBest.Score.Total
 	}
 	ch_scores <- NextScore{key: key, score: nScore}

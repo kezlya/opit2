@@ -20,7 +20,7 @@ type Piece struct {
 
 	Space      map[string]Cell
 	FieldAfter *Field
-	Score      Score
+	Score      *Score
 }
 
 type Score struct {
@@ -891,6 +891,9 @@ func (p *Piece) setTotalScore(st Strategy) {
 }
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
+	if p.Score == nil {
+		return
+	}
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 	p.Score.NScore = nextScore
