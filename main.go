@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// Happy New 2016 Year
+
 // External API constants
 const I, J, L, O, S, T, Z = "I", "J", "L", "O", "S", "T", "Z"
 const settings, update, action = "settings", "update", "action"
