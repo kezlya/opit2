@@ -31,6 +31,7 @@ type Player struct {
 	Field  Field
 	Points int
 	Combo  int
+	Skips  int
 }
 
 type NextScore struct {
@@ -110,6 +111,13 @@ func (g *Game) asignUpdates(who, action, value string) {
 				if p.Name == who {
 					grid := InitGrid(cleanSource)
 					g.Players[i].Field = grid.ToField()
+					break
+				}
+			}
+		case "skips":
+			for i, p := range g.Players {
+				if p.Name == who {
+					g.Players[i].Skips, _ = strconv.Atoi(value)
 					break
 				}
 			}
