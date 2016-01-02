@@ -18,6 +18,7 @@ const right = "right"
 const turnleft = "turnleft"
 const turnright = "turnright"
 const drop = "drop"
+const skip = "skip"
 
 var strategy = Strategy{
 	Burn:   1,
@@ -44,7 +45,11 @@ func main() {
 			game.initPieces()
 			pos := game.calculateMoves()
 			if pos != nil && pos.Moves != "" {
-				fmt.Println(strings.TrimPrefix(pos.Moves, ",") + "," + drop)
+				if pos.Score.Total > 100 && game.MyPlayer.Skips > 0 {
+					fmt.Println(skip)
+				} else {
+					fmt.Println(strings.TrimPrefix(pos.Moves, ",") + "," + drop)
+				}
 			} else {
 				fmt.Println(drop)
 			}
