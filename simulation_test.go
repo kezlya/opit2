@@ -124,13 +124,15 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		g.asignUpdates("game", "this_piece_type", input[round-1])
 		g.asignUpdates("game", "next_piece_type", input[round])
 		g.asignUpdates("game", "this_piece_position", "3,-1")
-		g.initPieces()
 		g.MyPlayer.Field = *position.FieldAfter
 		g.initPieces()
 
 		// play round
 		pos := g.calculateMoves()
-		if pos.Score.Total > 50 && g.MyPlayer.Skips > 0 {
+		if pos == nil || pos.Score == nil {
+			break
+		}
+		if pos.Score.Total > 20 && g.MyPlayer.Skips > 0 {
 			fmt.Println()
 			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
 			fmt.Println()

@@ -44,7 +44,7 @@ func main() {
 			//time, _ := strconv.Atoi(parts[2])
 			game.initPieces()
 			pos := game.calculateMoves()
-			if pos != nil && pos.Moves != "" {
+			if pos != nil && pos.Score != nil && pos.Moves != "" {
 				if pos.Score.Total > 50 && game.MyPlayer.Skips > 0 {
 					fmt.Println(skip)
 				} else {
