@@ -45,7 +45,7 @@ func main() {
 			game.initPieces()
 			pos := game.calculateMoves()
 			if pos != nil && pos.Moves != "" {
-				if pos.Score.Total > 100 && game.MyPlayer.Skips > 0 {
+				if pos.Score.Total > 50 && game.MyPlayer.Skips > 0 {
 					fmt.Println(skip)
 				} else {
 					fmt.Println(strings.TrimPrefix(pos.Moves, ",") + "," + drop)

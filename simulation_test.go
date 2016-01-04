@@ -124,21 +124,29 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		g.asignUpdates("game", "this_piece_type", input[round-1])
 		g.asignUpdates("game", "next_piece_type", input[round])
 		g.asignUpdates("game", "this_piece_position", "3,-1")
+		g.initPieces()
 		g.MyPlayer.Field = *position.FieldAfter
 		g.initPieces()
 
 		// play round
-		position = g.calculateMoves()
-		g.MyPlayer.Points += position.getPoints()
-		if visual {
+		pos := g.calculateMoves()
+		if pos.Score.Total > 50 && g.MyPlayer.Skips > 0 {
 			fmt.Println()
-			fmt.Println("===============================================================")
+			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
 			fmt.Println()
-			g.MyPlayer.Field.Grid.visual()
-			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
-			fmt.Printf("%+v\n", position.Score)
-			position.FieldAfter.Grid.visual()
-			time.Sleep(1000000000)
+		} else {
+			position = pos
+			g.MyPlayer.Points += position.getPoints()
+			if visual {
+				fmt.Println()
+				fmt.Println("===============================================================")
+				fmt.Println()
+				g.MyPlayer.Field.Grid.visual()
+				fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
+				fmt.Printf("%+v\n", position.Score)
+				position.FieldAfter.Grid.visual()
+				time.Sleep(1000000000)
+			}
 		}
 
 		// check if the game is over
