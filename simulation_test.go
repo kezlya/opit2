@@ -133,12 +133,18 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			break
 		}
 		if pos.Score.Total > 20 && g.MyPlayer.Skips > 0 {
-			fmt.Println()
-			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
-			fmt.Println()
+			g.MyPlayer.Skips--
+			if visual {
+				fmt.Println()
+				fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
+				fmt.Println()
+			}
 		} else {
 			position = pos
 			g.MyPlayer.Points += position.getPoints()
+			if position.isDoubleTSpin() {
+				g.MyPlayer.Skips++
+			}
 			if visual {
 				fmt.Println()
 				fmt.Println("===============================================================")
