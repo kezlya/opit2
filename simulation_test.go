@@ -132,7 +132,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		if pos == nil || pos.Score == nil {
 			break
 		}
-		if pos.Score.Total > 20 && g.MyPlayer.Skips > 0 {
+		if pos.shouldSkip(g.MyPlayer.Skips) {
 			g.MyPlayer.Skips--
 			if visual {
 				fmt.Println()

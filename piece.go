@@ -966,6 +966,14 @@ func (p *Piece) getPoints() int {
 	return points
 }
 
+func (p *Piece) shouldSkip(skips int) bool {
+	if p.Score.Total > 20 && skips > 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
 func (p *Piece) isSingleTSpin() bool {
 	if p.Name != T {
 		return false
