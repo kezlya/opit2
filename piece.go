@@ -897,8 +897,8 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.Total = p.Score.Total - 10
 	}
 
-	if p.Tspin2 && p.FieldAfter.Empty > 4 {
-		p.Score.Total = p.Score.Total - 20
+	if p.Tspin2 && p.FieldAfter.Empty > 2 {
+		p.Score.Total = p.Score.Total - 40
 	}
 	/*
 		delta := p.FieldAfter.Picks().SumStep()
