@@ -893,12 +893,16 @@ func (p *Piece) setTotalScore(st Strategy) {
 		//fmt.Println(p.Name, " break :(")
 	}*/
 
+	if p.Score.Burn == 4 {
+		p.Score.Total = p.Score.Total - 60
+	}
+
 	if p.Tspin && p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - 10
 	}
 
 	if p.Tspin2 && p.FieldAfter.Empty > 2 {
-		p.Score.Total = p.Score.Total - 40
+		p.Score.Total = p.Score.Total - 60
 	}
 	/*
 		delta := p.FieldAfter.Picks().SumStep()
