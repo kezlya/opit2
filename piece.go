@@ -12,7 +12,6 @@ type Piece struct {
 	CurrentX int
 	CurrentY int
 	Rotation int
-	Points   int
 
 	Tspin        bool
 	Tspin2       bool
