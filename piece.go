@@ -748,24 +748,6 @@ func (p *Piece) setKey() {
 
 func (p *Piece) setHighY() {
 	p.Score.HighY = p.CurrentY
-	/*switch p.Name {
-	case I:
-		switch p.Rotation {
-		case 0, 2:
-			p.Score.HighY = p.CurrentY
-		case 1, 3:
-			p.Score.HighY = p.CurrentY + 3
-		}
-	case J, L, S, T, Z:
-		switch p.Rotation {
-		case 0, 2:
-			p.Score.HighY = p.CurrentY + 1
-		case 1, 3:
-			p.Score.HighY = p.CurrentY + 2
-		}
-	case O:
-		p.Score.HighY = p.CurrentY + 1
-	}*/
 }
 
 func (p *Piece) setStep() {
@@ -829,31 +811,6 @@ func (p *Piece) setCHoles() {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
-
-	/*
-		for _, h := range effective {
-			stucking := 0
-			if h.X == ps[0] {
-				stucking++
-			}
-			if h.X == ps[1] {
-				stucking++
-			}
-			if h.X == ps[2] {
-				stucking++
-
-			}
-			if h.X == ps[3] {
-				stucking++
-			}
-
-			if stucking > 0 {
-				deep := h.Y - lowEffectiveY + 1
-
-				p.Score.CHoles += deep + stucking
-			}
-		}
-	*/
 }
 
 func (p *Piece) setTotalScore(st Strategy) {
@@ -882,16 +839,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.Burn*kB -
 		points*4
 
-	/*if p.Score.IsDSR && p.FieldAfter.Empty > 10 {
-		p.Score.Total = p.Score.Total - 50
-		//fmt.Println(p.Name, " is dsr")
-	}
-
-	if p.Score.BreakDSR && p.Name != T && p.FieldAfter.Empty > 10 {
-		p.Score.Total = p.Score.Total + 100
-		//fmt.Println(p.Name, " break :(")
-	}*/
-
 	if p.Score.Burn == 4 {
 		p.Score.Total = p.Score.Total - 60
 	}
@@ -903,32 +850,14 @@ func (p *Piece) setTotalScore(st Strategy) {
 	if p.Tspin2 && p.FieldAfter.Empty > 2 {
 		p.Score.Total = p.Score.Total - 60
 	}
-	/*
-		delta := p.FieldAfter.Picks().SumStep()
-		if delta > 17 {
-			p.Score.Total = p.Score.Total + 7
-		}
-	*/
+
 	if p.FieldAfter.Empty == 0 {
 		p.Score.Total = p.Score.Total + 100
-		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total = p.Score.Total + 5
-		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
+		p.Score.Total = p.Score.Total + 10
 	}
-
-	/*
-			if p.FieldAfter.Empty > 10 && holes < 5 && p.Score.Burn == 1 {
-				p.Score.Total = p.Score.Total + 10
-				//fmt.Println("====")
-			}
-
-		if holes > 10 && p.Score.Burn > 0 {
-			p.Score.Total = p.Score.Total - 4
-		}
-	*/
 }
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
