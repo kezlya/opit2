@@ -104,9 +104,8 @@ func (g Grid) IsCollision(cells map[string]Cell, checkTop bool) bool {
 		if c.Y >= h {
 			if checkTop {
 				return true
-			} else {
-				continue
 			}
+			continue
 		}
 		if g[c.Y][c.X] {
 			return true

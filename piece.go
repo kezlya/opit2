@@ -814,29 +814,20 @@ func (p *Piece) setCHoles() {
 }
 
 func (p *Piece) setTotalScore(st Strategy) {
-
 	p.Score.Burn = p.FieldAfter.Burned
-
-	kY := st.HighY
 	kS := st.Step
-	kC := st.CHoles
-	kB := st.Burn
-
-	kBH := st.BHoles
-	kFH := st.FHoles
-
 	if p.FieldAfter.Empty < 5 {
-		kS = kS + 1
+		kS = st.Step + 1
 	}
 
 	points := p.getPoints()
-	p.Score.Total = p.Score.BHoles*kBH +
-		p.Score.FHoles*kFH +
-		p.Score.HighY*kY +
+	p.Score.Total = p.Score.BHoles*st.BHoles +
+		p.Score.FHoles*st.FHoles +
+		p.Score.HighY*st.HighY +
 		p.Score.Step*kS +
 		p.Score.NScore +
-		p.Score.CHoles*kC -
-		p.Score.Burn*kB -
+		p.Score.CHoles*st.CHoles -
+		p.Score.Burn*st.Burn -
 		points*4
 
 	if p.Score.Burn == 4 {

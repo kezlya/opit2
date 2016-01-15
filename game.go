@@ -149,7 +149,7 @@ func (g *Game) calculateMoves() *Piece {
 	return getBest(positions)
 }
 
-func (g *Game) nextPieceScore(ch_scores chan NextScore, pf *Field, key int) {
+func (g *Game) nextPieceScore(chScores chan NextScore, pf *Field, key int) {
 	nextPositions := pf.FindPositions(g.NextPiece)
 	for _, np := range nextPositions {
 		g.applySolidLines(np)
@@ -160,7 +160,7 @@ func (g *Game) nextPieceScore(ch_scores chan NextScore, pf *Field, key int) {
 	if nextBest != nil && nextBest.Score != nil {
 		nScore = nextBest.Score.Total
 	}
-	ch_scores <- NextScore{key: key, score: nScore}
+	chScores <- NextScore{key: key, score: nScore}
 }
 
 func (g *Game) applySolidLines(p *Piece) {
