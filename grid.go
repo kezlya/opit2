@@ -177,7 +177,11 @@ func (g Grid) tSpinLevels(max int) (int, int, int) {
 		}
 		if check {
 			if g.tSpinLevel2(&cell) {
-				tlevel2++
+				if g.tSpinLevel3(&cell) {
+					tlevel3++
+				} else {
+					tlevel2++
+				}
 			} else {
 				tlevel1++
 			}
@@ -195,6 +199,16 @@ func (g Grid) tSpinLevel2(c *Cell) bool {
 		return true
 	}
 	return false
+}
+
+func (g Grid) tSpinLevel3(c *Cell) bool {
+	check := true
+	for i, col := range g[c.Y+1] {
+		if !col && (i < c.X-1 || i > c.X+1) {
+			check = false
+		}
+	}
+	return check
 }
 
 func (g Grid) isTshapeSpace(h *Cell) bool {
