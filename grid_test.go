@@ -246,6 +246,8 @@ func Test_tSpinLevels(t *testing.T) {
 		{false, true, true, true, true, true, true, true, true, true},
 		{true, true, true, true, true, true, true, true, true, false},
 		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, false, false, false, true},
 		{false, false, false, false, false, false, true, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
@@ -262,14 +264,14 @@ func Test_tSpinLevels(t *testing.T) {
 		fmt.Println("Level1 tSpace faild", level1)
 		grid.visual()
 	}
-	if level2 != 0 {
+	if level2 != 1 {
 		t.Fail()
-		fmt.Println("Level1 tSpace faild", level2)
+		fmt.Println("Level2 tSpace faild", level2)
 		grid.visual()
 	}
 	if level3 != 0 {
 		t.Fail()
-		fmt.Println("Level1 tSpace faild", level3)
+		fmt.Println("Level3 tSpace faild", level3)
 		grid.visual()
 	}
 }

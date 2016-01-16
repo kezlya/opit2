@@ -156,30 +156,45 @@ func (g Grid) burn() int {
 
 func (g Grid) tSpinLevels(max int) (int, int, int) {
 	var tlevel1, tlevel2, tlevel3 int
-	var check1 bool //, check2, check3 bool
+	var check bool
+	var cell Cell
 	maxW := len(g[0]) - 1
 	fmt.Println(max)
 	for i := 0; i < max; i++ {
 		fmt.Println(g[i])
-		check1 = false
-		//check2 = false
-		//check3 = false
+		check = false
+		//TODO isilate this loop into separate function
 		for col := 1; col < maxW; col++ {
 			if !g[i][col] {
-				if check1 {
-					check1 = false
+				if check {
+					check = false
 					break
 				} else {
-					check1 = true
+					check = true
+					cell = Cell{X: col, Y: i}
 				}
 			}
 		}
-		if check1 {
-			tlevel1++
+		if check {
+			if g.tSpinLevel2(&cell) {
+				tlevel2++
+			} else {
+				tlevel1++
+			}
 		}
 	}
 
 	return tlevel1, tlevel2, tlevel3
+}
+
+func (g Grid) tSpinLevel2(c *Cell) bool {
+	if c.Y+1 < len(g)-1 &&
+		!g[c.Y+1][c.X] &&
+		!g[c.Y+1][c.X-1] &&
+		!g[c.Y+1][c.X+1] {
+		return true
+	}
+	return false
 }
 
 func (g Grid) isTshapeSpace(h *Cell) bool {
