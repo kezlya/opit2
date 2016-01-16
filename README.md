@@ -55,4 +55,4 @@ Current result is: 100	  13142213 ns/op  Must always be bellow 500ms
 
 
 ### TODOs
-##### force keep shape for T-sping
+##### force keep shape for T-sping (use points as shape build up)

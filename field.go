@@ -18,7 +18,7 @@ type Field struct {
 	Holes []*Cell
 }
 
-func (f Field) FindPositions(piece Piece) []*Piece {
+func (f *Field) FindPositions(piece Piece) []*Piece {
 	p := &piece
 	positions := make([]*Piece, 0)
 	drop := p.CurrentY - f.MaxPick - 2
@@ -50,7 +50,7 @@ func (f Field) FindPositions(piece Piece) []*Piece {
 	return positions
 }
 
-func (f Field) Search(stack *Stack, p *Piece, dir string) {
+func (f *Field) Search(stack *Stack, p *Piece, dir string) {
 	nMoves := p.Moves + "," + dir
 	var ex, np *Piece
 	switch dir {

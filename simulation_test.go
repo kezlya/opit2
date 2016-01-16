@@ -128,17 +128,33 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		g.initPieces()
 
 		// play round
-		position = g.calculateMoves()
-		g.MyPlayer.Points += position.getPoints()
-		if visual {
+		pos := g.calculateMoves()
+		if pos == nil || pos.Score == nil {
+			break
+		}
+		if pos.shouldSkip(g.MyPlayer.Skips) {
+			g.MyPlayer.Skips--
+			//if visual {
 			fmt.Println()
-			fmt.Println("===============================================================")
+			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
 			fmt.Println()
-			g.MyPlayer.Field.Grid.visual()
-			fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
-			fmt.Printf("%+v\n", position.Score)
-			position.FieldAfter.Grid.visual()
-			time.Sleep(1000000000)
+			//}
+		} else {
+			position = pos
+			g.MyPlayer.Points += position.getPoints()
+			if position.isDoubleTSpin() {
+				g.MyPlayer.Skips++
+			}
+			if visual {
+				fmt.Println()
+				fmt.Println("===============================================================")
+				fmt.Println()
+				g.MyPlayer.Field.Grid.visual()
+				fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
+				fmt.Printf("%+v\n", position.Score)
+				position.FieldAfter.Grid.visual()
+				time.Sleep(1000000000)
+			}
 		}
 
 		// check if the game is over

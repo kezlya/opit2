@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// Happy New 2016 Year
+
 // External API constants
 const I, J, L, O, S, T, Z = "I", "J", "L", "O", "S", "T", "Z"
 const settings, update, action = "settings", "update", "action"
@@ -16,6 +18,7 @@ const right = "right"
 const turnleft = "turnleft"
 const turnright = "turnright"
 const drop = "drop"
+const skip = "skip"
 
 var strategy = Strategy{
 	Burn:   1,
@@ -41,8 +44,12 @@ func main() {
 			//time, _ := strconv.Atoi(parts[2])
 			game.initPieces()
 			pos := game.calculateMoves()
-			if pos != nil && pos.Moves != "" {
-				fmt.Println(strings.TrimPrefix(pos.Moves, ",") + "," + drop)
+			if pos != nil && pos.Score != nil && pos.Moves != "" {
+				if pos.shouldSkip(game.MyPlayer.Skips) {
+					fmt.Println(skip)
+				} else {
+					fmt.Println(strings.TrimPrefix(pos.Moves, ",") + "," + drop)
+				}
 			} else {
 				fmt.Println(drop)
 			}

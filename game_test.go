@@ -6,8 +6,10 @@ import (
 	"testing"
 )
 
-func checkScores(t *testing.T, e, a Score) {
-	if e.BHoles != a.BHoles ||
+func checkScores(t *testing.T, e, a *Score) {
+	if e == nil ||
+		a == nil ||
+		e.BHoles != a.BHoles ||
 		e.Burn != a.Burn ||
 		e.CHoles != a.CHoles ||
 		e.FHoles != a.FHoles ||
@@ -100,7 +102,7 @@ func Test_calculateMoves(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 1,
 		FHoles: 1,
@@ -170,7 +172,7 @@ func Test_55d7935d35ec1d06d15c9d7e_31_T_Spin_Single(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: 1,
@@ -238,7 +240,7 @@ func Test_55edfd6135ec1d06d15dad14_42_T_Spin_Double(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   2,
 		BHoles: -1,
 		FHoles: -1,
@@ -306,7 +308,7 @@ func Test_55c29f6435ec1d070e2b66e9_40(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: 0,
@@ -375,7 +377,7 @@ func Test_55dc7ff01c687b0946a742f3_67(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: 0,
@@ -444,7 +446,7 @@ func Test_55dc5b501c687b0946a741a2_35(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: 0,
@@ -513,7 +515,7 @@ func Test_55ededec1c687b0946a7e6c6_08(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: 0,
@@ -581,7 +583,7 @@ func Test_560b136035ec1d3214e473b8_74(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   2,
 		BHoles: -1,
 		FHoles: 0,
@@ -649,7 +651,7 @@ func Test_563bfe8035ec1d521be3ee36_2(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: -1,
@@ -717,7 +719,7 @@ func Test_01(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	expectedScore := Score{
+	expectedScore := &Score{
 		Burn:   0,
 		BHoles: 0,
 		FHoles: 0,

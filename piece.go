@@ -12,7 +12,6 @@ type Piece struct {
 	CurrentX int
 	CurrentY int
 	Rotation int
-	Points   int
 
 	Tspin        bool
 	Tspin2       bool
@@ -20,7 +19,7 @@ type Piece struct {
 
 	Space      map[string]Cell
 	FieldAfter *Field
-	Score      Score
+	Score      *Score
 }
 
 type Score struct {
@@ -40,7 +39,12 @@ type Cell struct {
 }
 
 func InitPiece(name string, x, y int) Piece {
-	piece := Piece{Name: name, CurrentX: x, CurrentY: y}
+	piece := Piece{
+		Name:     name,
+		CurrentX: x,
+		CurrentY: y,
+		Score:    &Score{},
+	}
 	piece.Space = make(map[string]Cell, 4)
 	switch name {
 	case I:
@@ -90,7 +94,14 @@ func (p *Piece) Left() *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X - 1, Y: v.Y}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX - 1, CurrentY: p.CurrentY, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX - 1,
+		CurrentY: p.CurrentY,
+		Space:    res,
+		Score:    &Score{},
+	}
 	np.setKey()
 	return &np
 }
@@ -100,7 +111,14 @@ func (p *Piece) Right() *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X + 1, Y: v.Y}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX + 1, CurrentY: p.CurrentY, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX + 1,
+		CurrentY: p.CurrentY,
+		Space:    res,
+		Score:    &Score{},
+	}
 	np.setKey()
 	return &np
 }
@@ -110,7 +128,13 @@ func (p *Piece) Down() *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - 1}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - 1, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX,
+		CurrentY: p.CurrentY - 1,
+		Space:    res,
+		Score:    &Score{}}
 	np.setKey()
 	return &np
 }
@@ -120,7 +144,14 @@ func (p *Piece) Drop(n int) *Piece {
 	for i, v := range p.Space {
 		res[i] = Cell{X: v.X, Y: v.Y - n}
 	}
-	np := Piece{Name: p.Name, Rotation: p.Rotation, CurrentX: p.CurrentX, CurrentY: p.CurrentY - n, Space: res}
+	np := Piece{
+		Name:     p.Name,
+		Rotation: p.Rotation,
+		CurrentX: p.CurrentX,
+		CurrentY: p.CurrentY - n,
+		Space:    res,
+		Score:    &Score{},
+	}
 	np.setKey()
 	for i := 0; i < n; i++ {
 		np.Moves += ",down"
@@ -129,9 +160,12 @@ func (p *Piece) Drop(n int) *Piece {
 }
 
 func (p *Piece) Turnright() *Piece {
-	np := Piece{Name: p.Name}
+	np := Piece{
+		Name:     p.Name,
+		Score:    &Score{},
+		Rotation: p.Rotation + 1,
+	}
 
-	np.Rotation = p.Rotation + 1
 	if np.Rotation > 3 {
 		np.Rotation = 0
 	}
@@ -406,9 +440,12 @@ func (p *Piece) Turnright() *Piece {
 }
 
 func (p *Piece) Turnleft() *Piece {
-	np := Piece{Name: p.Name}
+	np := Piece{
+		Name:     p.Name,
+		Score:    &Score{},
+		Rotation: p.Rotation - 1,
+	}
 
-	np.Rotation = p.Rotation - 1
 	if np.Rotation < 0 {
 		np.Rotation = 3
 	}
@@ -711,24 +748,6 @@ func (p *Piece) setKey() {
 
 func (p *Piece) setHighY() {
 	p.Score.HighY = p.CurrentY
-	/*switch p.Name {
-	case I:
-		switch p.Rotation {
-		case 0, 2:
-			p.Score.HighY = p.CurrentY
-		case 1, 3:
-			p.Score.HighY = p.CurrentY + 3
-		}
-	case J, L, S, T, Z:
-		switch p.Rotation {
-		case 0, 2:
-			p.Score.HighY = p.CurrentY + 1
-		case 1, 3:
-			p.Score.HighY = p.CurrentY + 2
-		}
-	case O:
-		p.Score.HighY = p.CurrentY + 1
-	}*/
 }
 
 func (p *Piece) setStep() {
@@ -792,102 +811,44 @@ func (p *Piece) setCHoles() {
 			p.Score.CHoles += h.Y - lowEffectiveY
 		}
 	}
-
-	/*
-		for _, h := range effective {
-			stucking := 0
-			if h.X == ps[0] {
-				stucking++
-			}
-			if h.X == ps[1] {
-				stucking++
-			}
-			if h.X == ps[2] {
-				stucking++
-
-			}
-			if h.X == ps[3] {
-				stucking++
-			}
-
-			if stucking > 0 {
-				deep := h.Y - lowEffectiveY + 1
-
-				p.Score.CHoles += deep + stucking
-			}
-		}
-	*/
 }
 
 func (p *Piece) setTotalScore(st Strategy) {
-
 	p.Score.Burn = p.FieldAfter.Burned
-
-	kY := st.HighY
 	kS := st.Step
-	kC := st.CHoles
-	kB := st.Burn
-
-	kBH := st.BHoles
-	kFH := st.FHoles
-
 	if p.FieldAfter.Empty < 5 {
-		kS = kS + 1
+		kS = st.Step + 1
 	}
 
 	points := p.getPoints()
-	p.Score.Total = p.Score.BHoles*kBH +
-		p.Score.FHoles*kFH +
-		p.Score.HighY*kY +
+	p.Score.Total = p.Score.BHoles*st.BHoles +
+		p.Score.FHoles*st.FHoles +
+		p.Score.HighY*st.HighY +
 		p.Score.Step*kS +
 		p.Score.NScore +
-		p.Score.CHoles*kC -
-		p.Score.Burn*kB -
+		p.Score.CHoles*st.CHoles -
+		p.Score.Burn*st.Burn -
 		points*4
 
-	/*if p.Score.IsDSR && p.FieldAfter.Empty > 10 {
-		p.Score.Total = p.Score.Total - 50
-		//fmt.Println(p.Name, " is dsr")
+	if p.Score.Burn == 4 {
+		p.Score.Total = p.Score.Total - 60
 	}
-
-	if p.Score.BreakDSR && p.Name != T && p.FieldAfter.Empty > 10 {
-		p.Score.Total = p.Score.Total + 100
-		//fmt.Println(p.Name, " break :(")
-	}*/
 
 	if p.Tspin && p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - 10
 	}
 
-	if p.Tspin2 && p.FieldAfter.Empty > 4 {
-		p.Score.Total = p.Score.Total - 20
+	if p.Tspin2 && p.FieldAfter.Empty > 2 {
+		p.Score.Total = p.Score.Total - 60
 	}
-	/*
-		delta := p.FieldAfter.Picks().SumStep()
-		if delta > 17 {
-			p.Score.Total = p.Score.Total + 7
-		}
-	*/
+
 	if p.FieldAfter.Empty == 0 {
 		p.Score.Total = p.Score.Total + 100
-		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total = p.Score.Total + 5
-		//fmt.Println("YESYEYEWYSYEYEYSYEYSYYEYSYEYEYYSYSYEYSYSYYEYSYSYEYEY")
+		p.Score.Total = p.Score.Total + 10
 	}
-
-	/*
-			if p.FieldAfter.Empty > 10 && holes < 5 && p.Score.Burn == 1 {
-				p.Score.Total = p.Score.Total + 10
-				//fmt.Println("====")
-			}
-
-		if holes > 10 && p.Score.Burn > 0 {
-			p.Score.Total = p.Score.Total - 4
-		}
-	*/
 }
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
@@ -926,6 +887,13 @@ func (p *Piece) getPoints() int {
 		points = 18
 	}
 	return points
+}
+
+func (p *Piece) shouldSkip(skips int) bool {
+	if p.Score.Total > 20 && skips > 0 {
+		return true
+	}
+	return false
 }
 
 func (p *Piece) isSingleTSpin() bool {

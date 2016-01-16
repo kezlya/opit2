@@ -7,7 +7,6 @@ import (
 //http://golang.org/pkg/sort/#example_Interface
 
 var SCORE = func(c1, c2 *Piece) bool {
-
 	if c1.Score.Total != c2.Score.Total {
 		return c1.Score.Total < c2.Score.Total
 	}
