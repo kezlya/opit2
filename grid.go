@@ -154,6 +154,21 @@ func (g Grid) burn() int {
 	return burned
 }
 
+func (g Grid) tSpinLevels(max int) (int, int, int) {
+	var tlevel1, tlevel2, tlevel3 int
+
+	for i := 0; i < len(g); i++ {
+		tlevel1++
+		for _, col := range g[i] {
+			if col {
+				tlevel2++
+			}
+		}
+	}
+
+	return tlevel1, tlevel2, tlevel3
+}
+
 func (g Grid) isTshapeSpace(h *Cell) bool {
 	if h.X > 0 &&
 		h.X < len(g[0])-1 &&
