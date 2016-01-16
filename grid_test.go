@@ -243,7 +243,7 @@ func Test_isTshapeSpace(t *testing.T) {
 func Test_tSpinLevels(t *testing.T) {
 	//arrange
 	grid := Grid{
-		{false, true, true, false, true, true, true, false, false, false},
+		{true, true, true, false, true, true, true, true, true, true},
 		{false, false, false, false, false, false, true, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
@@ -255,7 +255,7 @@ func Test_tSpinLevels(t *testing.T) {
 	level1, level2, level3 := grid.tSpinLevels(field.MaxPick)
 
 	//assert
-	if level1 != 0 {
+	if level1 != 1 {
 		t.Fail()
 		fmt.Println("Level1 tSpace faild", level1)
 		grid.visual()

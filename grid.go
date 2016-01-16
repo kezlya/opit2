@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"log"
 	"strings"
 )
@@ -156,13 +156,25 @@ func (g Grid) burn() int {
 
 func (g Grid) tSpinLevels(max int) (int, int, int) {
 	var tlevel1, tlevel2, tlevel3 int
-
-	for i := 0; i < len(g); i++ {
-		tlevel1++
+	var check1 bool //, check2, check3 bool
+	fmt.Println(max)
+	for i := 0; i < max; i++ {
+		fmt.Println(g[i])
+		check1 = false
+		//check2 = false
+		//check3 = false
 		for _, col := range g[i] {
-			if col {
-				tlevel2++
+			if !col {
+				if check1 {
+					check1 = false
+					break
+				} else {
+					check1 = true
+				}
 			}
+		}
+		if check1 {
+			tlevel1++
 		}
 	}
 
