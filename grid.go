@@ -156,25 +156,11 @@ func (g Grid) burn() int {
 
 func (g Grid) tSpinLevels(max int) (int, int, int) {
 	var tlevel1, tlevel2, tlevel3 int
-	var check bool
-	var cell Cell
 	maxW := len(g[0]) - 1
 	fmt.Println(max)
-	for i := 0; i < max; i++ {
-		fmt.Println(g[i])
-		check = false
-		//TODO isilate this loop into separate function
-		for col := 1; col < maxW; col++ {
-			if !g[i][col] {
-				if check {
-					check = false
-					break
-				} else {
-					check = true
-					cell = Cell{X: col, Y: i}
-				}
-			}
-		}
+	for row := 0; row < max; row++ {
+		fmt.Println(g[row])
+		check, cell := g.isHoleInTheRow(row, maxW)
 		if check {
 			if g.tSpinLevel2(&cell) {
 				if g.tSpinLevel3(&cell) {
@@ -189,6 +175,23 @@ func (g Grid) tSpinLevels(max int) (int, int, int) {
 	}
 
 	return tlevel1, tlevel2, tlevel3
+}
+
+func (g Grid) isHoleInTheRow(row, maxW int) (bool, Cell) {
+	var isHole bool
+	var cell Cell
+	for col := 1; col < maxW; col++ {
+		if !g[row][col] {
+			if isHole {
+				isHole = false
+				break
+			} else {
+				isHole = true
+				cell = Cell{X: col, Y: row}
+			}
+		}
+	}
+	return isHole, cell
 }
 
 func (g Grid) tSpinLevel2(c *Cell) bool {
