@@ -157,14 +157,15 @@ func (g Grid) burn() int {
 func (g Grid) tSpinLevels(max int) (int, int, int) {
 	var tlevel1, tlevel2, tlevel3 int
 	var check1 bool //, check2, check3 bool
+	maxW := len(g[0]) - 1
 	fmt.Println(max)
 	for i := 0; i < max; i++ {
 		fmt.Println(g[i])
 		check1 = false
 		//check2 = false
 		//check3 = false
-		for _, col := range g[i] {
-			if !col {
+		for col := 1; col < maxW; col++ {
+			if !g[i][col] {
 				if check1 {
 					check1 = false
 					break
