@@ -134,11 +134,11 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 		}
 		if pos.shouldSkip(g.MyPlayer.Skips) {
 			g.MyPlayer.Skips--
-			if visual {
-				fmt.Println()
-				fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
-				fmt.Println()
-			}
+			//if visual {
+			fmt.Println()
+			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
+			fmt.Println()
+			//}
 		} else {
 			position = pos
 			g.MyPlayer.Points += position.getPoints()
