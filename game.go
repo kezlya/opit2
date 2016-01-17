@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"strconv"
 	"strings"
 )
@@ -135,9 +135,7 @@ func (g *Game) calculateMoves() *Piece {
 	mf := &g.MyPlayer.Field
 	revertOriginal := false
 	if g.CurrentPieceName != T && g.NextPieceName != T {
-		mf.HideTspace()
 		revertOriginal = true
-		fmt.Print("start hiding")
 	}
 
 	positions := mf.FindPositions(g.CurrentPiece)

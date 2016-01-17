@@ -218,28 +218,6 @@ func Test_Burn(t *testing.T) {
 	}
 }
 
-func Test_isTshapeSpace(t *testing.T) {
-	//arrange
-	hole := &Cell{X: 3, Y: 0}
-	grid := Grid{
-		{false, true, true, false, true, true, true, false, false, false},
-		{false, false, false, false, false, false, true, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	}
-
-	//act
-	result := grid.isTshapeSpace(hole)
-
-	//assert
-	if !result {
-		t.Fail()
-		fmt.Println("Tshap not found")
-		grid.visual()
-	}
-}
-
 func Test_tSpinLevels(t *testing.T) {
 	//arrange
 	grid := Grid{
@@ -250,15 +228,15 @@ func Test_tSpinLevels(t *testing.T) {
 		{true, true, false, true, true, true, false, false, false, true},
 		{true, true, true, true, true, true, true, false, true, true},
 		{true, true, true, true, true, true, false, false, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, false, false, false, true},
 		{false, false, false, false, false, false, true, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
 	field := grid.ToField()
 
 	//act
-	level1, level2, level3 := grid.tSpinLevels(field.MaxPick)
+	level1, level2, level3, level4 := grid.tSpinLevels(field.MaxPick)
 
 	//assert
 	if level1 != 1 {
@@ -274,6 +252,11 @@ func Test_tSpinLevels(t *testing.T) {
 	if level3 != 1 {
 		t.Fail()
 		fmt.Println("Level3 tSpace faild", level3)
+		grid.visual()
+	}
+	if level4 != 1 {
+		t.Fail()
+		fmt.Println("Level4 tSpace faild", level4)
 		grid.visual()
 	}
 }

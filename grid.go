@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"log"
 	"strings"
 )
@@ -154,17 +154,19 @@ func (g Grid) burn() int {
 	return burned
 }
 
-func (g Grid) tSpinLevels(max int) (int, int, int) {
-	var tlevel1, tlevel2, tlevel3 int
+func (g Grid) tSpinLevels(max int) (int, int, int, int) {
+	var tlevel1, tlevel2, tlevel3, tlevel4 int
 	maxW := len(g[0]) - 1
-	fmt.Println(max)
 	for row := 0; row < max; row++ {
-		fmt.Println(g[row])
 		check, cell := g.isHoleInTheRow(row, maxW)
 		if check {
 			if g.tSpinLevel2(&cell) {
 				if g.tSpinLevel3(&cell) {
-					tlevel3++
+					if g.tSpinLevel4(&cell) {
+						tlevel4++
+					} else {
+						tlevel3++
+					}
 				} else {
 					tlevel2++
 				}
@@ -174,7 +176,7 @@ func (g Grid) tSpinLevels(max int) (int, int, int) {
 		}
 	}
 
-	return tlevel1, tlevel2, tlevel3
+	return tlevel1, tlevel2, tlevel3, tlevel4
 }
 
 func (g Grid) isHoleInTheRow(row, maxW int) (bool, Cell) {
@@ -214,15 +216,11 @@ func (g Grid) tSpinLevel3(c *Cell) bool {
 	return check
 }
 
-func (g Grid) isTshapeSpace(h *Cell) bool {
-	if h.X > 0 &&
-		h.X < len(g[0])-1 &&
-		h.Y < len(g)-2 &&
-		!g[h.Y][h.X] &&
-		!g[h.Y+1][h.X-1] &&
-		!g[h.Y+1][h.X] &&
-		!g[h.Y+1][h.X+1] {
-		return true
+func (g Grid) tSpinLevel4(c *Cell) bool {
+	var check bool
+	if (!g[c.Y+2][c.X-1] && !g[c.Y+2][c.X] && g[c.Y+2][c.X+1]) ||
+		(g[c.Y+2][c.X-1] && !g[c.Y+2][c.X] && !g[c.Y+2][c.X+1]) {
+		check = true
 	}
-	return false
+	return check
 }

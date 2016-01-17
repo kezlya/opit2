@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+//"fmt"
 )
 
 type Field struct {
@@ -108,55 +108,4 @@ func (f *Field) Search(stack *Stack, p *Piece, dir string) {
 	}
 	np.Moves = nMoves
 	stack.Push(np)
-}
-
-func (f Field) HideTspace() {
-	for y, row := range f.Grid {
-		x := -1
-		isOneHole := false
-		for i, col := range row {
-			if !col {
-				if x < 0 {
-					x = i
-					isOneHole = true
-				} else {
-					isOneHole = false
-				}
-			}
-		}
-		if isOneHole && f.Grid.isTshapeSpace(&Cell{X: x, Y: y}) {
-			valid := true
-			left := x - 2
-			for left >= 0 {
-				if !f.Grid[y+1][left] {
-					valid = false
-				}
-				left--
-			}
-			right := x + 2
-			for right < f.Width {
-				if !f.Grid[y+1][right] {
-					valid = false
-				}
-				right++
-			}
-
-			//cut the field
-			if valid {
-				fmt.Println("hide field")
-				ng := f.Grid[y+2:]
-				nf := ng.ToField()
-				f = nf
-			}
-			/*
-				if valid {
-					if f.Grid[y+2][x-1] && !f[y+2][x] && !f[y+2][x+1] {
-						return x
-					}
-					if !f[y+2][x-1] && !f[y+2][x] && f[y+2][x+1] {
-						return x - 1
-					}
-				}*/
-		}
-	}
 }
