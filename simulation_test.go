@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"encoding/csv"
 	"fmt"
 	"github.com/agonopol/gosplat"
 	"github.com/skratchdot/open-golang/open"
@@ -259,23 +258,6 @@ func addGarbageLines(g *Game, p *Piece, garbage *[60]int) bool {
 	return false
 }
 
-/*
-func save(fileName string, record []string) {
-	csvfile, err := os.OpenFile("output/"+fileName+".csv", os.O_APPEND|os.O_WRONLY, 0777)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	defer csvfile.Close()
-	writer := csv.NewWriter(csvfile)
-	err = writer.Write(record)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	writer.Flush()
-}
-
 func statistic(a []int) (int, int, int) {
 	if len(a) < 4 {
 		return a[0], a[0], a[0]
@@ -288,7 +270,7 @@ func statistic(a []int) (int, int, int) {
 	avr := total/len(a) - 2
 	return avr, a[1], a[len(a)-2]
 }
-*/
+
 func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	cScores := gosplat.NewChart()
 	cRounds := gosplat.NewChart()
