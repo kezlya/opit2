@@ -821,6 +821,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 
 	points := p.getPoints()
+	level1, level2, level3, level4 := p.FieldAfter.Grid.tSpinLevels(p.FieldAfter.MaxPick)
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
@@ -828,10 +829,15 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
 		p.Score.Burn*st.Burn -
+		level1*st.Tspin -
+		level2*st.Tspin*2 -
+		level3*st.Tspin*3 -
+		level4*st.Tspin*4 -
+
 		points*4
 
 	if p.Score.Burn == 4 {
-		p.Score.Total = p.Score.Total - 60
+		p.Score.Total = p.Score.Total - 100
 	}
 
 	if p.Tspin && p.FieldAfter.Empty > 4 {
@@ -839,7 +845,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 
 	if p.Tspin2 && p.FieldAfter.Empty > 2 {
-		p.Score.Total = p.Score.Total - 60
+		p.Score.Total = p.Score.Total - 100
 	}
 
 	if p.FieldAfter.Empty == 0 {
