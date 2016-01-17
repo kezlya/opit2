@@ -833,7 +833,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 		level2*st.Tspin*2 -
 		level3*st.Tspin*3 -
 		level4*st.Tspin*4 -
-
 		points*4
 
 	if p.Score.Burn == 4 {

@@ -134,11 +134,6 @@ func (g *Game) initPieces() {
 
 func (g *Game) calculateMoves() *Piece {
 	mf := &g.MyPlayer.Field
-	revertOriginal := false
-	if g.CurrentPieceName != T && g.NextPieceName != T {
-		revertOriginal = true
-	}
-
 	positions := mf.FindPositions(g.CurrentPiece)
 	buff := len(positions)
 	chScores := make(chan NextScore, buff)
@@ -152,13 +147,7 @@ func (g *Game) calculateMoves() *Piece {
 		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH, ns.score)
 	}
 
-	bestP := getBest(positions)
-	if revertOriginal {
-		ng := g.MyPlayer.Field.Grid.ApplyPiece(bestP.Space)
-		nf := ng.ToField()
-		bestP.FieldAfter = &nf
-	}
-	return bestP
+	return getBest(positions)
 }
 
 func (g *Game) nextPieceScore(chScores chan NextScore, pf *Field, key int) {
