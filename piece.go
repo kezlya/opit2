@@ -31,6 +31,10 @@ type Score struct {
 	HighY  int
 	Total  int
 	NScore int
+	l1     int
+	l2     int
+	l3     int
+	l4     int
 }
 
 type Cell struct {
@@ -821,7 +825,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 
 	points := p.getPoints()
-	level1, level2, level3, level4 := p.FieldAfter.Grid.tSpinLevels(p.FieldAfter.MaxPick)
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
@@ -829,11 +832,15 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
 		p.Score.Burn*st.Burn -
-		level1*st.Tspin -
-		level2*st.Tspin*2 -
-		level3*st.Tspin*3 -
-		level4*st.Tspin*4 -
 		points*4
+
+	if p.FieldAfter.Empty > 4 {
+		p.Score.Total = p.Score.Total -
+			p.Score.l1*st.Tspin -
+			p.Score.l2*st.Tspin*2 -
+			p.Score.l3*st.Tspin*3 -
+			p.Score.l4*st.Tspin*4
+	}
 
 	if p.Score.Burn == 4 {
 		p.Score.Total = p.Score.Total - 100
