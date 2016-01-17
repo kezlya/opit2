@@ -217,3 +217,46 @@ func Test_Burn(t *testing.T) {
 		expectedGrid.visual()
 	}
 }
+
+func Test_tSpinLevels(t *testing.T) {
+	//arrange
+	grid := Grid{
+		{false, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, false, true, true, true, false, false, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, false, false, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, false, false, false, true},
+		{false, false, false, false, false, false, true, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	field := grid.ToField()
+
+	//act
+	level1, level2, level3, level4 := grid.tSpinLevels(field.MaxPick)
+
+	//assert
+	if level1 != 1 {
+		t.Fail()
+		fmt.Println("Level1 tSpace faild", level1)
+		grid.visual()
+	}
+	if level2 != 1 {
+		t.Fail()
+		fmt.Println("Level2 tSpace faild", level2)
+		grid.visual()
+	}
+	if level3 != 1 {
+		t.Fail()
+		fmt.Println("Level3 tSpace faild", level3)
+		grid.visual()
+	}
+	if level4 != 1 {
+		t.Fail()
+		fmt.Println("Level4 tSpace faild", level4)
+		grid.visual()
+	}
+}

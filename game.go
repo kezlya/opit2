@@ -46,6 +46,7 @@ type Strategy struct {
 	FHoles int
 	CHoles int
 	HighY  int
+	Tspin  int
 }
 
 func (g *Game) asignSettings(action, value string) {

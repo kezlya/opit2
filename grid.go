@@ -153,3 +153,74 @@ func (g Grid) burn() int {
 	}
 	return burned
 }
+
+func (g Grid) tSpinLevels(max int) (int, int, int, int) {
+	var tlevel1, tlevel2, tlevel3, tlevel4 int
+	maxW := len(g[0]) - 1
+	for row := 0; row < max; row++ {
+		check, cell := g.isHoleInTheRow(row, maxW)
+		if check {
+			if g.tSpinLevel2(&cell) {
+				if g.tSpinLevel3(&cell) {
+					if g.tSpinLevel4(&cell) {
+						tlevel4++
+					} else {
+						tlevel3++
+					}
+				} else {
+					tlevel2++
+				}
+			} else {
+				tlevel1++
+			}
+		}
+	}
+
+	return tlevel1, tlevel2, tlevel3, tlevel4
+}
+
+func (g Grid) isHoleInTheRow(row, maxW int) (bool, Cell) {
+	var isHole bool
+	var cell Cell
+	for col := 1; col < maxW; col++ {
+		if !g[row][col] {
+			if isHole {
+				isHole = false
+				break
+			} else {
+				isHole = true
+				cell = Cell{X: col, Y: row}
+			}
+		}
+	}
+	return isHole, cell
+}
+
+func (g Grid) tSpinLevel2(c *Cell) bool {
+	if c.Y+1 < len(g)-1 &&
+		!g[c.Y+1][c.X] &&
+		!g[c.Y+1][c.X-1] &&
+		!g[c.Y+1][c.X+1] {
+		return true
+	}
+	return false
+}
+
+func (g Grid) tSpinLevel3(c *Cell) bool {
+	check := true
+	for i, col := range g[c.Y+1] {
+		if !col && (i < c.X-1 || i > c.X+1) {
+			check = false
+		}
+	}
+	return check
+}
+
+func (g Grid) tSpinLevel4(c *Cell) bool {
+	var check bool
+	if (!g[c.Y+2][c.X-1] && !g[c.Y+2][c.X] && g[c.Y+2][c.X+1]) ||
+		(g[c.Y+2][c.X-1] && !g[c.Y+2][c.X] && !g[c.Y+2][c.X+1]) {
+		check = true
+	}
+	return check
+}
