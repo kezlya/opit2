@@ -833,33 +833,41 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.CHoles*st.CHoles -
 		p.Score.Burn*st.Burn -
 		points*4
-
+	//fmt.Println(p.Score.Total)
 	if p.FieldAfter.Empty > 4 {
-		p.Score.Total = p.Score.Total -
-			p.Score.l1*st.Tspin -
-			p.Score.l2*st.Tspin*2 -
-			p.Score.l3*st.Tspin*3 -
-			p.Score.l4*st.Tspin*4
+		if p.Score.l1 > 0 {
+			p.Score.Total -= p.Score.l1 * 10
+		}
+		if p.Score.l2 > 0 {
+			p.Score.Total -= p.Score.l2 * 30
+		}
+		if p.Score.l3 > 0 {
+			p.Score.Total -= p.Score.l3 * 50
+		}
+		if p.Score.l4 > 0 {
+			p.Score.Total -= p.Score.l4 * 70
+		}
+		//fmt.Println(p.Score.l1, p.Score.l2, p.Score.l3, p.Score.l4, p.Score.Total)
 	}
 
 	if p.Score.Burn == 4 {
-		p.Score.Total = p.Score.Total - 100
+		p.Score.Total = p.Score.Total - 200
 	}
 
-	if p.Tspin && p.FieldAfter.Empty > 4 {
-		p.Score.Total = p.Score.Total - 10
+	if p.Tspin {
+		p.Score.Total -= 50
 	}
 
-	if p.Tspin2 && p.FieldAfter.Empty > 2 {
-		p.Score.Total = p.Score.Total - 100
+	if p.Tspin2 {
+		p.Score.Total -= 200
 	}
 
 	if p.FieldAfter.Empty == 0 {
-		p.Score.Total = p.Score.Total + 100
+		p.Score.Total += 100
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total = p.Score.Total + 10
+		p.Score.Total += 10
 	}
 }
 
