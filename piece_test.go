@@ -504,35 +504,84 @@ func Test_isPerfectClear(t *testing.T) {
 	}
 }
 
-/*
 func Test_isSingleTSpin(t *testing.T) {
-	badField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, true, false, false, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
-	goodField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, false, true, true, true, false, false, false, true, true}, {false, false, true, true, true, true, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
+	//arrange
+	badGrid := Grid{
+		{true, true, true, false, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, false, true, true, true, false, false, false, true, true},
+		{false, false, true, true, false, false, false, false, true, false},
+		{false, false, false, true, false, false, false, false, false, false},
+		{false, false, false, true, true, true, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	goodGrid := Grid{
+		{true, true, true, false, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, false, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, false, true, true, true, false, false, false, true, true},
+		{false, false, true, true, true, true, false, false, true, false},
+		{false, false, false, true, false, false, false, false, false, false},
+		{false, false, false, true, true, true, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	p := Piece{
+		Name:     T,
+		Space:    T2,
+		Rotation: 2,
+	}
+	p.Space["m1"] = Cell{X: 5, Y: 7}
+	p.Space["m2"] = Cell{X: 6, Y: 7}
+	p.Space["b2"] = Cell{X: 6, Y: 6}
+	p.Space["m3"] = Cell{X: 7, Y: 7}
+	badField := badGrid.ApplyPiece(p.Space).ToField()
+	goodField := goodGrid.ApplyPiece(p.Space).ToField()
 
-	piece1 := Piece{Name: T, Score: Score{Burn: 1}, Space: T2, Rotation: 2, IsHole: true}
-	piece1.Space["m1"] = Cell{X: 5, Y: 7}
-	piece1.Space["m2"] = Cell{X: 6, Y: 7}
-	piece1.Space["b2"] = Cell{X: 6, Y: 6}
-	piece1.Space["m3"] = Cell{X: 7, Y: 7}
-	piece1.FieldAfter = badField.AfterHole(piece1.Space)
-	piece1.FieldAfter.Burn()
+	//act
+	p.FieldAfter = &badField
+	badSpin := p.isSingleTSpin()
+	p.FieldAfter = &goodField
+	goodSpin := p.isSingleTSpin()
 
-	if piece1.isSingleTSpin() {
+	//assert
+	if badSpin {
 		t.Fail()
-		PrintVisuals(badField, piece1.FieldAfter)
+		badField.Grid.visual()
 		fmt.Println("should not be single T spin")
 	}
-
-	piece1.FieldAfter = goodField.AfterHole(piece1.Space)
-	piece1.FieldAfter.Burn()
-
-	if !piece1.isSingleTSpin() {
+	if !goodSpin {
 		t.Fail()
-		PrintVisuals(goodField, piece1.FieldAfter)
+		goodField.Grid.visual()
 		fmt.Println("should be single T spin")
 	}
 }
 
+/*
 func Test_isDoubleTSpin(t *testing.T) {
 	badField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, false, false, false, true, true}, {false, false, true, true, true, false, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}
 	goodField := Field{{true, true, true, false, true, true, true, true, true, true}, {true, true, true, true, false, true, true, true, true, true}, {true, true, true, true, true, true, true, true, false, true}, {true, true, true, true, true, true, true, false, true, true}, {true, true, true, true, true, true, true, true, true, false}, {true, false, true, true, true, true, true, true, true, true}, {true, true, true, true, true, true, false, true, true, true}, {true, true, true, true, true, false, false, false, true, true}, {false, false, true, true, true, true, false, false, true, false}, {false, false, false, true, false, false, false, false, false, false}, {false, false, false, true, true, true, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}, {false, false, false, false, false, false, false, false, false, false}}

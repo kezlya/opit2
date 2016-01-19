@@ -917,19 +917,14 @@ func (p *Piece) shouldSkip(skips int) bool {
 }
 
 func (p *Piece) isSingleTSpin() bool {
-	if p.Name != T {
+	if p.Name != T ||
+		p.Rotation != 2 ||
+		p.FieldAfter.Burned != 1 ||
+		p.Space["m1"].Y-1 < 0 {
 		return false
 	}
-	if p.Rotation != 2 {
-		return false
-	}
-	if p.FieldAfter.Burned != 1 {
-		return false
-	}
-	if p.Space["m1"].Y-1 < 0 {
-		return false
-	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y][p.Space["m1"].X] || p.FieldAfter.Grid[p.Space["m3"].Y][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.Space["m1"].Y][p.Space["m1"].X] ||
+		p.FieldAfter.Grid[p.Space["m3"].Y][p.Space["m3"].X] {
 		return true
 	}
 	return false
@@ -948,7 +943,8 @@ func (p *Piece) isDoubleTSpin() bool {
 	if p.Space["m1"].Y-2 < 0 {
 		return false
 	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] || p.FieldAfter.Grid[p.Space["m3"].Y-1][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] ||
+		p.FieldAfter.Grid[p.Space["m3"].Y-1][p.Space["m3"].X] {
 		return true
 	}
 	return false
