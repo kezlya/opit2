@@ -53,7 +53,8 @@ func Benchmark_one(b *testing.B) {
 		buff := 1
 		ch_round := make(chan int, buff)
 		ch_score := make(chan int, buff)
-		go playGame(ch_round, ch_score, &Game{Strategy: strategy}, &g10, &gr7, true)
+		g := Game{Strategy: strategy}
+		go playGame(ch_round, ch_score, &g, &g10, &gr7, true)
 		scores := make([]int, buff)
 		rounds := make([]int, buff)
 		for k := 0; k < buff; k++ {
@@ -75,7 +76,7 @@ func Benchmark_many(banch *testing.B) {
 		fmt.Println(strategyName)
 
 		scores, rounds := playGames(strategy)
-		Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
+		Linechart(scores, rounds, strategyName)
 		fmt.Println("done")
 	}
 }
@@ -88,14 +89,21 @@ func Benchmark_strategy(banch *testing.B) {
 					for ch := 1; ch <= 3; ch++ {
 						for hy := 1; hy <= 3; hy++ {
 							for s := 1; s <= 3; s++ {
-								st := Strategy{Burn: b, BHoles: bh, FHoles: fh, CHoles: ch, HighY: hy, Step: s}
+								st := Strategy{
+									Burn:   b,
+									BHoles: bh,
+									FHoles: fh,
+									CHoles: ch,
+									HighY:  hy,
+									Step:   s,
+								}
 								fmt.Println()
 								fmt.Println("================================")
 								strategyName := st.name()
 								fmt.Println(strategyName)
 								scores, rounds := playGames(st)
-								if CheckIfStrategyIsBetter(&oldScores, scores, &oldRounds, rounds) {
-									Linechart(&oldScores, scores, &oldRounds, rounds, strategyName)
+								if CheckIfStrategyIsBetter(scores, rounds) {
+									Linechart(scores, rounds, strategyName)
 								} else {
 									fmt.Println("Bad")
 								}
@@ -108,7 +116,7 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
+func playGame(ch_round, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.asignSettings("field_width", "10")
@@ -135,7 +143,7 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			g.MyPlayer.Skips--
 			//if visual {
 			fmt.Println()
-			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
+			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
 			fmt.Println()
 			//}
 		} else {
@@ -146,10 +154,13 @@ func playGame(ch_round chan int, ch_score chan int, g *Game, input *[400]string,
 			}
 			if visual {
 				fmt.Println()
-				fmt.Println("===============================================================")
+				fmt.Println("===============================================")
 				fmt.Println()
 				g.MyPlayer.Field.Grid.visual()
-				fmt.Println(g.CurrentPiece.Name, "sore:", g.MyPlayer.Points, "round:", g.Round, "combo:", g.MyPlayer.Combo)
+				fmt.Println(g.CurrentPiece.Name,
+					"sore:", g.MyPlayer.Points,
+					"round:", g.Round,
+					"combo:", g.MyPlayer.Combo)
 				fmt.Printf("%+v\n", position.Score)
 				position.FieldAfter.Grid.visual()
 				time.Sleep(1000000000)
@@ -271,12 +282,20 @@ func statistic(a []int) (int, int, int) {
 	return avr, a[1], a[len(a)-2]
 }
 
-func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
+func Linechart(new_scores, new_rounds *[]int, strategy string) {
 	cScores := gosplat.NewChart()
 	cRounds := gosplat.NewChart()
 	for i := 0; i < len(*new_scores); i++ {
-		cScores.Append(map[string]interface{}{"game": i, "old": (*scores)[i], "new": (*new_scores)[i]})
-		cRounds.Append(map[string]interface{}{"game": i, "old": (*rounds)[i], "new": (*new_rounds)[i]})
+		cScores.Append(map[string]interface{}{
+			"game": i,
+			"old":  (oldScores)[i],
+			"new":  (*new_scores)[i],
+		})
+		cRounds.Append(map[string]interface{}{
+			"game": i,
+			"old":  (oldRounds)[i],
+			"new":  (*new_rounds)[i],
+		})
 	}
 
 	f := gosplat.NewFrame(strategy)
@@ -313,15 +332,15 @@ func Linechart(scores, new_scores, rounds, new_rounds *[]int, strategy string) {
 	fmt.Println(name)
 }
 
-func CheckIfStrategyIsBetter(scores, new_scores, rounds, new_rounds *[]int) bool {
+func CheckIfStrategyIsBetter(new_scores, new_rounds *[]int) bool {
 	counterS := 0
 	counterR := 0
 	half := len(*new_scores) / 2
 	for i := 0; i < len(*new_scores); i++ {
-		if (*scores)[i]-(*new_scores)[i] <= 0 {
+		if (oldScores)[i]-(*new_scores)[i] <= 0 {
 			counterS++
 		}
-		if (*rounds)[i]-(*new_rounds)[i] <= 0 {
+		if (oldRounds)[i]-(*new_rounds)[i] <= 0 {
 			counterR++
 		}
 	}
