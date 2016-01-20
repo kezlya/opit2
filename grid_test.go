@@ -233,13 +233,33 @@ func Test_tSpinLevels(t *testing.T) {
 		{false, false, false, false, false, false, true, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
+	grid2 := Grid{
+		{false, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, false},
+		{true, false, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, false, true, true},
+		{true, true, false, true, true, false, false, false, true, true},
+		{true, true, true, true, true, true, true, false, false, true},
+		{true, true, true, true, true, true, false, false, false, true},
+		{true, true, true, true, true, true, false, false, true, true},
+		{true, true, true, true, true, true, false, false, false, true},
+		{false, false, false, false, false, false, true, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
 	field := grid.ToField()
+	field2 := grid2.ToField()
 
 	//act
 	level1, level2, level3, level4 := grid.tSpinLevels(field.MaxPick)
+	level1_good, _, _, _ := grid2.tSpinLevels(field2.MaxPick)
 
 	//assert
-	if level1 != 1 {
+	if level1_good != 1 {
+		t.Fail()
+		fmt.Println("Level1_good tSpace faild", level1_good)
+		grid2.visual()
+	}
+	if level1 != 0 {
 		t.Fail()
 		fmt.Println("Level1 tSpace faild", level1)
 		grid.visual()
