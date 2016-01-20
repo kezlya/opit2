@@ -931,16 +931,10 @@ func (p *Piece) isSingleTSpin() bool {
 }
 
 func (p *Piece) isDoubleTSpin() bool {
-	if p.Name != T {
-		return false
-	}
-	if p.Rotation != 2 {
-		return false
-	}
-	if p.FieldAfter.Burned != 2 {
-		return false
-	}
-	if p.Space["m1"].Y-2 < 0 {
+	if p.Name != T ||
+		p.Rotation != 2 ||
+		p.FieldAfter.Burned != 2 ||
+		p.Space["m1"].Y-2 < 0 {
 		return false
 	}
 	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] ||
