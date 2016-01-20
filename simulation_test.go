@@ -53,13 +53,16 @@ func Benchmark_one(b *testing.B) {
 		buff := 1
 		ch_round := make(chan int, buff)
 		ch_score := make(chan int, buff)
+		ch_skip := make(chan int, buff)
 		g := Game{Strategy: strategy}
-		go playGame(ch_round, ch_score, &g, &g10, &gr7, true)
+		go playGame(ch_round, ch_score, ch_skip, &g, &g10, &gr7, true)
 		scores := make([]int, buff)
 		rounds := make([]int, buff)
+		skips := make([]int, buff)
 		for k := 0; k < buff; k++ {
 			scores[k] = <-ch_score
 			rounds[k] = <-ch_round
+			skips[k] = <-ch_skip
 		}
 
 		fmt.Println("scores:", scores)
@@ -75,8 +78,8 @@ func Benchmark_many(banch *testing.B) {
 		fmt.Println("================================")
 		fmt.Println(strategyName)
 
-		scores, rounds := playGames(strategy)
-		Linechart(scores, rounds, strategyName)
+		scores, rounds, skips := playGames(strategy)
+		Linechart(scores, rounds, skips, strategyName)
 		fmt.Println("done")
 	}
 }
@@ -101,9 +104,9 @@ func Benchmark_strategy(banch *testing.B) {
 								fmt.Println("================================")
 								strategyName := st.name()
 								fmt.Println(strategyName)
-								scores, rounds := playGames(st)
+								scores, rounds, skips := playGames(st)
 								if CheckIfStrategyIsBetter(scores, rounds) {
-									Linechart(scores, rounds, strategyName)
+									Linechart(scores, rounds, skips, strategyName)
 								} else {
 									fmt.Println("Bad")
 								}
@@ -116,7 +119,7 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 }
 
-func playGame(ch_round, ch_score chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
+func playGame(ch_round, ch_score, ch_skip chan int, g *Game, input *[400]string, garbage *[60]int, visual bool) {
 	g.asignSettings("player_names", "player1,player2")
 	g.asignSettings("your_bot", "player1")
 	g.asignSettings("field_width", "10")
@@ -124,6 +127,7 @@ func playGame(ch_round, ch_score chan int, g *Game, input *[400]string, garbage 
 	field := EmptyGrig10x20.ToField()
 	position := &Piece{FieldAfter: &field}
 	round := 1
+	var skips int
 	keepGoing := true
 	for keepGoing {
 		// setup new round
@@ -141,16 +145,18 @@ func playGame(ch_round, ch_score chan int, g *Game, input *[400]string, garbage 
 		}
 		if pos.shouldSkip(g.MyPlayer.Skips) {
 			g.MyPlayer.Skips--
-			//if visual {
-			fmt.Println()
-			fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
-			fmt.Println()
-			//}
+			if visual {
+				fmt.Println()
+				fmt.Println("SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP=SKIP")
+				fmt.Println()
+			}
 		} else {
 			position = pos
 			g.MyPlayer.Points += position.getPoints()
-			if position.isDoubleTSpin() {
+			if position.isDoubleTSpin() { //||
+				//position.FieldAfter.Burned == 4 {
 				g.MyPlayer.Skips++
+				skips++
 			}
 			if visual {
 				fmt.Println()
@@ -188,51 +194,57 @@ func playGame(ch_round, ch_score chan int, g *Game, input *[400]string, garbage 
 	}
 	ch_round <- g.Round
 	ch_score <- g.MyPlayer.Points
+	ch_skip <- skips
 }
 
-func playGames(st Strategy) (*[]int, *[]int) {
+func playGames(st Strategy) (*[]int, *[]int, *[]int) {
 	buff := 26
 	ch_round := make(chan int, buff)
 	ch_score := make(chan int, buff)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g1, &gr1, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g2, &gr2, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g3, &gr3, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g4, &gr4, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g5, &gr5, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g6, &gr6, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g7, &gr7, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g8, &gr8, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g9, &gr9, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g10, &gr10, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g11, &gr11, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g12, &gr12, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g13, &gr13, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g14, &gr14, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g15, &gr15, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g16, &gr16, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g17, &gr17, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g18, &gr18, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g19, &gr19, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g20, &gr20, false)
+	ch_skip := make(chan int, buff)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g1, &gr1, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g2, &gr2, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g3, &gr3, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g4, &gr4, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g5, &gr5, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g6, &gr6, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g7, &gr7, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g8, &gr8, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g9, &gr9, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g10, &gr10, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g11, &gr11, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g12, &gr12, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g13, &gr13, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g14, &gr14, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g15, &gr15, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g16, &gr16, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g17, &gr17, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g18, &gr18, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g19, &gr19, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g20, &gr20, false)
 
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g21, &gr21, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g22, &gr22, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g23, &gr23, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g24, &gr24, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g25, &gr25, false)
-	go playGame(ch_round, ch_score, &Game{Strategy: st}, &g26, &gr26, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g21, &gr21, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g22, &gr22, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g23, &gr23, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g24, &gr24, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g25, &gr25, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g26, &gr26, false)
 
 	scores := make([]int, buff)
 	rounds := make([]int, buff)
+	skips := make([]int, buff)
 	for k := 0; k < buff; k++ {
 		scores[k] = <-ch_score
 		rounds[k] = <-ch_round
+		skips[k] = <-ch_skip
 	}
 	sort.Ints(scores)
 	sort.Ints(rounds)
+	sort.Ints(skips)
 	fmt.Println("scores:", scores)
 	fmt.Println("rounds:", rounds)
-	return &scores, &rounds
+	fmt.Println("skips:", skips)
+	return &scores, &rounds, &skips
 }
 
 func addSolidLines(g *Game, p *Piece) bool {
@@ -262,7 +274,8 @@ func addGarbageLines(g *Game, p *Piece, garbage *[60]int) bool {
 		}
 		row[garbage[g.Round/speed]] = false
 		row[garbage[len(garbage)-g.Round/speed]] = false
-		newGrid := Grid(append([][]bool{row}, [][]bool(p.FieldAfter.Grid[:p.FieldAfter.Height-1])...))
+		newGrid := Grid(append([][]bool{row},
+			[][]bool(p.FieldAfter.Grid[:p.FieldAfter.Height-1])...))
 		newField := newGrid.ToField()
 		p.FieldAfter = &newField
 	}
@@ -282,9 +295,10 @@ func statistic(a []int) (int, int, int) {
 	return avr, a[1], a[len(a)-2]
 }
 
-func Linechart(new_scores, new_rounds *[]int, strategy string) {
+func Linechart(new_scores, new_rounds, new_skips *[]int, strategy string) {
 	cScores := gosplat.NewChart()
 	cRounds := gosplat.NewChart()
+	cSkips := gosplat.NewChart()
 	for i := 0; i < len(*new_scores); i++ {
 		cScores.Append(map[string]interface{}{
 			"game": i,
@@ -296,6 +310,11 @@ func Linechart(new_scores, new_rounds *[]int, strategy string) {
 			"old":  (oldRounds)[i],
 			"new":  (*new_rounds)[i],
 		})
+		cSkips.Append(map[string]interface{}{
+			"game": i,
+			"old":  (oldSkips)[i],
+			"new":  (*new_skips)[i],
+		})
 	}
 
 	f := gosplat.NewFrame(strategy)
@@ -306,6 +325,12 @@ func Linechart(new_scores, new_rounds *[]int, strategy string) {
 			"1": map[string]interface{}{
 				"color": "black"}}}))
 	f.Append("Round", cRounds.Linechart(map[string]interface{}{
+		"series": map[string]interface{}{
+			"0": map[string]interface{}{
+				"color": "red"},
+			"1": map[string]interface{}{
+				"color": "black"}}}))
+	f.Append("Skip", cSkips.Linechart(map[string]interface{}{
 		"series": map[string]interface{}{
 			"0": map[string]interface{}{
 				"color": "red"},
