@@ -909,7 +909,7 @@ func (p *Piece) getPoints() int {
 }
 
 func (p *Piece) shouldSkip(skips int) bool {
-	if p.Score.Total > 20 && skips > 0 {
+	if p.Score.Total > 50 && skips > 0 {
 		return true
 	}
 	return false
