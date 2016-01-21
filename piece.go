@@ -850,7 +850,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 
 	if p.Score.Burn == 4 {
-		p.Score.Total = p.Score.Total - 200
+		p.Score.Total = p.Score.Total - 400
 	}
 
 	if p.Tspin {
@@ -858,7 +858,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 
 	if p.Tspin2 {
-		p.Score.Total -= 200
+		p.Score.Total -= 400
 	}
 
 	if p.FieldAfter.Empty == 0 {
