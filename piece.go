@@ -836,16 +836,16 @@ func (p *Piece) setTotalScore(st Strategy) {
 	//fmt.Println(p.Score.Total)
 	if p.FieldAfter.Empty > 5 {
 		if p.Score.l1 > 0 {
-			p.Score.Total -= p.Score.l1 * 5
+			p.Score.Total -= p.Score.l1 * 2
 		}
 		if p.Score.l2 > 0 {
-			p.Score.Total -= p.Score.l2 * 15
+			p.Score.Total -= p.Score.l2 * 6
 		}
 		if p.Score.l3 > 0 {
-			p.Score.Total -= p.Score.l3 * 45
+			p.Score.Total -= p.Score.l3 * 13
 		}
 		if p.Score.l4 > 0 {
-			p.Score.Total -= p.Score.l4 * 100
+			p.Score.Total -= p.Score.l4 * 27
 		}
 	}
 
