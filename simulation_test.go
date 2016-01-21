@@ -153,8 +153,8 @@ func playGame(ch_round, ch_score, ch_skip chan int, g *Game, input *[400]string,
 		} else {
 			position = pos
 			g.MyPlayer.Points += position.getPoints()
-			if position.isDoubleTSpin() { //||
-				//position.FieldAfter.Burned == 4 {
+			if position.isDoubleTSpin() ||
+				position.FieldAfter.Burned == 4 {
 				g.MyPlayer.Skips++
 				skips++
 			}

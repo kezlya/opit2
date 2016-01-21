@@ -847,7 +847,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 		if p.Score.l4 > 0 {
 			p.Score.Total -= p.Score.l4 * 70
 		}
-		//fmt.Println(p.Score.l1, p.Score.l2, p.Score.l3, p.Score.l4, p.Score.Total)
 	}
 
 	if p.Score.Burn == 4 {
