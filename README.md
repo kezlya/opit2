@@ -55,4 +55,4 @@ Current result is: 100	  13142213 ns/op  Must always be bellow 500ms
 
 
 ### TODOs
-##### Test for Piece class (isDoubleSpin, etc ) refactoring if statments
+##### Impliment better skip strategy (check next piece lowest Score)
