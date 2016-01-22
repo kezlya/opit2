@@ -839,13 +839,13 @@ func (p *Piece) setTotalScore(st Strategy) {
 			p.Score.Total -= p.Score.l1 * 2
 		}
 		if p.Score.l2 > 0 {
-			p.Score.Total -= p.Score.l2 * 6
+			p.Score.Total -= p.Score.l2 * 5
 		}
 		if p.Score.l3 > 0 {
 			p.Score.Total -= p.Score.l3 * 13
 		}
 		if p.Score.l4 > 0 {
-			p.Score.Total -= p.Score.l4 * 27
+			p.Score.Total -= p.Score.l4 * 26
 		}
 	}
 
