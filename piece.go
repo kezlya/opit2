@@ -866,7 +866,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total += 10
+		p.Score.Total += 15
 	}
 }
 
