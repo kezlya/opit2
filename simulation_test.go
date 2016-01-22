@@ -105,7 +105,7 @@ func Benchmark_strategy(banch *testing.B) {
 								strategyName := st.name()
 								fmt.Println(strategyName)
 								scores, rounds, skips := playGames(st)
-								if CheckIfStrategyIsBetter(scores, rounds) {
+								if CheckIfStrategyIsBetter(scores, rounds, skips) {
 									Linechart(scores, rounds, skips, strategyName)
 								} else {
 									fmt.Println("Bad")
@@ -357,9 +357,8 @@ func Linechart(new_scores, new_rounds, new_skips *[]int, strategy string) {
 	fmt.Println(name)
 }
 
-func CheckIfStrategyIsBetter(new_scores, new_rounds *[]int) bool {
-	counterS := 0
-	counterR := 0
+func CheckIfStrategyIsBetter(new_scores, new_rounds, new_skips *[]int) bool {
+	var counterS, counterR, counterSk int
 	half := len(*new_scores) / 2
 	for i := 0; i < len(*new_scores); i++ {
 		if (oldScores)[i]-(*new_scores)[i] <= 0 {
@@ -368,9 +367,14 @@ func CheckIfStrategyIsBetter(new_scores, new_rounds *[]int) bool {
 		if (oldRounds)[i]-(*new_rounds)[i] <= 0 {
 			counterR++
 		}
+		if (oldSkips)[i]-(*new_skips)[i] <= 0 {
+			counterSk++
+		}
 	}
 	fmt.Println("Better Scores:", counterS)
 	fmt.Println("Better Rounds:", counterR)
+	fmt.Println("Better Skips:", counterSk)
+
 	return (counterS > half || counterR > half)
 }
 
