@@ -735,3 +735,6 @@ func Test_01(t *testing.T) {
 	result.FieldAfter.Grid.assertEqualTo(expectedGrid, t)
 	checkScores(t, expectedScore, result.Score)
 }
+
+//http://theaigames.com/competitions/ai-block-battle/games/56a1e1951c687b1946c9f610 round 18
+// need to fix it
