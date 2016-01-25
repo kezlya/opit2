@@ -738,3 +738,10 @@ func Test_01(t *testing.T) {
 
 //http://theaigames.com/competitions/ai-block-battle/games/56a1e1951c687b1946c9f610 round 18
 // need to fix it
+
+// last round bug need  test
+//http://theaigames.com/competitions/ai-block-battle/games/56a3d7901c687b1946ca04da
+
+// fix single Tspin accourding the rule
+
+// dont use holes next to the sides only in the middle

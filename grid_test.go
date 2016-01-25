@@ -233,32 +233,12 @@ func Test_tSpinLevels(t *testing.T) {
 		{false, false, false, false, false, false, true, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	grid2 := Grid{
-		{false, true, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, false},
-		{true, false, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, false, true, true},
-		{true, true, false, true, true, false, false, false, true, true},
-		{true, true, true, true, true, true, true, false, false, true},
-		{true, true, true, true, true, true, false, false, false, true},
-		{true, true, true, true, true, true, false, false, true, true},
-		{true, true, true, true, true, true, false, false, false, true},
-		{false, false, false, false, false, false, true, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	}
 	field := grid.ToField()
-	field2 := grid2.ToField()
 
 	//act
 	level1, level2, level3, level4 := grid.tSpinLevels(field.MaxPick)
-	level1_good, _, _, _ := grid2.tSpinLevels(field2.MaxPick)
 
 	//assert
-	if level1_good != 1 {
-		t.Fail()
-		fmt.Println("Level1_good tSpace faild", level1_good)
-		grid2.visual()
-	}
 	if level1 != 0 {
 		t.Fail()
 		fmt.Println("Level1 tSpace faild", level1)
@@ -279,4 +259,37 @@ func Test_tSpinLevels(t *testing.T) {
 		fmt.Println("Level4 tSpace faild", level4)
 		grid.visual()
 	}
+}
+
+func Test_isHoleInTheRow(t *testing.T) {
+	//arrange
+	grid := Grid{
+		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, true, true, true, true, true, true},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+
+	grid.visual()
+	field := grid.ToField()
+	maxW := field.Width - 1
+	maxH := field.MaxPick
+	results := make([]bool, 0)
+
+	field.Grid.visual()
+
+	grid.visual()
+
+	//act
+	for row := 0; row < maxH; row++ {
+		check, _ := field.Grid.isHoleInTheRow(row, maxW, maxH)
+		results = append(results, check)
+	}
+
+	//assert
+	//if level1_good != 1 {
+	t.Fail()
+	fmt.Println("Wrong hole in the row detection", results)
+	grid.visual()
+	//}
 }
