@@ -267,29 +267,29 @@ func Test_isHoleInTheRow(t *testing.T) {
 		{true, true, true, true, true, true, true, true, true, true},
 		{true, true, true, true, true, true, true, true, true, true},
 		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, true, false, false, false, false, false, false, false},
 	}
 
 	grid.visual()
 	field := grid.ToField()
-	maxW := field.Width - 1
-	maxH := field.MaxPick
-	results := make([]bool, 0)
+	//maxW := field.Width - 1
+	//maxH := field.MaxPick
+	//results := make([]bool, 0)
 
 	field.Grid.visual()
 
 	grid.visual()
 
 	//act
-	for row := 0; row < maxH; row++ {
+	/*for row := 0; row < maxH; row++ {
 		check, _ := field.Grid.isHoleInTheRow(row, maxW, maxH)
 		results = append(results, check)
-	}
+	}*/
 
 	//assert
 	//if level1_good != 1 {
 	t.Fail()
-	fmt.Println("Wrong hole in the row detection", results)
+	//fmt.Println("Wrong hole in the row detection", results)
 	grid.visual()
 	//}
 }
