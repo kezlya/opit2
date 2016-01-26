@@ -268,13 +268,12 @@ func Test_isHoleInTheRow_Yes(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 	}
 	field := grid.ToField()
-	maxW := field.Width - 1
 	maxH := field.MaxPick
 	check := false
 
 	//act
 	for row := 0; row < maxH; row++ {
-		check, _ = field.Grid.isHoleInTheRow(row, maxW, maxH)
+		check, _ = field.Grid.isHoleInTheRow(row, maxH)
 	}
 
 	//assert
@@ -292,13 +291,12 @@ func Test_isHoleInTheRow_No(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 	}
 	field := grid.ToField()
-	maxW := field.Width - 1
 	maxH := field.MaxPick
 	check := false
 
 	//act
 	for row := 0; row < maxH; row++ {
-		check, _ = field.Grid.isHoleInTheRow(row, maxW, maxH)
+		check, _ = field.Grid.isHoleInTheRow(row, maxH)
 	}
 
 	//assert
