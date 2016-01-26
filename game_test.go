@@ -743,5 +743,3 @@ func Test_01(t *testing.T) {
 //http://theaigames.com/competitions/ai-block-battle/games/56a3d7901c687b1946ca04da
 
 // fix single Tspin accourding the rule
-
-// dont use holes next to the sides only in the middle
