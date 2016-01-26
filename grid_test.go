@@ -261,35 +261,50 @@ func Test_tSpinLevels(t *testing.T) {
 	}
 }
 
-func Test_isHoleInTheRow(t *testing.T) {
+func Test_isHoleInTheRow_Yes(t *testing.T) {
 	//arrange
 	grid := Grid{
-		{true, true, true, true, true, true, true, true, true, true},
-		{true, true, true, true, true, true, true, true, true, true},
+		{true, true, true, true, false, true, true, true, true, true},
 		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, true, false, false, false, false, false, false, false},
 	}
-
-	grid.visual()
 	field := grid.ToField()
-	//maxW := field.Width - 1
-	//maxH := field.MaxPick
-	//results := make([]bool, 0)
-
-	field.Grid.visual()
-
-	grid.visual()
+	maxW := field.Width - 1
+	maxH := field.MaxPick
+	check := false
 
 	//act
-	/*for row := 0; row < maxH; row++ {
-		check, _ := field.Grid.isHoleInTheRow(row, maxW, maxH)
-		results = append(results, check)
-	}*/
+	for row := 0; row < maxH; row++ {
+		check, _ = field.Grid.isHoleInTheRow(row, maxW, maxH)
+	}
 
 	//assert
-	//if level1_good != 1 {
-	t.Fail()
-	//fmt.Println("Wrong hole in the row detection", results)
-	grid.visual()
-	//}
+	if !check {
+		t.Fail()
+		fmt.Println("Hole in the row")
+		grid.visual()
+	}
+}
+
+func Test_isHoleInTheRow_No(t *testing.T) {
+	//arrange
+	grid := Grid{
+		{true, true, true, true, false, true, true, true, true, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	field := grid.ToField()
+	maxW := field.Width - 1
+	maxH := field.MaxPick
+	check := false
+
+	//act
+	for row := 0; row < maxH; row++ {
+		check, _ = field.Grid.isHoleInTheRow(row, maxW, maxH)
+	}
+
+	//assert
+	if check {
+		t.Fail()
+		fmt.Println("No Hole in the row")
+		grid.visual()
+	}
 }
