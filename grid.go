@@ -194,17 +194,6 @@ func (g Grid) isHoleInTheRow(row, maxH int) (bool, Cell) {
 	if cell.X < 1 || cell.X > len(g[row])-2 {
 		isHole = false
 	}
-	/*for col := 1; col < maxW; col++ {
-		if !g[row][col] {
-			if isHole {
-				isHole = false
-				break
-			} else {
-				isHole = true
-				cell = Cell{X: col, Y: row}
-			}
-		}
-	}*/
 	if isHole {
 		for y := cell.Y; y < maxH; y++ {
 			if g[y][cell.X] {
