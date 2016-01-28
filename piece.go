@@ -824,15 +824,15 @@ func (p *Piece) setTotalScore(st Strategy) {
 		kS = st.Step + 1
 	}
 
-	points := p.getPoints()
+	//points := p.getPoints()
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
 		p.Score.Step*kS +
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
-		p.Score.Burn*st.Burn -
-		points*4
+		p.Score.Burn*st.Burn // -
+		//points*4
 	//fmt.Println(p.Score.Total)
 	if p.FieldAfter.Empty > 4 {
 		if p.Score.l1 > 0 {
