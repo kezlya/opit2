@@ -25,7 +25,7 @@ var strategy = Strategy{
 	BHoles: 14,
 	FHoles: 12,
 	CHoles: 2,
-	HighY:  1,
+	HighY:  2,
 	Step:   3,
 	Tspin:  5,
 }
