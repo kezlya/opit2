@@ -23,7 +23,6 @@ type Piece struct {
 }
 
 type Score struct {
-	Burn   int
 	Step   int
 	BHoles int
 	FHoles int
@@ -818,7 +817,6 @@ func (p *Piece) setCHoles() {
 }
 
 func (p *Piece) setTotalScore(st Strategy) {
-	p.Score.Burn = p.FieldAfter.Burned
 	kS := st.Step
 	if p.FieldAfter.Empty < 5 {
 		kS = st.Step + 1
@@ -831,7 +829,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.Step*kS +
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
-		p.Score.Burn*st.Burn -
+		p.FieldAfter.Burned*st.Burn -
 		points*2
 	//fmt.Println(p.Score.Total)
 	if p.FieldAfter.Empty > 4 || p.FieldAfter.CountBH > 10 {
@@ -849,7 +847,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 		}
 	}
 
-	if p.Score.Burn == 4 {
+	if p.FieldAfter.Burned == 4 {
 		p.Score.Total = p.Score.Total - 400
 	}
 
@@ -888,7 +886,7 @@ func (p *Piece) getPoints() int {
 	if p == nil {
 		return points
 	}
-	switch p.Score.Burn {
+	switch p.FieldAfter.Burned {
 	case 2:
 		points = 3
 	case 3:
