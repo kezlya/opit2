@@ -52,6 +52,9 @@ func (f *Field) FindPositions(piece Piece) []*Piece {
 			p.Tspin = p.isSingleTSpin()
 			p.Tspin2 = p.isDoubleTSpin()
 			p.PerfectClear = p.isPerfectClear()
+			p.setHighY()
+			p.setStep()
+			p.setCHoles()
 			positions = append(positions, p)
 		}
 	}
