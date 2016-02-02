@@ -820,16 +820,11 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 
-	kS := st.Step
-	if p.FieldAfter.Empty < 5 {
-		kS = st.Step + 1
-	}
-
 	points := p.getPoints()
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
-		p.Score.Step*kS +
+		p.Score.Step*st.Step +
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
 		p.FieldAfter.Burned*st.Burn -
