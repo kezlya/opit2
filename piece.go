@@ -12,6 +12,7 @@ type Piece struct {
 	CurrentX int
 	CurrentY int
 	Rotation int
+	Points   int
 
 	Tspin        bool
 	Tspin2       bool
@@ -898,32 +899,28 @@ func (p *Piece) shouldSkip(skips int) bool {
 	return false
 }
 
-func (p *Piece) isSingleTSpin() bool {
+func (p *Piece) setTSpins() {
+	l1, l2, l3, l4 := p.FieldAfter.Grid.tSpinLevels(p.FieldAfter.MaxPick)
+	p.Score.l1 = l1
+	p.Score.l2 = l2
+	p.Score.l3 = l3
+	p.Score.l4 = l4
+	b := p.FieldAfter.Burned
 	if p.Name != T ||
 		p.Rotation != 2 ||
-		p.FieldAfter.Burned != 1 ||
-		p.Space["m1"].Y-1 < 0 {
-		return false
+		b > 0 ||
+		p.Space["m1"].Y-b < 0 {
+		return
 	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y][p.Space["m1"].X] ||
-		p.FieldAfter.Grid[p.Space["m3"].Y][p.Space["m3"].X] {
-		return true
+	if p.FieldAfter.Grid[p.Space["m1"].Y-b+1][p.Space["m1"].X] ||
+		p.FieldAfter.Grid[p.Space["m3"].Y-b+1][p.Space["m3"].X] {
+		if b == 1 {
+			p.Tspin = true
+		}
+		if b == 2 {
+			p.Tspin2 = true
+		}
 	}
-	return false
-}
-
-func (p *Piece) isDoubleTSpin() bool {
-	if p.Name != T ||
-		p.Rotation != 2 ||
-		p.FieldAfter.Burned != 2 ||
-		p.Space["m1"].Y-2 < 0 {
-		return false
-	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] ||
-		p.FieldAfter.Grid[p.Space["m3"].Y-1][p.Space["m3"].X] {
-		return true
-	}
-	return false
 }
 
 func (p *Piece) isPerfectClear() bool {
@@ -935,4 +932,13 @@ func (p *Piece) isPerfectClear() bool {
 		}
 	}
 	return true
+}
+
+func (p *Piece) assignField(field *Field) {
+	p.FieldAfter = field
+	p.setTSpins()
+	p.PerfectClear = p.isPerfectClear()
+	p.setHighY()
+	p.setStep()
+	p.setCHoles()
 }

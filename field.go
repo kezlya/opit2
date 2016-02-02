@@ -43,18 +43,7 @@ func (f *Field) FindPositions(piece Piece) []*Piece {
 		if p.IsDown(stack) && !f.Grid.IsCollision(p.Space, true) {
 			newGrid := f.Grid.ApplyPiece(p.Space)
 			newField := newGrid.ToField()
-			p.FieldAfter = &newField
-			l1, l2, l3, l4 := newGrid.tSpinLevels(newField.MaxPick)
-			p.Score.l1 = l1
-			p.Score.l2 = l2
-			p.Score.l3 = l3
-			p.Score.l4 = l4
-			p.Tspin = p.isSingleTSpin()
-			p.Tspin2 = p.isDoubleTSpin()
-			p.PerfectClear = p.isPerfectClear()
-			p.setHighY()
-			p.setStep()
-			p.setCHoles()
+			p.assignField(&newField)
 			positions = append(positions, p)
 		}
 	}
