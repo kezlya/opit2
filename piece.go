@@ -816,7 +816,10 @@ func (p *Piece) setCHoles() {
 	}
 }
 
-func (p *Piece) setTotalScore(st Strategy) {
+func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
+	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
+	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
+
 	kS := st.Step
 	if p.FieldAfter.Empty < 5 {
 		kS = st.Step + 1
@@ -831,7 +834,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 		p.Score.CHoles*st.CHoles -
 		p.FieldAfter.Burned*st.Burn -
 		points*2
-	//fmt.Println(p.Score.Total)
+
 	if p.FieldAfter.Empty > 4 || p.FieldAfter.CountBH > 10 {
 		if p.Score.l1 > 0 {
 			p.Score.Total -= p.Score.l1 * 2
@@ -866,13 +869,6 @@ func (p *Piece) setTotalScore(st Strategy) {
 	if p.FieldAfter.Empty == 1 {
 		p.Score.Total += 15
 	}
-}
-
-func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
-	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
-	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
-	p.Score.NScore = nextScore
-	p.setTotalScore(st)
 }
 
 func (p *Piece) getPoints() int {
