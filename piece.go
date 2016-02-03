@@ -820,8 +820,6 @@ func (p *Piece) setCHoles() {
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
-
-	points := p.getPoints()
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
@@ -829,7 +827,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
 		p.FieldAfter.Burned*st.Burn -
-		points*2
+		p.Points*2
 
 	if p.FieldAfter.Empty > 4 || p.FieldAfter.CountBH > 10 {
 		if p.Score.l1 > 0 {
@@ -867,29 +865,24 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 }
 
-func (p *Piece) getPoints() int {
-	points := 0
-	if p == nil {
-		return points
-	}
+func (p *Piece) setPoints() {
 	switch p.FieldAfter.Burned {
 	case 2:
-		points = 3
+		p.Points = 3
 	case 3:
-		points = 6
+		p.Points = 6
 	case 4:
-		points = 10
+		p.Points = 10
 	}
 	if p.Tspin {
-		points = 5
+		p.Points = 5
 	}
 	if p.Tspin2 {
-		points = 10
+		p.Points = 10
 	}
 	if p.PerfectClear {
-		points = 18
+		p.Points = 18
 	}
-	return points
 }
 
 func (p *Piece) shouldSkip(skips int) bool {
@@ -941,4 +934,5 @@ func (p *Piece) assignField(field *Field) {
 	p.setHighY()
 	p.setStep()
 	p.setCHoles()
+	p.setPoints()
 }
