@@ -916,21 +916,21 @@ func (p *Piece) setTSpins() {
 	}
 }
 
-func (p *Piece) isPerfectClear() bool {
+func (p *Piece) setPerfectClear() {
 	for _, row := range p.FieldAfter.Grid {
 		for _, col := range row {
 			if col {
-				return false
+				return
 			}
 		}
 	}
-	return true
+	p.PerfectClear = true
 }
 
 func (p *Piece) assignField(field *Field) {
 	p.FieldAfter = field
 	p.setTSpins()
-	p.PerfectClear = p.isPerfectClear()
+	p.setPerfectClear()
 	p.setHighY()
 	p.setStep()
 	p.setCHoles()

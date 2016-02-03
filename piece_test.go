@@ -485,20 +485,20 @@ func Test_isPerfectClear(t *testing.T) {
 	clearField := EmptyGrig10x20.Copy().ToField()
 	notclearField := EmptyGrig10x20.Copy().ToField()
 	notclearField.Grid[7][7] = true
-	p1 := Piece{FieldAfter: &notclearField}
-	p2 := Piece{FieldAfter: &clearField}
+	p1 := InitPiece("Z", 3, 3)
+	p2 := InitPiece("Z", 3, 3)
 
 	//act
-	good := p1.isPerfectClear()
-	notgood := p2.isPerfectClear()
+	p1.assignField(&clearField)
+	p2.assignField(&notclearField)
 
 	//assert
-	if good {
+	if p2.PerfectClear {
 		t.Fail()
 		fmt.Println("should not be perfect clear")
 	}
 
-	if !notgood {
+	if !p1.PerfectClear {
 		t.Fail()
 		fmt.Println("should be perfect clear")
 	}
