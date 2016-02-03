@@ -908,7 +908,7 @@ func (p *Piece) setTSpins() {
 	b := p.FieldAfter.Burned
 	if p.Name != T ||
 		p.Rotation != 2 ||
-		b > 0 ||
+		b == 0 ||
 		p.Space["m1"].Y-b < 0 {
 		return
 	}
