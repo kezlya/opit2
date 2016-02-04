@@ -485,26 +485,26 @@ func Test_isPerfectClear(t *testing.T) {
 	clearField := EmptyGrig10x20.Copy().ToField()
 	notclearField := EmptyGrig10x20.Copy().ToField()
 	notclearField.Grid[7][7] = true
-	p1 := Piece{FieldAfter: &notclearField}
-	p2 := Piece{FieldAfter: &clearField}
+	p1 := InitPiece("Z", 3, 3)
+	p2 := InitPiece("Z", 3, 3)
 
 	//act
-	good := p1.isPerfectClear()
-	notgood := p2.isPerfectClear()
+	p1.assignField(&clearField)
+	p2.assignField(&notclearField)
 
 	//assert
-	if good {
+	if p2.PerfectClear {
 		t.Fail()
 		fmt.Println("should not be perfect clear")
 	}
 
-	if !notgood {
+	if !p1.PerfectClear {
 		t.Fail()
 		fmt.Println("should be perfect clear")
 	}
 }
 
-func Test_isSingleTSpin(t *testing.T) {
+func Test_TSpins_Single(t *testing.T) {
 	//arrange
 	badGrid := Grid{
 		{true, true, true, false, true, true, true, true, true, true},
@@ -554,6 +554,7 @@ func Test_isSingleTSpin(t *testing.T) {
 		Name:     T,
 		Space:    T2,
 		Rotation: 2,
+		Score:    &Score{},
 	}
 	p.Space["m1"] = Cell{X: 5, Y: 7}
 	p.Space["m2"] = Cell{X: 6, Y: 7}
@@ -563,10 +564,10 @@ func Test_isSingleTSpin(t *testing.T) {
 	goodField := goodGrid.ApplyPiece(p.Space).ToField()
 
 	//act
-	p.FieldAfter = &badField
-	badSpin := p.isSingleTSpin()
-	p.FieldAfter = &goodField
-	goodSpin := p.isSingleTSpin()
+	p.assignField(&badField)
+	badSpin := p.Tspin
+	p.assignField(&goodField)
+	goodSpin := p.Tspin
 
 	//assert
 	if badSpin {
@@ -581,7 +582,7 @@ func Test_isSingleTSpin(t *testing.T) {
 	}
 }
 
-func Test_isDoubleTSpin(t *testing.T) {
+func Test_TSpins_Double(t *testing.T) {
 	//arrange
 	badGrid := Grid{
 		{true, true, true, false, true, true, true, true, true, true},
@@ -631,6 +632,7 @@ func Test_isDoubleTSpin(t *testing.T) {
 		Name:     T,
 		Space:    T2,
 		Rotation: 2,
+		Score:    &Score{},
 	}
 	p.Space["m1"] = Cell{X: 5, Y: 7}
 	p.Space["m2"] = Cell{X: 6, Y: 7}
@@ -640,10 +642,10 @@ func Test_isDoubleTSpin(t *testing.T) {
 	goodField := goodGrid.ApplyPiece(p.Space).ToField()
 
 	//act
-	p.FieldAfter = &badField
-	badSpin := p.isDoubleTSpin()
-	p.FieldAfter = &goodField
-	goodSpin := p.isDoubleTSpin()
+	p.assignField(&badField)
+	badSpin := p.Tspin2
+	p.assignField(&goodField)
+	goodSpin := p.Tspin2
 
 	//assert
 	if badSpin {

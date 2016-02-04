@@ -27,7 +27,6 @@ var strategy = Strategy{
 	CHoles: 2,
 	HighY:  2,
 	Step:   3,
-	Tspin:  5,
 }
 
 func main() {

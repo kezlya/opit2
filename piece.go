@@ -12,6 +12,7 @@ type Piece struct {
 	CurrentX int
 	CurrentY int
 	Rotation int
+	Points   int
 
 	Tspin        bool
 	Tspin2       bool
@@ -23,7 +24,6 @@ type Piece struct {
 }
 
 type Score struct {
-	Burn   int
 	Step   int
 	BHoles int
 	FHoles int
@@ -817,23 +817,18 @@ func (p *Piece) setCHoles() {
 	}
 }
 
-func (p *Piece) setTotalScore(st Strategy) {
-	p.Score.Burn = p.FieldAfter.Burned
-	kS := st.Step
-	if p.FieldAfter.Empty < 5 {
-		kS = st.Step + 1
-	}
-
-	points := p.getPoints()
+func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
+	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
+	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
-		p.Score.Step*kS +
+		p.Score.Step*st.Step +
 		p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
-		p.Score.Burn*st.Burn -
-		points*2
-	//fmt.Println(p.Score.Total)
+		p.FieldAfter.Burned*st.Burn -
+		p.Points*2
+
 	if p.FieldAfter.Empty > 4 || p.FieldAfter.CountBH > 10 {
 		if p.Score.l1 > 0 {
 			p.Score.Total -= p.Score.l1 * 2
@@ -849,7 +844,7 @@ func (p *Piece) setTotalScore(st Strategy) {
 		}
 	}
 
-	if p.Score.Burn == 4 {
+	if p.FieldAfter.Burned == 4 {
 		p.Score.Total = p.Score.Total - 400
 	}
 
@@ -870,42 +865,24 @@ func (p *Piece) setTotalScore(st Strategy) {
 	}
 }
 
-func (p *Piece) SetScore(st Strategy, oldBH, oldFH, nextScore int) {
-	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
-	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
-	p.Score.NScore = nextScore
-	p.Tspin = p.isSingleTSpin()
-	p.Tspin2 = p.isDoubleTSpin()
-	p.PerfectClear = p.isPerfectClear()
-	p.setHighY()
-	p.setStep()
-	p.setCHoles()
-	p.setTotalScore(st)
-}
-
-func (p *Piece) getPoints() int {
-	points := 0
-	if p == nil {
-		return points
-	}
-	switch p.Score.Burn {
+func (p *Piece) setPoints() {
+	switch p.FieldAfter.Burned {
 	case 2:
-		points = 3
+		p.Points = 3
 	case 3:
-		points = 6
+		p.Points = 6
 	case 4:
-		points = 10
+		p.Points = 10
 	}
 	if p.Tspin {
-		points = 5
+		p.Points = 5
 	}
 	if p.Tspin2 {
-		points = 10
+		p.Points = 10
 	}
 	if p.PerfectClear {
-		points = 18
+		p.Points = 18
 	}
-	return points
 }
 
 func (p *Piece) shouldSkip(skips int) bool {
@@ -915,41 +892,47 @@ func (p *Piece) shouldSkip(skips int) bool {
 	return false
 }
 
-func (p *Piece) isSingleTSpin() bool {
+func (p *Piece) setTSpins() {
+	l1, l2, l3, l4 := p.FieldAfter.Grid.tSpinLevels(p.FieldAfter.MaxPick)
+	p.Score.l1 = l1
+	p.Score.l2 = l2
+	p.Score.l3 = l3
+	p.Score.l4 = l4
+	b := p.FieldAfter.Burned
 	if p.Name != T ||
 		p.Rotation != 2 ||
-		p.FieldAfter.Burned != 1 ||
-		p.Space["m1"].Y-1 < 0 {
-		return false
+		b == 0 ||
+		p.Space["m1"].Y-b < 0 {
+		return
 	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y][p.Space["m1"].X] ||
-		p.FieldAfter.Grid[p.Space["m3"].Y][p.Space["m3"].X] {
-		return true
+	if p.FieldAfter.Grid[p.Space["m1"].Y-b+1][p.Space["m1"].X] ||
+		p.FieldAfter.Grid[p.Space["m3"].Y-b+1][p.Space["m3"].X] {
+		if b == 1 {
+			p.Tspin = true
+		}
+		if b == 2 {
+			p.Tspin2 = true
+		}
 	}
-	return false
 }
 
-func (p *Piece) isDoubleTSpin() bool {
-	if p.Name != T ||
-		p.Rotation != 2 ||
-		p.FieldAfter.Burned != 2 ||
-		p.Space["m1"].Y-2 < 0 {
-		return false
-	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y-1][p.Space["m1"].X] ||
-		p.FieldAfter.Grid[p.Space["m3"].Y-1][p.Space["m3"].X] {
-		return true
-	}
-	return false
-}
-
-func (p *Piece) isPerfectClear() bool {
+func (p *Piece) setPerfectClear() {
 	for _, row := range p.FieldAfter.Grid {
 		for _, col := range row {
 			if col {
-				return false
+				return
 			}
 		}
 	}
-	return true
+	p.PerfectClear = true
+}
+
+func (p *Piece) assignField(field *Field) {
+	p.FieldAfter = field
+	p.setTSpins()
+	p.setPerfectClear()
+	p.setHighY()
+	p.setStep()
+	p.setCHoles()
+	p.setPoints()
 }

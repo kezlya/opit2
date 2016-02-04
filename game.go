@@ -46,7 +46,6 @@ type Strategy struct {
 	FHoles int
 	CHoles int
 	HighY  int
-	Tspin  int
 }
 
 func (g *Game) asignSettings(action, value string) {
@@ -144,7 +143,8 @@ func (g *Game) calculateMoves() *Piece {
 	}
 	for k := 0; k < buff; k++ {
 		ns := <-chScores
-		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH, ns.score)
+		pMap[ns.key].Score.NScore = ns.score
+		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH)
 	}
 
 	return getBest(positions)
@@ -154,7 +154,7 @@ func (g *Game) nextPieceScore(chScores chan NextScore, pf *Field, key int) {
 	nextPositions := pf.FindPositions(g.NextPiece)
 	for _, np := range nextPositions {
 		g.applySolidLines(np)
-		np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, 0)
+		np.SetScore(g.Strategy, pf.CountBH, pf.CountFH)
 	}
 	nScore := 10000000000000
 	nextBest := getBest(nextPositions)
