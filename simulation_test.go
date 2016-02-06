@@ -5,7 +5,7 @@ import (
 	"github.com/agonopol/gosplat"
 	"github.com/skratchdot/open-golang/open"
 	"io/ioutil"
-	//"math/rand"
+	"math/rand"
 	"os"
 	"sort"
 	"strconv"
@@ -14,39 +14,40 @@ import (
 	"time"
 )
 
-/*
-func Test_generateGames(t *testing.T) {
-	for j := 1; j <= 26; j++ {
-
-		i := 1
-		rand.Seed(time.Now().UTC().UnixNano())
-		fmt.Print("var g", j, " =[400]string{\"", pieces[rand.Intn(len(pieces))], "\"")
-		for i < 400 {
-			fmt.Print(",\"", pieces[rand.Intn(len(pieces))], "\"")
-			i++
+func Benchmark_generateGames(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		for j := 1; j <= 27; j++ {
+			i := 1
+			rand.Seed(time.Now().UTC().UnixNano())
+			fmt.Print("var g", j, " =[400]string{", pieces[rand.Intn(len(pieces))], "")
+			for i < 400 {
+				fmt.Print(",", pieces[rand.Intn(len(pieces))], "")
+				i++
+			}
+			fmt.Print("}")
+			fmt.Println()
 		}
-		fmt.Print("}")
-		fmt.Println()
-
+		time.Sleep(10000000000)
 	}
 }
-*/
-/*
-func Test_generateGarbageRows(t *testing.T) {
-	size := 10
-	for j := 1; j <= 26; j++ {
-		i := 1
-		rand.Seed(time.Now().UTC().UnixNano())
-		fmt.Print("var gr", j, " =[60]int{", rand.Intn(size))
-		for i < 60 {
-			fmt.Print(",", rand.Intn(size))
-			i++
+
+func Benchmark_generateGarbageRows(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		size := 10
+		for j := 1; j <= 27; j++ {
+			i := 1
+			rand.Seed(time.Now().UTC().UnixNano())
+			fmt.Print("var gr", j, " =[60]int{", rand.Intn(size))
+			for i < 60 {
+				fmt.Print(",", rand.Intn(size))
+				i++
+			}
+			fmt.Print("}")
+			fmt.Println()
 		}
-		fmt.Print("}")
-		fmt.Println()
+		time.Sleep(10000000000)
 	}
 }
-*/
 
 func Benchmark_one(b *testing.B) {
 	for n := 0; n < b.N; n++ {
@@ -229,6 +230,7 @@ func playGames(st Strategy) (*[]int, *[]int, *[]int) {
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g24, &gr24, false)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g25, &gr25, false)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g26, &gr26, false)
+	//go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g27, &gr27, false)
 
 	scores := make([]int, buff)
 	rounds := make([]int, buff)
@@ -359,7 +361,7 @@ func Linechart(new_scores, new_rounds, new_skips *[]int, strategy string) {
 
 func CheckIfStrategyIsBetter(new_scores, new_rounds, new_skips *[]int) bool {
 	var counterS, counterR, counterSk int
-	half := len(*new_scores) / 2
+	half := len(*new_scores) / 4
 	for i := 0; i < len(*new_scores); i++ {
 		if (oldScores)[i]-(*new_scores)[i] <= 0 {
 			counterS++
