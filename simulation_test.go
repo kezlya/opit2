@@ -86,13 +86,34 @@ func Benchmark_many(banch *testing.B) {
 }
 
 func Benchmark_strategy(banch *testing.B) {
+	var deep, side, _b, _bh, _fh, _ch, _hy, _s int
+	deep = 3
+	side = (deep - 1) / 2
+	if strategy.Burn > side {
+		_b = strategy.Burn - side
+	}
+	if strategy.BHoles > side {
+		_bh = strategy.BHoles - side
+	}
+	if strategy.FHoles > side {
+		_fh = strategy.FHoles - side
+	}
+	if strategy.CHoles > side {
+		_ch = strategy.CHoles - side
+	}
+	if strategy.HighY > side {
+		_hy = strategy.HighY - side
+	}
+	if strategy.Step > side {
+		_s = strategy.Step - side
+	}
 	for n := 0; n < banch.N; n++ {
-		for b := strategy.Burn - 1; b <= strategy.Burn+1; b++ {
-			for bh := strategy.BHoles - 1; bh <= strategy.BHoles+1; bh++ {
-				for fh := strategy.FHoles - 1; fh <= strategy.FHoles+1; fh++ {
-					for ch := strategy.CHoles - 1; ch <= strategy.CHoles+1; ch++ {
-						for hy := strategy.HighY - 1; hy <= strategy.HighY+1; hy++ {
-							for s := strategy.Step - 1; s <= strategy.Step+1; s++ {
+		for b := _b; b < _b+deep; b++ {
+			for bh := _bh; bh <= _bh+deep; bh++ {
+				for fh := _fh; fh <= _fh+deep; fh++ {
+					for ch := _ch; ch <= _ch+deep; ch++ {
+						for hy := _hy; hy <= _hy+deep; hy++ {
+							for s := _s; s <= _s+deep; s++ {
 								st := Strategy{
 									Burn:   b,
 									BHoles: bh,
