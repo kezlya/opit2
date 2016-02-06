@@ -1,30 +1,7 @@
 package main
 
-/*
-var testHolesField = Field{
-	Grid: [][]bool{
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, true, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-		{false, false, false, false, false, false, false, false, false, false},
-	},
-}*/
+const AMOUNT_OF_GAMES = 27
+
 var EmptyGrig10x20 = Grid{
 	{false, false, false, false, false, false, false, false, false, false},
 	{false, false, false, false, false, false, false, false, false, false},
@@ -106,6 +83,6 @@ var gr25 = [60]int{7, 4, 1, 5, 3, 4, 0, 0, 9, 3, 1, 2, 4, 9, 7, 2, 6, 6, 7, 7, 5
 var gr26 = [60]int{0, 9, 2, 4, 5, 0, 7, 6, 6, 3, 4, 2, 6, 6, 5, 3, 3, 7, 4, 1, 9, 7, 3, 4, 6, 1, 0, 8, 1, 7, 3, 2, 5, 0, 2, 7, 4, 5, 6, 7, 5, 2, 4, 8, 3, 0, 3, 2, 9, 8, 7, 0, 9, 4, 1, 1, 7, 0, 6, 4}
 var gr27 = [60]int{5, 2, 1, 8, 6, 1, 9, 9, 9, 7, 0, 8, 7, 6, 2, 2, 2, 3, 5, 4, 1, 0, 8, 7, 3, 3, 6, 3, 3, 1, 4, 2, 6, 6, 2, 6, 8, 6, 8, 7, 0, 4, 0, 1, 6, 8, 6, 1, 4, 0, 8, 7, 4, 5, 2, 4, 1, 2, 6, 6}
 
-var oldScores = []int{21, 24, 30, 32, 39, 44, 44, 51, 52, 52, 56, 56, 58, 60, 60, 64, 65, 66, 67, 68, 70, 70, 74, 77, 79, 86}
-var oldRounds = []int{71, 72, 80, 85, 89, 91, 92, 94, 98, 100, 104, 106, 112, 112, 113, 120, 122, 141, 141, 141, 144, 147, 148, 162, 162, 168}
-var oldSkips = []int{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4}
+var oldScores = []int{21, 24, 30, 30, 32, 39, 44, 44, 51, 52, 52, 56, 56, 58, 60, 60, 64, 65, 66, 67, 68, 70, 70, 74, 77, 79, 86}
+var oldRounds = []int{71, 72, 80, 85, 89, 91, 92, 94, 98, 100, 103, 104, 106, 112, 112, 113, 120, 122, 141, 141, 141, 144, 147, 148, 162, 162, 168}
+var oldSkips = []int{0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4}

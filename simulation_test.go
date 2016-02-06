@@ -16,7 +16,7 @@ import (
 
 func Benchmark_generateGames(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		for j := 1; j <= 27; j++ {
+		for j := 1; j <= AMOUNT_OF_GAMES; j++ {
 			i := 1
 			rand.Seed(time.Now().UTC().UnixNano())
 			fmt.Print("var g", j, " =[400]string{", pieces[rand.Intn(len(pieces))], "")
@@ -34,7 +34,7 @@ func Benchmark_generateGames(b *testing.B) {
 func Benchmark_generateGarbageRows(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		size := 10
-		for j := 1; j <= 27; j++ {
+		for j := 1; j <= AMOUNT_OF_GAMES; j++ {
 			i := 1
 			rand.Seed(time.Now().UTC().UnixNano())
 			fmt.Print("var gr", j, " =[60]int{", rand.Intn(size))
@@ -87,12 +87,12 @@ func Benchmark_many(banch *testing.B) {
 
 func Benchmark_strategy(banch *testing.B) {
 	for n := 0; n < banch.N; n++ {
-		for b := 1; b <= 2; b++ {
-			for bh := 12; bh <= 14; bh++ {
-				for fh := 10; fh <= 13; fh++ {
-					for ch := 1; ch <= 3; ch++ {
-						for hy := 1; hy <= 3; hy++ {
-							for s := 1; s <= 3; s++ {
+		for b := strategy.Burn - 1; b <= strategy.Burn+1; b++ {
+			for bh := strategy.BHoles - 1; bh <= strategy.BHoles+1; bh++ {
+				for fh := strategy.FHoles - 1; fh <= strategy.FHoles+1; fh++ {
+					for ch := strategy.CHoles - 1; ch <= strategy.CHoles+1; ch++ {
+						for hy := strategy.HighY - 1; hy <= strategy.HighY+1; hy++ {
+							for s := strategy.Step - 1; s <= strategy.Step+1; s++ {
 								st := Strategy{
 									Burn:   b,
 									BHoles: bh,
@@ -199,10 +199,9 @@ func playGame(ch_round, ch_score, ch_skip chan int, g *Game, input *[400]string,
 }
 
 func playGames(st Strategy) (*[]int, *[]int, *[]int) {
-	buff := 26
-	ch_round := make(chan int, buff)
-	ch_score := make(chan int, buff)
-	ch_skip := make(chan int, buff)
+	ch_round := make(chan int, AMOUNT_OF_GAMES)
+	ch_score := make(chan int, AMOUNT_OF_GAMES)
+	ch_skip := make(chan int, AMOUNT_OF_GAMES)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g1, &gr1, false)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g2, &gr2, false)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g3, &gr3, false)
@@ -230,12 +229,12 @@ func playGames(st Strategy) (*[]int, *[]int, *[]int) {
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g24, &gr24, false)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g25, &gr25, false)
 	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g26, &gr26, false)
-	//go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g27, &gr27, false)
+	go playGame(ch_round, ch_score, ch_skip, &Game{Strategy: st}, &g27, &gr27, false)
 
-	scores := make([]int, buff)
-	rounds := make([]int, buff)
-	skips := make([]int, buff)
-	for k := 0; k < buff; k++ {
+	scores := make([]int, AMOUNT_OF_GAMES)
+	rounds := make([]int, AMOUNT_OF_GAMES)
+	skips := make([]int, AMOUNT_OF_GAMES)
+	for k := 0; k < AMOUNT_OF_GAMES; k++ {
 		scores[k] = <-ch_score
 		rounds[k] = <-ch_round
 		skips[k] = <-ch_skip
@@ -361,8 +360,8 @@ func Linechart(new_scores, new_rounds, new_skips *[]int, strategy string) {
 
 func CheckIfStrategyIsBetter(new_scores, new_rounds, new_skips *[]int) bool {
 	var counterS, counterR, counterSk int
-	half := len(*new_scores) / 4
-	for i := 0; i < len(*new_scores); i++ {
+	twoThirds := AMOUNT_OF_GAMES / 3 * 2
+	for i := 0; i < AMOUNT_OF_GAMES; i++ {
 		if (oldScores)[i]-(*new_scores)[i] <= 0 {
 			counterS++
 		}
@@ -377,7 +376,7 @@ func CheckIfStrategyIsBetter(new_scores, new_rounds, new_skips *[]int) bool {
 	fmt.Println("Better Rounds:", counterR)
 	fmt.Println("Better Skips:", counterSk)
 
-	return (counterS > half || counterR > half)
+	return (counterS >= twoThirds || counterR >= twoThirds)
 }
 
 func (s *Strategy) name() string {
