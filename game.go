@@ -147,6 +147,15 @@ func (g *Game) calculateMoves() *Piece {
 		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH)
 	}
 
+	/*for _, p := range positions {
+		fmt.Printf("x:%+v, y:%+v, r:%+v, spin:%+v, %+v\n",
+		p.CurrentX,
+		p.CurrentY,
+		p.Rotation,
+		p.Tspin2,
+		p.Score)
+	}*/
+
 	return getBest(positions)
 }
 

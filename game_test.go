@@ -658,6 +658,73 @@ func Test_563bfe8035ec1d521be3ee36_2(t *testing.T) {
 	checkScores(t, expectedScore, result.Score)
 }
 
+func Test_56b7a2e11c687b4f4e8ae9ce_9(t *testing.T) {
+	//arrange
+	game := Game{Strategy: strategy}
+	grid := Grid{
+		{true, true, true, true, true, true, false, true, true, true},
+		{true, true, true, true, true, false, false, false, true, true},
+		{true, true, true, false, true, true, false, false, false, true},
+		{true, true, true, false, false, false, false, false, false, true},
+		{true, true, true, false, false, false, false, false, false, true},
+		{true, false, false, false, false, false, false, false, false, false},
+		{true, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	game.MyPlayer = &Player{Field: grid.ToField()}
+	game.asignUpdates("game", "this_piece_type", T)
+	game.asignUpdates("game", "next_piece_type", J)
+	game.initPieces()
+	expectedGrid := Grid{
+		{true, true, true, false, true, true, false, false, false, true},
+		{true, true, true, false, false, false, false, false, false, true},
+		{true, true, true, false, false, false, false, false, false, true},
+		{true, false, false, false, false, false, false, false, false, false},
+		{true, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false, false},
+	}
+	expectedScore := &Score{
+		BHoles: 0,
+		FHoles: -1,
+		CHoles: 0,
+		HighY:  0,
+		Step:   0,
+	}
+
+	//act
+	result := game.calculateMoves()
+
+	//assert
+	result.FieldAfter.Grid.assertEqualTo(expectedGrid, t)
+	checkScores(t, expectedScore, result.Score)
+}
+
 func Test_01(t *testing.T) {
 	//arrange
 	game := Game{Strategy: strategy}

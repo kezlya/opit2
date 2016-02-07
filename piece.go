@@ -899,14 +899,14 @@ func (p *Piece) setTSpins() {
 	p.Score.l3 = l3
 	p.Score.l4 = l4
 	b := p.FieldAfter.Burned
+
 	if p.Name != T ||
 		p.Rotation != 2 ||
-		b == 0 ||
-		p.Space["m1"].Y-b < 0 {
+		b == 0 {
 		return
 	}
-	if p.FieldAfter.Grid[p.Space["m1"].Y-b+1][p.Space["m1"].X] ||
-		p.FieldAfter.Grid[p.Space["m3"].Y-b+1][p.Space["m3"].X] {
+	if p.FieldAfter.Grid[p.CurrentY+(2-b)][p.CurrentX] ||
+		p.FieldAfter.Grid[p.CurrentY+(2-b)][p.CurrentX+2] {
 		if b == 1 {
 			p.Tspin = true
 		}
