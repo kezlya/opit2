@@ -899,7 +899,6 @@ func (p *Piece) setTSpins() {
 	p.Score.l3 = l3
 	p.Score.l4 = l4
 	b := p.FieldAfter.Burned
-
 	if p.Name != T ||
 		p.Rotation != 2 ||
 		b == 0 {

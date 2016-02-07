@@ -550,16 +550,10 @@ func Test_TSpins_Single(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	p := Piece{
-		Name:     T,
-		Space:    T2,
-		Rotation: 2,
-		Score:    &Score{},
-	}
-	p.Space["m1"] = Cell{X: 5, Y: 7}
-	p.Space["m2"] = Cell{X: 6, Y: 7}
-	p.Space["b2"] = Cell{X: 6, Y: 6}
-	p.Space["m3"] = Cell{X: 7, Y: 7}
+	piece := InitPiece("T", 5, 7)
+	p := &piece
+	p = p.Turnright()
+	p = p.Turnright()
 	badField := badGrid.ApplyPiece(p.Space).ToField()
 	goodField := goodGrid.ApplyPiece(p.Space).ToField()
 
@@ -628,16 +622,10 @@ func Test_TSpins_Double(t *testing.T) {
 		{false, false, false, false, false, false, false, false, false, false},
 		{false, false, false, false, false, false, false, false, false, false},
 	}
-	p := Piece{
-		Name:     T,
-		Space:    T2,
-		Rotation: 2,
-		Score:    &Score{},
-	}
-	p.Space["m1"] = Cell{X: 5, Y: 7}
-	p.Space["m2"] = Cell{X: 6, Y: 7}
-	p.Space["b2"] = Cell{X: 6, Y: 6}
-	p.Space["m3"] = Cell{X: 7, Y: 7}
+	piece := InitPiece("T", 5, 7)
+	p := &piece
+	p = p.Turnright()
+	p = p.Turnright()
 	badField := badGrid.ApplyPiece(p.Space).ToField()
 	goodField := goodGrid.ApplyPiece(p.Space).ToField()
 
