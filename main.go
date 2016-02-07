@@ -22,10 +22,10 @@ const skip = "skip"
 
 var strategy = Strategy{
 	Burn:   0,
-	BHoles: 14,
-	FHoles: 11,
+	BHoles: 15,
+	FHoles: 13,
 	CHoles: 3,
-	HighY:  1,
+	HighY:  0,
 	Step:   3,
 }
 
