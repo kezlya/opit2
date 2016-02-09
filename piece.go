@@ -840,7 +840,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 			p.Score.Total -= p.Score.l3 * 13
 		}
 		if p.Score.l4 > 0 {
-			p.Score.Total -= p.Score.l4 * 26
+			p.Score.Total -= p.Score.l4 * 27
 		}
 	}
 
@@ -861,7 +861,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total += 15
+		p.Score.Total += 25
 	}
 }
 
