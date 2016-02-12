@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"log"
 )
 
@@ -856,13 +856,22 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		p.Score.Total -= 400
 	}
 
-	if p.FieldAfter.Empty == 0 {
-		p.Score.Total += 100
+	for _, c := range p.Space {
+		if c.Y == p.FieldAfter.Height {
+			p.Score.Total += 75
+			fmt.Println("yes", p.FieldAfter.Height)
+		}
+		if c.Y == p.FieldAfter.Height-1 {
+			p.Score.Total += 25
+		}
 	}
+	//if p.FieldAfter.Empty == 0 {
+	//	p.Score.Total += 100
+	//}
 
-	if p.FieldAfter.Empty == 1 {
-		p.Score.Total += 25
-	}
+	//if p.FieldAfter.Empty == 1 {
+	//	p.Score.Total += 25
+	//}
 }
 
 func (p *Piece) setPoints() {
