@@ -859,8 +859,8 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		}
 	}
 
-	if trickyPlay && p.FieldAfter.Burned == 1 {
-		//p.Score.Total += 10
+	if p.FieldAfter.CountBH <= 1 && p.FieldAfter.CountFH <= 1 && (p.FieldAfter.Burned == 1) {
+		//p.Score.Total += 30
 	}
 
 	if p.FieldAfter.Burned == 4 {
