@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"log"
 )
 
@@ -818,18 +818,33 @@ func (p *Piece) setCHoles() {
 }
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
+	trickyPlay := false
+	if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
+		trickyPlay = true
+	}
+
+	s_hy := st.HighY
+	s_ch := st.CHoles
+	s_s := st.Step
+
+	if trickyPlay {
+		//s_hy = 1
+		//s_ch = 1
+		//s_s = 1
+	}
+
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 	p.Score.Total = p.Score.BHoles*st.BHoles +
 		p.Score.FHoles*st.FHoles +
-		p.Score.HighY*st.HighY +
-		p.Score.Step*st.Step +
+		p.Score.HighY*s_hy +
+		p.Score.Step*s_s +
 		p.Score.NScore +
-		p.Score.CHoles*st.CHoles -
+		p.Score.CHoles*s_ch -
 		p.FieldAfter.Burned*st.Burn -
 		p.Points*2
 
-	if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
+	if trickyPlay {
 		if p.Score.l1 > 0 {
 			p.Score.Total -= p.Score.l1 * 2
 		}
@@ -842,6 +857,10 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		if p.Score.l4 > 0 {
 			p.Score.Total -= p.Score.l4 * 27
 		}
+	}
+
+	if trickyPlay && p.FieldAfter.Burned == 1 {
+		//p.Score.Total += 10
 	}
 
 	if p.FieldAfter.Burned == 4 {
@@ -857,11 +876,10 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	for _, c := range p.Space {
-		if c.Y == p.FieldAfter.Height {
-			p.Score.Total += 75
-			fmt.Println("yes", p.FieldAfter.Height)
-		}
 		if c.Y == p.FieldAfter.Height-1 {
+			p.Score.Total += 75
+		}
+		if c.Y == p.FieldAfter.Height-2 {
 			p.Score.Total += 25
 		}
 	}
