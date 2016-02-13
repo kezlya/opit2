@@ -21,7 +21,7 @@ const drop = "drop"
 const skip = "skip"
 
 var strategy = Strategy{
-	Burn:   0,
+	Burn:   1,
 	BHoles: 15,
 	FHoles: 11,
 	CHoles: 3,

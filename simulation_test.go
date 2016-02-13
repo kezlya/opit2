@@ -397,7 +397,7 @@ func CheckIfStrategyIsBetter(new_scores, new_rounds, new_skips *[]int) bool {
 	fmt.Println("Better Rounds:", counterR)
 	fmt.Println("Better Skips:", counterSk)
 
-	return counterS >= twoThirds
+	return counterR >= twoThirds
 }
 
 func (s *Strategy) name() string {
