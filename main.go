@@ -7,7 +7,13 @@ import (
 	"strings"
 )
 
-// Happy New 2016 Year
+// best rounds:
+// b0 bh15 fh13 ch2 y1 s3
+// b0 bh15 fh12 ch3 y2 s4
+// b0 bh16 fh13 ch2 y2 s4
+// b0 bh17 fh13 ch4 y3 s5
+
+// bset scores:
 
 // External API constants
 const I, J, L, O, S, T, Z = "I", "J", "L", "O", "S", "T", "Z"
@@ -21,7 +27,7 @@ const drop = "drop"
 const skip = "skip"
 
 var strategy = Strategy{
-	Burn:   0,
+	Burn:   1,
 	BHoles: 15,
 	FHoles: 11,
 	CHoles: 3,
