@@ -819,24 +819,28 @@ func (p *Piece) setCHoles() {
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	trickyPlay := false
-	//if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
-	//	trickyPlay = true
-	//}
+	if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
+		trickyPlay = true
+	}
 
+	s_bh := st.BHoles
+	s_fh := st.FHoles
 	s_hy := st.HighY
 	s_ch := st.CHoles
 	s_s := st.Step
 
-	if trickyPlay {
-		//s_hy = 1
-		//s_ch = 1
-		//s_s = 1
+	if !trickyPlay {
+		s_bh = 16
+		s_fh = 13
+		s_ch = 2
+		s_hy = 2
+		s_s = 4
 	}
 
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
-	p.Score.Total = p.Score.BHoles*st.BHoles +
-		p.Score.FHoles*st.FHoles +
+	p.Score.Total = p.Score.BHoles*s_bh +
+		p.Score.FHoles*s_fh +
 		p.Score.HighY*s_hy +
 		p.Score.Step*s_s +
 		p.Score.NScore +
