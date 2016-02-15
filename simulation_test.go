@@ -109,11 +109,11 @@ func Benchmark_strategy(banch *testing.B) {
 	}
 	for n := 0; n < banch.N; n++ {
 		for b := _b; b < _b+deep; b++ {
-			for bh := _bh; bh <= _bh+deep; bh++ {
-				for fh := _fh; fh <= _fh+deep; fh++ {
-					for ch := _ch; ch <= _ch+deep; ch++ {
-						for hy := _hy; hy <= _hy+deep; hy++ {
-							for s := _s; s <= _s+deep; s++ {
+			for bh := _bh; bh < _bh+deep; bh++ {
+				for fh := _fh; fh < _fh+deep; fh++ {
+					for ch := _ch; ch < _ch+deep; ch++ {
+						for hy := _hy; hy < _hy+deep; hy++ {
+							for s := _s; s < _s+deep; s++ {
 								st := Strategy{
 									Burn:   b,
 									BHoles: bh,
