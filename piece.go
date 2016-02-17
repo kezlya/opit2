@@ -829,13 +829,18 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	s_ch := st.CHoles
 	s_s := st.Step
 
-	/*if !trickyPlay {
-		s_bh = 16
-		s_fh = 13
-		s_ch = 2
-		s_hy = 2
-		s_s = 4
-	}*/
+	if !trickyPlay {
+		// b0 bh15 fh13 ch2 y1 s3
+		// b0 bh15 fh12 ch3 y2 s4
+		// b0 bh16 fh13 ch2 y2 s4
+		// b0 bh17 fh13 ch4 y3 s5
+
+		//s_bh = 16
+		//s_fh = 13
+		//s_ch = 2
+		//s_hy = 2
+		//s_s = 4
+	}
 
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
@@ -879,21 +884,22 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		p.Score.Total -= 400
 	}
 
-	for _, c := range p.Space {
+	/*for _, c := range p.Space {
 		if c.Y == p.FieldAfter.Height-1 {
 			p.Score.Total += 75
 		}
 		if c.Y == p.FieldAfter.Height-2 {
 			p.Score.Total += 25
 		}
-	}
-	//if p.FieldAfter.Empty == 0 {
-	//	p.Score.Total += 100
-	//}
+	}*/
 
-	//if p.FieldAfter.Empty == 1 {
-	//	p.Score.Total += 25
-	//}
+	if p.FieldAfter.Empty == 0 {
+		p.Score.Total += 100
+	}
+
+	if p.FieldAfter.Empty == 1 {
+		p.Score.Total += 25
+	}
 }
 
 func (p *Piece) setPoints() {
