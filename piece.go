@@ -819,7 +819,7 @@ func (p *Piece) setCHoles() {
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	trickyPlay := false
-	if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
+	if p.FieldAfter.Empty > 5 && p.FieldAfter.CountBH < 6 {
 		trickyPlay = true
 	}
 
