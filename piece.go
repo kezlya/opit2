@@ -877,7 +877,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.Tspin {
-		p.Score.Total -= 100
+		p.Score.Total -= 150
 	}
 
 	if p.Tspin2 {
