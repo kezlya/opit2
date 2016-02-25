@@ -873,7 +873,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.FieldAfter.Burned == 4 {
-		p.Score.Total = p.Score.Total - 400
+		p.Score.Total -= 400
 	}
 
 	if p.Tspin {
