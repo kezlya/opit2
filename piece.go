@@ -873,7 +873,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.FieldAfter.Burned == 4 {
-		p.Score.Total -= 400
+		p.Score.Total -= 300
 	}
 
 	if p.Tspin {
@@ -881,7 +881,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.Tspin2 {
-		p.Score.Total -= 400
+		p.Score.Total -= 300
 	}
 
 	for _, c := range p.Space {
