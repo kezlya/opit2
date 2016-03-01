@@ -835,11 +835,11 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		// b0 bh16 fh13 ch2 y2 s4
 		// b0 bh17 fh13 ch4 y3 s5
 
-		//s_bh = 16
-		//s_fh = 13
-		//s_ch = 2
-		//s_hy = 2
-		//s_s = 4
+		s_bh = 17
+		s_fh = 13
+		s_ch = 4
+		s_hy = 3
+		s_s = 5
 	}
 
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
