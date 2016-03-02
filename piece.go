@@ -850,7 +850,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		p.Score.Step*s_s +
 		p.Score.NScore +
 		p.Score.CHoles*s_ch -
-		p.FieldAfter.Burned*st.Burn -
+		//p.FieldAfter.Burned*st.Burn -
 		p.Points*2
 
 	if trickyPlay {
