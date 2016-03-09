@@ -283,7 +283,7 @@ func addSolidLines(g *Game, p *Piece) bool {
 }
 
 func addGarbageLines(g *Game, p *Piece, garbage *[60]int) bool {
-	speed := 7
+	speed := 5
 	r := g.Round % speed
 	if r == 0 && g.Round != 0 {
 		if g.MyPlayer.Field.Empty == 0 {
