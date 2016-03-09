@@ -11,9 +11,9 @@ var SCORE = func(c1, c2 *Piece) bool {
 		return c1.Score.Total < c2.Score.Total
 	}
 
-	/*if c1.FieldAfter.Burned != c2.FieldAfter.Burned {
+	if c1.FieldAfter.Burned != c2.FieldAfter.Burned {
 		return c1.FieldAfter.Burned > c2.FieldAfter.Burned
-	}*/
+	}
 
 	if c1.Score.BHoles != c2.Score.BHoles {
 		return c1.Score.BHoles < c2.Score.BHoles

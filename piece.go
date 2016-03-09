@@ -818,42 +818,18 @@ func (p *Piece) setCHoles() {
 }
 
 func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
-	trickyPlay := false
-	if p.FieldAfter.Empty > 5 && p.FieldAfter.CountBH < 6 {
-		trickyPlay = true
-	}
-
-	s_bh := st.BHoles
-	s_fh := st.FHoles
-	s_hy := st.HighY
-	s_ch := st.CHoles
-	s_s := st.Step
-
-	if !trickyPlay {
-		// b0 bh15 fh13 ch2 y1 s3
-		// b0 bh15 fh12 ch3 y2 s4
-		// b0 bh16 fh13 ch2 y2 s4
-		// b0 bh17 fh13 ch4 y3 s5
-
-		s_bh = 17
-		s_fh = 13
-		s_ch = 4
-		s_hy = 3
-		s_s = 5
-	}
-
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
-	p.Score.Total = p.Score.BHoles*s_bh +
-		p.Score.FHoles*s_fh +
-		p.Score.HighY*s_hy +
-		p.Score.Step*s_s +
+	p.Score.Total = p.Score.BHoles*st.BHoles +
+		p.Score.FHoles*st.FHoles +
+		p.Score.HighY*st.HighY +
+		p.Score.Step*st.Step +
 		p.Score.NScore +
-		p.Score.CHoles*s_ch -
+		p.Score.CHoles*st.CHoles -
 		p.FieldAfter.Burned*st.Burn -
 		p.Points*2
 
-	if trickyPlay {
+	if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
 		if p.Score.l1 > 0 {
 			p.Score.Total -= p.Score.l1 * 2
 		}
@@ -868,38 +844,25 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		}
 	}
 
-	if p.FieldAfter.CountBH <= 1 && p.FieldAfter.CountFH <= 1 && (p.FieldAfter.Burned == 1) {
-		p.Score.Total += 30
-	}
-
 	if p.FieldAfter.Burned == 4 {
-		p.Score.Total -= 300
+		p.Score.Total = p.Score.Total - 400
 	}
 
 	if p.Tspin {
-		p.Score.Total -= 150
+		p.Score.Total -= 100
 	}
 
 	if p.Tspin2 {
-		p.Score.Total -= 300
+		p.Score.Total -= 400
 	}
 
-	for _, c := range p.Space {
-		if c.Y == p.FieldAfter.Height-1 {
-			p.Score.Total += 75
-		}
-		if c.Y == p.FieldAfter.Height-2 {
-			p.Score.Total += 25
-		}
-	}
-
-	/*if p.FieldAfter.Empty == 0 {
+	if p.FieldAfter.Empty == 0 {
 		p.Score.Total += 100
 	}
 
 	if p.FieldAfter.Empty == 1 {
 		p.Score.Total += 25
-	}*/
+	}
 }
 
 func (p *Piece) setPoints() {
@@ -923,7 +886,7 @@ func (p *Piece) setPoints() {
 }
 
 func (p *Piece) shouldSkip(skips int) bool {
-	if p.Score.Total > 65 && skips > 0 {
+	if p.Score.Total > 50 && skips > 0 {
 		return true
 	}
 	return false

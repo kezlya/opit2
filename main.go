@@ -13,8 +13,6 @@ import (
 // b0 bh16 fh13 ch2 y2 s4
 // b0 bh17 fh13 ch4 y3 s5
 
-// bset scores:
-
 // External API constants
 const I, J, L, O, S, T, Z = "I", "J", "L", "O", "S", "T", "Z"
 const settings, update, action = "settings", "update", "action"
@@ -27,10 +25,10 @@ const drop = "drop"
 const skip = "skip"
 
 var strategy = Strategy{
-	Burn:   1,
-	BHoles: 14,
-	FHoles: 12,
-	CHoles: 2,
+	Burn:   0,
+	BHoles: 15,
+	FHoles: 11,
+	CHoles: 3,
 	HighY:  1,
 	Step:   3,
 }
