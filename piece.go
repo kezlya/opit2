@@ -861,7 +861,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total += 25
+		p.Score.Total += 30
 	}
 }
 
