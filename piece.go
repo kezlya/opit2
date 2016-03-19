@@ -845,23 +845,23 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.FieldAfter.Burned == 4 {
-		p.Score.Total = p.Score.Total - 400
+		p.Score.Total = p.Score.Total - 200
 	}
 
 	if p.Tspin {
-		p.Score.Total -= 100
+		p.Score.Total -= 50
 	}
 
 	if p.Tspin2 {
-		p.Score.Total -= 400
+		p.Score.Total -= 200
 	}
 
 	if p.FieldAfter.Empty == 0 {
-		p.Score.Total += 100
+		p.Score.Total += 500
 	}
 
 	if p.FieldAfter.Empty == 1 {
-		p.Score.Total += 30
+		p.Score.Total += 15
 	}
 }
 
