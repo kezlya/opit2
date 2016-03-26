@@ -29,7 +29,7 @@ var strategy = Strategy{
 	BHoles: 16,
 	FHoles: 14,
 	CHoles: 3,
-	HighY:  1,
+	HighY:  0,
 	Step:   3,
 }
 
