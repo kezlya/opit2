@@ -824,7 +824,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		p.Score.FHoles*st.FHoles +
 		p.Score.HighY*st.HighY +
 		p.Score.Step*st.Step +
-		p.Score.NScore +
+		//p.Score.NScore +
 		p.Score.CHoles*st.CHoles -
 		p.FieldAfter.Burned*st.Burn -
 		p.Points*2
