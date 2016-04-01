@@ -26,11 +26,11 @@ const skip = "skip"
 
 var strategy = Strategy{
 	Burn:   1,
-	BHoles: 18,
-	FHoles: 14,
-	CHoles: 3,
+	BHoles: 14,
+	FHoles: 12,
+	CHoles: 4,
 	HighY:  1,
-	Step:   3,
+	Step:   4,
 }
 
 func main() {
