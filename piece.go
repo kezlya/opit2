@@ -829,7 +829,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		p.FieldAfter.Burned*st.Burn -
 		p.Points*2
 
-	if p.FieldAfter.Empty > 5 || p.FieldAfter.CountBH < 6 {
+	if p.FieldAfter.Empty > 4 || p.FieldAfter.CountBH < 4 {
 		if p.Score.l1 > 0 {
 			p.Score.Total -= p.Score.l1 * 2
 		}
@@ -837,10 +837,10 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 			p.Score.Total -= p.Score.l2 * 5
 		}
 		if p.Score.l3 > 0 {
-			p.Score.Total -= p.Score.l3 * 13
+			p.Score.Total -= p.Score.l3 * 12
 		}
 		if p.Score.l4 > 0 {
-			p.Score.Total -= p.Score.l4 * 27
+			p.Score.Total -= p.Score.l4 * 25
 		}
 	}
 
@@ -849,11 +849,11 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 	}
 
 	if p.Tspin {
-		p.Score.Total -= 50
+		p.Score.Total -= 30
 	}
 
 	if p.Tspin2 {
-		p.Score.Total -= 200
+		p.Score.Total -= 400
 	}
 
 	if p.FieldAfter.Empty == 0 {
