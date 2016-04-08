@@ -843,7 +843,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 			p.Score.Total -= p.Score.l4 * 25
 		}
 	}
-	if p.FieldAfter.Height-p.FieldAfter.Empty > 5 {
+	if p.FieldAfter.Height-p.FieldAfter.Empty > 4 {
 		p.Score.Total = p.Score.Total - p.FieldAfter.Burned
 	}
 
