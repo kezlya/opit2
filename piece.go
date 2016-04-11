@@ -829,18 +829,15 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		//p.FieldAfter.Burned*st.Burn -
 		p.Points*2
 
-	if p.FieldAfter.Empty > 4 && (p.FieldAfter.Height-p.FieldAfter.Empty) < 15 {
-		if p.Score.l1 > 0 {
-			p.Score.Total -= p.Score.l1 * 2
-		}
-		if p.Score.l2 > 0 {
-			p.Score.Total -= p.Score.l2 * 5
-		}
-		if p.Score.l3 > 0 {
-			p.Score.Total -= p.Score.l3 * 12
-		}
+	if p.FieldAfter.Empty > 4 {
 		if p.Score.l4 > 0 {
 			p.Score.Total -= p.Score.l4 * 25
+		} else if p.Score.l3 > 0 {
+			p.Score.Total -= p.Score.l3 * 12
+		} else if p.Score.l2 > 0 {
+			p.Score.Total -= p.Score.l2 * 5
+		} else if p.Score.l1 > 0 {
+			p.Score.Total -= p.Score.l1 * 2
 		}
 	}
 	if p.FieldAfter.Height-p.FieldAfter.Empty > 4 {
