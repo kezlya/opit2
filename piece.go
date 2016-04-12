@@ -817,7 +817,7 @@ func (p *Piece) setCHoles() {
 	}
 }
 
-func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
+func (p *Piece) SetScore(st Strategy, oldBH, oldFH int, nextPieceName string) {
 	p.Score.BHoles = p.FieldAfter.CountBH - oldBH
 	p.Score.FHoles = p.FieldAfter.CountFH - oldFH
 	p.Score.Total = p.Score.BHoles*st.BHoles +
@@ -829,7 +829,7 @@ func (p *Piece) SetScore(st Strategy, oldBH, oldFH int) {
 		//p.FieldAfter.Burned*st.Burn -
 		p.Points*2
 
-	if p.FieldAfter.Empty > 4 {
+	if p.FieldAfter.Empty > 4 || nextPieceName == T {
 		if p.Score.l4 > 0 {
 			p.Score.Total -= p.Score.l4 * 25
 		} else if p.Score.l3 > 0 {

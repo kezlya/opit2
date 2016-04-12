@@ -144,7 +144,7 @@ func (g *Game) calculateMoves() *Piece {
 	for k := 0; k < buff; k++ {
 		ns := <-chScores
 		pMap[ns.key].Score.NScore = ns.score
-		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH)
+		pMap[ns.key].SetScore(g.Strategy, mf.CountBH, mf.CountFH, g.NextPieceName)
 	}
 
 	/*for _, p := range positions {
@@ -163,7 +163,7 @@ func (g *Game) nextPieceScore(chScores chan NextScore, pf *Field, key int) {
 	nextPositions := pf.FindPositions(g.NextPiece)
 	for _, np := range nextPositions {
 		g.applySolidLines(np)
-		np.SetScore(g.Strategy, pf.CountBH, pf.CountFH)
+		np.SetScore(g.Strategy, pf.CountBH, pf.CountFH, "")
 	}
 	nScore := 10000000000000
 	nextBest := getBest(nextPositions)
